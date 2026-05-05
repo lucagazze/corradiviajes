@@ -60,33 +60,38 @@
   .cdd-trigger.open .cdd-chevron { transform:rotate(180deg); }
 
   .cdd-panel {
-    position:absolute; top:calc(100% + 6px); left:0; right:0; min-width:180px;
-    border-radius:14px; overflow:hidden;
+    position:absolute; top:calc(100% + 6px); left:0; width:100%;
+    border-radius:12px; overflow:hidden;
     background:#0d1b2e;
     border:1px solid rgba(255,255,255,0.13);
-    box-shadow:0 16px 40px rgba(0,0,0,0.5);
+    box-shadow:0 12px 30px rgba(0,0,0,0.5);
     backdrop-filter:blur(20px);
     z-index:200;
     opacity:0; transform:translateY(-6px) scale(0.98);
     pointer-events:none;
     transition:opacity .18s ease, transform .18s ease;
-    max-height:260px; overflow-y:auto;
+    max-height:240px; overflow-y:auto;
   }
   .cdd-panel.open { opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
 
   .cdd-option {
-    display:flex; align-items:center; gap:8px;
-    padding:9px 14px;
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px;
     font-size:13px; font-weight:500; color:rgba(255,255,255,0.8);
     cursor:pointer; transition:background .15s, color .15s;
-    border-bottom:1px solid rgba(255,255,255,0.05);
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    text-align: left;
+  }
+  @media (min-width: 768px) {
+    .cdd-option { padding: 10px 16px; font-size: 14px; gap: 12px; }
+    .cdd-flag { width: 18px; height: 14px; }
   }
   .cdd-option:last-child { border-bottom:none; }
   .cdd-option:hover { background:rgba(55,120,184,0.18); color:#fff; }
   .cdd-option.selected { background:rgba(55,120,184,0.22); color:#7ab3e0; }
   .cdd-option .cdd-check { font-size:14px; color:#3778b8; opacity:0; flex-shrink:0; margin-left:auto; }
   .cdd-option.selected .cdd-check { opacity:1; }
-  .cdd-flag { font-size:16px; flex-shrink:0; line-height:1; }
+  .cdd-flag { width:16px; height:12px; object-fit:cover; border-radius:2px; flex-shrink:0; box-shadow:0 0 0 1px rgba(0,0,0,0.1) inset; }
 
   /* Light mode — white card style */
   html[data-theme="light"] .cdd-trigger {
@@ -139,8 +144,8 @@
       </div>
       <div class="cdd-panel" id="cddCountryPanel">
         <div class="cdd-option selected" data-value="all">
+          <span style="flex:1" class="truncate">Todos los destinos</span>
           <span class="material-symbols-outlined cdd-check">check</span>
-          Todos los destinos
         </div>
       </div>
     </div>
@@ -154,16 +159,16 @@
       </div>
       <div class="cdd-panel" id="cddFeaturePanel">
         <div class="cdd-option selected" data-value="all">
+          <span style="flex:1" class="truncate">Todos los tipos</span>
           <span class="material-symbols-outlined cdd-check">check</span>
-          Todos los tipos
         </div>
         <div class="cdd-option" data-value="destacados">
+          <span style="flex:1" class="truncate">Destacados</span>
           <span class="material-symbols-outlined cdd-check">check</span>
-          Destacados
         </div>
         <div class="cdd-option" data-value="oferta">
+          <span style="flex:1" class="truncate">Con oferta</span>
           <span class="material-symbols-outlined cdd-check">check</span>
-          Con oferta
         </div>
       </div>
     </div>
@@ -197,22 +202,28 @@
       </div>
       <div class="cdd-panel" id="cddSortPanel">
         <div class="cdd-option selected" data-value="relevance">
-          <span class="material-symbols-outlined cdd-check">check</span>Relevancia
+          <span style="flex:1" class="truncate">Relevancia</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
         </div>
         <div class="cdd-option" data-value="price_asc">
-          <span class="material-symbols-outlined cdd-check">check</span>Precio: menor a mayor
+          <span style="flex:1" class="truncate">Precio: menor a mayor</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
         </div>
         <div class="cdd-option" data-value="price_desc">
-          <span class="material-symbols-outlined cdd-check">check</span>Precio: mayor a menor
+          <span style="flex:1" class="truncate">Precio: mayor a menor</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
         </div>
         <div class="cdd-option" data-value="az">
-          <span class="material-symbols-outlined cdd-check">check</span>Nombre: A → Z
+          <span style="flex:1" class="truncate">Nombre: A → Z</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
         </div>
         <div class="cdd-option" data-value="za">
-          <span class="material-symbols-outlined cdd-check">check</span>Nombre: Z → A
+          <span style="flex:1" class="truncate">Nombre: Z → A</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
         </div>
         <div class="cdd-option" data-value="newest">
-          <span class="material-symbols-outlined cdd-check">check</span>Más recientes
+          <span style="flex:1" class="truncate">Más recientes</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
         </div>
       </div>
     </div>
@@ -292,29 +303,33 @@ initCDD('cddSortTrigger', 'cddSortPanel', 'cddSortValue', (val) => {
   sortBy = val; renderResults();
 });
 
-// Override populateCountrySelect to use custom dropdown with flags
-const COUNTRY_FLAGS = {
-  'argentina': '🇦🇷', 'brasil': '🇧🇷', 'chile': '🇨🇱', 'peru': '🇵🇪',
-  'perú': '🇵🇪', 'colombia': '🇨🇴', 'uruguay': '🇺🇾', 'bolivia': '🇧🇴',
-  'paraguay': '🇵🇾', 'ecuador': '🇪🇨', 'venezuela': '🇻🇪',
-  'mexico': '🇲🇽', 'méxico': '🇲🇽', 'cuba': '🇨🇺', 'jamaica': '🇯🇲',
-  'república dominicana': '🇩🇴', 'costa rica': '🇨🇷', 'panamá': '🇵🇦', 'panama': '🇵🇦',
-  'estados unidos': '🇺🇸', 'canadá': '🇨🇦', 'canada': '🇨🇦',
-  'españa': '🇪🇸', 'espana': '🇪🇸', 'francia': '🇫🇷', 'italia': '🇮🇹',
-  'grecia': '🇬🇷', 'portugal': '🇵🇹', 'alemania': '🇩🇪', 'suiza': '🇨🇭',
-  'austria': '🇦🇹', 'holanda': '🇳🇱', 'países bajos': '🇳🇱',
-  'reino unido': '🇬🇧', 'inglaterr': '🇬🇧', 'irlanda': '🇮🇪',
-  'croacia': '🇭🇷', 'turquía': '🇹🇷', 'turquia': '🇹🇷',
-  'noruega': '🇳🇴', 'suecia': '🇸🇪', 'dinamarca': '🇩🇰', 'finlandia': '🇫🇮',
-  'egipto': '🇪🇬', 'marruecos': '🇲🇦', 'sudáfrica': '🇿🇦', 'kenia': '🇰🇪',
-  'japón': '🇯🇵', 'japon': '🇯🇵', 'china': '🇨🇳', 'tailandia': '🇹🇭',
-  'indonesia': '🇮🇩', 'india': '🇮🇳', 'vietnam': '🇻🇳', 'cambodia': '🇰🇭',
-  'emiratos árabes': '🇦🇪', 'dubai': '🇦🇪', 'israel': '🇮🇱',
-  'maldivas': '🇲🇻', 'australia': '🇦🇺', 'nueva zelanda': '🇳🇿',
+// Override populateCountrySelect to use custom dropdown with real SVG flags
+const COUNTRY_CODES = {
+  'argentina': 'ar', 'brasil': 'br', 'chile': 'cl', 'peru': 'pe',
+  'perú': 'pe', 'colombia': 'co', 'uruguay': 'uy', 'bolivia': 'bo',
+  'paraguay': 'py', 'ecuador': 'ec', 'venezuela': 've',
+  'mexico': 'mx', 'méxico': 'mx', 'cuba': 'cu', 'jamaica': 'jm',
+  'república dominicana': 'do', 'costa rica': 'cr', 'panamá': 'pa', 'panama': 'pa',
+  'estados unidos': 'us', 'canadá': 'ca', 'canada': 'ca',
+  'españa': 'es', 'espana': 'es', 'francia': 'fr', 'italia': 'it',
+  'grecia': 'gr', 'portugal': 'pt', 'alemania': 'de', 'suiza': 'ch',
+  'austria': 'at', 'holanda': 'nl', 'países bajos': 'nl',
+  'reino unido': 'gb', 'inglaterra': 'gb', 'irlanda': 'ie',
+  'croacia': 'hr', 'turquía': 'tr', 'turquia': 'tr',
+  'noruega': 'no', 'suecia': 'se', 'dinamarca': 'dk', 'finlandia': 'fi',
+  'egipto': 'eg', 'marruecos': 'ma', 'sudáfrica': 'za', 'kenia': 'ke',
+  'japón': 'jp', 'japon': 'jp', 'china': 'cn', 'tailandia': 'th',
+  'indonesia': 'id', 'india': 'in', 'vietnam': 'vn', 'cambodia': 'kh',
+  'emiratos árabes': 'ae', 'dubai': 'ae', 'israel': 'il',
+  'maldivas': 'mv', 'australia': 'au', 'nueva zelanda': 'nz',
 };
-function getFlag(country) {
+function getFlagHtml(country) {
   const key = (country || '').toLowerCase().trim();
-  return COUNTRY_FLAGS[key] || '🌍';
+  const code = COUNTRY_CODES[key];
+  if (code) {
+    return `<img src="https://flagcdn.com/w20/${code}.png" class="cdd-flag" alt="${code}">`;
+  }
+  return `<span class="material-symbols-outlined text-[14px] opacity-50 flex-shrink-0">public</span>`;
 }
 
 window.populateCountrySelect = function() {
@@ -330,7 +345,7 @@ window.populateCountrySelect = function() {
     const div = document.createElement('div');
     div.className = 'cdd-option';
     div.dataset.value = c;
-    div.innerHTML = `<span class="cdd-flag">${getFlag(c)}</span>${c}<span class="material-symbols-outlined cdd-check">check</span>`;
+    div.innerHTML = `${getFlagHtml(c)}<span style="flex:1" class="truncate">${c}</span><span class="material-symbols-outlined cdd-check">check</span>`;
     panel.appendChild(div);
   });
 };

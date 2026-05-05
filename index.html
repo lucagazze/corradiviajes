@@ -176,6 +176,19 @@
   }
   .flatpickr-month { height: 40px !important; }
   .flatpickr-current-month { font-size: 110% !important; padding-top: 5px !important; }
+  .bg-surface { background-color: var(--surface); }
+  .bg-surface-variant { background-color: var(--surface-variant); }
+  
+  /* Scrollbar estético para listas */
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 8px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 8px; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.3); }
+
+  .custom-scrollbar-light::-webkit-scrollbar { width: 6px; }
+  .custom-scrollbar-light::-webkit-scrollbar-track { background: transparent; border-radius: 8px; }
+  .custom-scrollbar-light::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 8px; }
+  .custom-scrollbar-light::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 </style>
 </head>
 <body class="text-on-background antialiased selection:bg-primary-container selection:text-on-primary font-body-md text-body-md overflow-x-hidden min-h-screen">
@@ -186,13 +199,13 @@
 <main class="w-full pt-[90px] md:pt-[100px]">
   <section id="heroSection" class="w-[90%] max-w-[1800px] mx-auto pt-0 pb-12 flex flex-col items-center">
     <!-- Hero Container -->
-    <div class="video-hero relative w-full h-[75vh] min-h-[500px] max-h-[800px] flex flex-col justify-center items-center text-center rounded-[32px] overflow-hidden">
+    <div class="video-hero relative w-full h-[65vh] md:h-[75vh] min-h-[450px] md:min-h-[500px] max-h-[800px] flex flex-col justify-center items-center text-center rounded-[32px] overflow-hidden">
       <!-- Hero Background Video -->
       <div class="absolute inset-0 rounded-[32px] overflow-hidden">
-        <video autoplay muted loop playsinline
+        <video autoplay muted loop playsinline preload="none" poster="img/hero_travel_new.png"
           style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.05);min-width:100%;min-height:100%;width:auto;height:auto;object-fit:cover;">
           
-          <source data-src="hero" src="video/Video Project.mp4" type="video/mp4">
+          <source data-src="hero" type="video/mp4">
 
         </video>
         <div class="absolute inset-0 pointer-events-none" style="background:rgba(0,0,0,0.35)"></div>
@@ -200,39 +213,46 @@
 
       <!-- Hero Content -->
       <div class="relative z-10 w-full max-w-5xl flex flex-col items-center text-center px-4">
-        <h1 class="font-['Geomanist'] text-4xl md:text-[46px] font-bold text-white tracking-tight mb-4 drop-shadow-sm">
+        <h1 class="font-['Geomanist'] text-3xl md:text-[40px] font-bold text-white tracking-tight mb-1 drop-shadow-sm">
           Viajá con sentido.
         </h1>
-        <p class="hero-text text-white/90 text-lg md:text-xl font-light mb-10 drop-shadow-sm">
+        <p class="hero-text text-white/90 text-base md:text-lg font-light mb-8 drop-shadow-sm">
           Experiencias que no podrías planear ni aunque quisieras.
         </p>
         
         <!-- Global Search Bar -->
-        <div class="w-full bg-white/90 backdrop-blur-xl p-2 md:rounded-full rounded-[32px] flex flex-col md:flex-row items-center gap-2 transition-all border border-white/40">
+        <div class="w-full bg-white/90 backdrop-blur-xl p-1.5 md:p-2 md:rounded-full rounded-[32px] flex flex-col md:flex-row items-center gap-1.5 md:gap-2 transition-all border border-white/40">
           
           <!-- Destination Autocomplete -->
-          <div class="flex-1 flex items-center bg-transparent md:bg-surface w-full md:w-auto rounded-[32px] px-6 py-2 border-b border-black/8 md:border md:border-outline-variant md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative">
-            <span class="material-symbols-outlined text-outline mr-2">location_on</span>
+          <div class="flex-1 flex items-center bg-transparent md:bg-white hover:bg-slate-50 w-full md:w-auto rounded-full px-4 py-1.5 md:px-6 md:py-2 border-b border-black/8 md:border md:border-transparent md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative group cursor-pointer" id="destContainer">
+            <span class="material-symbols-outlined text-outline mr-2 text-[20px] group-hover:text-primary transition-colors">location_on</span>
             <div class="flex flex-col w-full text-left">
-              <span class="font-label-md text-label-md text-on-surface-variant uppercase text-[10px]">Dónde</span>
-              <input id="searchDest" autocomplete="off" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-body-md text-body-md w-full placeholder-outline-variant outline-none" placeholder="Buscar destinos" type="text"/>
-              <ul id="autocompleteList" class="bg-white border border-slate-100 rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] hidden max-h-80 overflow-y-auto" style="position:absolute;top:calc(100% + 12px);left:0;z-index:50;width:100%;min-width:260px"></ul>
+              <span class="font-label-md text-slate-500 uppercase text-[9px] md:text-[10px] font-bold tracking-wide">Dónde</span>
+              <input id="searchDest" autocomplete="off" class="bg-transparent border-none p-0 focus:ring-0 text-slate-800 font-medium text-sm md:text-base w-full placeholder-slate-400 outline-none cursor-pointer pointer-events-none" placeholder="Todos los destinos" type="text" readonly value=""/>
+              <input type="hidden" id="searchDestHidden" value="all">
+            </div>
+            <span class="material-symbols-outlined text-slate-400 text-[18px] ml-2 group-hover:text-primary transition-colors">expand_more</span>
+            
+            <!-- Dest Popover Panel -->
+            <div id="destPopover" class="bg-white rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-slate-100 hidden cursor-default max-h-[340px] overflow-y-auto custom-scrollbar-light py-1" style="position:absolute;top:calc(100% + 12px);left:0;z-index:50;min-width:280px">
+              <!-- Rendered via JS -->
             </div>
           </div>
           
           <div class="hidden md:block w-[1px] h-10 bg-outline-variant"></div>
           
           <!-- Date Month Picker -->
-          <div class="flex-1 flex items-center bg-transparent md:bg-surface w-full md:w-auto rounded-[32px] px-6 py-2 border-b border-black/8 md:border md:border-outline-variant md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative cursor-pointer" id="monthContainer">
-            <span class="material-symbols-outlined text-outline mr-2">calendar_month</span>
+          <div class="flex-1 flex items-center bg-transparent md:bg-white hover:bg-slate-50 w-full md:w-auto rounded-full px-4 py-1.5 md:px-6 md:py-2 border-b border-black/8 md:border md:border-transparent md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative group cursor-pointer" id="monthContainer">
+            <span class="material-symbols-outlined text-outline mr-2 text-[20px] group-hover:text-primary transition-colors">calendar_month</span>
             <div class="flex flex-col w-full text-left">
-              <span class="font-label-md text-label-md text-on-surface-variant uppercase text-[10px]">Cuándo</span>
-              <input id="searchMonthDisplay" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-body-md text-body-md w-full placeholder-outline-variant outline-none cursor-pointer pointer-events-none" placeholder="Cualquier mes" type="text" readonly value=""/>
+              <span class="font-label-md text-slate-500 uppercase text-[9px] md:text-[10px] font-bold tracking-wide">Cuándo</span>
+              <input id="searchMonthDisplay" class="bg-transparent border-none p-0 focus:ring-0 text-slate-800 font-medium text-sm md:text-base w-full placeholder-slate-400 outline-none cursor-pointer pointer-events-none" placeholder="Cualquier mes" type="text" readonly value=""/>
               <input type="hidden" id="searchMonth" value="">
             </div>
+            <span class="material-symbols-outlined text-slate-400 text-[18px] ml-2 group-hover:text-primary transition-colors">expand_more</span>
             
             <!-- Popover Panel -->
-            <div id="monthPopover" class="bg-white rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-slate-100 p-4 hidden cursor-default" style="position:absolute;top:calc(100% + 12px);left:0;z-index:50;min-width:320px">
+            <div id="monthPopover" class="bg-white rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-slate-100 p-4 hidden cursor-default max-h-[340px] overflow-y-auto custom-scrollbar-light" style="position:absolute;top:calc(100% + 12px);left:0;z-index:50;min-width:320px">
               <h4 class="font-medium text-sm text-slate-400 mb-3 ml-1 uppercase tracking-wider">Seleccionar Mes</h4>
               <div class="grid grid-cols-3 gap-2" id="monthGrid">
                 <!-- Months populated by JS -->
@@ -243,16 +263,17 @@
           <div class="hidden md:block w-[1px] h-10 bg-outline-variant"></div>
           
           <!-- Price Filter -->
-          <div class="flex-1 flex items-center bg-transparent md:bg-surface w-full md:w-auto rounded-[32px] px-6 py-2 md:border md:border-outline-variant md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative cursor-pointer" id="priceContainer">
-            <span class="material-symbols-outlined text-outline mr-2">payments</span>
+          <div class="flex-1 flex items-center bg-transparent md:bg-white hover:bg-slate-50 w-full md:w-auto rounded-full px-4 py-1.5 md:px-6 md:py-2 border-b border-black/8 md:border md:border-transparent md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative group cursor-pointer" id="priceContainer">
+            <span class="material-symbols-outlined text-outline mr-2 text-[20px] group-hover:text-primary transition-colors">payments</span>
             <div class="flex flex-col w-full text-left">
-              <span class="font-label-md text-label-md text-on-surface-variant uppercase text-[10px]">Presupuesto</span>
-              <input id="searchPriceDisplay" class="bg-transparent border-none p-0 focus:ring-0 text-on-surface font-body-md text-body-md w-full placeholder-outline-variant outline-none cursor-pointer pointer-events-none" placeholder="Cualquier precio" type="text" readonly value=""/>
+              <span class="font-label-md text-slate-500 uppercase text-[9px] md:text-[10px] font-bold tracking-wide">Presupuesto</span>
+              <input id="searchPriceDisplay" class="bg-transparent border-none p-0 focus:ring-0 text-slate-800 font-medium text-sm md:text-base w-full placeholder-slate-400 outline-none cursor-pointer pointer-events-none" placeholder="Cualquier precio" type="text" readonly value=""/>
               <input type="hidden" id="searchPrice" value="">
             </div>
+            <span class="material-symbols-outlined text-slate-400 text-[18px] ml-2 group-hover:text-primary transition-colors">expand_more</span>
             
             <!-- Price Popover -->
-            <div id="pricePopover" class="bg-white rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-slate-100 p-4 hidden cursor-default" style="position:absolute;top:calc(100% + 12px);left:0;z-index:50;min-width:280px">
+            <div id="pricePopover" class="bg-white rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-slate-100 p-4 hidden cursor-default max-h-[340px] overflow-y-auto custom-scrollbar-light" style="position:absolute;top:calc(100% + 12px);left:0;z-index:50;min-width:280px">
               <h4 class="font-medium text-sm text-slate-400 mb-3 ml-1 uppercase tracking-wider">Rango de precio</h4>
               <div class="flex flex-col gap-2">
                 <div class="price-option flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors group" data-val="" data-label="Cualquier precio">
@@ -291,8 +312,8 @@
             </div>
           </div>
           
-          <button onclick="triggerSearch()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium font-['Geomanist'] text-sm px-7 py-3 md:rounded-full rounded-[24px] flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(37,99,235,0.4)] hover:shadow-[0_12px_28px_rgba(37,99,235,0.5)] hover:scale-105 transition-all duration-200 mt-2 md:mt-0 active:scale-95">
-            <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">search</span>
+          <button onclick="triggerSearch()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium font-['Geomanist'] text-[13px] md:text-sm px-5 py-2.5 md:px-6 md:py-2.5 md:rounded-full rounded-[20px] flex items-center justify-center gap-1.5 shadow-[0_6px_20px_rgba(37,99,235,0.35)] hover:shadow-[0_10px_24px_rgba(37,99,235,0.45)] hover:scale-[1.02] transition-all duration-200 mt-2 md:mt-0 active:scale-95">
+            <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">search</span>
             Buscar
           </button>
         </div>
@@ -455,8 +476,8 @@
 
   <!-- Cinematic Video Section -->
   <section class="w-full relative h-[50vh] md:h-[65vh] min-h-[350px] max-h-[600px] overflow-hidden">
-    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover" style="transform: scale(1.05);">
-      <source data-src="section" src="video/Video Project 1.mp4" type="video/mp4">
+    <video autoplay muted loop playsinline preload="none" poster="img/hero_travel.png" class="absolute inset-0 w-full h-full object-cover" style="transform: scale(1.05);">
+      <source data-src="section" type="video/mp4">
     </video>
     <div class="absolute inset-0 pointer-events-none" style="background:rgba(0,0,0,0.35)"></div>
   </section>
@@ -608,17 +629,102 @@
     const r = trigger.getBoundingClientRect();
     popup.style.top = (window.scrollY + r.bottom + 6) + 'px';
     popup.style.left = r.left + 'px';
-    popup.style.maxWidth = (window.innerWidth - r.left - 12) + 'px';
+    popup.style.width = Math.max(r.width, parseInt(window.getComputedStyle(popup).minWidth) || 280) + 'px';
+    
+    // Prevent flowing off screen on mobile
+    if (r.left + popup.offsetWidth > window.innerWidth) {
+      popup.style.left = (window.innerWidth - popup.offsetWidth - 16) + 'px';
+    }
   }
 
   document.addEventListener('DOMContentLoaded', () => {
     // Move popovers to body so overflow:hidden on hero doesn't clip them
+    const destPopover = document.getElementById('destPopover');
     const monthPopover = document.getElementById('monthPopover');
     const pricePopover = document.getElementById('pricePopover');
-    const autocompleteList = document.getElementById('autocompleteList');
+    if (destPopover) document.body.appendChild(destPopover);
     if (monthPopover) document.body.appendChild(monthPopover);
     if (pricePopover) document.body.appendChild(pricePopover);
-    if (autocompleteList) document.body.appendChild(autocompleteList);
+
+    // Destination Custom Dropdown
+    const destContainer = document.getElementById('destContainer');
+    const destDisplay = document.getElementById('searchDest');
+    const destInput = document.getElementById('searchDestHidden');
+
+    if (destContainer && destPopover) {
+      // Countries dictionary for flags
+      const COUNTRY_CODES = {
+        'argentina': 'ar', 'brasil': 'br', 'chile': 'cl', 'peru': 'pe', 'perú': 'pe', 'colombia': 'co',
+        'uruguay': 'uy', 'bolivia': 'bo', 'paraguay': 'py', 'ecuador': 'ec', 'venezuela': 've',
+        'mexico': 'mx', 'méxico': 'mx', 'cuba': 'cu', 'jamaica': 'jm', 'república dominicana': 'do',
+        'costa rica': 'cr', 'panamá': 'pa', 'panama': 'pa', 'estados unidos': 'us', 'canadá': 'ca', 'canada': 'ca',
+        'españa': 'es', 'espana': 'es', 'francia': 'fr', 'italia': 'it', 'grecia': 'gr', 'portugal': 'pt',
+        'alemania': 'de', 'suiza': 'ch', 'austria': 'at', 'holanda': 'nl', 'países bajos': 'nl',
+        'reino unido': 'gb', 'inglaterra': 'gb', 'irlanda': 'ie', 'croacia': 'hr', 'turquía': 'tr', 'turquia': 'tr',
+        'noruega': 'no', 'suecia': 'se', 'dinamarca': 'dk', 'finlandia': 'fi', 'egipto': 'eg', 'marruecos': 'ma',
+        'sudáfrica': 'za', 'kenia': 'ke', 'japón': 'jp', 'japon': 'jp', 'china': 'cn', 'tailandia': 'th',
+        'indonesia': 'id', 'india': 'in', 'vietnam': 'vn', 'cambodia': 'kh', 'emiratos árabes': 'ae', 'dubai': 'ae',
+        'israel': 'il', 'maldivas': 'mv', 'australia': 'au', 'nueva zelanda': 'nz',
+      };
+      function getFlagHtml(country) {
+        const key = (country || '').toLowerCase().trim();
+        const code = COUNTRY_CODES[key];
+        if (code) return `<img src="https://flagcdn.com/w20/${code}.png" class="w-[18px] h-[14px] object-cover rounded-[2px] shrink-0" style="box-shadow:0 0 0 1px rgba(0,0,0,0.1) inset;" alt="${code}">`;
+        return `<span class="material-symbols-outlined text-[14px] opacity-50 shrink-0">public</span>`;
+      }
+
+      // Populate countries from allPackages once loaded
+      const populateDestinations = () => {
+        if (!window.allPackages || window.allPackages.length === 0) return;
+        const countries = [...new Set(window.allPackages.map(p => (p.country || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
+        
+        let html = `
+          <div class="dest-option flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="all" data-label="Todos los destinos">
+            <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-primary">public</span>
+            <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
+          </div>`;
+        
+        countries.forEach(c => {
+          html += `
+            <div class="dest-option flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="${c}" data-label="${c}">
+              ${getFlagHtml(c)}
+              <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">${c}</span>
+            </div>`;
+        });
+        // Remove last border
+        html = html.replace(/border-b border-slate-100(?=[^>]*>([^<]*<)(?!\/div>))/g, 'border-b border-slate-100');
+        // Actually, just let the last item have a border-b, or we can use CSS :last-child. 
+        // It's fine with the py-1 wrapper padding.
+        destPopover.innerHTML = html;
+        
+        destPopover.querySelectorAll('.dest-option').forEach(opt => {
+          opt.addEventListener('click', () => {
+            destDisplay.value = opt.getAttribute('data-label');
+            destInput.value = opt.getAttribute('data-val');
+            destPopover.classList.add('hidden');
+          });
+        });
+      };
+
+      // Poll until packages load
+      const checkPackages = setInterval(() => {
+        if (window.allPackages && window.allPackages.length > 0) {
+          populateDestinations();
+          clearInterval(checkPackages);
+        }
+      }, 500);
+
+      destContainer.addEventListener('click', (e) => {
+        if (destPopover.contains(e.target)) return;
+        e.stopPropagation();
+        if (monthPopover) monthPopover.classList.add('hidden');
+        if (pricePopover) pricePopover.classList.add('hidden');
+        const isHidden = destPopover.classList.contains('hidden');
+        if (isHidden) { positionBelow(destContainer, destPopover); destPopover.classList.remove('hidden'); }
+        else { destPopover.classList.add('hidden'); }
+      });
+      document.addEventListener('click', (e) => { if (!destContainer.contains(e.target) && !destPopover.contains(e.target)) destPopover.classList.add('hidden'); });
+    }
 
     // Month picker
     const monthContainer = document.getElementById('monthContainer');
@@ -644,6 +750,7 @@
         if (monthPopover.contains(e.target)) return;
         e.stopPropagation();
         if (pricePopover) pricePopover.classList.add('hidden');
+        if (destPopover) destPopover.classList.add('hidden');
         const isHidden = monthPopover.classList.contains('hidden');
         if (isHidden) { positionBelow(monthContainer, monthPopover); monthPopover.classList.remove('hidden'); }
         else { monthPopover.classList.add('hidden'); }
@@ -664,6 +771,7 @@
         if (pricePopover.contains(e.target)) return;
         e.stopPropagation();
         if (monthPopover) monthPopover.classList.add('hidden');
+        if (destPopover) destPopover.classList.add('hidden');
         const isHidden = pricePopover.classList.contains('hidden');
         if (isHidden) { positionBelow(priceContainer, pricePopover); pricePopover.classList.remove('hidden'); }
         else { pricePopover.classList.add('hidden'); }

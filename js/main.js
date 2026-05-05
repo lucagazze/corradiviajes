@@ -25,6 +25,7 @@ async function loadPackages() {
       if (error) throw error;
       allPackages = data;
     }
+    window.allPackages = allPackages; // Make it globally accessible for the index.html popovers
     renderPackages();
     renderOffersCarousel();
     setupAutocomplete();
@@ -384,7 +385,10 @@ function renderOffersCarousel() {
 
 // ── Search ──────────────────────────────────────
 function triggerSearch() {
-  const q = document.getElementById('searchDest')?.value || '';
+  const hiddenDest = document.getElementById('searchDestHidden');
+  let q = hiddenDest ? hiddenDest.value : (document.getElementById('searchDest')?.value || '');
+  if (q === 'all' || q === 'Todos los destinos') q = '';
+  
   const month = document.getElementById('searchMonth')?.value || '';
   const price = document.getElementById('searchPrice')?.value || '';
 
