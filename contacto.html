@@ -111,27 +111,31 @@
 
 <app-navbar></app-navbar>
 
-<!-- ── HERO ── -->
-<section class="relative w-full overflow-hidden" style="min-height:380px; padding-top:73px;background-image:none">
-  <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1600"
-    alt="Contacto Corradi Viajes"
-    class="absolute inset-0 w-full h-full object-cover"/>
-  <div class="absolute inset-0" style="background:linear-gradient(to bottom, rgba(13,27,46,0.55) 0%, rgba(13,27,46,0.9) 80%, #0d1b2e 100%)"></div>
-  <div class="relative z-10 flex flex-col items-center justify-center text-center px-5 pt-16 pb-20">
-    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 text-sm font-medium"
-      style="background:rgba(55,120,184,0.18);color:#7ab3e0;border:1px solid rgba(55,120,184,0.3)">
-      <span class="material-symbols-outlined text-[15px]" style="font-variation-settings:'FILL' 1">support_agent</span>
-      Atención personalizada
+<main class="w-full pt-[90px] md:pt-[100px]">
+
+  <!-- Hero Section -->
+  <section id="heroSection" class="w-[90%] max-w-[1800px] mx-auto pt-0 pb-12 flex flex-col items-center">
+    <div class="video-hero relative w-full h-[50vh] md:h-[60vh] min-h-[400px] md:min-h-[450px] max-h-[600px] flex flex-col justify-center items-center text-center rounded-[32px] overflow-hidden">
+      <div class="absolute inset-0 rounded-[32px] overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1600"
+          alt="Contacto Corradi Viajes"
+          class="absolute inset-0 w-full h-full object-cover" style="transform:scale(1.05);"/>
+        <div class="absolute inset-0 pointer-events-none" style="background:rgba(0,0,0,0.45)"></div>
+      </div>
+      <div class="relative z-10 w-full max-w-4xl flex flex-col items-center text-center px-6">
+
+        <h1 class="font-['Geomanist'] font-bold text-[38px] md:text-[52px] leading-tight mb-3 text-white drop-shadow-sm">
+          Contactanos
+        </h1>
+        <p class="text-white/80 text-[17px] md:text-[18px] max-w-xl drop-shadow-sm">
+          Dejanos tu consulta y un asesor te contacta a la brevedad.
+        </p>
+      </div>
     </div>
-    <h1 class="font-bold text-[38px] md:text-[52px] leading-tight mb-3">Contactanos</h1>
-    <p class="text-[17px] md:text-[18px] max-w-xl" style="color:rgba(255,255,255,0.62)">
-      Dejanos tu consulta y un asesor te contacta a la brevedad.
-    </p>
-  </div>
-</section>
+  </section>
 
 <!-- ── MAIN CONTENT ── -->
-<main class="w-full max-w-[1300px] mx-auto px-5 md:px-12 py-14 md:py-20">
+<div class="w-full max-w-[1300px] mx-auto px-5 md:px-12 py-14 md:py-20">
 
   <!-- Contact Card -->
   <div class="rounded-[28px] overflow-hidden grid grid-cols-1 md:grid-cols-12 mb-20"
@@ -190,18 +194,7 @@
         </div>
       </div>
 
-      <!-- WhatsApp CTA -->
-      <div class="relative z-10 mt-10">
-        <a id="ctcWaBtn" href="#" target="_blank" rel="noopener"
-          class="flex items-center gap-3 w-full font-semibold text-sm px-5 py-4 rounded-[14px] transition-all active:scale-95 hover:opacity-90"
-          style="background:#25D366;color:#fff;box-shadow:0 6px 20px rgba(37,211,102,0.35)">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
-            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.556 4.122 1.528 5.855L.057 23.882a.75.75 0 0 0 .923.923l6.042-1.464A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.524-5.225-1.435l-.374-.223-3.878.94.965-3.87-.245-.385A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
-          </svg>
-          Escribinos por WhatsApp
-        </a>
-      </div>
+
     </div>
 
     <!-- Right: WhatsApp CTA -->
@@ -227,63 +220,69 @@
 
   </div>
 
-  <!-- ── FAQ SECTION ── -->
-  <div class="mb-4 text-center">
-    <h2 class="font-bold text-[28px] md:text-[34px] mb-2">Preguntas frecuentes</h2>
-    <p class="text-[16px]" style="color:rgba(255,255,255,0.5)">Respuestas rápidas a las consultas más comunes.</p>
-  </div>
+  <!-- Preguntas Frecuentes Section -->
+  <section class="w-full py-20" style="background:#0d1b2e">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-14">
+        <h2 class="font-['Geomanist'] font-medium text-[32px] text-white mb-3">Preguntas Frecuentes</h2>
+        <p class="text-white/60 font-light text-lg">Todo lo que necesitás saber antes de tu próxima aventura.</p>
+      </div>
 
-  <div class="max-w-3xl mx-auto mt-10 flex flex-col gap-3">
+      <div class="flex flex-col gap-4" id="faqAccordion">
+        <!-- FAQ 1 -->
+        <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+            ¿Cómo es el proceso para armar un viaje a medida?
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
+            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+              Nos contactás contándonos tu idea (destinos, fechas, presupuesto aproximado). Uno de nuestros asesores se comunica con vos para afinar detalles y, en base a eso, diseñamos un itinerario 100% personalizado. Podés hacerle todos los cambios que quieras hasta que quede perfecto.
+            </div>
+          </div>
+        </div>
 
-    <div class="faq-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09)">
-      <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-bold text-[16px]">
-        ¿Cuánto tardan en responder?
-        <span class="material-symbols-outlined text-[22px] faq-icon" style="color:rgba(255,255,255,0.4)">expand_more</span>
-      </button>
-      <div class="faq-body">
-        <div class="px-6 pb-5 text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">
-          En horario de oficina respondemos en menos de 2 horas. Si nos escribís fuera del horario, te respondemos a primera hora del día siguiente.
+        <!-- FAQ 2 -->
+        <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+            ¿Qué incluyen los paquetes en oferta?
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
+            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+              Nuestras ofertas suelen incluir vuelos, alojamiento, traslados y seguro de asistencia médica. Dependiendo del paquete, también pueden incluir excursiones y comidas. En la descripción de cada oferta detallamos exactamente todo lo que está contemplado.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 3 -->
+        <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+            ¿Tienen opciones de financiación?
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
+            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+              Sí, trabajamos con múltiples formas de pago. Podés abonar mediante transferencia bancaria (pesos o dólares), tarjeta de crédito y débito. Contamos con planes de cuotas fijas dependiendo de las promociones bancarias vigentes al momento de la compra.
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ 4 -->
+        <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+            ¿Ofrecen asistencia durante el viaje?
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+          </button>
+          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
+            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+              Absolutamente. Te acompañamos desde que salís hasta que volvés. Tenés a tu disposición un canal de WhatsApp de emergencias para comunicarte con nuestro equipo en caso de cualquier eventualidad durante tu viaje.
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <div class="faq-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09)">
-      <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-bold text-[16px]">
-        ¿Tienen consultas sin cargo?
-        <span class="material-symbols-outlined text-[22px] faq-icon" style="color:rgba(255,255,255,0.4)">expand_more</span>
-      </button>
-      <div class="faq-body">
-        <div class="px-6 pb-5 text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">
-          Sí. La consulta inicial es completamente gratuita y sin compromiso. Te ayudamos a armar un presupuesto personalizado sin ningún costo.
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09)">
-      <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-bold text-[16px]">
-        ¿Puedo cambiar el itinerario después?
-        <span class="material-symbols-outlined text-[22px] faq-icon" style="color:rgba(255,255,255,0.4)">expand_more</span>
-      </button>
-      <div class="faq-body">
-        <div class="px-6 pb-5 text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">
-          Absolutamente. Trabajamos de manera iterativa: te presentamos una propuesta inicial y hacemos todos los ajustes necesarios hasta que el viaje sea exactamente lo que buscás.
-        </div>
-      </div>
-    </div>
-
-    <div class="faq-item" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09)">
-      <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-bold text-[16px]">
-        ¿Tienen opciones de financiación?
-        <span class="material-symbols-outlined text-[22px] faq-icon" style="color:rgba(255,255,255,0.4)">expand_more</span>
-      </button>
-      <div class="faq-body">
-        <div class="px-6 pb-5 text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">
-          Sí. Aceptamos tarjetas de crédito, débito y transferencia en pesos o dólares. Contamos con planes de cuotas según las promociones bancarias vigentes al momento de la compra.
-        </div>
-      </div>
-    </div>
-
-  </div>
+  </section>
 
 </main>
 
@@ -305,24 +304,42 @@ if (document.getElementById('ctcWaBtnBig')) {
 }
 
 // FAQ accordion
-document.querySelectorAll('.faq-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const item = btn.parentElement;
-    const body = item.querySelector('.faq-body');
-    const isOpen = item.classList.contains('open');
-
-    // Close all
-    document.querySelectorAll('.faq-item').forEach(i => {
-      i.classList.remove('open');
-      i.querySelector('.faq-body').classList.remove('open');
+function initFAQ() {
+  const faqBtns = document.querySelectorAll('.faq-btn');
+  faqBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const content = btn.nextElementSibling;
+      const icon = btn.querySelector('.faq-icon');
+      
+      // Close all others
+      faqBtns.forEach(otherBtn => {
+        if (otherBtn !== btn) {
+          const otherContent = otherBtn.nextElementSibling;
+          const otherIcon = otherBtn.querySelector('.faq-icon');
+          if (otherContent) {
+            otherContent.style.maxHeight = null;
+            otherContent.style.opacity = '0';
+          }
+          if (otherIcon) {
+            otherIcon.style.transform = 'rotate(0deg)';
+          }
+        }
+      });
+      
+      // Toggle current
+      if (content.style.maxHeight) {
+        content.style.maxHeight = null;
+        content.style.opacity = '0';
+        if (icon) icon.style.transform = 'rotate(0deg)';
+      } else {
+        content.style.maxHeight = content.scrollHeight + "px";
+        content.style.opacity = '1';
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      }
     });
-
-    if (!isOpen) {
-      item.classList.add('open');
-      body.classList.add('open');
-    }
   });
-});
+}
+initFAQ();
 </script>
 <script src="js/theme.js"></script>
 </body>

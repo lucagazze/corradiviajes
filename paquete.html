@@ -301,6 +301,26 @@
 <script src="js/config.js"></script>
 <script src="js/components.js"></script>
 <script>
+// ── Swipe Logic ──────────────────────────────────
+function initSwipe(element, onLeft, onRight) {
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  element.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+
+  element.addEventListener('touchend', e => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+
+  function handleSwipe() {
+    const threshold = 50;
+    if (touchEndX < touchStartX - threshold) onLeft();
+    if (touchEndX > touchStartX + threshold) onRight();
+  }
+}
 // ── Lightbox ──────────────────────────────────────
 let lbImages = [], lbIdx = 0;
 
@@ -310,6 +330,12 @@ function openLightbox(i) {
   const lb = document.getElementById('lightbox');
   lb.classList.remove('hidden');
   lb.style.display = 'flex';
+  
+  // Init swipe for Lightbox
+  if (!lb.dataset.swipeInit) {
+    initSwipe(lb, lbNext, lbPrev);
+    lb.dataset.swipeInit = 'true';
+  }
 }
 function closeLightbox() {
   const lb = document.getElementById('lightbox');
@@ -394,6 +420,11 @@ function buildGallery(images, pkg) {
     if (thumbsEl) {
       thumbsEl.classList.remove('hidden');
       renderThumbs();
+    }
+    // Init swipe for Hero
+    const heroEl = grid.querySelector('.package-hero');
+    if (heroEl) {
+      initSwipe(heroEl, nextImg, prevImg);
     }
   }
 }

@@ -120,7 +120,7 @@ function renderPackages() {
               <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
               <div class="absolute bottom-0 left-0 p-4 w-full">
                 <h3 class="text-white font-semibold text-[15px] font-['Plus_Jakarta_Sans'] leading-tight">${p.name}</h3>
-                <span class="text-[#3778b8] text-sm font-bold drop-shadow-sm">Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+                <span class="text-white text-sm font-bold drop-shadow-sm">Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
               </div>
             </div>`;
         }).join('')}
