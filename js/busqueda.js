@@ -25,6 +25,12 @@ if (urlQ) {
   if (si) si.value = urlParams.get('q');
 }
 
+const urlCountry = urlParams.get('country');
+if (urlCountry) {
+  activeCategory = urlCountry;
+  // Label will be set dynamically inside populateCountrySelect
+}
+
 // Process initial price filter from Hero Search
 if (searchPrice) {
   if (searchPrice.includes('+')) {

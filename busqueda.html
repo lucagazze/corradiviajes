@@ -309,21 +309,24 @@ const COUNTRY_CODES = {
   'perú': 'pe', 'colombia': 'co', 'uruguay': 'uy', 'bolivia': 'bo',
   'paraguay': 'py', 'ecuador': 'ec', 'venezuela': 've',
   'mexico': 'mx', 'méxico': 'mx', 'cuba': 'cu', 'jamaica': 'jm',
-  'república dominicana': 'do', 'costa rica': 'cr', 'panamá': 'pa', 'panama': 'pa',
+  'república dominicana': 'do', 'rep. dominicana': 'do',
+  'costa rica': 'cr', 'panamá': 'pa', 'panama': 'pa',
   'estados unidos': 'us', 'canadá': 'ca', 'canada': 'ca',
   'españa': 'es', 'espana': 'es', 'francia': 'fr', 'italia': 'it',
   'grecia': 'gr', 'portugal': 'pt', 'alemania': 'de', 'suiza': 'ch',
   'austria': 'at', 'holanda': 'nl', 'países bajos': 'nl', 'paises bajos': 'nl',
+  'bélgica': 'be', 'belgica': 'be',
   'reino unido': 'gb', 'inglaterra': 'gb', 'irlanda': 'ie',
   'croacia': 'hr', 'turquía': 'tr', 'turquia': 'tr',
+  'hungría': 'hu', 'hungria': 'hu',
+  'rep. checa': 'cz', 'república checa': 'cz', 'republica checa': 'cz',
   'noruega': 'no', 'suecia': 'se', 'dinamarca': 'dk', 'finlandia': 'fi',
   'egipto': 'eg', 'marruecos': 'ma', 'sudáfrica': 'za', 'kenia': 'ke',
   'japón': 'jp', 'japon': 'jp', 'china': 'cn', 'tailandia': 'th',
   'indonesia': 'id', 'india': 'in', 'vietnam': 'vn', 'cambodia': 'kh',
   'emiratos árabes': 'ae', 'dubai': 'ae', 'israel': 'il',
   'maldivas': 'mv', 'australia': 'au', 'nueva zelanda': 'nz',
-  'antillas holandesas': 'cw', 'rep. checa': 'cz', 'república checa': 'cz', 
-  'republica checa': 'cz', 'rep. dominicana': 'do'
+  'antillas holandesas': 'cw'
 };
 function getFlagHtml(country) {
   const key = (country || '').toLowerCase().trim();
@@ -336,20 +339,42 @@ function getFlagHtml(country) {
 
 window.populateCountrySelect = function() {
   const panel = document.getElementById('cddCountryPanel');
+  const valueEl = document.getElementById('cddCountryValue');
   if (!panel || !allPackages) return;
+
+  // Build the country list from the packages currently visible (filtered by price/month)
+  // so only countries with matching packages show up
+  let eligible = allPackages;
+  if (priceMin !== null) eligible = eligible.filter(p => p.price_usd >= priceMin);
+  if (priceMax !== null) eligible = eligible.filter(p => p.price_usd <= priceMax);
+
   const countries = [...new Set(
-    allPackages.map(p => (p.country || '').trim()).filter(Boolean)
+    eligible.map(p => (p.country || '').trim()).filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, 'es'));
-  const first = panel.querySelector('.cdd-option[data-value="all"]');
+
   panel.innerHTML = '';
-  if (first) panel.appendChild(first);
+
+  // "All destinations" option
+  const allOpt = document.createElement('div');
+  allOpt.className = 'cdd-option' + (activeCategory === 'all' ? ' selected' : '');
+  allOpt.dataset.value = 'all';
+  allOpt.innerHTML = `<span style="flex:1" class="truncate">Todos los destinos</span><span class="material-symbols-outlined cdd-check">check</span>`;
+  panel.appendChild(allOpt);
+
   countries.forEach(c => {
     const div = document.createElement('div');
-    div.className = 'cdd-option';
+    const isSelected = activeCategory === c;
+    div.className = 'cdd-option' + (isSelected ? ' selected' : '');
     div.dataset.value = c;
     div.innerHTML = `${getFlagHtml(c)}<span style="flex:1" class="truncate">${c}</span><span class="material-symbols-outlined cdd-check">check</span>`;
     panel.appendChild(div);
   });
+
+  // If a country is pre-selected from URL, update the display label
+  if (activeCategory !== 'all' && valueEl) {
+    const match = countries.find(c => c === activeCategory);
+    if (match) valueEl.textContent = match;
+  }
 };
 </script>
 <script src="js/theme.js"></script>

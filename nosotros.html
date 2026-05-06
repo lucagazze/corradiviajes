@@ -6,24 +6,20 @@
 <script>!function(){var t=localStorage.getItem('corradiTheme')||'dark';document.documentElement.setAttribute('data-theme',t)}()</script>
 <link rel="stylesheet" href="css/theme.css">
 <title>Nosotros - Corradi Viajes</title>
-<meta name="description" content="Conoce a Corradi Viajes, agencia de viajes con más de 20 años de experiencia. Especialistas en viajes personalizados desde Rosario al mundo.">
+<meta name="description" content="Conoce a Corradi Viajes, agencia de viajes con más de 30 años de experiencia. Especialistas en viajes personalizados desde Rosario al mundo.">
 <meta name="keywords" content="nosotros, agencia de viajes, experiencia, viajes personalizados, Rosario, Argentina">
 <meta name="author" content="Corradi Viajes">
 <meta name="robots" content="index, follow">
-<meta name="language" content="Spanish">
-<meta name="revisit-after" content="7 days">
 <link rel="canonical" href="https://corradi.vercel.app/nosotros.html">
-<!-- Open Graph / Facebook -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://corradi.vercel.app/nosotros.html">
 <meta property="og:title" content="Nosotros - Corradi Viajes">
-<meta property="og:description" content="Conoce a Corradi Viajes, especialistas en viajes personalizados con más de 20 años de experiencia.">
+<meta property="og:description" content="Conoce a Corradi Viajes, especialistas en viajes personalizados con más de 30 años de experiencia.">
 <meta property="og:image" content="https://corradi.vercel.app/assets/logo.png">
-<!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image">
 <meta property="twitter:url" content="https://corradi.vercel.app/nosotros.html">
 <meta property="twitter:title" content="Nosotros - Corradi Viajes">
-<meta property="twitter:description" content="Conoce a Corradi Viajes, especialistas en viajes personalizados con más de 20 años de experiencia.">
+<meta property="twitter:description" content="Conoce a Corradi Viajes, especialistas en viajes personalizados con más de 30 años de experiencia.">
 <meta property="twitter:image" content="https://corradi.vercel.app/assets/logo.png">
 <link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="apple-touch-icon" href="assets/logo.png">
@@ -37,74 +33,92 @@
   @font-face { font-family:'Geomanist'; src:url('geomanist-medium.woff') format('woff'); font-weight:700; font-style:normal; }
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
   body { min-height: 100dvh; }
+  .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+  .stat-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+  .value-card { transition: transform 0.2s ease, border-color 0.2s ease; }
+  .value-card:hover { transform: translateY(-4px); border-color: rgba(55,120,184,0.4) !important; }
 </style>
 </head>
 <body style="background:#0d1b2e;color:#fff" class="antialiased overflow-x-hidden min-h-screen pb-[72px] md:pb-0 font-['Geomanist','Plus_Jakarta_Sans',sans-serif]">
 
 <app-navbar></app-navbar>
 
-<main>
+<main class="w-full pt-[90px] md:pt-[100px]">
 
-  <!-- Hero -->
-  <section class="relative w-full overflow-hidden" style="min-height:420px;background-image:none">
-    <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1600"
-      alt="Viajes Corradi" class="absolute inset-0 w-full h-full object-cover"/>
-    <div class="absolute inset-0" style="background:linear-gradient(to bottom,rgba(13,27,46,0.5) 0%,rgba(13,27,46,0.85) 100%)"></div>
-    <div class="relative z-10 flex flex-col items-center justify-center text-center px-5 pt-[140px] pb-20">
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 text-sm font-medium" style="background:rgba(55,120,184,0.2);color:#7ab3e0;border:1px solid rgba(55,120,184,0.35)">
-        <span class="material-symbols-outlined text-[16px]">groups</span>
-        Desde Rosario al Mundo
+  <!-- Hero — mismo contenedor que el index -->
+  <section class="video-hero w-[90%] max-w-[1800px] mx-auto pt-0 pb-12 flex flex-col items-center">
+    <div class="relative w-full h-[65vh] md:h-[75vh] min-h-[450px] md:min-h-[500px] max-h-[800px] flex flex-col justify-center items-center text-center rounded-[32px] overflow-hidden">
+      <!-- Background image -->
+      <div class="absolute inset-0 rounded-[32px] overflow-hidden">
+        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=1800"
+          alt="Corradi Viajes" class="absolute inset-0 w-full h-full object-cover" style="transform:scale(1.05);" loading="eager"/>
+        <div class="absolute inset-0" style="background:rgba(0,0,0,0.45)"></div>
       </div>
-      <h1 class="font-bold text-[40px] md:text-[58px] leading-tight mb-4">Nuestra Historia</h1>
-      <p class="text-[17px] md:text-[19px] max-w-2xl" style="color:rgba(255,255,255,0.7)">
-        Conocé quiénes somos y por qué miles de viajeros confían en nosotros cada año para descubrir el mundo.
-      </p>
+      <!-- Content -->
+      <div class="relative z-10 w-full max-w-4xl flex flex-col items-center text-center px-6">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6 text-sm font-medium" style="background:rgba(55,120,184,0.25);color:#93c5fd;border:1px solid rgba(55,120,184,0.4)">
+          <span class="material-symbols-outlined text-[16px]">groups</span>
+          Desde Rosario al Mundo
+        </div>
+        <h1 class="font-['Geomanist'] text-4xl md:text-[56px] font-bold text-white tracking-tight mb-4 drop-shadow-sm leading-tight">
+          Nuestra Historia
+        </h1>
+        <p class="text-white/80 text-base md:text-xl font-light max-w-2xl drop-shadow-sm">
+          Más de 30 años conectando rosarinos con el mundo. Conocé quiénes somos y por qué miles de viajeros confían en nosotros.
+        </p>
+      </div>
     </div>
   </section>
 
   <!-- Story Section -->
-  <section class="w-full max-w-[1400px] mx-auto px-5 md:px-16 py-20">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-center">
-      <div class="rounded-[24px] overflow-hidden" style="box-shadow:0 20px 60px rgba(0,0,0,0.4)">
-        <img src="https://images.unsplash.com/photo-1488085061387-422e29b40080?q=80&w=800"
-          alt="Corradi Viajes equipo" class="w-full h-full object-cover" style="aspect-ratio:4/3"/>
+  <section class="w-[90%] max-w-[1400px] mx-auto py-16 md:py-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-center">
+      <div class="rounded-[28px] overflow-hidden" style="box-shadow:0 24px 60px rgba(0,0,0,0.4)">
+        <img src="https://images.unsplash.com/photo-1488085061387-422e29b40080?q=80&w=900"
+          alt="Corradi Viajes equipo" class="w-full h-full object-cover" style="aspect-ratio:4/3" loading="lazy"/>
       </div>
       <div>
-        <h2 class="font-bold text-[32px] md:text-[38px] leading-tight mb-5">Más de 30 años<br/>viajando con vos</h2>
-        <p class="text-[16px] leading-relaxed mb-5" style="color:rgba(255,255,255,0.65)">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-5 text-xs font-bold uppercase tracking-wider" style="background:rgba(55,120,184,0.15);color:#7ab3e0;border:1px solid rgba(55,120,184,0.25)">
+          <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">star</span>
+          Quiénes somos
+        </div>
+        <h2 class="font-['Geomanist'] font-bold text-[30px] md:text-[40px] leading-tight mb-5">
+          Más de 30 años<br/>viajando con vos
+        </h2>
+        <p class="text-[16px] leading-relaxed mb-4" style="color:rgba(255,255,255,0.65)">
           En Corradi Viajes somos apasionados por descubrir el mundo. Nuestra misión es diseñar experiencias a medida, cuidando cada detalle para que tu único trabajo sea disfrutar.
         </p>
         <p class="text-[16px] leading-relaxed mb-8" style="color:rgba(255,255,255,0.65)">
           Nacimos en Rosario con un sueño simple: hacer que viajar sea accesible, confiable y memorable. Hoy, somos el puente entre los rosarinos y el mundo entero.
         </p>
         <a href="contacto.html"
-          class="inline-flex items-center gap-2 font-medium text-sm px-6 py-3 rounded-full transition-all active:scale-95"
-          style="background:linear-gradient(135deg,#2563eb,#3778b8);color:#fff;box-shadow:0 4px 14px rgba(37,99,235,0.3)">
+          class="inline-flex items-center gap-2 font-medium text-sm px-7 py-3.5 rounded-full transition-all hover:scale-105 active:scale-95"
+          style="background:linear-gradient(135deg,#2563eb,#3778b8);color:#fff;box-shadow:0 6px 20px rgba(37,99,235,0.35)">
           Hablemos de tu viaje
-          <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- Stats -->
+  <!-- Stats — mismo estilo que secciones del index -->
   <section style="background:#111c2d" class="w-full py-16">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-16">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div class="text-center py-8 rounded-[18px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-          <div class="font-bold text-[42px] leading-none mb-2" style="color:#3778b8">30+</div>
+    <div class="w-[90%] max-w-[1400px] mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div class="stat-card text-center py-8 px-4 rounded-[22px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+          <div class="font-bold text-[44px] leading-none mb-2" style="color:#3778b8">30+</div>
           <div class="text-sm font-medium" style="color:rgba(255,255,255,0.55)">Años de experiencia</div>
         </div>
-        <div class="text-center py-8 rounded-[18px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-          <div class="font-bold text-[42px] leading-none mb-2" style="color:#3778b8">10K+</div>
+        <div class="stat-card text-center py-8 px-4 rounded-[22px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+          <div class="font-bold text-[44px] leading-none mb-2" style="color:#3778b8">10K+</div>
           <div class="text-sm font-medium" style="color:rgba(255,255,255,0.55)">Viajeros felices</div>
         </div>
-        <div class="text-center py-8 rounded-[18px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-          <div class="font-bold text-[42px] leading-none mb-2" style="color:#3778b8">50+</div>
+        <div class="stat-card text-center py-8 px-4 rounded-[22px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+          <div class="font-bold text-[44px] leading-none mb-2" style="color:#3778b8">50+</div>
           <div class="text-sm font-medium" style="color:rgba(255,255,255,0.55)">Destinos disponibles</div>
         </div>
-        <div class="text-center py-8 rounded-[18px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
-          <div class="font-bold text-[42px] leading-none mb-2" style="color:#3778b8">5★</div>
+        <div class="stat-card text-center py-8 px-4 rounded-[22px]" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+          <div class="font-bold text-[44px] leading-none mb-2" style="color:#3778b8">5★</div>
           <div class="text-sm font-medium" style="color:rgba(255,255,255,0.55)">Calificación promedio</div>
         </div>
       </div>
@@ -112,73 +126,87 @@
   </section>
 
   <!-- Values -->
-  <section class="w-full max-w-[1400px] mx-auto px-5 md:px-16 py-20">
+  <section class="w-[90%] max-w-[1400px] mx-auto py-16 md:py-24">
     <div class="text-center mb-12">
-      <h2 class="font-bold text-[32px] md:text-[40px] leading-tight mb-3">Por qué elegirnos</h2>
-      <p class="text-[16px]" style="color:rgba(255,255,255,0.55)">Lo que nos hace diferentes en cada viaje que diseñamos.</p>
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-4 text-xs font-bold uppercase tracking-wider" style="background:rgba(55,120,184,0.15);color:#7ab3e0;border:1px solid rgba(55,120,184,0.25)">
+        <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">verified</span>
+        Nuestros valores
+      </div>
+      <h2 class="font-['Geomanist'] font-bold text-[30px] md:text-[40px] leading-tight mb-3">Por qué elegirnos</h2>
+      <p class="text-[16px] max-w-xl mx-auto" style="color:rgba(255,255,255,0.55)">Lo que nos hace diferentes en cada viaje que diseñamos.</p>
     </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-      <div class="rounded-[18px] p-7" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)">
-        <div class="w-12 h-12 rounded-[12px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.2)">
+      <div class="value-card rounded-[22px] p-7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+        <div class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.18)">
           <span class="material-symbols-outlined text-[24px]" style="color:#3778b8;font-variation-settings:'FILL' 1">support_agent</span>
         </div>
-        <h3 class="font-bold text-[18px] mb-2">Atención 24/7</h3>
+        <h3 class="font-['Geomanist'] font-bold text-[18px] mb-2">Atención 24/7</h3>
         <p class="text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">Estamos con vos antes, durante y después de tu viaje. Sin horarios, sin excusas.</p>
       </div>
-      <div class="rounded-[18px] p-7" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)">
-        <div class="w-12 h-12 rounded-[12px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.2)">
+      <div class="value-card rounded-[22px] p-7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+        <div class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.18)">
           <span class="material-symbols-outlined text-[24px]" style="color:#3778b8;font-variation-settings:'FILL' 1">verified</span>
         </div>
-        <h3 class="font-bold text-[18px] mb-2">Selección Premium</h3>
+        <h3 class="font-['Geomanist'] font-bold text-[18px] mb-2">Selección Premium</h3>
         <p class="text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">Trabajamos solo con los mejores proveedores, aerolíneas y hoteles del mundo.</p>
       </div>
-      <div class="rounded-[18px] p-7" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)">
-        <div class="w-12 h-12 rounded-[12px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.2)">
+      <div class="value-card rounded-[22px] p-7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+        <div class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.18)">
           <span class="material-symbols-outlined text-[24px]" style="color:#3778b8;font-variation-settings:'FILL' 1">auto_awesome</span>
         </div>
-        <h3 class="font-bold text-[18px] mb-2">A Medida</h3>
+        <h3 class="font-['Geomanist'] font-bold text-[18px] mb-2">A Medida</h3>
         <p class="text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">Cada viaje es único. Diseñamos itinerarios personalizados según tus gustos y presupuesto.</p>
       </div>
-      <div class="rounded-[18px] p-7" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)">
-        <div class="w-12 h-12 rounded-[12px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.2)">
+      <div class="value-card rounded-[22px] p-7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+        <div class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.18)">
           <span class="material-symbols-outlined text-[24px]" style="color:#3778b8;font-variation-settings:'FILL' 1">price_check</span>
         </div>
-        <h3 class="font-bold text-[18px] mb-2">Precios Transparentes</h3>
+        <h3 class="font-['Geomanist'] font-bold text-[18px] mb-2">Precios Transparentes</h3>
         <p class="text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">Sin cargos ocultos. Lo que ves es lo que pagás. Con opciones de pago en cuotas.</p>
       </div>
-      <div class="rounded-[18px] p-7" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)">
-        <div class="w-12 h-12 rounded-[12px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.2)">
+      <div class="value-card rounded-[22px] p-7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+        <div class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.18)">
           <span class="material-symbols-outlined text-[24px]" style="color:#3778b8;font-variation-settings:'FILL' 1">security</span>
         </div>
-        <h3 class="font-bold text-[18px] mb-2">Viaje Seguro</h3>
-        <p class="text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">Legit, habilitados y con toda la documentación en regla para tu tranquilidad.</p>
+        <h3 class="font-['Geomanist'] font-bold text-[18px] mb-2">Viaje Seguro</h3>
+        <p class="text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">Habilitados y con toda la documentación en regla para tu tranquilidad total.</p>
       </div>
-      <div class="rounded-[18px] p-7" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08)">
-        <div class="w-12 h-12 rounded-[12px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.2)">
+      <div class="value-card rounded-[22px] p-7" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08)">
+        <div class="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5" style="background:rgba(55,120,184,0.18)">
           <span class="material-symbols-outlined text-[24px]" style="color:#3778b8;font-variation-settings:'FILL' 1">location_on</span>
         </div>
-        <h3 class="font-bold text-[18px] mb-2">Locales en Rosario</h3>
+        <h3 class="font-['Geomanist'] font-bold text-[18px] mb-2">Locales en Rosario</h3>
         <p class="text-[15px] leading-relaxed" style="color:rgba(255,255,255,0.55)">Somos de acá. Entendemos lo que necesitás y hablamos tu idioma.</p>
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section style="background:#111c2d" class="w-full py-20">
-    <div class="max-w-[1400px] mx-auto px-5 md:px-16 text-center">
-      <h2 class="font-bold text-[32px] md:text-[40px] leading-tight mb-4">¿Listo para tu próximo viaje?</h2>
-      <p class="text-[17px] mb-8" style="color:rgba(255,255,255,0.6)">Contactanos y empezamos a planear juntos tu aventura perfecta.</p>
-      <div class="flex flex-col sm:flex-row gap-3 justify-center">
-        <a href="contacto.html"
-          class="inline-flex items-center justify-center gap-2 font-medium text-sm px-8 py-3.5 rounded-full transition-all active:scale-95"
-          style="background:linear-gradient(135deg,#2563eb,#3778b8);color:#fff;box-shadow:0 4px 14px rgba(37,99,235,0.3)">
-          Envianos un mensaje
-        </a>
-        <a href="busqueda.html"
-          class="inline-flex items-center justify-center gap-2 font-medium text-sm px-8 py-3.5 rounded-full transition-all active:scale-95"
-          style="border:1.5px solid rgba(55,120,184,0.6);color:#7ab3e0">
-          Ver destinos
-        </a>
+  <!-- CTA — mismo estilo que el CTA del index -->
+  <section class="w-full py-16" style="background:#0d1b2e">
+    <div class="w-[90%] max-w-[1500px] mx-auto">
+      <div class="cta-dark-card rounded-[32px] px-10 py-14 flex flex-col md:flex-row items-center justify-between gap-8 relative overflow-hidden shadow-[0_20px_60px_rgba(55,120,184,0.25)]">
+        <img src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?q=80&w=2000" alt="Viaje" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+        <div class="absolute inset-0 bg-[#2b4c7e]/80"></div>
+        <div class="relative z-10 text-center md:text-left">
+          <div class="inline-flex items-center gap-2 bg-white/20 text-white text-sm font-medium px-4 py-1.5 rounded-full mb-4">
+            <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">travel_explore</span>
+            Empezá hoy
+          </div>
+          <h2 class="font-['Geomanist'] font-bold text-[30px] md:text-[38px] text-white mb-3">¿Listo para tu próximo <span style="color:#ebb03a">viaje?</span></h2>
+          <p class="text-white/80 font-light text-lg max-w-lg">Contactanos y empezamos a planear juntos tu aventura perfecta.</p>
+        </div>
+        <div class="relative z-10 flex flex-col sm:flex-row gap-3 flex-shrink-0">
+          <a href="https://wa.me/5493411234567?text=Hola!%20Quisiera%20info%20sobre%20viajes" target="_blank"
+            class="flex items-center gap-3 bg-[#25D366] hover:bg-[#20ba5a] text-white font-medium font-['Geomanist'] text-base px-7 py-4 rounded-full transition-all shadow-[0_8px_24px_rgba(37,211,102,0.4)] hover:scale-105 active:scale-95">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Escribinos por WhatsApp
+          </a>
+          <a href="busqueda.html"
+            class="flex items-center justify-center gap-2 bg-white/15 hover:bg-white/25 text-white font-medium font-['Geomanist'] text-base px-7 py-4 rounded-full border border-white/30 transition-all hover:scale-105 active:scale-95">
+            <span class="material-symbols-outlined text-[20px]">travel_explore</span>
+            Ver destinos
+          </a>
+        </div>
       </div>
     </div>
   </section>
