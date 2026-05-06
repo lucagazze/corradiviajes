@@ -13,20 +13,6 @@
 <meta name="language" content="Spanish">
 <meta name="revisit-after" content="7 days">
 <link rel="canonical" href="https://corradi.vercel.app/ofertas.html">
-<!-- Open Graph / Facebook -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://corradi.vercel.app/ofertas.html">
-<meta property="og:title" content="Ofertas - Corradi Viajes">
-<meta property="og:description" content="Descubre las mejores ofertas de viajes con descuentos exclusivos.">
-<meta property="og:image" content="https://corradi.vercel.app/assets/logo.png">
-<!-- Twitter -->
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="https://corradi.vercel.app/ofertas.html">
-<meta property="twitter:title" content="Ofertas - Corradi Viajes">
-<meta property="twitter:description" content="Descubre las mejores ofertas de viajes con descuentos exclusivos.">
-<meta property="twitter:image" content="https://corradi.vercel.app/assets/logo.png">
-<link rel="icon" type="image/png" href="assets/logo.png">
-<link rel="apple-touch-icon" href="assets/logo.png">
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -38,9 +24,76 @@
   .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
   body { min-height: 100dvh; }
   ::-webkit-scrollbar { width:0; height:0; }
-  select option { background:#0d1b2e; color:#fff; }
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
+
+  /* ── Custom Dropdown ── */
+  .cdd { position:relative; }
+  .cdd-trigger {
+    display:flex; align-items:center; gap:8px;
+    width:100%; padding:9px 13px;
+    border-radius:12px;
+    cursor:pointer; user-select:none;
+    transition:border-color .2s, background .2s, box-shadow .2s;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+  }
+  .cdd-trigger:hover { border-color:rgba(255,255,255,0.3); background:rgba(255,255,255,0.12); }
+  .cdd-trigger.open { border-color:rgba(55,120,184,0.7); background:rgba(55,120,184,0.1); }
+  .cdd-label { font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,0.45); white-space:nowrap; }
+  .cdd-value { font-size:14px; font-weight:500; color:#fff; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .cdd-chevron { font-size:16px; color:rgba(255,255,255,0.45); transition:transform .25s; flex-shrink:0; }
+  .cdd-trigger.open .cdd-chevron { transform:rotate(180deg); }
+
+  .cdd-panel {
+    position:absolute; top:calc(100% + 6px); left:0; width:100%;
+    border-radius:12px; overflow:hidden;
+    background:#0d1b2e;
+    border:1px solid rgba(255,255,255,0.13);
+    box-shadow:0 12px 30px rgba(0,0,0,0.5);
+    backdrop-filter:blur(20px);
+    z-index:200;
+    opacity:0; transform:translateY(-6px) scale(0.98);
+    pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease;
+    max-height:240px; overflow-y:auto;
+  }
+  .cdd-panel.open { opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+
+  .cdd-option {
+    display:flex; align-items:center; gap:10px;
+    padding:8px 12px;
+    font-size:13px; font-weight:500; color:rgba(255,255,255,0.8);
+    cursor:pointer; transition:background .15s, color .15s;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    text-align: left;
+  }
+  @media (min-width: 768px) {
+    .cdd-option { padding: 10px 16px; font-size: 14px; gap: 12px; }
+    .cdd-flag { width: 18px; height: 14px; }
+  }
+  .cdd-option:last-child { border-bottom:none; }
+  .cdd-option:hover { background:rgba(55,120,184,0.18); color:#fff; }
+  .cdd-option.selected { background:rgba(55,120,184,0.22); color:#7ab3e0; }
+  .cdd-option .cdd-check { font-size:14px; color:#3778b8; opacity:0; flex-shrink:0; margin-left:auto; }
+  .cdd-option.selected .cdd-check { opacity:1; }
+  .cdd-flag { width:16px; height:12px; object-fit:cover; border-radius:2px; flex-shrink:0; box-shadow:0 0 0 1px rgba(0,0,0,0.1) inset; }
+
+  /* Light mode ── white card style */
+  html[data-theme="light"] .cdd-trigger {
+    background:#ffffff;
+    border-color:rgba(0,0,0,0.13);
+    box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  }
+  html[data-theme="light"] .cdd-trigger:hover { background:#f8fafc; border-color:rgba(0,0,0,0.22); box-shadow:0 4px 12px rgba(0,0,0,0.1); }
+  html[data-theme="light"] .cdd-trigger.open { border-color:#3778b8; background:#fff; box-shadow:0 0 0 3px rgba(55,120,184,0.15); }
+  html[data-theme="light"] .cdd-label { color:rgba(0,0,0,0.38); }
+  html[data-theme="light"] .cdd-value { color:#1e293b; }
+  html[data-theme="light"] .cdd-chevron { color:rgba(0,0,0,0.3); }
+  html[data-theme="light"] .cdd-panel { background:#fff; border-color:rgba(0,0,0,0.1); box-shadow:0 16px 40px rgba(0,0,0,0.12); }
+  html[data-theme="light"] .cdd-option { color:#334155; border-bottom-color:rgba(0,0,0,0.05); }
+  html[data-theme="light"] .cdd-option:hover { background:rgba(55,120,184,0.08); color:#1e293b; }
+  html[data-theme="light"] .cdd-option.selected { background:rgba(55,120,184,0.1); color:#3778b8; }
 </style>
 </head>
 <body style="background:#0d1b2e;color:#fff" class="antialiased overflow-x-hidden min-h-screen pb-[72px] md:pb-0 font-['Geomanist','Plus_Jakarta_Sans',sans-serif]">
@@ -50,58 +103,97 @@
 <main class="w-full max-w-[1400px] mx-auto px-5 md:px-16">
 
   <!-- Page Header -->
-  <div class="pt-[110px] pb-8 md:pt-[120px] md:pb-10">
-    <h1 class="font-bold text-[36px] md:text-[48px] leading-tight mb-2">Ofertas</h1>
-    <p class="text-[17px]" style="color:rgba(255,255,255,0.55)">Descuentos exclusivos para escapadas espontáneas. ¡Reservá antes de que se agoten!</p>
+  <div class="pt-[100px] pb-4 md:pt-[110px] md:pb-5 flex items-baseline gap-4">
+    <h1 class="font-bold text-[26px] md:text-[34px] leading-tight">Ofertas</h1>
+    <p class="hidden md:block text-[15px]" style="color:rgba(255,255,255,0.45)">Descuentos exclusivos por tiempo limitado.</p>
   </div>
 
   <!-- Search Bar -->
-  <div class="flex gap-3 mb-6">
-    <div class="flex items-center gap-3 flex-1 max-w-xl rounded-[14px] px-4 py-3 transition-all" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12)">
-      <span class="material-symbols-outlined text-[20px]" style="color:rgba(255,255,255,0.5)">search</span>
+  <div class="flex gap-3 mb-3">
+    <div class="flex items-center gap-2 flex-1 max-w-xl rounded-[12px] px-3 py-2.5 transition-all" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12)">
+      <span class="material-symbols-outlined text-[18px]" style="color:rgba(255,255,255,0.5)">search</span>
       <input type="text" id="searchInput"
-        class="flex-1 bg-transparent border-none outline-none text-white placeholder:text-white/40 font-medium text-[15px] focus:ring-0"
+        class="flex-1 bg-transparent border-none outline-none text-white placeholder:text-white/40 font-medium text-[14px] focus:ring-0"
         placeholder="Buscar oferta…"/>
     </div>
   </div>
 
-  <!-- Sort + Price Filter Row -->
-  <div class="flex flex-col sm:flex-row gap-3 mb-6">
-    <div class="relative">
-      <select id="sortSelect"
-        onchange="sortBy=this.value;renderResults()"
-        class="w-full sm:w-auto rounded-[12px] pl-4 pr-9 py-2.5 text-sm font-medium outline-none cursor-pointer appearance-none"
-        style="background:#1a2d45;color:#fff;border:1px solid rgba(255,255,255,0.15)">
-        <option value="relevance">Ordenar: Relevancia</option>
-        <option value="price_asc" selected>Precio: menor a mayor</option>
-        <option value="price_desc">Precio: mayor a menor</option>
-        <option value="az">Nombre: A → Z</option>
-        <option value="za">Nombre: Z → A</option>
-        <option value="newest">Más recientes</option>
-      </select>
-      <span class="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-[16px]" style="color:rgba(255,255,255,0.45)">expand_more</span>
+  <!-- Main Filters Row -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
+
+    <!-- Country Custom Dropdown -->
+    <div class="cdd md:col-span-1" id="cddCountry">
+      <div class="cdd-trigger" id="cddCountryTrigger">
+        <span class="cdd-label">País</span>
+        <span class="cdd-value" id="cddCountryValue">Todos los destinos</span>
+        <span class="material-symbols-outlined cdd-chevron">expand_more</span>
+      </div>
+      <div class="cdd-panel" id="cddCountryPanel">
+        <div class="cdd-option selected" data-value="all">
+          <span style="flex:1" class="truncate">Todos los destinos</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
+      </div>
     </div>
-    <div class="flex items-center gap-2 flex-1 sm:flex-none">
-      <div class="relative flex-1 sm:flex-none">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold" style="color:rgba(255,255,255,0.4)">USD</span>
+
+    <!-- Price Filter -->
+    <div class="flex items-center gap-2 md:col-span-2">
+      <div class="relative flex-1">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[11px] font-bold" style="color:rgba(255,255,255,0.4)">USD</span>
         <input type="number" id="priceMin" placeholder="Mín" min="0"
           oninput="priceMin=this.value?Number(this.value):null;renderResults()"
-          class="w-full sm:w-28 rounded-[12px] pl-10 pr-3 py-2.5 text-sm font-medium outline-none"
-          style="background:#1a2d45;color:#fff;border:1px solid rgba(255,255,255,0.15)"/>
+          class="w-full rounded-[12px] pl-[48px] pr-3 py-2.5 text-[14px] font-medium outline-none transition-all"
+          style="background:rgba(255,255,255,0.07);color:#fff;border:1px solid rgba(255,255,255,0.12)"/>
       </div>
-      <span style="color:rgba(255,255,255,0.3)" class="text-sm shrink-0">—</span>
-      <div class="relative flex-1 sm:flex-none">
-        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[11px] font-semibold" style="color:rgba(255,255,255,0.4)">USD</span>
+      <span style="color:rgba(255,255,255,0.3)" class="text-[15px] shrink-0 font-light">—</span>
+      <div class="relative flex-1">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[11px] font-bold" style="color:rgba(255,255,255,0.4)">USD</span>
         <input type="number" id="priceMax" placeholder="Máx" min="0"
           oninput="priceMax=this.value?Number(this.value):null;renderResults()"
-          class="w-full sm:w-28 rounded-[12px] pl-10 pr-3 py-2.5 text-sm font-medium outline-none"
-          style="background:#1a2d45;color:#fff;border:1px solid rgba(255,255,255,0.15)"/>
+          class="w-full rounded-[12px] pl-[48px] pr-3 py-2.5 text-[14px] font-medium outline-none transition-all"
+          style="background:rgba(255,255,255,0.07);color:#fff;border:1px solid rgba(255,255,255,0.12)"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sort Row -->
+  <div class="flex mt-2 mb-5">
+    <div class="cdd w-full md:w-[320px]" id="cddSort">
+      <div class="cdd-trigger" id="cddSortTrigger">
+        <span class="cdd-value" id="cddSortValue">Ordenar: Precio menor a mayor</span>
+        <span class="material-symbols-outlined cdd-chevron">expand_more</span>
+      </div>
+      <div class="cdd-panel" id="cddSortPanel">
+        <div class="cdd-option" data-value="relevance">
+          <span style="flex:1" class="truncate">Relevancia</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
+        <div class="cdd-option selected" data-value="price_asc">
+          <span style="flex:1" class="truncate">Precio: menor a mayor</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
+        <div class="cdd-option" data-value="price_desc">
+          <span style="flex:1" class="truncate">Precio: mayor a menor</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
+        <div class="cdd-option" data-value="az">
+          <span style="flex:1" class="truncate">Nombre: A → Z</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
+        <div class="cdd-option" data-value="za">
+          <span style="flex:1" class="truncate">Nombre: Z → A</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
+        <div class="cdd-option" data-value="newest">
+          <span style="flex:1" class="truncate">Más recientes</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Results count -->
-  <div id="resultsInfo" class="text-sm mb-5 hidden" style="color:rgba(255,255,255,0.4)"></div>
+  <div id="resultsInfo" class="text-[13px] mb-3 hidden" style="color:rgba(255,255,255,0.4)"></div>
 
   <!-- Results Grid -->
   <section id="searchResultsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-16">
@@ -120,6 +212,130 @@
 <script src="js/config.js"></script>
 <script src="js/components.js"></script>
 <script src="js/ofertas.js"></script>
+<script>
+// ── Custom Dropdowns ────────────────────────────
+function initCDD(triggerId, panelId, valueId, onChange) {
+  const trigger = document.getElementById(triggerId);
+  const panel   = document.getElementById(panelId);
+  const valueEl = document.getElementById(valueId);
+  if (!trigger || !panel) return;
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = panel.classList.contains('open');
+    // Close all panels first
+    document.querySelectorAll('.cdd-panel').forEach(p => p.classList.remove('open'));
+    document.querySelectorAll('.cdd-trigger').forEach(t => t.classList.remove('open'));
+    if (!isOpen) {
+      panel.classList.add('open');
+      trigger.classList.add('open');
+    }
+  });
+
+  panel.addEventListener('click', (e) => {
+    const opt = e.target.closest('.cdd-option');
+    if (!opt) return;
+    const val = opt.dataset.value;
+    const label = opt.querySelector('.truncate')?.textContent.trim() || opt.textContent.trim().replace('check', '');
+    // Update selected state
+    panel.querySelectorAll('.cdd-option').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+    // Update display
+    if (valueEl) valueEl.textContent = label;
+    // Close
+    panel.classList.remove('open');
+    trigger.classList.remove('open');
+    // Fire callback
+    if (onChange) onChange(val);
+  });
+}
+
+document.addEventListener('click', () => {
+  document.querySelectorAll('.cdd-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.cdd-trigger').forEach(t => t.classList.remove('open'));
+});
+
+// Init each dropdown
+initCDD('cddCountryTrigger', 'cddCountryPanel', 'cddCountryValue', (val) => {
+  activeCategory = val; renderResults();
+});
+initCDD('cddFeatureTrigger', 'cddFeaturePanel', 'cddFeatureValue', (val) => {
+  activeFeature = val; renderResults();
+});
+initCDD('cddSortTrigger', 'cddSortPanel', 'cddSortValue', (val) => {
+  sortBy = val; renderResults();
+});
+
+// Override populateCountrySelect to use custom dropdown with real SVG flags
+const COUNTRY_CODES = {
+  'argentina': 'ar', 'brasil': 'br', 'chile': 'cl', 'peru': 'pe',
+  'perú': 'pe', 'colombia': 'co', 'uruguay': 'uy', 'bolivia': 'bo',
+  'paraguay': 'py', 'ecuador': 'ec', 'venezuela': 've',
+  'mexico': 'mx', 'méxico': 'mx', 'cuba': 'cu', 'jamaica': 'jm',
+  'república dominicana': 'do', 'rep. dominicana': 'do',
+  'costa rica': 'cr', 'panamá': 'pa', 'panama': 'pa',
+  'estados unidos': 'us', 'canadá': 'ca', 'canada': 'ca',
+  'españa': 'es', 'espana': 'es', 'francia': 'fr', 'italia': 'it',
+  'grecia': 'gr', 'portugal': 'pt', 'alemania': 'de', 'suiza': 'ch',
+  'austria': 'at', 'holanda': 'nl', 'países bajos': 'nl', 'paises bajos': 'nl',
+  'bélgica': 'be', 'belgica': 'be',
+  'reino unido': 'gb', 'inglaterra': 'gb', 'irlanda': 'ie',
+  'croacia': 'hr', 'turquía': 'tr', 'turquia': 'tr',
+  'hungría': 'hu', 'hungria': 'hu',
+  'rep. checa': 'cz', 'república checa': 'cz', 'republica checa': 'cz',
+  'noruega': 'no', 'suecia': 'se', 'dinamarca': 'dk', 'finlandia': 'fi',
+  'egipto': 'eg', 'marruecos': 'ma', 'sudáfrica': 'za', 'kenia': 'ke',
+  'japón': 'jp', 'japon': 'jp', 'china': 'cn', 'tailandia': 'th',
+  'indonesia': 'id', 'india': 'in', 'vietnam': 'vn', 'cambodia': 'kh',
+  'emiratos árabes': 'ae', 'dubai': 'ae', 'israel': 'il',
+  'maldivas': 'mv', 'australia': 'au', 'nueva zelanda': 'nz',
+  'antillas holandesas': 'cw'
+};
+function getFlagHtml(country) {
+  const key = (country || '').toLowerCase().trim();
+  const code = COUNTRY_CODES[key];
+  if (code) {
+    return `<img src="https://flagcdn.com/w20/${code}.png" class="cdd-flag" alt="${code}">`;
+  }
+  return `<span class="material-symbols-outlined text-[14px] opacity-50 flex-shrink-0">public</span>`;
+}
+
+window.populateCountrySelect = function() {
+  const panel = document.getElementById('cddCountryPanel');
+  const valueEl = document.getElementById('cddCountryValue');
+  if (!panel || !allOffers) return;
+
+  let eligible = allOffers;
+  if (priceMin !== null) eligible = eligible.filter(p => p.price_usd >= priceMin);
+  if (priceMax !== null) eligible = eligible.filter(p => p.price_usd <= priceMax);
+
+  const countries = [...new Set(
+    eligible.map(p => (p.country || '').trim()).filter(Boolean)
+  )].sort((a, b) => a.localeCompare(b, 'es'));
+
+  panel.innerHTML = '';
+
+  const allOpt = document.createElement('div');
+  allOpt.className = 'cdd-option' + (activeCategory === 'all' ? ' selected' : '');
+  allOpt.dataset.value = 'all';
+  allOpt.innerHTML = `<span style="flex:1" class="truncate">Todos los destinos</span><span class="material-symbols-outlined cdd-check">check</span>`;
+  panel.appendChild(allOpt);
+
+  countries.forEach(c => {
+    const div = document.createElement('div');
+    const isSelected = activeCategory === c;
+    div.className = 'cdd-option' + (isSelected ? ' selected' : '');
+    div.dataset.value = c;
+    div.innerHTML = `${getFlagHtml(c)}<span style="flex:1" class="truncate">${c}</span><span class="material-symbols-outlined cdd-check">check</span>`;
+    panel.appendChild(div);
+  });
+
+  if (activeCategory !== 'all' && valueEl) {
+    const match = countries.find(c => c === activeCategory);
+    if (match) valueEl.textContent = match;
+  }
+};
+</script>
 <script src="js/theme.js"></script>
 </body>
 </html>

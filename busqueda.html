@@ -273,7 +273,7 @@ function initCDD(triggerId, panelId, valueId, onChange) {
     const opt = e.target.closest('.cdd-option');
     if (!opt) return;
     const val = opt.dataset.value;
-    const label = opt.textContent.trim();
+    const label = opt.querySelector('.truncate')?.textContent.trim() || opt.textContent.trim().replace('check', '');
     // Update selected state
     panel.querySelectorAll('.cdd-option').forEach(o => o.classList.remove('selected'));
     opt.classList.add('selected');

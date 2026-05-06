@@ -6,9 +6,11 @@ const LOCAL_API = 'http://localhost:5000/api';
 
 let allOffers = []; // solo paquetes en oferta
 let liveQuery = '';
-let sortBy = 'price_asc'; // por defecto: precio menor a mayor
+let sortBy = 'price_asc';
 let priceMin = null;
 let priceMax = null;
+let activeCategory = 'all';
+let activeFeature = 'all';
 
 const urlParams = new URLSearchParams(window.location.search);
 const urlQ = urlParams.get('q') ? urlParams.get('q').toLowerCase() : '';
@@ -45,6 +47,7 @@ async function loadPackages() {
       if (error) throw error;
       allOffers = data.filter(isOffer);
     }
+    if (window.populateCountrySelect) window.populateCountrySelect();
     renderResults();
   } catch(e) {
     if (grid) grid.innerHTML = '<div class="col-span-full text-center py-10 font-medium" style="color:rgba(255,100,100,0.8)">Error al cargar ofertas. Verificá la conexión.</div>';
@@ -69,6 +72,16 @@ function renderResults() {
   // Rango de precio
   if (priceMin !== null) filtered = filtered.filter(p => Number(p.price_usd) >= priceMin);
   if (priceMax !== null) filtered = filtered.filter(p => Number(p.price_usd) <= priceMax);
+
+  // Categoría (País)
+  if (activeCategory !== 'all') {
+    filtered = filtered.filter(p => p.country === activeCategory);
+  }
+
+  // Feature (Destacados)
+  if (activeFeature === 'destacados') {
+    filtered = filtered.filter(p => p.featured);
+  }
 
   // Ordenamiento
   if (sortBy === 'price_asc') filtered.sort((a, b) => Number(a.price_usd) - Number(b.price_usd));
