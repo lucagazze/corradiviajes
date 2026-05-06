@@ -204,101 +204,25 @@
       </div>
     </div>
 
-    <!-- Right: Form -->
-    <div class="md:col-span-7 p-8 md:p-12" style="background:rgba(255,255,255,0.025)">
-
-      <!-- Success State -->
-      <div id="successState">
-        <div class="w-20 h-20 rounded-full flex items-center justify-center mb-2"
-          style="background:rgba(74,222,128,0.12);border:2px solid rgba(74,222,128,0.3)">
-          <span class="material-symbols-outlined text-[38px]" style="color:#4ade80;font-variation-settings:'FILL' 1">check_circle</span>
-        </div>
-        <h3 class="font-bold text-[24px] mb-2">¡Mensaje enviado!</h3>
-        <p class="text-[15px] max-w-xs mx-auto" style="color:rgba(255,255,255,0.55)">
-          Gracias por escribirnos. Un asesor de Corradi Viajes te va a responder muy pronto.
-        </p>
-        <button onclick="resetForm()"
-          class="mt-6 flex items-center gap-2 font-semibold text-sm px-6 py-3 rounded-full transition-all hover:opacity-90 active:scale-95"
-          style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:rgba(255,255,255,0.8)">
-          <span class="material-symbols-outlined text-[16px]">refresh</span>
-          Enviar otra consulta
-        </button>
+    <!-- Right: WhatsApp CTA -->
+    <div class="md:col-span-7 p-8 md:p-16 flex flex-col items-center justify-center text-center" style="background:rgba(255,255,255,0.025)">
+      <div class="w-24 h-24 rounded-full flex items-center justify-center mb-6"
+        style="background:rgba(37,211,102,0.12);border:2px solid rgba(37,211,102,0.3)">
+        <span class="material-symbols-outlined text-[42px]" style="color:#25d366;font-variation-settings:'FILL' 1">chat</span>
       </div>
-
-      <!-- Form State -->
-      <div id="formState">
-        <h3 class="font-bold text-[20px] mb-1">Envianos tu consulta</h3>
-        <p class="text-[14px] mb-7" style="color:rgba(255,255,255,0.4)">Completá los datos y te respondemos a la brevedad.</p>
-
-        <form id="contactForm" class="flex flex-col gap-5" novalidate>
-
-          <!-- Row 1: Nombre + Email -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="fl">Nombre *</label>
-              <input type="text" name="name" id="fName" required class="fi" placeholder="Tu nombre completo">
-            </div>
-            <div>
-              <label class="fl">Email *</label>
-              <input type="email" name="email" id="fEmail" required class="fi" placeholder="tu@email.com">
-            </div>
-          </div>
-
-          <!-- Row 2: Teléfono + Personas -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="fl">Teléfono</label>
-              <input type="tel" name="phone" id="fPhone" class="fi" placeholder="+54 9 341 ...">
-            </div>
-            <div>
-              <label class="fl">Personas</label>
-              <select name="people" id="fPeople" class="fi">
-                <option value="">¿Cuántos viajan?</option>
-                <option value="1">Solo (1 persona)</option>
-                <option value="2">En pareja (2)</option>
-                <option value="3-4">Grupo pequeño (3–4)</option>
-                <option value="5-8">Grupo mediano (5–8)</option>
-                <option value="9+">Grupo grande (9+)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Row 3: Destino + Fecha tentativa -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="fl">Destino soñado</label>
-              <input type="text" name="destination" id="fDestination" class="fi" placeholder="Ej: Europa, Caribe, Japón…">
-            </div>
-            <div>
-              <label class="fl">Fecha tentativa</label>
-              <input type="text" name="departure_date" id="fDate" class="fi" placeholder="Ej: Julio 2025">
-            </div>
-          </div>
-
-          <!-- Row 4: Mensaje -->
-          <div>
-            <label class="fl">Mensaje *</label>
-            <textarea name="message" id="fMessage" rows="5" required class="fi" style="resize:none;min-height:120px;line-height:1.6"
-              placeholder="Contanos más sobre el viaje que tenés en mente…"></textarea>
-          </div>
-
-          <!-- Error message -->
-          <div id="formError" class="hidden text-[13px] font-medium px-4 py-3 rounded-[10px]"
-            style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);color:#f87171"></div>
-
-          <!-- Submit -->
-          <div class="flex items-center justify-between gap-4 flex-wrap pt-1">
-            <p class="text-[12px]" style="color:rgba(255,255,255,0.3)">* Campos obligatorios</p>
-            <button type="submit" id="btnSubmit"
-              class="flex items-center gap-2 font-semibold text-sm px-8 py-3.5 rounded-full transition-all active:scale-95 hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
-              style="background:linear-gradient(135deg,#2563eb,#3778b8);color:#fff;box-shadow:0 4px 18px rgba(37,99,235,0.35)">
-              <span id="btnIcon" class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">send</span>
-              <span id="btnText">Enviar mensaje</span>
-            </button>
-          </div>
-
-        </form>
-      </div>
+      <h3 class="font-bold text-[30px] md:text-[34px] mb-4">Atención Inmediata</h3>
+      <p class="text-[16px] md:text-[18px] max-w-md mx-auto mb-10 leading-relaxed" style="color:rgba(255,255,255,0.65)">
+        Dejanos tu consulta por WhatsApp y un asesor especializado te va a responder a la brevedad para armar tu viaje a medida.
+      </p>
+      <a id="ctcWaBtnBig" href="#" target="_blank" rel="noopener"
+        class="flex items-center gap-3 font-semibold text-[17px] md:text-[19px] px-8 py-4 md:px-10 md:py-5 rounded-full transition-all active:scale-95 hover:scale-105"
+        style="background:#25D366;color:#fff;box-shadow:0 8px 30px rgba(37,211,102,0.4)">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+          <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.556 4.122 1.528 5.855L.057 23.882a.75.75 0 0 0 .923.923l6.042-1.464A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.524-5.225-1.435l-.374-.223-3.878.94.965-3.87-.245-.385A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+        </svg>
+        Chateá con un asesor
+      </a>
     </div>
 
   </div>
@@ -376,72 +300,8 @@ const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Set WhatsApp link from config
 document.getElementById('ctcWaBtn').href = typeof whatsappLink === 'function' ? whatsappLink() : `https://wa.me/${WHATSAPP_NUMBER}`;
-
-// Form submission
-document.getElementById('contactForm').addEventListener('submit', async function(e) {
-  e.preventDefault();
-
-  const name    = document.getElementById('fName').value.trim();
-  const email   = document.getElementById('fEmail').value.trim();
-  const message = document.getElementById('fMessage').value.trim();
-
-  const errEl = document.getElementById('formError');
-  errEl.classList.add('hidden');
-
-  if (!name || !email || !message) {
-    errEl.textContent = 'Por favor completá nombre, email y mensaje.';
-    errEl.classList.remove('hidden');
-    return;
-  }
-  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRe.test(email)) {
-    errEl.textContent = 'El email ingresado no parece válido.';
-    errEl.classList.remove('hidden');
-    return;
-  }
-
-  const btn      = document.getElementById('btnSubmit');
-  const btnText  = document.getElementById('btnText');
-  const btnIcon  = document.getElementById('btnIcon');
-
-  btn.disabled = true;
-  btnIcon.outerHTML = '<div class="spinner" id="btnIcon"></div>';
-  btnText.textContent = 'Enviando…';
-
-  const payload = {
-    name,
-    email,
-    phone:          document.getElementById('fPhone').value.trim() || null,
-    people:         document.getElementById('fPeople').value || null,
-    destination:    document.getElementById('fDestination').value.trim() || null,
-    departure_date: document.getElementById('fDate').value.trim() || null,
-    message,
-    read: false,
-  };
-
-  const { error } = await db.from('corradi_contacts').insert(payload);
-
-  // Restore button
-  btn.disabled = false;
-  document.getElementById('btnIcon').outerHTML = '<span id="btnIcon" class="material-symbols-outlined text-[16px]" style="font-variation-settings:\'FILL\' 1">send</span>';
-  document.getElementById('btnText').textContent = 'Enviar mensaje';
-
-  if (error) {
-    errEl.textContent = 'Hubo un error al enviar el mensaje. Por favor intentá de nuevo.';
-    errEl.classList.remove('hidden');
-    return;
-  }
-
-  // Show success
-  document.getElementById('formState').classList.add('hidden-form');
-  document.getElementById('successState').classList.add('show');
-});
-
-function resetForm() {
-  document.getElementById('contactForm').reset();
-  document.getElementById('formError').classList.add('hidden');
-  document.getElementById('formState').classList.remove('hidden-form');
-  document.getElementById('successState').classList.remove('show');
+if (document.getElementById('ctcWaBtnBig')) {
+  document.getElementById('ctcWaBtnBig').href = typeof whatsappLink === 'function' ? whatsappLink() : `https://wa.me/${WHATSAPP_NUMBER}`;
 }
 
 // FAQ accordion

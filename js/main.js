@@ -393,7 +393,7 @@ function triggerSearch() {
   const price = document.getElementById('searchPrice')?.value || '';
 
   const params = new URLSearchParams();
-  if (q) params.append('q', q);
+  if (q) params.append('country', q);
   if (month) params.append('month', month);
   if (price) params.append('price', price);
 
