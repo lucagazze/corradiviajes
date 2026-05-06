@@ -59,7 +59,11 @@
   .itinerary-html br { display:block; margin:2px 0; }
 
   .package-hero{position:relative;overflow:hidden;border-radius:32px;min-height:480px;max-height:720px;box-shadow:0 30px 80px rgba(0,0,0,0.25);width:100%;}
-  .package-hero img.package-hero__bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.75) saturate(1.08);transition:transform .7s ease;}
+  .package-hero__slider { display:flex; width:100%; height:100%; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -ms-overflow-style:none; cursor:grab; position:absolute; inset:0; }
+  .package-hero__slider::-webkit-scrollbar { display:none; }
+  .package-hero__slider:active { cursor:grabbing; }
+  .package-hero__slide { flex:0 0 100%; width:100%; height:100%; scroll-snap-align:start; position:relative; overflow:hidden; }
+  .package-hero img.package-hero__bg{width:100%;height:100%;object-fit:cover;filter:brightness(.75) saturate(1.08);transition:transform .7s ease;}
   .package-hero:hover img.package-hero__bg{transform:scale(1.04);}
   .gallery-navigation{position:absolute;top:50%;left:0;right:0;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none;padding:0 24px;z-index:3;}
   .gallery-navigation button{pointer-events:auto;width:50px;height:50px;border-radius:999px;border:none;background:rgba(255,255,255,.88);color:#0b172d;display:flex;align-items:center;justify-content:center;box-shadow:0 18px 38px rgba(0,0,0,.18);transition:transform .2s ease;}
@@ -350,13 +354,13 @@ function lbNext() { lbIdx = (lbIdx + 1) % lbImages.length; updateLightbox(); }
 function setHeroImage(index) {
   if (!lbImages.length) return;
   lbIdx = (index + lbImages.length) % lbImages.length;
-  const heroImg = document.querySelector('.package-hero__bg');
-  if (!heroImg) return;
-  heroImg.style.opacity = '0.35';
-  setTimeout(() => {
-    heroImg.src = lbImages[lbIdx];
-    heroImg.style.opacity = '1';
-  }, 120);
+  const slider = document.querySelector('.package-hero__slider');
+  if (slider) {
+    slider.scrollTo({
+      left: slider.offsetWidth * lbIdx,
+      behavior: 'smooth'
+    });
+  }
   renderThumbs();
 }
 function prevImg() { setHeroImage(lbIdx - 1); }
@@ -404,8 +408,14 @@ function buildGallery(images, pkg) {
   const titleText = pkg ? sanitize(pkg.name) : 'Paquete destacado';
 
   grid.innerHTML = `
-    <div class="package-hero" style="cursor:${images.length > 1 ? 'pointer' : 'default'}" onclick="openLightbox(lbIdx)">
-      <img src="${images[0]}" alt="${titleText}" class="package-hero__bg" style="transition:opacity .15s ease,transform .7s ease"/>
+    <div class="package-hero">
+      <div class="package-hero__slider" id="heroSlider" onclick="if(Math.abs(this.dataset.scrollStart - this.scrollLeft) < 5) openLightbox(lbIdx)">
+        ${images.map((img, i) => `
+          <div class="package-hero__slide">
+            <img src="${img}" alt="${titleText} ${i+1}" class="package-hero__bg"/>
+          </div>
+        `).join('')}
+      </div>
       ${images.length > 1 ? `
       <div class="gallery-navigation">
         <button type="button" onclick="event.stopPropagation();prevImg()"><span class="material-symbols-outlined">chevron_left</span></button>
@@ -414,17 +424,24 @@ function buildGallery(images, pkg) {
       ${images.length > 1 ? `<span class="photo-counter absolute bottom-4 left-4 text-[12px] font-medium px-3 py-1 rounded-full" style="background:rgba(0,0,0,0.45);color:#ffffff;backdrop-filter:blur(6px)"><span class="material-symbols-outlined text-[14px] align-middle" style="vertical-align:-2px">photo_library</span> ${images.length} fotos</span>` : ''}
     </div>`;
 
+  const slider = document.getElementById('heroSlider');
+  if (slider) {
+    slider.addEventListener('mousedown', () => slider.dataset.scrollStart = slider.scrollLeft);
+    slider.addEventListener('scroll', () => {
+      const idx = Math.round(slider.scrollLeft / slider.offsetWidth);
+      if (idx !== lbIdx) {
+        lbIdx = idx;
+        renderThumbs();
+      }
+    });
+  }
+
   // Mostrar miniaturas si hay más de 1 imagen
   if (images.length > 1) {
     const thumbsEl = document.getElementById('galleryThumbs');
     if (thumbsEl) {
       thumbsEl.classList.remove('hidden');
       renderThumbs();
-    }
-    // Init swipe for Hero
-    const heroEl = grid.querySelector('.package-hero');
-    if (heroEl) {
-      initSwipe(heroEl, nextImg, prevImg);
     }
   }
 }
