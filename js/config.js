@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const style = document.createElement('style');
   style.textContent = `
     #waFab {
-      position:fixed; bottom:28px; right:20px; z-index:500;
+      position:fixed; bottom:15px; right:12px; z-index:500;
       width:58px; height:58px; border-radius:50%;
       background:#25D366; color:#fff;
       display:flex; align-items:center; justify-content:center;
