@@ -179,6 +179,7 @@
         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[11px] font-bold" style="color:rgba(255,255,255,0.4)">USD</span>
         <input type="number" id="priceMin" placeholder="Mín" min="0"
           oninput="priceMin=this.value?Number(this.value):null;renderResults()"
+          onkeypress="return event.charCode >= 48 && event.charCode <= 57"
           class="w-full rounded-[12px] pl-[48px] pr-3 py-2.5 text-[14px] font-medium outline-none transition-all"
           style="background:rgba(255,255,255,0.07);color:#fff;border:1px solid rgba(255,255,255,0.12)"/>
       </div>
@@ -187,6 +188,7 @@
         <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[11px] font-bold" style="color:rgba(255,255,255,0.4)">USD</span>
         <input type="number" id="priceMax" placeholder="Máx" min="0"
           oninput="priceMax=this.value?Number(this.value):null;renderResults()"
+          onkeypress="return event.charCode >= 48 && event.charCode <= 57"
           class="w-full rounded-[12px] pl-[48px] pr-3 py-2.5 text-[14px] font-medium outline-none transition-all"
           style="background:rgba(255,255,255,0.07);color:#fff;border:1px solid rgba(255,255,255,0.12)"/>
       </div>
