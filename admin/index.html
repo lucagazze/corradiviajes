@@ -718,64 +718,21 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
       </div><!-- /tab-details -->
 
-      <!-- TAB: Itinerario -->
       <div class="ed-panel" id="tab-itinerary">
         <div class="form-section">
-          <div class="form-section-title"><span class="ms material-symbols-outlined">route</span>Itinerario</div>
-          <!-- Toolbar -->
-          <div class="rich-toolbar" id="richToolbar">
-            <button class="tb-btn" style="font-size:13px;font-weight:700;min-width:34px" onclick="execFmt('formatBlock','h1')" title="Título grande">H1</button>
-            <button class="tb-btn" style="font-size:12px;font-weight:700;min-width:34px" onclick="execFmt('formatBlock','h2')" title="Título de día">H2</button>
-            <button class="tb-btn" style="font-size:11px;font-weight:700;min-width:34px" onclick="execFmt('formatBlock','h3')" title="Subtítulo">H3</button>
-            <div class="tb-sep"></div>
-            <button class="tb-btn" onclick="execFmt('bold')" title="Negrita"><b>B</b></button>
-            <button class="tb-btn" onclick="execFmt('italic')" title="Cursiva"><i style="font-size:13px">I</i></button>
-            <button class="tb-btn" onclick="execFmt('underline')" title="Subrayado"><u style="font-size:12px">U</u></button>
-            <button class="tb-btn" onclick="execFmt('hiliteColor','#3778b8')" title="Resaltar azul" style="font-size:11px;background:rgba(55,120,184,0.25)">▌Az</button>
-            <button class="tb-btn" onclick="execFmt('hiliteColor','#d97706')" title="Resaltar naranja" style="font-size:11px;background:rgba(217,119,6,0.2)">▌Or</button>
-            <button class="tb-btn" onclick="execFmt('hiliteColor','transparent')" title="Quitar resaltado" style="font-size:11px">✕▌</button>
-            <div class="tb-sep"></div>
-            <button class="tb-btn" onclick="execFmt('insertUnorderedList')" title="Lista con puntos">
-              <span class="material-symbols-outlined" style="font-size:16px">format_list_bulleted</span>
-            </button>
-            <button class="tb-btn" onclick="execFmt('insertOrderedList')" title="Lista numerada">
-              <span class="material-symbols-outlined" style="font-size:16px">format_list_numbered</span>
-            </button>
-            <button class="tb-btn" onclick="execFmt('outdent')" title="Menos sangría">
-              <span class="material-symbols-outlined" style="font-size:16px">format_indent_decrease</span>
-            </button>
-            <button class="tb-btn" onclick="execFmt('indent')" title="Más sangría">
-              <span class="material-symbols-outlined" style="font-size:16px">format_indent_increase</span>
-            </button>
-            <div class="tb-sep"></div>
-            <button class="tb-btn" onclick="execFmt('fontSize','4')" title="Texto grande" style="font-size:14px;font-weight:600">A+</button>
-            <button class="tb-btn" onclick="execFmt('fontSize','3')" title="Texto normal" style="font-size:12px;font-weight:500">A</button>
-            <button class="tb-btn" onclick="execFmt('fontSize','2')" title="Texto pequeño" style="font-size:10px;font-weight:500">A−</button>
-            <div class="tb-sep"></div>
-            <button class="tb-btn" onclick="insertRichText('─────────────<br>')" title="Separador" style="font-size:13px;min-width:32px">───</button>
-            <div class="tb-sep"></div>
-            <div style="position:relative">
-              <button class="tb-btn" id="emojiTrigger" onclick="toggleEmojiPicker(event)" title="Insertar emoji" style="font-size:16px;min-width:36px">😊</button>
-              <div class="emoji-popup" id="emojiPopup">
-                <div class="emoji-grid" id="emojiGrid"></div>
-              </div>
-            </div>
-            <div class="tb-sep"></div>
-            <button class="tb-btn" onclick="execFmt('undo')" title="Deshacer">
-              <span class="material-symbols-outlined" style="font-size:15px">undo</span>
-            </button>
-            <button class="tb-btn" onclick="execFmt('redo')" title="Rehacer">
-              <span class="material-symbols-outlined" style="font-size:15px">redo</span>
-            </button>
-            <button class="tb-btn" onclick="execFmt('removeFormat')" title="Quitar formato">
-              <span class="material-symbols-outlined" style="font-size:15px">format_clear</span>
-            </button>
+          <div class="form-section-title"><span class="ms material-symbols-outlined">route</span>Itinerario día por día</div>
+          <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;margin-top:-8px">
+            Ingresá el día a la izquierda (ej: Día 1) y la descripción a la derecha. Se guardará automáticamente con formato resaltado.
+          </p>
+          
+          <div id="itineraryRows" class="flex flex-col gap-3">
+            <!-- Dynamic rows will be rendered here -->
           </div>
-          <!-- Contenteditable editor -->
-          <div id="richItinerary" class="rich-editor" contenteditable="true"
-            data-placeholder="Escribí el itinerario día a día. Usá H2 para cada día, negrita para lugares destacados, listas para actividades…"
-            spellcheck="false"
-            onkeydown="richEditorKeydown(event)"></div>
+          
+          <button type="button" class="add-gal" onclick="addItineraryRow()" style="margin-top:15px; border-style: solid; border-color: #3778b8; color: #7ab3e0">
+            <span class="ms material-symbols-outlined" style="font-size:18px">add_circle</span>
+            Agregar un día al itinerario
+          </button>
         </div>
       </div><!-- /tab-itinerary -->
 
@@ -1207,17 +1164,9 @@ function openEditor(pkgId) {
   renderBullets('includes');
   renderBullets('excludes');
 
-  // Rich itinerary
-  const itin = p?.itinerary;
-  let itinHtml = '';
-  if (typeof itin === 'string' && itin.trim()) {
-    if (itin.includes('<') && itin.includes('>')) itinHtml = itin;
-    else itinHtml = markdownToHtml(itin);
-  } else if (Array.isArray(itin) && itin.length) {
-    itinHtml = markdownToHtml(itin.map(d=>`## ${d.title||'Día'}\n${d.description||''}`).join('\n\n'));
-  }
-  const richEl = document.getElementById('richItinerary');
-  if (richEl) richEl.innerHTML = itinHtml;
+  // Itinerary items
+  itineraryItems = parseItinerary(p?.itinerary || '');
+  renderItineraryRows();
 
   previewMain(p?.image_url||'');
   let imgs = [];
@@ -1361,7 +1310,7 @@ async function savePackage() {
     highlights:  document.getElementById('fHighlights').value.trim()||null,
     includes:    getBulletsText('includes')||null,
     excludes:    getBulletsText('excludes')||null,
-    itinerary:   (document.getElementById('richItinerary')?.innerHTML||'').trim()||null,
+    itinerary:   serializeItinerary(),
   };
 
   let res;
@@ -1496,6 +1445,79 @@ function parseBullets(text) {
   return text.split('\n')
     .map(l => l.replace(/^[\s•\-\*✓✗✔►→]+\s*/, '').trim())
     .filter(l => l.length > 0);
+}
+
+// ── ITINERARY STRUCTURED EDITOR ──
+let itineraryItems = [];
+
+function renderItineraryRows() {
+  const container = document.getElementById('itineraryRows');
+  if (!container) return;
+  
+  if (itineraryItems.length === 0) {
+    container.innerHTML = `<div class="empty" style="padding:20px"><p>No hay días cargados</p></div>`;
+    return;
+  }
+
+  container.innerHTML = itineraryItems.map((item, index) => `
+    <div class="itinerary-row" style="display:grid; grid-template-columns: 120px 1fr 36px; gap: 12px; margin-bottom: 8px; align-items: start;">
+      <div class="fg">
+        <input type="text" class="fi" value="${item.day}" placeholder="Día X" 
+          oninput="itineraryItems[${index}].day = this.value" style="font-weight: 700;">
+      </div>
+      <div class="fg">
+        <textarea class="ft" style="min-height: 70px; line-height: 1.5; font-size: 13.5px;" 
+          placeholder="Descripción de las actividades de este día..." 
+          oninput="itineraryItems[${index}].desc = this.value">${item.desc}</textarea>
+      </div>
+      <button type="button" class="bullet-rm" onclick="removeItineraryRow(${index})" style="margin-top: 6px; width: 36px; height: 36px;">
+        <span class="ms material-symbols-outlined" style="font-size: 18px">delete</span>
+      </button>
+    </div>
+  `).join('');
+}
+
+function addItineraryRow() {
+  const nextNum = itineraryItems.length + 1;
+  itineraryItems.push({ day: `Día ${nextNum}`, desc: '' });
+  renderItineraryRows();
+}
+
+function removeItineraryRow(index) {
+  itineraryItems.splice(index, 1);
+  renderItineraryRows();
+}
+
+function parseItinerary(text) {
+  if (!text) return [];
+  // Detect if it's the new format (with <strong>) or legacy
+  // Split by double line break or <br><br>
+  const parts = text.split(/<br\s*\/?>\s*<br\s*\/?>|\n\n/gi);
+  return parts.map(p => {
+    // Check for "<strong>Día X</strong> — Description" or "Día X — Description"
+    const match = p.match(/^(?:<strong>)?(D[íi]a\s*\d+)(?:<\/strong>)?\s*[—\-:]?\s*(.*)/is);
+    if (match) {
+      return { 
+        day: match[1].trim(), 
+        desc: match[2].replace(/<br\s*\/?>/gi, '\n').replace(/<\/?[^>]+(>|$)/g, "").trim() 
+      };
+    }
+    // Fallback: entire part as description
+    return { day: '', desc: p.replace(/<\/?[^>]+(>|$)/g, "").trim() };
+  }).filter(x => x.day || x.desc);
+}
+
+function serializeItinerary() {
+  if (!itineraryItems.length) return null;
+  return itineraryItems
+    .filter(it => it.day.trim() || it.desc.trim())
+    .map(it => {
+      const day = it.day.trim();
+      const desc = it.desc.trim().replace(/\n/g, '<br>');
+      if (day) return `<div style="margin-bottom: 24px;"><strong>${day}</strong> — ${desc}</div>`;
+      return `<div style="margin-bottom: 24px;">${desc}</div>`;
+    })
+    .join('');
 }
 
 function renderBullets(type) {
