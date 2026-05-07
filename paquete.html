@@ -98,6 +98,7 @@
     border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1) !important;
   }
+  .pkg-include-item, .pkg-exclude-item, .pkg-sidebar-item { color: rgba(255,255,255,0.9); }
   html[data-theme="light"] #mobileStickyPrice { color: #0f172a !important; }
   html[data-theme="light"] #mobileStickyBar span.text-white\/40 { color: rgba(0, 0, 0, 0.45) !important; }
   html[data-theme="light"] #mobileStickyBtn { color: #ffffff !important; }
@@ -105,6 +106,17 @@
   html[data-theme="light"] #waConsultBtn svg { color: #ffffff !important; fill: #ffffff !important; }
   html[data-theme="light"] #waConsultBtnMobile { color: #ffffff !important; }
   html[data-theme="light"] #waConsultBtnMobile svg { color: #ffffff !important; fill: #ffffff !important; }
+
+  /* Light mode text contrast for lists and trust items */
+  html[data-theme="light"] #pkgIncludes div,
+  html[data-theme="light"] #pkgExcludes div,
+  html[data-theme="light"] #pkgIncludesList li,
+  html[data-theme="light"] #pkgIncludesListMobile li,
+  html[data-theme="light"] #pkgIncludesWidgetMobile div,
+  html[data-theme="light"] .lg\:col-span-4 .flex.flex-col.gap-2\.5 div { 
+    color: #444444 !important; 
+    font-weight: 500 !important;
+  }
 </style>
 </head>
 <body style="background:#0d1b2e;color:#fff" class="antialiased overflow-x-hidden min-h-screen font-['Geomanist','Plus_Jakarta_Sans',sans-serif]">
@@ -627,13 +639,13 @@ function buildGallery(images, pkg) {
     if (includesLines.length) {
       document.getElementById('pkgIncludesBlock').classList.remove('hidden');
       document.getElementById('pkgIncludes').innerHTML = includesLines.map(l =>
-        `<div class="flex items-start gap-2.5 text-[15.5px] leading-relaxed" style="color:rgba(255,255,255,0.85)">
+        `<div class="flex items-start gap-2.5 text-[15.5px] leading-relaxed pkg-include-item">
           <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5" style="color:#4ade80">check</span>${l}
         </div>`).join('');
       if (excludesLines.length) {
         document.getElementById('pkgExcludesWrapper').classList.remove('hidden');
         document.getElementById('pkgExcludes').innerHTML = excludesLines.map(l =>
-          `<div class="flex items-start gap-2.5 text-[15.5px] leading-relaxed" style="color:rgba(255,255,255,0.85)">
+          `<div class="flex items-start gap-2.5 text-[15.5px] leading-relaxed pkg-exclude-item">
             <span class="material-symbols-outlined text-[18px] shrink-0 mt-0.5" style="color:#f87171">close</span>${l}
           </div>`).join('');
       }
@@ -703,8 +715,8 @@ function buildGallery(images, pkg) {
       if (widget && list) {
         widget.classList.remove('hidden');
         const show = includesLines.slice(0, 5);
-        const listHtml = show.map(l => `<li class="flex items-start gap-2.5 text-[13.5px] leading-tight" style="color:rgba(255,255,255,0.95)"><span class="material-symbols-outlined text-[16px] shrink-0 mt-0.5" style="color:#4ade80">check</span>${l}</li>`).join('');
-        const extraHtml = includesLines.length > 5 ? `<li class="text-[13px] mt-1 font-medium" style="color:rgba(255,255,255,0.6)">+${includesLines.length - 5} más</li>` : '';
+        const listHtml = show.map(l => `<li class="flex items-start gap-2.5 text-[13.5px] leading-tight pkg-sidebar-item"><span class="material-symbols-outlined text-[16px] shrink-0 mt-0.5" style="color:#4ade80">check</span>${l}</li>`).join('');
+        const extraHtml = includesLines.length > 5 ? `<li class="text-[13px] mt-1 font-semibold" style="color:rgba(255,255,255,0.6)">+${includesLines.length - 5} más</li>` : '';
         
         list.innerHTML = listHtml + extraHtml;
         
