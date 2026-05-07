@@ -74,6 +74,32 @@
     .gallery-navigation button { width: 36px; height: 36px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
     .gallery-navigation button span { font-size: 20px; }
   }
+
+  /* Mobile Sticky Bar styling */
+  #mobileStickyBar {
+    background: rgba(13, 27, 46, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  #mobileStickyBar.show { transform: translateY(0); }
+  
+  @media(max-width: 1023px) {
+    #waFab { display: none !important; }
+    body { padding-bottom: 90px; } /* Space for the sticky bar */
+  }
+
+  /* Light mode overrides for Sticky Bar */
+  html[data-theme="light"] #mobileStickyBar {
+    background: rgba(255, 255, 255, 0.92) !important;
+    border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.1) !important;
+  }
+  html[data-theme="light"] #mobileStickyPrice { color: #0f172a !important; }
+  html[data-theme="light"] #mobileStickyBar span.text-white\/40 { color: rgba(0, 0, 0, 0.45) !important; }
 </style>
 </head>
 <body style="background:#0d1b2e;color:#fff" class="antialiased overflow-x-hidden min-h-screen font-['Geomanist','Plus_Jakarta_Sans',sans-serif]">
@@ -239,6 +265,48 @@
             </div>
           </div>
         </div>
+        </div>
+      </section>
+
+      <!-- Mobile Summary Section (Before Footer) -->
+      <section class="lg:hidden mt-12 mb-8 rounded-[24px] p-6" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 50px rgba(0,0,0,0.3)">
+        <div class="mb-5">
+          <div class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,0.65)">Desde</div>
+          <div id="pkgPriceMobile" class="font-bold text-[34px] leading-none" style="color:#3778b8">USD 0</div>
+          <div id="pkgPriceOrigMobile" class="hidden font-medium text-[16px] line-through mt-1" style="color:rgba(255,255,255,0.45)"></div>
+        </div>
+
+        <a id="waConsultBtnMobile" href="#" target="_blank" rel="noopener"
+          class="flex items-center justify-center gap-2 w-full font-semibold text-sm px-4 py-3.5 rounded-[12px] mb-4 transition-all hover:opacity-90 active:scale-95"
+          style="background:#25D366;color:#fff;box-shadow:0 4px 14px rgba(37,211,102,0.3)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.556 4.122 1.528 5.855L.057 23.882a.75.75 0 0 0 .923.923l6.042-1.464A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.524-5.225-1.435l-.374-.223-3.878.94.965-3.87-.245-.385A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+          </svg>
+          Consultar por WhatsApp
+        </a>
+
+        <div id="pkgMetaBadgesMobile" class="flex flex-wrap gap-2 mb-5"></div>
+
+        <div id="pkgIncludesWidgetMobile" class="hidden mb-5 pt-5" style="border-top:1px solid rgba(255,255,255,0.08)">
+          <div class="text-[10px] font-semibold uppercase tracking-wider mb-2.5" style="color:rgba(255,255,255,0.4)">Incluye</div>
+          <ul id="pkgIncludesListMobile" class="flex flex-col gap-1.5"></ul>
+        </div>
+
+        <div class="flex flex-col gap-2 pt-4" style="border-top:1px solid rgba(255,255,255,0.07)">
+          <div class="flex items-center gap-2 text-[12px]" style="color:rgba(255,255,255,0.85)">
+            <span class="material-symbols-outlined text-[15px]" style="color:#4ade80;font-variation-settings:'FILL' 1">verified</span>
+            Agencia matriculada · IATA
+          </div>
+          <div class="flex items-center gap-2 text-[12px]" style="color:rgba(255,255,255,0.85)">
+            <span class="material-symbols-outlined text-[15px]" style="color:#7ab3e0;font-variation-settings:'FILL' 1">support_agent</span>
+            Asesoramiento personalizado y gratuito
+          </div>
+          <div class="flex items-center gap-2 text-[12px]" style="color:rgba(255,255,255,0.85)">
+            <span class="material-symbols-outlined text-[15px]" style="color:#fbbf24;font-variation-settings:'FILL' 1">lock</span>
+            Reserva segura y garantizada
+          </div>
+        </div>
       </section>
 
     </div>
@@ -294,6 +362,22 @@
       </div>
     </div>
 
+  </div>
+  
+  <!-- Mobile Sticky Bar -->
+  <div id="mobileStickyBar" class="lg:hidden fixed bottom-0 left-0 right-0 z-[100] px-5 py-4 flex items-center justify-between pb-safe">
+    <div class="flex flex-col">
+      <span class="text-[10px] font-bold uppercase tracking-[0.1em] text-white/40 mb-0.5">Precio desde</span>
+      <span id="mobileStickyPrice" class="text-[20px] font-bold text-white leading-none">USD 0</span>
+    </div>
+    <a id="mobileStickyBtn" href="#" target="_blank" rel="noopener" 
+       class="flex items-center gap-2 bg-[#25D366] text-white font-bold text-[14px] px-6 py-3.5 rounded-[14px] shadow-[0_8px_20px_rgba(37,211,102,0.3)] active:scale-95 transition-all">
+       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+         <path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.556 4.122 1.528 5.855L.057 23.882a.75.75 0 0 0 .923.923l6.042-1.464A11.945 11.945 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.907 0-3.693-.524-5.225-1.435l-.374-.223-3.878.94.965-3.87-.245-.385A9.96 9.96 0 0 1 2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
+       </svg>
+       Consultar por este viaje
+    </a>
   </div>
 </main>
 
@@ -511,13 +595,17 @@ function buildGallery(images, pkg) {
 
     const priceStr = `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}`;
     document.getElementById('pkgPrice').textContent = priceStr;
+    document.getElementById('pkgPriceMobile').textContent = priceStr;
 
     if (pkg.price_original_usd && pkg.price_original_usd > pkg.price_usd) {
       const origStr = `USD ${Number(pkg.price_original_usd).toLocaleString('es-AR')}`;
       document.getElementById('pkgPriceOrig').textContent = origStr;
       document.getElementById('pkgPriceOrig').classList.remove('hidden');
+      document.getElementById('pkgPriceOrigMobile').textContent = origStr;
+      document.getElementById('pkgPriceOrigMobile').classList.remove('hidden');
     } else {
       document.getElementById('pkgPriceOrig').classList.add('hidden');
+      document.getElementById('pkgPriceOrigMobile').classList.add('hidden');
     }
 
     // Days
@@ -578,7 +666,19 @@ function buildGallery(images, pkg) {
     // WhatsApp links
     const waLink = typeof whatsappLink === 'function' ? whatsappLink(pkg.name) : `https://wa.me/${WHATSAPP_NUMBER}`;
     document.getElementById('waConsultBtn').href = waLink;
+    document.getElementById('waConsultBtnMobile').href = waLink;
     if (typeof setWAFabPackage === 'function') setWAFabPackage(pkg.name);
+
+    // Update Mobile Sticky Bar
+    const stickyBar = document.getElementById('mobileStickyBar');
+    const stickyPrice = document.getElementById('mobileStickyPrice');
+    const stickyBtn = document.getElementById('mobileStickyBtn');
+    if (stickyBar && stickyPrice && stickyBtn) {
+      stickyPrice.textContent = priceStr;
+      stickyBtn.href = waLink;
+      // Show bar with a slight delay
+      setTimeout(() => stickyBar.classList.add('show'), 800);
+    }
 
     // Meta badges (days, departure city, custom badge)
     const metaBadges = [];
@@ -587,6 +687,8 @@ function buildGallery(images, pkg) {
     if (pkg.badge) metaBadges.push(`<span class="inline-flex items-center text-[11px] font-bold px-2.5 py-1 rounded-full" style="background:#ef4444;color:#fff">${pkg.badge}</span>`);
     const badgesEl = document.getElementById('pkgMetaBadges');
     if (badgesEl) badgesEl.innerHTML = metaBadges.join('');
+    const badgesElMobile = document.getElementById('pkgMetaBadgesMobile');
+    if (badgesElMobile) badgesElMobile.innerHTML = metaBadges.join('');
 
     // Includes preview in right sidebar
     if (includesLines.length) {
@@ -595,8 +697,17 @@ function buildGallery(images, pkg) {
       if (widget && list) {
         widget.classList.remove('hidden');
         const show = includesLines.slice(0, 5);
-        list.innerHTML = show.map(l => `<li class="flex items-start gap-2 text-[12px]" style="color:rgba(255,255,255,0.9)"><span class="material-symbols-outlined text-[13px] shrink-0 mt-0.5" style="color:#4ade80">check</span>${l}</li>`).join('');
-        if (includesLines.length > 5) list.innerHTML += `<li class="text-[12px] mt-1" style="color:rgba(255,255,255,0.6)">+${includesLines.length - 5} más</li>`;
+        const listHtml = show.map(l => `<li class="flex items-start gap-2 text-[12px]" style="color:rgba(255,255,255,0.9)"><span class="material-symbols-outlined text-[13px] shrink-0 mt-0.5" style="color:#4ade80">check</span>${l}</li>`).join('');
+        const extraHtml = includesLines.length > 5 ? `<li class="text-[12px] mt-1" style="color:rgba(255,255,255,0.6)">+${includesLines.length - 5} más</li>` : '';
+        
+        list.innerHTML = listHtml + extraHtml;
+        
+        const widgetMobile = document.getElementById('pkgIncludesWidgetMobile');
+        const listMobile = document.getElementById('pkgIncludesListMobile');
+        if (widgetMobile && listMobile) {
+          widgetMobile.classList.remove('hidden');
+          listMobile.innerHTML = listHtml + extraHtml;
+        }
       }
     }
 
