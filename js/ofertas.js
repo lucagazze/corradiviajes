@@ -118,7 +118,7 @@ function renderResults() {
         ${p.featured ? '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#fff">Destacado</span>' : ''}
         ${showBadge ? `<span class="absolute top-3 ${p.featured ? 'left-[110px]' : 'left-3'} px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#fff">Oferta</span>` : ''}
         ${discountPct ? `<span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[11px] font-bold" style="background:rgba(239,68,68,0.9);color:#fff">-${discountPct}%</span>` : ''}
-        <span class="absolute bottom-3 right-3 text-[11px] font-medium px-2.5 py-1 rounded-full" style="background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.9);backdrop-filter:blur(8px)">${p.country}</span>
+        <span class="absolute bottom-3 right-3 text-[11px] font-medium px-2.5 py-1 rounded-full" style="background:rgba(255,255,255,0.15);color:#ffffff;backdrop-filter:blur(8px)">${p.country}</span>
       </div>
       <div class="p-4 flex flex-col flex-grow">
         <h3 class="font-bold text-[17px] text-white line-clamp-1 leading-tight mb-1">${p.name}</h3>
