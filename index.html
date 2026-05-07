@@ -396,7 +396,8 @@
   </section>
 
   <!-- Full Width Banner Section -->
-  <section class="w-full relative py-24 md:py-32 flex items-center" style="background-image: url('https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?q=80&w=2000'); background-size: cover; background-position: center; background-attachment: fixed;">
+  <section class="w-full relative py-24 md:py-32 flex items-center overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?q=80&w=2000" alt="Viajes inspiradores" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
     <div class="absolute inset-0 bg-black/60"></div>
     <div class="max-w-7xl mx-auto px-6 w-full relative z-10">
       <div class="w-full md:w-[60%] lg:w-[50%] text-white">
@@ -428,6 +429,9 @@
 
         <!-- Item 2 -->
         <div class="flex flex-col md:flex-row-reverse items-center gap-10">
+          <div class="flex-shrink-0 w-52 h-52 rounded-full overflow-hidden shadow-[0_12px_40px_rgba(55,120,184,0.25)] ring-4 ring-[#3778b8]/20">
+            <img src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?q=80&w=600" alt="Viaje a medida" class="w-full h-full object-cover" loading="lazy" decoding="async">
+          </div>
           <div class="text-center md:text-left">
             <h3 class="font-['Geomanist'] font-medium text-[22px] text-white mb-2">Tu viaje, a tu medida</h3>
             <p class="text-white/60 font-light text-base leading-relaxed max-w-lg">No trabajamos con paquetes genéricos. Cada itinerario se diseña desde cero pensando en vos, en tus tiempos, en tus gustos y en tu presupuesto.</p>
