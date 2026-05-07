@@ -555,31 +555,34 @@ if (mainContactForm) {
 function initFAQ() {
   const faqBtns = document.querySelectorAll('.faq-btn');
   faqBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const item = btn.closest('.faq-item');
       const content = btn.nextElementSibling;
       const icon = btn.querySelector('.faq-icon');
+      const isOpen = item.classList.contains('active');
       
       // Close all other FAQs
       faqBtns.forEach(otherBtn => {
-        if (otherBtn !== btn) {
+        const otherItem = otherBtn.closest('.faq-item');
+        if (otherItem !== item && otherItem.classList.contains('active')) {
           const otherContent = otherBtn.nextElementSibling;
           const otherIcon = otherBtn.querySelector('.faq-icon');
-          if (otherContent) {
-            otherContent.style.maxHeight = null;
-            otherContent.style.opacity = '0';
-          }
-          if (otherIcon) {
-            otherIcon.style.transform = 'rotate(0deg)';
-          }
+          otherItem.classList.remove('active');
+          otherContent.style.maxHeight = '0';
+          otherContent.style.opacity = '0';
+          if (otherIcon) otherIcon.style.transform = 'rotate(0deg)';
         }
       });
       
       // Toggle current FAQ
-      if (content.style.maxHeight) {
-        content.style.maxHeight = null;
+      if (isOpen) {
+        item.classList.remove('active');
+        content.style.maxHeight = '0';
         content.style.opacity = '0';
         if (icon) icon.style.transform = 'rotate(0deg)';
       } else {
+        item.classList.add('active');
         content.style.maxHeight = content.scrollHeight + "px";
         content.style.opacity = '1';
         if (icon) icon.style.transform = 'rotate(180deg)';

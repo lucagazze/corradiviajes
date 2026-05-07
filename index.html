@@ -189,6 +189,13 @@
   .custom-scrollbar-light::-webkit-scrollbar-track { background: transparent; border-radius: 8px; }
   .custom-scrollbar-light::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 8px; }
   .custom-scrollbar-light::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
+
+  /* FAQ Active State */
+  .faq-item.active {
+    border-color: rgba(55, 120, 184, 0.4);
+    background-color: #1e3552;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
 </style>
 </head>
 <body class="text-on-background antialiased selection:bg-primary-container selection:text-on-primary font-body-md text-body-md overflow-x-hidden min-h-screen">
@@ -270,29 +277,29 @@
               <div class="flex flex-col gap-2">
                 <div class="price-option flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors group" data-val="" data-label="Cualquier precio">
                   <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-blue-500">all_inclusive</span>
-                  <span class="text-sm font-medium">Cualquier precio</span>
+                  <span class="text-[15px] font-medium">Cualquier precio</span>
                 </div>
                 <div class="price-option flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors group" data-val="0-800" data-label="Económico (hasta $800)">
                   <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-blue-500">savings</span>
-                  <div><span class="text-sm font-medium block">Económico</span><span class="text-xs text-slate-400">hasta $800</span></div>
+                  <div class="flex items-baseline gap-2"><span class="text-[15px] font-medium">Económico</span><span class="text-xs text-slate-400">hasta $800</span></div>
                 </div>
                 <div class="price-option flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors group" data-val="800-2000" data-label="Moderado ($800 - $2.000)">
                   <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-blue-500">account_balance_wallet</span>
-                  <div><span class="text-sm font-medium block">Moderado</span><span class="text-xs text-slate-400">$800 - $2.000</span></div>
+                  <div class="flex items-baseline gap-2"><span class="text-[15px] font-medium">Moderado</span><span class="text-xs text-slate-400">$800 - $2.000</span></div>
                 </div>
                 <div class="price-option flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors group" data-val="2000-4000" data-label="Premium ($2.000 - $4.000)">
                   <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-blue-500">diamond</span>
-                  <div><span class="text-sm font-medium block">Premium</span><span class="text-xs text-slate-400">$2.000 - $4.000</span></div>
+                  <div class="flex items-baseline gap-2"><span class="text-[15px] font-medium">Premium</span><span class="text-xs text-slate-400">$2.000 - $4.000</span></div>
                 </div>
                 <div class="price-option flex items-center gap-3 py-2.5 px-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 cursor-pointer transition-colors group" data-val="4000+" data-label="Lujo ($4.000+)">
                   <span class="material-symbols-outlined text-[20px] text-slate-400 group-hover:text-blue-500">star</span>
-                  <div><span class="text-sm font-medium block">Lujo</span><span class="text-xs text-slate-400">$4.000+</span></div>
+                  <div class="flex items-baseline gap-2"><span class="text-[15px] font-medium">Lujo</span><span class="text-xs text-slate-400">$4.000+</span></div>
                 </div>
               </div>
             </div>
           </div>
           
-          <button onclick="triggerSearch()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium font-['Geomanist'] text-[12px] md:text-sm px-4 py-2 md:px-6 md:py-2.5 md:rounded-full rounded-[26px] flex items-center justify-center gap-1.5 shadow-[0_6px_20px_rgba(37,99,235,0.35)] hover:shadow-[0_10px_24px_rgba(37,99,235,0.45)] hover:scale-[1.02] transition-all duration-200 mt-2 md:mt-0 active:scale-95">
+          <button onclick="triggerSearch()" class="w-[90%] mx-auto md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-medium font-['Geomanist'] text-[12px] md:text-sm px-4 py-2 md:px-6 md:py-2.5 md:rounded-full rounded-[26px] flex items-center justify-center gap-1.5 shadow-[0_6px_20px_rgba(37,99,235,0.35)] hover:shadow-[0_10px_24px_rgba(37,99,235,0.45)] hover:scale-[1.02] transition-all duration-200 mt-2 md:mt-0 active:scale-95">
             <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">search</span>
             Buscar
           </button>
@@ -396,13 +403,13 @@
   </section>
 
   <!-- Full Width Banner Section -->
-  <section class="w-full relative py-24 md:py-32 flex items-center overflow-hidden">
-    <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?q=80&w=2000" alt="Viajes inspiradores" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
+  <section class="w-full relative py-20 md:py-32 min-h-[300px] md:min-h-[400px] flex items-center overflow-hidden">
+    <img src="https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?q=80&w=2000" alt="Viajes inspiradores" class="absolute inset-0 w-full h-full object-cover object-center" loading="lazy">
     <div class="absolute inset-0 bg-black/60"></div>
     <div class="max-w-7xl mx-auto px-6 w-full relative z-10">
-      <div class="w-full md:w-[60%] lg:w-[50%] text-white">
-        <h2 class="font-['Geomanist'] font-bold text-[36px] md:text-[44px] leading-tight mb-5 drop-shadow-md">Nuestra selección de viajes inspiradores, curados para viajeros como vos.</h2>
-        <p class="font-normal text-white text-[17px] leading-relaxed drop-shadow-md">No hay dos viajes iguales. Tu próximo destino será construido desde cero, artesanalmente y pensado especialmente para vos.</p>
+      <div class="w-full md:w-[60%] lg:w-[50%]">
+        <h2 class="font-['Geomanist'] font-bold text-[36px] md:text-[44px] leading-tight mb-5 drop-shadow-md" style="color: white !important;">Nuestra selección de viajes inspiradores, curados para viajeros como vos.</h2>
+        <p class="font-normal text-[17px] leading-relaxed drop-shadow-md" style="color: white !important;">No hay dos viajes iguales. Tu próximo destino será construido desde cero, artesanalmente y pensado especialmente para vos.</p>
       </div>
     </div>
   </section>
@@ -473,12 +480,12 @@
       <div class="flex flex-col gap-4" id="faqAccordion">
         <!-- FAQ 1 -->
         <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
-          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[16px] text-white focus:outline-none group">
             ¿Cómo es el proceso para armar un viaje a medida?
-            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-500 faq-icon">expand_more</span>
           </button>
-          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
-            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+          <div class="faq-content overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] max-h-0 opacity-0">
+            <div class="px-6 pb-6 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
               Nos contactás contándonos tu idea (destinos, fechas, presupuesto aproximado). Uno de nuestros asesores se comunica con vos para afinar detalles y, en base a eso, diseñamos un itinerario 100% personalizado. Podés hacerle todos los cambios que quieras hasta que quede perfecto.
             </div>
           </div>
@@ -486,12 +493,12 @@
 
         <!-- FAQ 2 -->
         <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
-          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[16px] text-white focus:outline-none group">
             ¿Qué incluyen los paquetes en oferta?
-            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-500 faq-icon">expand_more</span>
           </button>
-          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
-            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+          <div class="faq-content overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] max-h-0 opacity-0">
+            <div class="px-6 pb-6 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
               Nuestras ofertas suelen incluir vuelos, alojamiento, traslados y seguro de asistencia médica. Dependiendo del paquete, también pueden incluir excursiones y comidas. En la descripción de cada oferta detallamos exactamente todo lo que está contemplado.
             </div>
           </div>
@@ -499,12 +506,12 @@
 
         <!-- FAQ 3 -->
         <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
-          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[16px] text-white focus:outline-none group">
             ¿Tienen opciones de financiación?
-            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-500 faq-icon">expand_more</span>
           </button>
-          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
-            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+          <div class="faq-content overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] max-h-0 opacity-0">
+            <div class="px-6 pb-6 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
               Sí, trabajamos con múltiples formas de pago. Podés abonar mediante transferencia bancaria (pesos o dólares), tarjeta de crédito y débito. Contamos con planes de cuotas fijas dependiendo de las promociones bancarias vigentes al momento de la compra.
             </div>
           </div>
@@ -512,12 +519,12 @@
 
         <!-- FAQ 4 -->
         <div class="faq-item bg-[#1a2d45] rounded-[20px] overflow-hidden transition-all duration-300 border border-white/10 hover:border-white/20">
-          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[18px] text-white focus:outline-none">
+          <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between font-['Geomanist'] font-medium text-[16px] text-white focus:outline-none group">
             ¿Ofrecen asistencia durante el viaje?
-            <span class="material-symbols-outlined text-slate-400 transition-transform duration-300 faq-icon">expand_more</span>
+            <span class="material-symbols-outlined text-slate-400 transition-transform duration-500 faq-icon">expand_more</span>
           </button>
-          <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 ease-in-out opacity-0">
-            <div class="px-6 pb-5 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
+          <div class="faq-content overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.4,0,0.2,1)] max-h-0 opacity-0">
+            <div class="px-6 pb-6 pt-1 text-white/60 font-light text-[17px] leading-relaxed">
               Absolutamente. Te acompañamos desde que salís hasta que volvés. Tenés a tu disposición un canal de WhatsApp de emergencias para comunicarte con nuestro equipo en caso de cualquier eventualidad durante tu viaje.
             </div>
           </div>
@@ -573,11 +580,6 @@
           class="flex items-center gap-3 bg-[#25D366] hover:bg-[#20ba5a] text-white font-medium font-['Geomanist'] text-base px-7 py-4 rounded-full transition-all shadow-[0_8px_24px_rgba(37,211,102,0.4)] hover:scale-105 active:scale-95">
           <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
           Escribinos por WhatsApp
-        </a>
-        <a href="contacto.html"
-          class="flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white font-medium font-['Geomanist'] text-base px-7 py-4 rounded-full border border-white/30 transition-all hover:scale-105 active:scale-95">
-          <span class="material-symbols-outlined text-[20px]">mail</span>
-          Enviarnos un mensaje
         </a>
       </div>
     </div>
@@ -661,14 +663,14 @@
         let html = `
           <div class="dest-option flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="all" data-label="Todos los destinos">
             <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-primary">public</span>
-            <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
+            <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
           </div>`;
         
         countries.forEach(c => {
           html += `
             <div class="dest-option flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="${c}" data-label="${c}">
               ${getFlagHtml(c)}
-              <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">${c}</span>
+              <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">${c}</span>
             </div>`;
         });
         // Remove last border
@@ -723,7 +725,7 @@
         let y = currentYear + Math.floor((currentMonth + i) / 12);
         let monthName = months[m];
         let label = `${monthName} ${y}`;
-        html += `<div class="month-option text-center py-2 px-1 rounded-lg hover:bg-blue-50 cursor-pointer text-sm font-medium transition-colors" data-val="${label}">${monthName.substring(0,3)} ${y}</div>`;
+        html += `<div class="month-option text-center py-2 px-1 rounded-lg hover:bg-blue-50 cursor-pointer text-[15px] font-medium transition-colors" data-val="${label}">${monthName.substring(0,3)} ${y}</div>`;
       }
       monthGrid.innerHTML = html;
       monthContainer.addEventListener('click', (e) => {
@@ -854,12 +856,12 @@
         const countries = [...new Set(window.allPackages.map(p => (p.country||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
         let html = `<div class="dest-option2 flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="all" data-label="Todos los destinos">
           <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-primary">public</span>
-          <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
+          <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
         </div>`;
         countries.forEach(c => {
           html += `<div class="dest-option2 flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="${c}" data-label="${c}">
             ${getFlagHtml2(c)}
-            <span class="text-sm font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">${c}</span>
+            <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">${c}</span>
           </div>`;
         });
         destPopover2.innerHTML = html;
@@ -902,7 +904,7 @@
         const m = (curMonth + i) % 12;
         const y = curYear + Math.floor((curMonth + i) / 12);
         const label = `${months[m]} ${y}`;
-        html += `<div class="month-option2 text-center py-2 px-1 rounded-lg hover:bg-blue-50 cursor-pointer text-sm font-medium transition-colors" data-val="${label}">${months[m].substring(0,3)} ${y}</div>`;
+        html += `<div class="month-option2 text-center py-2 px-1 rounded-lg hover:bg-blue-50 cursor-pointer text-[15px] font-medium transition-colors" data-val="${label}">${months[m].substring(0,3)} ${y}</div>`;
       }
       monthGrid2.innerHTML = html;
       monthContainer2.addEventListener('click', e => {
