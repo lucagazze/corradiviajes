@@ -449,19 +449,18 @@ body.light .sb-sub-count{color:rgba(0,0,0,0.4);background:rgba(0,0,0,0.06)}
 .media-card.picker-mode:hover::after{content:'Usar';position:absolute;inset:0;background:rgba(55,120,184,0.55);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;border-radius:12px;pointer-events:none}
 
 /* ── DRAG & DROP ── */
+@keyframes phPop{0%{opacity:0;transform:scale(.92)}100%{opacity:1;transform:scale(1)}}
+@keyframes phGlow{0%,100%{box-shadow:0 0 0 2px rgba(59,130,246,0.3),0 0 18px rgba(59,130,246,0.25)}50%{box-shadow:0 0 0 3px rgba(59,130,246,0.55),0 0 30px rgba(59,130,246,0.45)}}
 .pkg-card[draggable=true],.pkg-list-item[draggable=true]{cursor:grab}
-.pkg-card.dragging{opacity:.35;transform:scale(.95) rotate(-0.5deg);box-shadow:0 24px 50px rgba(0,0,0,0.6);transition:opacity .12s,transform .12s}
-.pkg-list-item.dragging{opacity:.35;transition:opacity .12s}
-/* drop-before: gap + line LEFT (grid) / TOP (list) */
-.pkg-card.drop-before{transform:translateX(8px);transition:transform .12s}
-.pkg-card.drop-before::before{content:'';position:absolute;top:0;bottom:0;left:-10px;width:5px;background:#3b82f6;border-radius:4px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 22px rgba(59,130,246,0.7)}
-.pkg-list-item.drop-before{transform:translateY(5px);transition:transform .12s}
-.pkg-list-item.drop-before::before{content:'';position:absolute;left:0;right:0;top:-4px;height:4px;background:#3b82f6;border-radius:3px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 18px rgba(59,130,246,0.7)}
-/* drop-after: gap + line RIGHT (grid) / BOTTOM (list) */
-.pkg-card.drop-after{transform:translateX(-8px);transition:transform .12s}
-.pkg-card.drop-after::after{content:'';position:absolute;top:0;bottom:0;right:-10px;width:5px;background:#3b82f6;border-radius:4px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 22px rgba(59,130,246,0.7)}
-.pkg-list-item.drop-after{transform:translateY(-5px);transition:transform .12s}
-.pkg-list-item.drop-after::after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:4px;background:#3b82f6;border-radius:3px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 18px rgba(59,130,246,0.7)}
+/* Card being dragged */
+.pkg-card.dragging{opacity:.22;transform:scale(.94) rotate(-1deg);filter:grayscale(.4) blur(.4px);box-shadow:0 40px 70px rgba(0,0,0,0.8);transition:opacity .1s,transform .1s,filter .1s;pointer-events:none;z-index:0}
+.pkg-list-item.dragging{opacity:.22;filter:grayscale(.4);transition:opacity .1s,filter .1s;pointer-events:none}
+/* All other cards dim while dragging */
+body.pkg-dragging .pkg-card:not(.dragging){opacity:.65;transition:opacity .15s}
+body.pkg-dragging .pkg-list-item:not(.dragging){opacity:.65;transition:opacity .15s}
+/* Placeholder card — appears in the exact slot */
+.pkg-drop-placeholder{border-radius:16px;background:rgba(59,130,246,0.07);border:2px dashed rgba(59,130,246,0.5);animation:phPop .14s ease-out,phGlow 1.2s ease-in-out infinite .14s;min-height:260px}
+.pkg-drop-placeholder-list{border-radius:10px;background:rgba(59,130,246,0.07);border:2px dashed rgba(59,130,246,0.5);animation:phPop .14s ease-out,phGlow 1.2s ease-in-out infinite .14s;height:54px}
 .pkg-drag-handle{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:6px;background:rgba(15,25,45,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0.6;transition:opacity .15s;cursor:grab;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
 .pkg-card:hover .pkg-drag-handle{opacity:1}
 .pkg-drag-handle .ms{font-size:14px;color:rgba(255,255,255,0.8)}
@@ -2016,84 +2015,114 @@ function onDragStart(e, id) {
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/plain', id);
   setTimeout(() => {
-    const el = document.querySelector(`[data-id="${id}"]`);
-    el?.classList.add('dragging');
+    document.querySelector(`[data-id="${id}"]`)?.classList.add('dragging');
+    document.body.classList.add('pkg-dragging');
+    document.body.style.cursor = 'grabbing';
   }, 0);
 }
 
 let dropPosition = 'after';
+let dropDestId   = null;
+
+function removePlaceholder() {
+  document.getElementById('pkgDropPh')?.remove();
+}
+
+function cleanupDrag() {
+  removePlaceholder();
+  document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>c.classList.remove('dragging'));
+  document.body.classList.remove('pkg-dragging');
+  document.body.style.cursor = '';
+}
+
+function insertPlaceholder(destId, pos) {
+  const isList = viewMode === 'list';
+  const el = document.querySelector(`[data-id="${destId}"]`);
+  if (!el) return;
+  removePlaceholder();
+  const ph = document.createElement('div');
+  ph.id = 'pkgDropPh';
+  ph.className = isList ? 'pkg-drop-placeholder-list' : 'pkg-drop-placeholder';
+  ph.addEventListener('dragover', ev => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; });
+  ph.addEventListener('drop', ev => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    const src = dragSrcId;
+    const insertIndex = getPhInsertIndex(src);
+    cleanupDrag();
+    dragSrcId  = null;
+    dropDestId = null;
+    if (src && insertIndex >= 0) executeDropByIndex(src, insertIndex);
+  });
+  pos === 'before' ? el.parentNode.insertBefore(ph, el) : el.parentNode.insertBefore(ph, el.nextSibling);
+}
 
 function onDragOver(e, id) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
   if (dragSrcId === id) return;
-  document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>c.classList.remove('drop-before','drop-after'));
   const el = document.querySelector(`[data-id="${id}"]`);
   if (!el) return;
   const rect = el.getBoundingClientRect();
   const isList = viewMode === 'list';
-  dropPosition = isList
+  const newPos = isList
     ? (e.clientY < rect.top + rect.height / 2 ? 'before' : 'after')
     : (e.clientX < rect.left + rect.width  / 2 ? 'before' : 'after');
-  el.classList.add(dropPosition === 'before' ? 'drop-before' : 'drop-after');
+  if (newPos === dropPosition && id === dropDestId) return;
+  dropPosition = newPos;
+  dropDestId   = id;
+  insertPlaceholder(id, newPos);
 }
 
-function onDragLeave(e) {
-  e.currentTarget.classList.remove('drop-before','drop-after');
-}
+function onDragLeave(e) {}
 
 function onDragEnd(e) {
-  document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>{
-    c.classList.remove('dragging','drop-before','drop-after');
-  });
-  dragSrcId = null;
+  cleanupDrag();
+  dragSrcId  = null;
+  dropDestId = null;
+}
+
+function getPhInsertIndex(srcId) {
+  const ph = document.getElementById('pkgDropPh');
+  if (!ph || !ph.parentNode) return -1;
+  let idx = 0;
+  for (const child of ph.parentNode.children) {
+    if (child === ph) return idx;
+    const cid = parseInt(child.dataset.id);
+    if (cid && cid !== srcId) idx++;
+  }
+  return idx;
 }
 
 async function onDrop(e, destId) {
   e.preventDefault();
-  document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>c.classList.remove('drop-before','drop-after','dragging'));
   const srcId = dragSrcId;
-  const pos   = dropPosition;
-  dragSrcId   = null;
-  if (!srcId || srcId === destId) return;
+  const insertIndex = getPhInsertIndex(srcId);
+  cleanupDrag();
+  dragSrcId = null; dropDestId = null;
+  if (!srcId || insertIndex < 0) return;
+  await executeDropByIndex(srcId, insertIndex);
+}
 
-  // Get current visible list (respects all active filters)
+async function executeDropByIndex(srcId, insertIndex) {
   const list = getFilteredPackages();
-  const srcIdx = list.findIndex(p=>p.id===srcId);
+  const srcIdx = list.findIndex(p => p.id === srcId);
   if (srcIdx === -1) return;
-
-  // Remove source from list
   const [moved] = list.splice(srcIdx, 1);
-
-  // Find dest index after splice and insert before/after
-  let destIdx = list.findIndex(p=>p.id===destId);
-  if (destIdx === -1) return;
-  const insertAt = pos === 'before' ? destIdx : destIdx + 1;
-  list.splice(insertAt, 0, moved);
-
-  // Assign new sort_order (1-based) to reordered list
+  const clampedIdx = Math.min(Math.max(insertIndex, 0), list.length);
+  list.splice(clampedIdx, 0, moved);
   list.forEach((p, i) => { p.sort_order = i + 1; });
-  // Update global packages array too
-  list.forEach(p => {
-    const g = packages.find(x=>x.id===p.id);
-    if (g) g.sort_order = p.sort_order;
-  });
-
-  // Switch to manual sort to reflect the change
+  list.forEach(p => { const g = packages.find(x => x.id === p.id); if (g) g.sort_order = p.sort_order; });
   const sortEl = document.getElementById('filterSort');
   if (sortEl) sortEl.value = 'manual';
-
   renderPkgView();
-
   if (isSavingOrder) return;
   isSavingOrder = true;
   try {
-    await Promise.all(list.map(p=>
-      db.from('corradi_packages').update({sort_order: p.sort_order}).eq('id', p.id)
-    ));
-    showToast('Orden guardado ✓','success');
+    await Promise.all(list.map(p => db.from('corradi_packages').update({ sort_order: p.sort_order }).eq('id', p.id)));
+    showToast('Orden guardado ✓', 'success');
   } catch(err) {
-    showToast('Error al guardar orden','error');
+    showToast('Error al guardar orden', 'error');
   } finally {
     isSavingOrder = false;
   }
