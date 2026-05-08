@@ -101,6 +101,14 @@ body.light ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15)}
 body.light .ctx-item{color:#334155}
 body.light #ctxMenu{background:#fff;border-color:rgba(0,0,0,0.1);box-shadow:0 8px 30px rgba(0,0,0,0.15)}
 body.light .ctx-item:hover{background:rgba(0,0,0,0.05)}
+body.light .pkg-view-hint{color:rgba(0,0,0,0.35)}
+body.light .manual-hint{color:#334155;background:rgba(55,120,184,0.07);border-color:rgba(55,120,184,0.2)}
+body.light .afb-label{color:rgba(0,0,0,0.45)}
+body.light .afb-chip{color:#1d4ed8;background:rgba(55,120,184,0.1);border-color:rgba(55,120,184,0.25)}
+body.light .afb-chip-rm{color:#1d4ed8}
+body.light .afb-clear{color:rgba(0,0,0,0.45);background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.12)}
+body.light .pill-inactive{background:rgba(239,68,68,0.08);color:#dc2626;border-color:rgba(239,68,68,0.2)}
+body.light .sb-sub-count{color:rgba(0,0,0,0.4);background:rgba(0,0,0,0.06)}
 
 /* ── LOGIN ── */
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,#1a3a6b 0%,#0b1525 65%)}
@@ -189,12 +197,18 @@ body.light .ctx-item:hover{background:rgba(0,0,0,0.05)}
 .pkg-card.context-open{border-color:#3778b8}
 .pkg-img{width:100%;height:140px;object-fit:cover;display:block;background:rgba(255,255,255,0.04)}
 .pkg-img-placeholder{width:100%;height:140px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.03)}
-.pkg-body{padding:11px 13px}
+.pkg-body{padding:11px 13px 30px}
 .pkg-name{font-size:13px;font-weight:600;margin-bottom:2px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .pkg-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px}
 .pkg-footer{display:flex;align-items:center;justify-content:space-between}
-.pkg-price{font-size:14px;font-weight:700;color:#3778b8}
+.pkg-price{font-size:14px;font-weight:700;color:#3778b8;white-space:nowrap}
 .pkg-card-date{font-size:10px;color:rgba(255,255,255,0.25)}
+.pkg-view-hint{font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;margin-top:-8px}
+.manual-hint{display:flex;align-items:center;gap:7px;background:rgba(55,120,184,0.1);border:1px solid rgba(55,120,184,0.25);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px}
+.afb-label{font-size:11px;color:rgba(255,255,255,0.35);font-weight:600}
+.afb-chip{display:inline-flex;align-items:center;gap:4px;background:rgba(55,120,184,0.15);border:1px solid rgba(55,120,184,0.3);border-radius:20px;padding:3px 10px 3px 12px;font-size:11px;color:#7ab3e0}
+.afb-chip-rm{background:none;border:none;cursor:pointer;color:#7ab3e0;display:flex;align-items:center;padding:0;margin-left:2px;font-family:inherit}
+.afb-clear{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,0.4);cursor:pointer;font-family:inherit}
 .pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
 .pill-active{background:rgba(74,222,128,0.12);color:#4ade80;border:1px solid rgba(74,222,128,0.2)}
 .pill-inactive{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.18)}
@@ -436,15 +450,29 @@ body.light .ctx-item:hover{background:rgba(0,0,0,0.05)}
 
 /* ── DRAG & DROP ── */
 .pkg-card[draggable=true],.pkg-list-item[draggable=true]{cursor:grab}
-.pkg-card.dragging,.pkg-list-item.dragging{opacity:.3;transform:scale(.96)}
-.pkg-card.drag-over,.pkg-list-item.drag-over{outline:none !important;background:rgba(255,255,255,0.04) !important;border-color:rgba(255,255,255,0.08) !important}
-.pkg-card.drag-over::before,.pkg-list-item.drag-over::before{content:'';position:absolute;left:0;right:0;top:-3px;height:3px;background:#3778b8;border-radius:3px;z-index:10;box-shadow:0 0 10px rgba(55,120,184,0.8)}
+.pkg-card.dragging{opacity:.35;transform:scale(.95) rotate(-0.5deg);box-shadow:0 24px 50px rgba(0,0,0,0.6);transition:opacity .12s,transform .12s}
+.pkg-list-item.dragging{opacity:.35;transition:opacity .12s}
+/* drop-before: gap + line LEFT (grid) / TOP (list) */
+.pkg-card.drop-before{transform:translateX(8px);transition:transform .12s}
+.pkg-card.drop-before::before{content:'';position:absolute;top:0;bottom:0;left:-10px;width:5px;background:#3b82f6;border-radius:4px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 22px rgba(59,130,246,0.7)}
+.pkg-list-item.drop-before{transform:translateY(5px);transition:transform .12s}
+.pkg-list-item.drop-before::before{content:'';position:absolute;left:0;right:0;top:-4px;height:4px;background:#3b82f6;border-radius:3px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 18px rgba(59,130,246,0.7)}
+/* drop-after: gap + line RIGHT (grid) / BOTTOM (list) */
+.pkg-card.drop-after{transform:translateX(-8px);transition:transform .12s}
+.pkg-card.drop-after::after{content:'';position:absolute;top:0;bottom:0;right:-10px;width:5px;background:#3b82f6;border-radius:4px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 22px rgba(59,130,246,0.7)}
+.pkg-list-item.drop-after{transform:translateY(-5px);transition:transform .12s}
+.pkg-list-item.drop-after::after{content:'';position:absolute;left:0;right:0;bottom:-4px;height:4px;background:#3b82f6;border-radius:3px;z-index:20;box-shadow:0 0 0 3px rgba(59,130,246,0.2),0 0 18px rgba(59,130,246,0.7)}
 .pkg-drag-handle{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:6px;background:rgba(15,25,45,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0.6;transition:opacity .15s;cursor:grab;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
 .pkg-card:hover .pkg-drag-handle{opacity:1}
 .pkg-drag-handle .ms{font-size:14px;color:rgba(255,255,255,0.8)}
 .drag-list-handle{display:flex;align-items:center;justify-content:center;padding:0 4px;color:rgba(255,255,255,0.2);cursor:grab;flex-shrink:0;transition:color .15s}
 .drag-list-handle:hover{color:rgba(255,255,255,0.6)}
 .drag-list-handle .ms{font-size:18px}
+/* ── ORDER NUMBER BADGE ── */
+.pkg-order-num{position:absolute;bottom:7px;left:11px;min-width:22px;height:20px;padding:0 6px;background:rgba(55,120,184,0.2);color:#7ab3e0;font-size:10px;font-weight:700;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;line-height:1;z-index:1}
+.pkg-list-order-num{min-width:22px;height:22px;background:rgba(55,120,184,0.18);color:#7ab3e0;font-size:11px;font-weight:700;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+body.light .pkg-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
+body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 
 /* ── LIST VIEW ── */
 .pkg-list{display:flex;flex-direction:column;gap:5px}
@@ -721,7 +749,7 @@ body.light .ctx-item:hover{background:rgba(0,0,0,0.05)}
         </button>
       </div>
       <div id="activeFiltersBar" style="display:none;align-items:center;gap:8px;margin-bottom:14px;margin-top:-6px;flex-wrap:wrap"></div>
-      <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;margin-top:-8px">
+      <p class="pkg-view-hint">
         Click derecho para opciones · Arrastrá para reordenar · Hover para acciones rápidas
       </p>
 
@@ -1114,14 +1142,14 @@ function updateActiveFiltersBar() {
   if (cnt && cnt!=='all') tags.push({label:cntLabels[cnt]||cnt, clear:()=>{document.getElementById('filterContinent').value='all';renderPkgView();}});
   if (!tags.length) { bar.style.display='none'; return; }
   bar.style.display = 'flex';
-  bar.innerHTML = '<span style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:600">Filtros:</span>'
-    + tags.map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(55,120,184,0.15);border:1px solid rgba(55,120,184,0.3);border-radius:20px;padding:3px 10px 3px 12px;font-size:11px;color:#7ab3e0">
+  bar.innerHTML = '<span class="afb-label">Filtros:</span>'
+    + tags.map((t,i)=>`<span class="afb-chip">
         ${t.label}
-        <button onclick="(${t.clear.toString()})()" style="background:none;border:none;cursor:pointer;color:#7ab3e0;display:flex;align-items:center;padding:0;margin-left:2px">
+        <button onclick="(${t.clear.toString()})()" class="afb-chip-rm">
           <span class="ms material-symbols-outlined" style="font-size:13px">close</span>
         </button>
       </span>`).join('')
-    + `<button onclick="clearAllFilters()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,0.4);cursor:pointer;font-family:inherit">Limpiar todo</button>`;
+    + `<button onclick="clearAllFilters()" class="afb-clear">Limpiar todo</button>`;
 }
 
 // ── Ctrl+S to save ──
@@ -1309,19 +1337,18 @@ function renderPkgView() {
     return;
   }
   const isManual = (document.getElementById('filterSort')?.value === 'manual');
-  const manualHint = isManual
-    ? `<div style="display:flex;align-items:center;gap:7px;background:rgba(55,120,184,0.1);border:1px solid rgba(55,120,184,0.25);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px">
-        <span class="ms material-symbols-outlined" style="font-size:15px;color:#7ab3e0">drag_indicator</span>
-        Arrastrá las tarjetas para cambiar el orden. Se guarda automáticamente.
-      </div>` : '';
+  const manualHint = isManual ? `<div class="manual-hint">
+      <span class="ms material-symbols-outlined" style="font-size:15px;color:#3778b8">drag_indicator</span>
+      Arrastrá las tarjetas para cambiar el orden. Se guarda automáticamente.
+    </div>` : '';
   const isList = viewMode === 'list';
   const renderFn = isList ? renderPkgListItem : renderPkgCard;
   const wrapClass = isList ? 'pkg-list' : 'pkg-grid';
-  container.innerHTML = manualHint + `<div class="${wrapClass}">${list.map(p=>renderFn(p)).join('')}</div>`;
+  container.innerHTML = manualHint + `<div class="${wrapClass}">${list.map((p,i)=>renderFn(p,i+1)).join('')}</div>`;
   bindCardEvents();
 }
 
-function renderPkgCard(p) {
+function renderPkgCard(p, num) {
   const img = p.image_url
     ? `<img class="pkg-img" src="${p.image_url}" alt="${p.name}" onerror="this.style.display='none'">`
     : `<div class="pkg-img-placeholder"><span class="ms material-symbols-outlined" style="font-size:30px;opacity:.2">image</span></div>`;
@@ -1358,10 +1385,11 @@ function renderPkgCard(p) {
         </div>
       </div>
     </div>
+    ${num!==undefined?`<div class="pkg-order-num">${num}</div>`:''}
   </div>`;
 }
 
-function renderPkgListItem(p) {
+function renderPkgListItem(p, num) {
   const thumb = p.image_url
     ? `<img class="pkg-list-thumb" src="${p.image_url}" alt="${p.name}" onerror="this.style.display='none'">`
     : `<div class="pkg-list-thumb-ph"><span class="ms material-symbols-outlined" style="font-size:18px;opacity:.2">image</span></div>`;
@@ -1371,6 +1399,7 @@ function renderPkgListItem(p) {
     ondragstart="onDragStart(event,${p.id})" ondragover="onDragOver(event,${p.id})"
     ondragleave="onDragLeave(event)" ondrop="onDrop(event,${p.id})" ondragend="onDragEnd(event)">
     <div class="drag-list-handle" title="Arrastrar para reordenar"><span class="ms material-symbols-outlined">drag_indicator</span></div>
+    ${num!==undefined?`<div class="pkg-list-order-num">${num}</div>`:''}
     ${thumb}
     <div class="pkg-list-info">
       <div class="pkg-list-name">${p.name}</div>
@@ -1992,41 +2021,55 @@ function onDragStart(e, id) {
   }, 0);
 }
 
+let dropPosition = 'after';
+
 function onDragOver(e, id) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
   if (dragSrcId === id) return;
-  document.querySelectorAll('.pkg-card.drag-over,.pkg-list-item.drag-over').forEach(c=>c.classList.remove('drag-over'));
-  document.querySelector(`[data-id="${id}"]`)?.classList.add('drag-over');
+  document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>c.classList.remove('drop-before','drop-after'));
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (!el) return;
+  const rect = el.getBoundingClientRect();
+  const isList = viewMode === 'list';
+  dropPosition = isList
+    ? (e.clientY < rect.top + rect.height / 2 ? 'before' : 'after')
+    : (e.clientX < rect.left + rect.width  / 2 ? 'before' : 'after');
+  el.classList.add(dropPosition === 'before' ? 'drop-before' : 'drop-after');
 }
 
 function onDragLeave(e) {
-  e.currentTarget.classList.remove('drag-over');
+  e.currentTarget.classList.remove('drop-before','drop-after');
 }
 
 function onDragEnd(e) {
   document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>{
-    c.classList.remove('dragging','drag-over');
+    c.classList.remove('dragging','drop-before','drop-after');
   });
   dragSrcId = null;
 }
 
 async function onDrop(e, destId) {
   e.preventDefault();
-  document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>c.classList.remove('drag-over','dragging'));
+  document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(c=>c.classList.remove('drop-before','drop-after','dragging'));
   const srcId = dragSrcId;
-  dragSrcId = null;
+  const pos   = dropPosition;
+  dragSrcId   = null;
   if (!srcId || srcId === destId) return;
 
   // Get current visible list (respects all active filters)
   const list = getFilteredPackages();
-  const srcIdx  = list.findIndex(p=>p.id===srcId);
-  const destIdx = list.findIndex(p=>p.id===destId);
-  if (srcIdx === -1 || destIdx === -1) return;
+  const srcIdx = list.findIndex(p=>p.id===srcId);
+  if (srcIdx === -1) return;
 
-  // Reorder
+  // Remove source from list
   const [moved] = list.splice(srcIdx, 1);
-  list.splice(destIdx, 0, moved);
+
+  // Find dest index after splice and insert before/after
+  let destIdx = list.findIndex(p=>p.id===destId);
+  if (destIdx === -1) return;
+  const insertAt = pos === 'before' ? destIdx : destIdx + 1;
+  list.splice(insertAt, 0, moved);
 
   // Assign new sort_order (1-based) to reordered list
   list.forEach((p, i) => { p.sort_order = i + 1; });
