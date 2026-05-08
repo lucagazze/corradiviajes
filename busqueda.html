@@ -339,45 +339,96 @@ function getFlagHtml(country) {
   return `<span class="material-symbols-outlined text-[14px] opacity-50 flex-shrink-0">public</span>`;
 }
 
-window.populateCountrySelect = function() {
+window.populateCountrySelect = function(filter = '') {
   const panel = document.getElementById('cddCountryPanel');
   const valueEl = document.getElementById('cddCountryValue');
   if (!panel || !allPackages) return;
 
-  // Build the country list from the packages currently visible (filtered by price/month)
-  // so only countries with matching packages show up
+  const q = filter.toLowerCase().trim();
+
+  // 1. Ensure search header exists and is stable
+  if (!document.getElementById('countryOptions')) {
+    panel.innerHTML = `
+      <div class="sticky top-0 p-2 border-b border-white/5 z-10" style="background:inherit" onclick="event.stopPropagation()">
+        <div class="flex items-center bg-white/5 rounded-lg px-3 py-1.5 border border-white/10 focus-within:border-primary/50 transition-all">
+          <span class="material-symbols-outlined text-[16px] opacity-40 mr-2">search</span>
+          <input type="text" id="countrySearch" placeholder="Buscar país..." 
+            class="bg-transparent border-none p-0 focus:ring-0 text-[13px] text-white w-full outline-none" 
+            autocomplete="off">
+        </div>
+      </div>
+      <div id="countryOptions"></div>
+    `;
+    const searchInput = document.getElementById('countrySearch');
+    searchInput.oninput = (e) => window.populateCountrySelect(e.target.value);
+  }
+
+  const listContainer = document.getElementById('countryOptions');
+
+  // 2. Build the eligible country list
   let eligible = allPackages;
   if (priceMin !== null) eligible = eligible.filter(p => p.price_usd >= priceMin);
   if (priceMax !== null) eligible = eligible.filter(p => p.price_usd <= priceMax);
 
-  const countries = [...new Set(
+  let countries = [...new Set(
     eligible.map(p => (p.country || '').trim()).filter(Boolean)
   )].sort((a, b) => a.localeCompare(b, 'es'));
 
-  panel.innerHTML = '';
+  // 3. Filter if needed
+  if (q) {
+    countries = countries.filter(c => c.toLowerCase().includes(q));
+  }
 
-  // "All destinations" option
-  const allOpt = document.createElement('div');
-  allOpt.className = 'cdd-option' + (activeCategory === 'all' ? ' selected' : '');
-  allOpt.dataset.value = 'all';
-  allOpt.innerHTML = `<span style="flex:1" class="truncate">Todos los destinos</span><span class="material-symbols-outlined cdd-check">check</span>`;
-  panel.appendChild(allOpt);
+  // 4. Render only the list content
+  let html = '';
+  if (!q) {
+    html += `
+      <div class="cdd-option${activeCategory === 'all' ? ' selected' : ''}" data-value="all">
+        <span style="flex:1" class="truncate">Todos los destinos</span><span class="material-symbols-outlined cdd-check">check</span>
+      </div>`;
+  }
 
   countries.forEach(c => {
-    const div = document.createElement('div');
     const isSelected = activeCategory === c;
-    div.className = 'cdd-option' + (isSelected ? ' selected' : '');
-    div.dataset.value = c;
-    div.innerHTML = `${getFlagHtml(c)}<span style="flex:1" class="truncate">${c}</span><span class="material-symbols-outlined cdd-check">check</span>`;
-    panel.appendChild(div);
+    html += `
+      <div class="cdd-option${isSelected ? ' selected' : ''}" data-value="${c}">
+        ${getFlagHtml(c)}<span style="flex:1" class="truncate">${c}</span><span class="material-symbols-outlined cdd-check">check</span>
+      </div>`;
   });
 
-  // If a country is pre-selected from URL, update the display label
+  if (countries.length === 0 && q) {
+    html += `<div class="py-6 px-4 text-center text-white/30 text-xs italic">No hay resultados</div>`;
+  }
+
+  listContainer.innerHTML = html;
+
+  // 5. Update display label if needed
   if (activeCategory !== 'all' && valueEl) {
     const match = countries.find(c => c === activeCategory);
     if (match) valueEl.textContent = match;
   }
 };
+
+// Handle jump-to-letter in search page
+document.addEventListener('keydown', (e) => {
+  const panel = document.getElementById('cddCountryPanel');
+  if (!panel || !panel.classList.contains('open')) return;
+  if (e.target.id === 'countrySearch') return;
+
+  if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
+    const letter = e.key.toLowerCase();
+    const options = panel.querySelectorAll('.cdd-option');
+    for (let opt of options) {
+      const label = opt.querySelector('.truncate')?.textContent.trim().toLowerCase();
+      if (label && label.startsWith(letter)) {
+        opt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        opt.style.background = 'rgba(55,120,184,0.4)';
+        setTimeout(() => opt.style.background = '', 500);
+        break;
+      }
+    }
+  }
+});
 </script>
 <script src="js/theme.js"></script>
 </body>

@@ -25,7 +25,8 @@ async function loadPackages() {
       if (error) throw error;
       allPackages = data;
     }
-    window.allPackages = allPackages; // Make it globally accessible for the index.html popovers
+    window.allPackages = allPackages;
+    window.dispatchEvent(new CustomEvent('corradiPackagesLoaded'));
     renderPackages();
     renderOffersCarousel();
     setupAutocomplete();
@@ -163,7 +164,7 @@ window.updateMobileDots = function() {
   const dots = dotsContainer.children;
   for (let i = 0; i < dots.length; i++) {
     if (i === activeIndex) {
-      dots[i].className = "w-1.5 h-1.5 rounded-full transition-all duration-300 bg-blue-600 w-4";
+      dots[i].className = "w-4 h-1.5 rounded-full transition-all duration-300 bg-blue-600";
     } else {
       dots[i].className = "w-1.5 h-1.5 rounded-full transition-all duration-300 bg-slate-300";
     }
@@ -189,7 +190,7 @@ window.updateOffersDots = function() {
   });
   [...dotsContainer.children].forEach((dot, i) => {
     dot.className = i === activeIndex
-      ? 'w-1.5 h-1.5 rounded-full transition-all duration-300 bg-[#3778b8] w-4'
+      ? 'w-4 h-1.5 rounded-full transition-all duration-300 bg-[#3778b8]'
       : 'w-1.5 h-1.5 rounded-full transition-all duration-300 bg-slate-300';
   });
 };

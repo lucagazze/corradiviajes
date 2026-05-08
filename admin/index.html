@@ -15,7 +15,7 @@
 @font-face{font-family:'Geomanist';src:url('../geomanist-medium.woff') format('woff');font-weight:700}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:'Geomanist','Plus Jakarta Sans',sans-serif;background:#0b1525;color:#fff;min-height:100vh;overflow-x:hidden}
+body{font-family:'Geomanist','Plus Jakarta Sans',sans-serif;background:#0b1525;color:#fff;min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s}
 img{display:block;max-width:100%}
 button,input,select,textarea{font-family:inherit}
 textarea{resize:vertical}
@@ -24,6 +24,82 @@ a{color:inherit;text-decoration:none}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+
+/* ── LIGHT MODE ── */
+body.light{background:#f1f5fb;color:#1e293b}
+body.light .sidebar{background:#e8eef7;border-right-color:rgba(0,0,0,0.08)}
+body.light .sb-brand{border-bottom-color:rgba(0,0,0,0.06)}
+body.light .sb-section{color:rgba(0,0,0,0.35)}
+body.light .sb-item{color:#334155}
+body.light .sb-item:hover,body.light .sb-item.active{background:rgba(55,120,184,0.12);color:#1e40af}
+body.light .sb-sub-item{color:#475569}
+body.light .sb-sub-item:hover,body.light .sb-sub-item.active{background:rgba(55,120,184,0.1);color:#1e40af}
+body.light .sb-version{color:rgba(0,0,0,0.25)}
+body.light .sb-divider{background:rgba(0,0,0,0.07)}
+body.light .view-header h1{color:#1e293b}
+body.light .form-section{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.07)}
+body.light .form-section-title{color:rgba(0,0,0,0.5);border-bottom-color:rgba(0,0,0,0.06)}
+body.light .fl{color:rgba(0,0,0,0.5)}
+body.light .fi,body.light .ft,body.light .fs{background:rgba(0,0,0,0.05);border-color:rgba(0,0,0,0.12);color:#1e293b}
+body.light .fi:focus,body.light .ft:focus,body.light .fs:focus{border-color:#3778b8;background:#fff}
+body.light .fi::placeholder,body.light .ft::placeholder{color:rgba(0,0,0,0.28)}
+body.light .dash-card{background:#fff;border-color:rgba(0,0,0,0.08);box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+body.light .dash-card[onclick]:hover{background:#f8faff;border-color:rgba(55,120,184,0.3)}
+body.light .stat-card{background:#fff;border-color:rgba(0,0,0,0.08)}
+body.light .pkg-card{background:#fff;border-color:rgba(0,0,0,0.08);box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+body.light .pkg-card:hover{border-color:rgba(55,120,184,0.4);box-shadow:0 4px 16px rgba(0,0,0,0.1)}
+body.light .pkg-list-item{background:#fff;border-color:rgba(0,0,0,0.07)}
+body.light .pkg-list-item:hover{background:#f8faff}
+body.light .pkg-name,body.light .pkg-list-name{color:#1e293b}
+body.light .pkg-sub,body.light .pkg-list-sub{color:#64748b}
+body.light .filter-bar{background:rgba(0,0,0,0.03);border-color:rgba(0,0,0,0.07)}
+body.light .search-box{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1)}
+body.light .search-box input{color:#1e293b}
+body.light .search-box input::placeholder{color:rgba(0,0,0,0.3)}
+body.light .select-filter{background:rgba(0,0,0,0.05);border-color:rgba(0,0,0,0.1);color:#1e293b}
+body.light #editorPanel{background:#f1f5fb;border-left-color:rgba(0,0,0,0.1)}
+body.light .ed-header{background:#e8eef7;border-bottom-color:rgba(0,0,0,0.08)}
+body.light .ed-title{color:#1e293b}
+body.light .ed-tabs{background:#e8eef7;border-bottom-color:rgba(0,0,0,0.08)}
+body.light .ed-tab{color:rgba(0,0,0,0.45)}
+body.light .ed-tab.active{color:#3778b8;border-bottom-color:#3778b8}
+body.light .ed-tab:hover{color:#1e293b;background:rgba(0,0,0,0.04)}
+body.light .tgl-row{border-bottom-color:rgba(0,0,0,0.06)}
+body.light .tgl-name{color:#1e293b}
+body.light .tgl-desc{color:#64748b}
+body.light .bullet-item{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.08)}
+body.light .bullet-item input{color:#1e293b;background:transparent}
+body.light .itin-row{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.08)}
+body.light .add-gal{background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.1);color:#475569}
+body.light .add-gal:hover{background:rgba(0,0,0,0.07)}
+body.light .btn-ghost{color:#475569;border-color:rgba(0,0,0,0.15)}
+body.light .btn-ghost:hover{background:rgba(0,0,0,0.07)}
+body.light .drop-zone,body.light #stripUploadZone{border-color:rgba(0,0,0,0.15);color:rgba(0,0,0,0.3)}
+body.light .pis-thumb img{border-color:rgba(0,0,0,0.1)}
+body.light .media-card{background:#fff;border-color:rgba(0,0,0,0.08)}
+body.light .media-card:hover{border-color:rgba(55,120,184,0.4)}
+body.light .media-card-name{color:#334155}
+body.light .media-card-date{color:rgba(0,0,0,0.35)}
+body.light .media-btn-copy{background:rgba(55,120,184,0.12);color:#1d4ed8}
+body.light .media-btn-del{background:rgba(239,68,68,0.1);color:#dc2626}
+body.light .sb-item-parent{color:#334155}
+body.light .sb-item-parent:hover,body.light .sb-item-parent.active{background:rgba(55,120,184,0.12);color:#1e40af}
+body.light .sb-item-parent .ms-arrow{color:rgba(0,0,0,0.25)}
+body.light .pkg-card-date{color:rgba(0,0,0,0.35)}
+body.light .dash-num{color:#1e293b}
+body.light .dash-label{color:rgba(0,0,0,0.45)}
+body.light .stat-num{color:#1e293b}
+body.light .stat-label{color:rgba(0,0,0,0.45)}
+body.light .pkg-sub{color:#64748b}
+body.light .pkg-price{color:#1d4ed8}
+body.light .itin-row textarea{color:#1e293b;background:transparent}
+body.light .itin-day{color:#1e293b}
+body.light .pis-num{background:rgba(0,0,0,0.55);color:#fff}
+body.light .empty{color:rgba(0,0,0,0.3)}
+body.light ::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15)}
+body.light .ctx-item{color:#334155}
+body.light #ctxMenu{background:#fff;border-color:rgba(0,0,0,0.1);box-shadow:0 8px 30px rgba(0,0,0,0.15)}
+body.light .ctx-item:hover{background:rgba(0,0,0,0.05)}
 
 /* ── LOGIN ── */
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,#1a3a6b 0%,#0b1525 65%)}
@@ -117,6 +193,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .pkg-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:8px}
 .pkg-footer{display:flex;align-items:center;justify-content:space-between}
 .pkg-price{font-size:14px;font-weight:700;color:#3778b8}
+.pkg-card-date{font-size:10px;color:rgba(255,255,255,0.25)}
 .pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
 .pill-active{background:rgba(74,222,128,0.12);color:#4ade80;border:1px solid rgba(74,222,128,0.2)}
 .pill-inactive{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.18)}
@@ -124,11 +201,10 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .pill-badge{background:#ef4444;color:#fff}
 
 /* Quick actions on card hover */
-.pkg-quick{position:absolute;top:8px;right:8px;display:flex;gap:5px;opacity:0;transition:opacity .15s}
-.pkg-card:hover .pkg-quick{opacity:1}
-.pkg-qbtn{width:28px;height:28px;border-radius:8px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;backdrop-filter:blur(8px)}
-.pkg-qbtn:hover{transform:scale(1.1)}
-.pkg-qbtn .ms{font-size:15px}
+.pkg-quick{position:absolute;top:8px;right:8px;display:flex;gap:5px}
+.pkg-qbtn{width:32px;height:32px;border-radius:9px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;backdrop-filter:blur(10px);box-shadow:0 2px 8px rgba(0,0,0,0.35)}
+.pkg-qbtn:hover{transform:scale(1.12)}
+.pkg-qbtn .ms{font-size:16px}
 
 /* ── CONTEXT MENU ── */
 #ctxMenu{position:fixed;z-index:9999;background:#112240;border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:6px;min-width:200px;box-shadow:0 12px 40px rgba(0,0,0,0.5);display:none}
@@ -158,15 +234,42 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .form-section-title .ms{font-size:14px}
 .fg{display:flex;flex-direction:column;gap:5px}
 .fl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,0.38)}
-.fi,.fs,.ft{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:9px 13px;color:#fff;font-size:14px;outline:none;transition:border-color .2s;width:100%;font-family:inherit}
+.fi,.fs,.ft{background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:8px 12px;color:#fff;font-size:13.5px;outline:none;transition:border-color .2s;width:100%;font-family:inherit}
 .fi::placeholder,.ft::placeholder{color:rgba(255,255,255,0.28)}
 .fi:focus,.fs:focus,.ft:focus{border-color:#3778b8;background:rgba(255,255,255,0.08)}
 .fs{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.4)'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:20px;padding-right:36px}
 .fs option{background:#0b1525;color:#fff}
+
+/* ── COUNTRY PICKER ── */
+.cp-wrap{position:relative;width:100%}
+.cp-display{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);border-radius:10px;padding:7px 12px;color:#fff;font-size:13.5px;cursor:pointer;transition:border-color .2s;user-select:none;min-height:36px}
+.cp-display:hover{border-color:rgba(255,255,255,0.22)}
+.cp-display.open{border-color:#3778b8;background:rgba(255,255,255,0.08)}
+.cp-display.empty{color:rgba(255,255,255,0.28)}
+.cp-chevron{margin-left:auto;color:rgba(255,255,255,0.4);font-size:17px;transition:transform .2s;flex-shrink:0}
+.cp-display.open .cp-chevron{transform:rotate(180deg)}
+.cp-dropdown{position:fixed;background:#0d1e35;border:1.5px solid rgba(55,120,184,0.4);border-radius:12px;z-index:99999;box-shadow:0 16px 48px rgba(0,0,0,0.55);overflow:hidden;min-width:240px}
+.cp-search-wrap{padding:8px 8px 6px;border-bottom:1px solid rgba(255,255,255,0.07)}
+.cp-search{width:100%;background:rgba(255,255,255,0.07);border:1.5px solid rgba(255,255,255,0.12);border-radius:8px;padding:6px 10px;color:#fff;font-size:13px;outline:none;font-family:inherit;transition:border-color .2s}
+.cp-search:focus{border-color:#3778b8}
+.cp-search::placeholder{color:rgba(255,255,255,0.3)}
+.cp-list{max-height:220px;overflow-y:auto;padding:4px 4px 6px}
+.cp-group-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,0.25);padding:8px 10px 4px}
+.cp-option{display:flex;align-items:center;gap:9px;padding:7px 10px;border-radius:8px;cursor:pointer;font-size:13px;color:rgba(255,255,255,0.85);transition:background .12s;white-space:nowrap}
+.cp-option:hover{background:rgba(55,120,184,0.18);color:#fff}
+.cp-option.selected{background:rgba(55,120,184,0.25);color:#7ab3e0;font-weight:600}
+.cp-option.hidden{display:none}
+.cp-no-results{text-align:center;padding:18px 10px;font-size:13px;color:rgba(255,255,255,0.3)}
+.cp-flag{font-size:16px;flex-shrink:0;line-height:1}
 .ft{min-height:90px;line-height:1.6}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .grid1{display:grid;grid-template-columns:1fr;gap:12px}
+
+/* ── DEST PICKER (Autocomplete) ── */
+.dp-dropdown{position:fixed;background:#0d1e35;border:1.5px solid rgba(55,120,184,0.3);border-radius:12px;z-index:99999;box-shadow:0 12px 36px rgba(0,0,0,0.5);overflow-y:auto;max-height:200px;display:none}
+.dp-option{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:13px;color:rgba(255,255,255,0.8);cursor:pointer;transition:background .1s}
+.dp-option:hover{background:rgba(55,120,184,0.15);color:#fff}
 
 /* Toggle */
 .tgl-row{display:flex;align-items:center;gap:12px;padding:3px 0}
@@ -192,6 +295,54 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 /* Image preview */
 .img-preview{width:100%;height:170px;border-radius:12px;object-fit:cover;display:block}
 .img-ph{width:100%;height:170px;border-radius:12px;background:rgba(255,255,255,0.03);border:2px dashed rgba(255,255,255,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,0.25);font-size:13px;gap:7px}
+
+/* ── PKG IMAGE STRIP ── */
+#pkgImgStrip{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-start}
+.pis-thumb{position:relative;width:180px;height:130px;border-radius:10px;overflow:visible;flex-shrink:0;transition:transform .18s,opacity .18s;cursor:grab}
+.pis-thumb img{width:180px;height:130px;object-fit:cover;border-radius:10px;display:block;border:2px solid transparent;transition:border-color .15s,box-shadow .15s;cursor:grab}
+.pis-num{position:absolute;top:6px;right:6px;background:rgba(0,0,0,0.65);color:#fff;font-size:11px;font-weight:700;padding:2px 7px;border-radius:6px;pointer-events:none;backdrop-filter:blur(4px)}
+.pis-thumb img:hover{border-color:rgba(55,120,184,0.4)}
+.pis-thumb.main-img img{border-color:#3778b8;box-shadow:0 0 0 3px rgba(55,120,184,0.25)}
+.pis-thumb.pis-dragging{opacity:.3;transform:scale(.86);cursor:grabbing}
+.pis-thumb.pis-drop-before{transform:translateX(7px)}
+.pis-thumb.pis-drop-before::before{content:'';position:absolute;left:-9px;top:0;bottom:0;width:3px;background:#3778b8;border-radius:2px;box-shadow:0 0 10px rgba(55,120,184,0.9)}
+.pis-thumb.pis-drop-after{transform:translateX(-7px)}
+.pis-thumb.pis-drop-after::after{content:'';position:absolute;right:-9px;top:0;bottom:0;width:3px;background:#3778b8;border-radius:2px;box-shadow:0 0 10px rgba(55,120,184,0.9)}
+@keyframes pisLand{0%{transform:scale(1.1)}60%{transform:scale(.95)}100%{transform:scale(1)}}
+.pis-thumb.pis-landed{animation:pisLand .28s ease-out}
+.pis-badge{position:absolute;bottom:4px;left:4px;background:rgba(55,120,184,0.9);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;letter-spacing:.5px;pointer-events:none}
+.pis-rm{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;background:#ef4444;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,0.4)}
+.pis-rm .ms{font-size:12px;color:#fff}
+.pis-add{width:60px;height:130px;border-radius:10px;border:2px dashed rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.3);transition:border-color .15s,color .15s;flex-shrink:0}
+.pis-add:hover{border-color:rgba(55,120,184,0.5);color:rgba(55,120,184,0.8)}
+.pis-add .ms{font-size:22px}
+.pis-empty{width:100%;padding:28px;border:2px dashed rgba(255,255,255,0.1);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:rgba(255,255,255,0.22);gap:8px;font-size:13px;cursor:pointer;transition:border-color .15s}
+.pis-empty:hover{border-color:rgba(55,120,184,0.4)}
+/* image manager modal */
+.imm-sel-thumb{position:relative;width:100px;height:74px;border-radius:9px;overflow:visible;flex-shrink:0;cursor:grab;transition:transform .18s,opacity .18s}
+.imm-sel-thumb img{width:100px;height:74px;object-fit:cover;border-radius:9px;display:block;border:2px solid rgba(255,255,255,0.12);transition:border-color .15s,box-shadow .15s}
+.imm-sel-thumb.imm-main img{border-color:#3778b8;box-shadow:0 0 0 3px rgba(55,120,184,0.3)}
+.imm-sel-thumb:hover img{border-color:rgba(55,120,184,0.5)}
+.imm-sel-thumb.imm-dragging{opacity:.35;transform:scale(.88);cursor:grabbing}
+.imm-sel-thumb.imm-drop-before{transform:translateX(6px)}
+.imm-sel-thumb.imm-drop-before::before{content:'';position:absolute;left:-8px;top:0;bottom:0;width:3px;background:#3778b8;border-radius:2px;box-shadow:0 0 8px rgba(55,120,184,0.8)}
+.imm-sel-thumb.imm-drop-after{transform:translateX(-6px)}
+.imm-sel-thumb.imm-drop-after::after{content:'';position:absolute;right:-8px;top:0;bottom:0;width:3px;background:#3778b8;border-radius:2px;box-shadow:0 0 8px rgba(55,120,184,0.8)}
+@keyframes immLand{0%{transform:scale(1.12)}60%{transform:scale(.96)}100%{transform:scale(1)}}
+.imm-sel-thumb.imm-landed{animation:immLand .3s ease-out}
+.imm-badge{position:absolute;bottom:3px;left:3px;background:rgba(55,120,184,0.9);color:#fff;font-size:8px;font-weight:700;padding:1px 5px;border-radius:4px;letter-spacing:.5px;pointer-events:none}
+.imm-num{position:absolute;top:3px;left:3px;background:rgba(0,0,0,0.6);color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;pointer-events:none}
+.imm-rm{position:absolute;top:-6px;right:-6px;width:19px;height:19px;border-radius:50%;background:#ef4444;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;box-shadow:0 2px 5px rgba(0,0,0,0.4)}
+.imm-rm .ms{font-size:11px;color:#fff}
+/* image adder / manager library grid */
+.img-adder-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.img-adder-item{position:relative;border-radius:9px;overflow:hidden;cursor:pointer;border:2.5px solid transparent;transition:border-color .15s}
+.img-adder-item:hover{border-color:rgba(55,120,184,0.55)}
+.img-adder-item.selected{border-color:#3778b8;box-shadow:0 0 0 2px rgba(55,120,184,0.25)}
+.img-adder-item img{width:100%;height:80px;object-fit:cover;display:block}
+.img-adder-item .sel-check{position:absolute;top:4px;right:4px;width:18px;height:18px;border-radius:50%;background:#3778b8;display:none;align-items:center;justify-content:center}
+.img-adder-item.selected .sel-check{display:flex}
+.img-adder-item .sel-check .ms{font-size:12px;color:#fff}
 
 /* Gallery */
 .gal-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
@@ -237,7 +388,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
 /* Dashboard */
 .dash-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-bottom:24px}
-.dash-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px 20px}
+.dash-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:18px 20px;transition:border-color .15s,background .15s}
+.dash-card[onclick]:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.15)}
 .dash-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
 .dash-num{font-size:28px;font-weight:700;line-height:1;margin-bottom:4px}
 .dash-label{font-size:12px;color:rgba(255,255,255,0.45);font-weight:500}
@@ -266,12 +418,27 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .spinner{width:20px;height:20px;border:2px solid rgba(255,255,255,0.12);border-top-color:#fff;border-radius:50%;animation:spin .65s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* ── MEDIA LIBRARY ── */
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.media-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:12px;overflow:hidden;cursor:pointer;transition:border-color .15s,transform .15s;position:relative}
+.media-card:hover{border-color:rgba(55,120,184,0.5);transform:translateY(-2px)}
+.media-card img{width:100%;height:130px;object-fit:cover;display:block;background:rgba(255,255,255,0.03)}
+.media-card-body{padding:8px 10px}
+.media-card-name{font-size:11px;color:rgba(255,255,255,0.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.media-card-date{font-size:10px;color:rgba(255,255,255,0.25);margin-top:2px}
+.media-card-actions{display:flex;gap:5px;margin-top:7px}
+.media-btn{flex:1;padding:4px 0;border:none;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity .15s}
+.media-btn:hover{opacity:.85}
+.media-btn-copy{background:rgba(55,120,184,0.2);color:#7ab3e0}
+.media-btn-del{background:rgba(239,68,68,0.12);color:#f87171;flex:0 0 32px}
+.media-card.picker-mode:hover::after{content:'Usar';position:absolute;inset:0;background:rgba(55,120,184,0.55);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;border-radius:12px;pointer-events:none}
+
 /* ── DRAG & DROP ── */
 .pkg-card[draggable=true],.pkg-list-item[draggable=true]{cursor:grab}
 .pkg-card.dragging,.pkg-list-item.dragging{opacity:.3;transform:scale(.96)}
 .pkg-card.drag-over,.pkg-list-item.drag-over{outline:none !important;background:rgba(255,255,255,0.04) !important;border-color:rgba(255,255,255,0.08) !important}
 .pkg-card.drag-over::before,.pkg-list-item.drag-over::before{content:'';position:absolute;left:0;right:0;top:-3px;height:3px;background:#3778b8;border-radius:3px;z-index:10;box-shadow:0 0 10px rgba(55,120,184,0.8)}
-.pkg-drag-handle{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:6px;background:rgba(0,0,0,0.5);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s;cursor:grab;z-index:1}
+.pkg-drag-handle{position:absolute;top:8px;left:8px;width:22px;height:22px;border-radius:6px;background:rgba(15,25,45,0.7);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0.6;transition:opacity .15s;cursor:grab;z-index:1;box-shadow:0 2px 6px rgba(0,0,0,0.3)}
 .pkg-card:hover .pkg-drag-handle{opacity:1}
 .pkg-drag-handle .ms{font-size:14px;color:rgba(255,255,255,0.8)}
 .drag-list-handle{display:flex;align-items:center;justify-content:center;padding:0 4px;color:rgba(255,255,255,0.2);cursor:grab;flex-shrink:0;transition:color .15s}
@@ -379,6 +546,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
         <span class="ms material-symbols-outlined">dashboard</span>Dashboard
       </div>
       <div class="sb-section">Contenido</div>
+      <div class="sb-item" id="navMedia" onclick="switchView('media')">
+        <span class="ms material-symbols-outlined">photo_library</span>Biblioteca
+      </div>
       <div class="sb-item-parent" id="navPkg" onclick="switchPkgFilter('all','all')">
         <span class="ms material-symbols-outlined">travel_explore</span>Paquetes
         <span class="ms material-symbols-outlined ms-arrow">expand_more</span>
@@ -408,6 +578,11 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
     </nav>
     <div class="sb-divider"></div>
     <div class="sb-bottom">
+      <span id="aiKeyStatus" style="display:none"></span>
+      <div class="sb-item" onclick="toggleTheme()" id="themeToggleBtn">
+        <span class="ms material-symbols-outlined" id="themeIcon">light_mode</span>
+        <span id="themeLabel">Modo claro</span>
+      </div>
       <a class="sb-item" href="../index.html" target="_blank">
         <span class="ms material-symbols-outlined">open_in_new</span>Ver sitio
       </a>
@@ -440,27 +615,27 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       </div>
 
       <div class="dash-grid" id="dashGrid">
-        <div class="dash-card">
+        <div class="dash-card" onclick="switchPkgFilter('all','all')" style="cursor:pointer" title="Ver todos">
           <div class="dash-icon" style="background:rgba(55,120,184,0.15)"><span class="material-symbols-outlined" style="color:#7ab3e0;font-size:22px">travel_explore</span></div>
           <div class="dash-num" id="dTotal" style="color:#7ab3e0">—</div>
           <div class="dash-label">Paquetes totales</div>
         </div>
-        <div class="dash-card">
+        <div class="dash-card" onclick="switchPkgFilter('active','all')" style="cursor:pointer" title="Ver activos">
           <div class="dash-icon" style="background:rgba(74,222,128,0.12)"><span class="material-symbols-outlined" style="color:#4ade80;font-size:22px">check_circle</span></div>
           <div class="dash-num" id="dActive" style="color:#4ade80">—</div>
-          <div class="dash-label">Paquetes activos</div>
+          <div class="dash-label">Activos</div>
         </div>
-        <div class="dash-card">
+        <div class="dash-card" onclick="switchPkgFilter('featured','all')" style="cursor:pointer" title="Ver destacados">
           <div class="dash-icon" style="background:rgba(251,191,36,0.12)"><span class="material-symbols-outlined" style="color:#fbbf24;font-size:22px">star</span></div>
           <div class="dash-num" id="dFeatured" style="color:#fbbf24">—</div>
           <div class="dash-label">Destacados</div>
         </div>
-        <div class="dash-card">
+        <div class="dash-card" onclick="switchPkgFilter('offer','all')" style="cursor:pointer" title="Ver con oferta">
           <div class="dash-icon" style="background:rgba(248,113,113,0.12)"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px">local_offer</span></div>
           <div class="dash-num" id="dOffers" style="color:#f87171">—</div>
-          <div class="dash-label">Con badge/oferta</div>
+          <div class="dash-label">En oferta</div>
         </div>
-        <div class="dash-card">
+        <div class="dash-card" onclick="switchPkgFilter('inactive','all')" style="cursor:pointer" title="Ver inactivos">
           <div class="dash-icon" style="background:rgba(239,68,68,0.12)"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px">cancel</span></div>
           <div class="dash-num" id="dInactive" style="color:#f87171">—</div>
           <div class="dash-label">Inactivos</div>
@@ -532,9 +707,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
           <option value="general">General</option>
         </select>
         <select class="select-filter" id="filterSort" onchange="renderPkgView()">
+          <option value="newest" selected>Más nuevos primero</option>
+          <option value="oldest">Más antiguos primero</option>
           <option value="manual">Orden manual ↕</option>
-          <option value="newest">Más nuevos</option>
-          <option value="oldest">Más antiguos</option>
           <option value="price_asc">Precio ↑</option>
           <option value="price_desc">Precio ↓</option>
           <option value="name_az">Nombre A–Z</option>
@@ -544,11 +719,32 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
           <span class="ms material-symbols-outlined" id="viewToggleIcon">view_list</span>
         </button>
       </div>
+      <div id="activeFiltersBar" style="display:none;align-items:center;gap:8px;margin-bottom:14px;margin-top:-6px;flex-wrap:wrap"></div>
       <p style="font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;margin-top:-8px">
-        Click derecho para opciones rápidas · Arrastrá para reordenar · Hover para acciones
+        Click derecho para opciones · Arrastrá para reordenar · Hover para acciones rápidas
       </p>
 
       <div id="pkgViewContainer"></div>
+    </div>
+
+    <!-- ── MEDIA LIBRARY VIEW ── -->
+    <div class="view" id="viewMedia">
+      <div class="view-header">
+        <div>
+          <h1>Biblioteca de imágenes</h1>
+          <p style="font-size:13px;color:rgba(255,255,255,0.4);margin-top:2px">Todas las imágenes subidas a Supabase Storage</p>
+        </div>
+        <div class="spacer"></div>
+        <button class="btn btn-ghost btn-sm" onclick="loadMediaLibrary()">
+          <span class="ms material-symbols-outlined">refresh</span>
+        </button>
+        <label class="btn btn-primary" style="cursor:pointer">
+          <span class="ms material-symbols-outlined">upload</span>Subir imágenes
+          <input type="file" accept="image/*" multiple onchange="mediaUpload(event)" style="display:none">
+        </label>
+      </div>
+      <div id="mediaStats" style="font-size:13px;color:rgba(255,255,255,0.35);margin-bottom:18px"></div>
+      <div id="mediaGrid"></div>
     </div>
 
   </div><!-- /main-wrap -->
@@ -559,6 +755,9 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <button class="btn btn-ghost btn-icon" onclick="closeEditor()"><span class="ms material-symbols-outlined">arrow_back</span></button>
       <h2 id="edTitle">Nuevo Paquete</h2>
       <div class="spacer"></div>
+      <button class="btn btn-green btn-sm" id="btnAI" onclick="showAIModal()" title="Generar paquete completo con IA">
+        <span class="ms material-symbols-outlined">auto_fix</span>Generar con IA
+      </button>
       <button class="btn btn-ghost btn-sm" id="btnDuplicate" onclick="duplicatePackage()" style="display:none">
         <span class="ms material-symbols-outlined">content_copy</span>Duplicar
       </button>
@@ -606,10 +805,37 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
             <div class="fg"><label class="fl">Ciudad de salida</label><input type="text" id="fDeptCity" class="fi" placeholder="Rosario"></div>
           </div>
           <div class="grid2" style="margin-bottom:12px">
-            <div class="fg"><label class="fl">Destino *</label><input type="text" id="fDest" class="fi" placeholder="Ej: París, Italia del Sur"></div>
-            <div class="fg"><label class="fl">País *</label><input type="text" id="fCountry" class="fi" placeholder="Ej: Francia"></div>
+            <div class="fg">
+              <label class="fl">Destino *</label>
+              <div style="position:relative">
+                <input type="text" id="fDest" class="fi" placeholder="Ej: París, Italia del Sur" 
+                  oninput="dpRender(this.value)" onfocus="dpRender(this.value)" autocomplete="off">
+                <div class="dp-dropdown" id="dpDropdown"></div>
+              </div>
+            </div>
+            <div class="fg">
+              <label class="fl">País *</label>
+              <input type="hidden" id="fCountry">
+              <div class="cp-wrap" id="cpWrap">
+                <div class="cp-display empty" id="cpDisplay" onclick="cpToggle()">
+                  <span id="cpFlag" style="font-size:16px"></span>
+                  <span id="cpLabel" style="font-size:13.5px">— Seleccioná un país —</span>
+                  <span class="ms material-symbols-outlined cp-chevron">expand_more</span>
+                </div>
+                <div class="cp-dropdown" id="cpDropdown" style="display:none">
+                  <div class="cp-search-wrap">
+                    <input type="text" class="cp-search" id="cpSearch"
+                      placeholder="🔍 Buscar país…"
+                      oninput="cpFilter(this.value)"
+                      onkeydown="cpSearchKey(event)"
+                      autocomplete="off">
+                  </div>
+                  <div class="cp-list" id="cpList"></div>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="grid3">
+          <div class="grid2">
             <div class="fg"><label class="fl">Días *</label><input type="number" id="fDays" class="fi" placeholder="10" min="1"></div>
             <div class="fg">
               <label class="fl">Continente / Categoría</label>
@@ -624,15 +850,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
                 <option value="argentina">🇦🇷 Argentina</option>
               </select>
             </div>
-            <div class="fg">
-              <label class="fl">Dificultad</label>
-              <select id="fDiff" class="fs">
-                <option value="fácil">Fácil</option>
-                <option value="moderado">Moderado</option>
-                <option value="difícil">Difícil</option>
-              </select>
-            </div>
           </div>
+          <input type="hidden" id="fDiff" value="fácil">
         </div>
 
         <!-- Precios -->
@@ -651,36 +870,35 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <div class="ed-panel" id="tab-media">
 
         <div class="form-section">
-          <div class="form-section-title"><span class="ms material-symbols-outlined">photo</span>Imagen principal</div>
-          <div class="fg" style="margin-bottom:12px">
-            <label class="fl">URL de imagen</label>
-            <input type="text" id="fImgUrl" class="fi" placeholder="https://…" oninput="previewMain(this.value)">
+          <div class="form-section-title" style="justify-content:space-between">
+            <span style="display:flex;align-items:center;gap:7px"><span class="ms material-symbols-outlined">photo_library</span>Imágenes del paquete</span>
+            <div style="display:flex;gap:7px">
+              <label class="btn btn-ghost btn-sm" style="cursor:pointer" title="Subir imagen directo">
+                <span class="ms material-symbols-outlined" style="font-size:15px">upload</span>Subir
+                <input type="file" accept="image/*" multiple onchange="stripQuickUpload(event)" style="display:none">
+              </label>
+              <button type="button" class="btn btn-primary btn-sm" onclick="openImgManager()">
+                <span class="ms material-symbols-outlined" style="font-size:15px">tune</span>Administrar
+              </button>
+            </div>
           </div>
-          <!-- Drop zone -->
-          <div class="drop-zone" id="mainDropZone" ondragover="handleDragOver(event,'mainDropZone')" ondragleave="handleDragLeave('mainDropZone')" ondrop="handleDrop(event,'main')">
-            <input type="file" id="mainFileInput" accept="image/*" onchange="handleFileSelect(event,'main')" style="opacity:0;position:absolute;inset:0;cursor:pointer">
-            <span class="ms material-symbols-outlined">upload_file</span>
-            <p>Arrastrá una imagen aquí</p>
-            <span>o hacé click para seleccionar</span>
+          <!-- Drop zone para subir nuevas -->
+          <div id="stripUploadZone"
+            ondragover="stripUploadZoneOver(event)"
+            ondragleave="stripUploadZoneLeave()"
+            ondrop="stripDropUpload(event)"
+            onclick="document.getElementById('stripFileInput').click()"
+            style="border:2px dashed rgba(255,255,255,0.12);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:14px">
+            <span class="ms material-symbols-outlined" style="font-size:26px;color:rgba(255,255,255,0.25);flex-shrink:0">upload_file</span>
+            <div>
+              <div style="font-size:13px;color:rgba(255,255,255,0.5);font-weight:600">Arrastrá imágenes acá o tocá para seleccionar</div>
+              <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px">Se suben a la biblioteca y se agregan al paquete automáticamente</div>
+            </div>
+            <input type="file" id="stripFileInput" accept="image/*" multiple onchange="stripQuickUpload(event)" style="display:none">
           </div>
-          <div id="mainImgWrap" style="margin-top:12px">
-            <div class="img-ph"><span class="ms material-symbols-outlined" style="font-size:30px">image</span><span>Sin imagen</span></div>
-          </div>
-        </div>
-
-        <div class="form-section">
-          <div class="form-section-title"><span class="ms material-symbols-outlined">photo_library</span>Galería</div>
-          <!-- Gallery drop zone -->
-          <div class="drop-zone" id="galDropZone" style="min-height:100px;margin-bottom:12px" ondragover="handleDragOver(event,'galDropZone')" ondragleave="handleDragLeave('galDropZone')" ondrop="handleDrop(event,'gallery')">
-            <input type="file" accept="image/*" multiple onchange="handleFileSelect(event,'gallery')" style="opacity:0;position:absolute;inset:0;cursor:pointer">
-            <span class="ms material-symbols-outlined" style="font-size:28px">add_photo_alternate</span>
-            <p style="font-size:12px">Arrastrá imágenes para la galería</p>
-            <span style="font-size:11px">Podés subir múltiples a la vez</span>
-          </div>
-          <div id="galList" class="gal-list"></div>
-          <button type="button" class="add-gal" onclick="addGalItem()">
-            <span class="ms material-symbols-outlined" style="font-size:17px">add_link</span>Agregar por URL
-          </button>
+          <!-- Thumbnails -->
+          <div id="pkgImgStrip" style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-start"></div>
+          <input type="hidden" id="fImgUrl">
         </div>
 
       </div><!-- /tab-media -->
@@ -698,6 +916,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
         <div class="form-section">
           <div class="form-section-title"><span class="ms material-symbols-outlined">checklist</span>Incluye / No incluye</div>
+          <p style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:14px;margin-top:-6px"><kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> para agregar · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío para borrar</p>
           <div class="grid2">
             <div class="fg">
               <label class="fl" style="color:rgba(74,222,128,0.65);margin-bottom:6px">✓ Incluye</label>
@@ -720,18 +939,18 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
       <div class="ed-panel" id="tab-itinerary">
         <div class="form-section">
-          <div class="form-section-title"><span class="ms material-symbols-outlined">route</span>Itinerario día por día</div>
-          <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;margin-top:-8px">
-            Ingresá el día a la izquierda (ej: Día 1) y la descripción a la derecha. Se guardará automáticamente con formato resaltado.
-          </p>
-          
-          <div id="itineraryRows" class="flex flex-col gap-3">
-            <!-- Dynamic rows will be rendered here -->
+          <div class="form-section-title" style="justify-content:space-between">
+            <span style="display:flex;align-items:center;gap:7px"><span class="ms material-symbols-outlined">route</span>Itinerario día por día</span>
+            <button type="button" class="btn btn-primary btn-sm" onclick="autoGenerateDays()" id="btnAutodays" title="Genera filas vacías según los días del paquete">
+              <span class="ms material-symbols-outlined" style="font-size:15px">auto_fix_high</span>Generar días
+            </button>
           </div>
-          
-          <button type="button" class="add-gal" onclick="addItineraryRow()" style="margin-top:15px; border-style: solid; border-color: #3778b8; color: #7ab3e0">
-            <span class="ms material-symbols-outlined" style="font-size:18px">add_circle</span>
-            Agregar un día al itinerario
+          <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;margin-top:-4px">
+            Día a la izquierda · descripción a la derecha · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> agrega fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío borra
+          </p>
+          <div id="itineraryRows"></div>
+          <button type="button" class="add-gal" onclick="addItineraryRow()" style="margin-top:12px;border-style:solid;border-color:#3778b8;color:#7ab3e0">
+            <span class="ms material-symbols-outlined" style="font-size:18px">add_circle</span>Agregar día
           </button>
         </div>
       </div><!-- /tab-itinerary -->
@@ -794,6 +1013,21 @@ let isSavingOrder = false;
 // ═══════════════ AUTH ═════════════════
 let isAuth = sessionStorage.getItem('corradi_adm') === '1';
 
+// ── Theme ──
+function applyTheme(light) {
+  document.body.classList.toggle('light', light);
+  const icon  = document.getElementById('themeIcon');
+  const label = document.getElementById('themeLabel');
+  if (icon)  icon.textContent  = light ? 'dark_mode' : 'light_mode';
+  if (label) label.textContent = light ? 'Modo oscuro' : 'Modo claro';
+}
+function toggleTheme() {
+  const isLight = !document.body.classList.contains('light');
+  localStorage.setItem('corradi_theme', isLight ? 'light' : 'dark');
+  applyTheme(isLight);
+}
+applyTheme(localStorage.getItem('corradi_theme') === 'light');
+
 function doLogin() {
   const v = document.getElementById('passInput').value;
   if (v === ADMIN_PASS) {
@@ -818,6 +1052,16 @@ function init() {
 }
 async function initApp() {
   await loadPackages();
+  updateAIKeyStatus();
+}
+
+function updateAIKeyStatus() {
+  const el = document.getElementById('aiKeyStatus');
+  if (!el) return;
+  const hasKey = !!localStorage.getItem('corradi_ai_key');
+  el.textContent = hasKey ? '✓' : '—';
+  el.style.background = hasKey ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)';
+  el.style.color = hasKey ? '#4ade80' : 'rgba(255,255,255,0.3)';
 }
 
 // ═══════════════ SIDEBAR ══════════════
@@ -831,7 +1075,7 @@ function closeSidebar() {
 }
 
 // ═══════════════ VIEWS ════════════════
-const VIEWS = ['dashboard','packages'];
+const VIEWS = ['dashboard','packages','media'];
 
 function switchView(v) {
   VIEWS.forEach(id => {
@@ -839,9 +1083,89 @@ function switchView(v) {
   });
   document.getElementById('navDash')?.classList.toggle('active', v==='dashboard');
   document.getElementById('navPkg')?.classList.toggle('active', v==='packages');
+  document.getElementById('navMedia')?.classList.toggle('active', v==='media');
+  if (v === 'media') loadMediaLibrary();
   closeSidebar();
 }
 function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+// ── Filter helpers ──
+function clearAllFilters() {
+  const s = document.getElementById('pkgSearch'); if (s) s.value = '';
+  const fs = document.getElementById('filterStatus'); if (fs) fs.value = 'all';
+  const fc = document.getElementById('filterContinent'); if (fc) fc.value = 'all';
+  document.querySelectorAll('.sb-sub-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('sbFilterAll')?.classList.add('active');
+  renderPkgView();
+}
+
+function updateActiveFiltersBar() {
+  const bar = document.getElementById('activeFiltersBar');
+  if (!bar) return;
+  const q   = document.getElementById('pkgSearch')?.value?.trim();
+  const st  = document.getElementById('filterStatus')?.value;
+  const cnt = document.getElementById('filterContinent')?.value;
+  const tags = [];
+  const stLabels = {active:'Activos',inactive:'Inactivos',featured:'Destacados',offer:'Con oferta'};
+  const cntLabels = {europa:'Europa',caribe:'Caribe & México',america_del_sur:'Sudamérica',asia:'Asia & Pacífico',africa:'África',oceania:'Oceanía',general:'General'};
+  if (q) tags.push({label:`"${q}"`, clear:()=>{document.getElementById('pkgSearch').value='';renderPkgView();}});
+  if (st && st!=='all') tags.push({label:stLabels[st]||st, clear:()=>{document.getElementById('filterStatus').value='all';renderPkgView();}});
+  if (cnt && cnt!=='all') tags.push({label:cntLabels[cnt]||cnt, clear:()=>{document.getElementById('filterContinent').value='all';renderPkgView();}});
+  if (!tags.length) { bar.style.display='none'; return; }
+  bar.style.display = 'flex';
+  bar.innerHTML = '<span style="font-size:11px;color:rgba(255,255,255,0.35);font-weight:600">Filtros:</span>'
+    + tags.map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(55,120,184,0.15);border:1px solid rgba(55,120,184,0.3);border-radius:20px;padding:3px 10px 3px 12px;font-size:11px;color:#7ab3e0">
+        ${t.label}
+        <button onclick="(${t.clear.toString()})()" style="background:none;border:none;cursor:pointer;color:#7ab3e0;display:flex;align-items:center;padding:0;margin-left:2px">
+          <span class="ms material-symbols-outlined" style="font-size:13px">close</span>
+        </button>
+      </span>`).join('')
+    + `<button onclick="clearAllFilters()" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 10px;font-size:11px;color:rgba(255,255,255,0.4);cursor:pointer;font-family:inherit">Limpiar todo</button>`;
+}
+
+// ── Ctrl+S to save ──
+document.addEventListener('keydown', e => {
+  if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+    const panel = document.getElementById('editorPanel');
+    if (panel?.classList.contains('open')) { e.preventDefault(); savePackage(); }
+  }
+});
+
+// ── Itinerary auto-generate ──
+function autoGenerateDays() {
+  const n = parseInt(document.getElementById('fDays')?.value) || 0;
+  if (!n || n < 1) { showToast('Primero ingresá la cantidad de días en la tab Información', 'error'); return; }
+  if (n > 30) { showToast('Máximo 30 días para auto-generar', 'error'); return; }
+  if (itineraryItems.length > 0) {
+    if (!confirm(`Ya hay ${itineraryItems.length} día(s). ¿Reemplazar con ${n} filas vacías?`)) return;
+  }
+  itineraryItems = Array.from({length:n}, (_,i) => ({day:`Día ${i+1}`, desc:''}));
+  renderItineraryRows();
+  showToast(`${n} días generados — completá las descripciones`, 'success');
+  // focus first desc
+  setTimeout(() => document.querySelector('#itineraryRows textarea')?.focus(), 100);
+}
+
+// ── Editor tab content dots ──
+function updateEditorTabDots() {
+  const checks = {
+    info: () => !!(document.getElementById('fName')?.value || document.getElementById('fPrice')?.value),
+    media: () => pkgImages.length > 0,
+    details: () => !!(document.getElementById('fDesc')?.value || includesItems.length || excludesItems.length),
+    itinerary: () => itineraryItems.length > 0,
+  };
+  document.querySelectorAll('.ed-tab').forEach(tab => {
+    const key = tab.getAttribute('onclick')?.match(/switchEdTab\('(\w+)'/)?.[1];
+    if (!key) return;
+    tab.querySelector('.ed-tab-dot')?.remove();
+    if (checks[key]?.()) {
+      const dot = document.createElement('span');
+      dot.className = 'ed-tab-dot';
+      dot.style.cssText = 'width:5px;height:5px;border-radius:50%;background:#4ade80;display:inline-block;margin-left:5px;vertical-align:middle;flex-shrink:0';
+      tab.appendChild(dot);
+    }
+  });
+}
 
 // ── Sidebar quick filters ──
 let activeSbFilter = 'all';
@@ -951,18 +1275,48 @@ const CAT_META = {
   general:        { label:'General',          emoji:'🌍' },
 };
 
+function formatDate(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr);
+  if (isNaN(d)) return '';
+  const now = new Date();
+  const diffMs = now - d;
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays === 0) return 'Hoy';
+  if (diffDays === 1) return 'Ayer';
+  if (diffDays < 7) return `Hace ${diffDays} días`;
+  if (diffDays < 30) return `Hace ${Math.floor(diffDays/7)} sem.`;
+  return d.toLocaleDateString('es-AR', { day:'numeric', month:'short', year: d.getFullYear() !== now.getFullYear() ? 'numeric' : undefined });
+}
+
 function renderPkgView() {
   const container = document.getElementById('pkgViewContainer');
   if (!container) return;
+  updateActiveFiltersBar();
   const list = getFilteredPackages();
   if (!list.length) {
-    container.innerHTML = `<div class="empty"><span class="ms material-symbols-outlined">travel_off</span><p>No se encontraron paquetes con esos filtros</p></div>`;
+    const q = document.getElementById('pkgSearch')?.value;
+    const hasFilters = q || document.getElementById('filterStatus')?.value !== 'all' || document.getElementById('filterContinent')?.value !== 'all';
+    container.innerHTML = `<div class="empty">
+      <span class="ms material-symbols-outlined">travel_off</span>
+      <p>${hasFilters ? 'No hay paquetes con esos filtros' : 'No hay paquetes todavía'}</p>
+      ${hasFilters
+        ? `<button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="clearAllFilters()"><span class="ms material-symbols-outlined" style="font-size:15px">filter_alt_off</span>Limpiar filtros</button>`
+        : `<button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="openEditor(null)"><span class="ms material-symbols-outlined" style="font-size:15px">add</span>Crear primer paquete</button>`
+      }
+    </div>`;
     return;
   }
+  const isManual = (document.getElementById('filterSort')?.value === 'manual');
+  const manualHint = isManual
+    ? `<div style="display:flex;align-items:center;gap:7px;background:rgba(55,120,184,0.1);border:1px solid rgba(55,120,184,0.25);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px">
+        <span class="ms material-symbols-outlined" style="font-size:15px;color:#7ab3e0">drag_indicator</span>
+        Arrastrá las tarjetas para cambiar el orden. Se guarda automáticamente.
+      </div>` : '';
   const isList = viewMode === 'list';
   const renderFn = isList ? renderPkgListItem : renderPkgCard;
   const wrapClass = isList ? 'pkg-list' : 'pkg-grid';
-  container.innerHTML = `<div class="${wrapClass}">${list.map(p=>renderFn(p)).join('')}</div>`;
+  container.innerHTML = manualHint + `<div class="${wrapClass}">${list.map(p=>renderFn(p)).join('')}</div>`;
   bindCardEvents();
 }
 
@@ -978,11 +1332,11 @@ function renderPkgCard(p) {
     ${img}
     <div class="pkg-drag-handle" title="Arrastrar para reordenar"><span class="ms material-symbols-outlined">drag_indicator</span></div>
     <div class="pkg-quick">
-      <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.3)':'rgba(0,0,0,0.5)'}" onclick="event.stopPropagation();quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Marcar destacado'}">
-        <span class="ms material-symbols-outlined" style="color:${p.featured?'#fbbf24':'rgba(255,255,255,0.7)'};font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
+      <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.85)':'rgba(15,25,45,0.75)'}" onclick="event.stopPropagation();quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Marcar destacado'}">
+        <span class="ms material-symbols-outlined" style="color:${p.featured?'#1a1200':'rgba(255,255,255,0.75)'};font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
       </button>
-      <button class="pkg-qbtn" style="background:${p.active?'rgba(74,222,128,0.2)':'rgba(239,68,68,0.2)'}" onclick="event.stopPropagation();quickToggleActive(${p.id})" title="${p.active?'Desactivar':'Activar'}">
-        <span class="ms material-symbols-outlined" style="color:${p.active?'#4ade80':'#f87171'}">power_settings_new</span>
+      <button class="pkg-qbtn" style="background:${p.active?'rgba(34,197,94,0.85)':'rgba(239,68,68,0.85)'}" onclick="event.stopPropagation();quickToggleActive(${p.id})" title="${p.active?'Desactivar':'Activar'}">
+        <span class="ms material-symbols-outlined" style="color:#fff">power_settings_new</span>
       </button>
     </div>
     <div class="pkg-body">
@@ -993,10 +1347,13 @@ function renderPkgCard(p) {
           <div class="pkg-price">USD ${Number(p.price_usd).toLocaleString('es-AR')}</div>
           ${p.price_original_usd&&p.price_original_usd>p.price_usd?`<div style="font-size:10px;color:rgba(255,255,255,0.33);text-decoration:line-through;margin-top:1px">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</div>`:''}
         </div>
-        <div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
-          ${p.featured?'<span class="pill pill-featured">★</span>':''}
-          ${p.badge?`<span class="pill pill-badge">${p.badge}</span>`:''}
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
+            ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+            ${p.featured?'<span class="pill pill-featured">★</span>':''}
+            ${p.badge?`<span class="pill pill-badge">${p.badge}</span>`:''}
+          </div>
+          ${p.created_at?`<div class="pkg-card-date">${formatDate(p.created_at)}</div>`:''}
         </div>
       </div>
     </div>
@@ -1016,7 +1373,7 @@ function renderPkgListItem(p) {
     ${thumb}
     <div class="pkg-list-info">
       <div class="pkg-list-name">${p.name}</div>
-      <div class="pkg-list-sub">${p.destination||''}${p.country?' · '+p.country:''} · ${p.days} días</div>
+      <div class="pkg-list-sub">${p.destination||''}${p.country?' · '+p.country:''} · ${p.days} días${p.created_at?' · <span class="pkg-card-date">'+formatDate(p.created_at)+'</span>':''}</div>
     </div>
     <div class="pkg-list-price">
       USD ${Number(p.price_usd).toLocaleString('es-AR')}
@@ -1144,17 +1501,16 @@ function openEditor(pkgId) {
 
   document.getElementById('fName').value       = p?.name || '';
   document.getElementById('fDest').value       = p?.destination || '';
-  document.getElementById('fCountry').value    = p?.country || '';
+  cpSetValue(p?.country || '');
   document.getElementById('fDeptCity').value   = p?.departure_city || 'Rosario';
   document.getElementById('fDays').value       = p?.days || '';
   document.getElementById('fCat').value        = p?.category || 'general';
-  document.getElementById('fDiff').value       = p?.difficulty || 'fácil';
+  // difficulty removed from UI — kept in hidden field for DB compat
   document.getElementById('fPrice').value      = p?.price_usd || '';
   document.getElementById('fPriceOrig').value  = p?.price_original_usd || '';
   document.getElementById('fBadge').value      = p?.badge || '';
   document.getElementById('fActive').checked   = p ? p.active : true;
   document.getElementById('fFeatured').checked = p?.featured || false;
-  document.getElementById('fImgUrl').value     = p?.image_url || '';
   document.getElementById('fDesc').value       = p?.description || '';
   document.getElementById('fHighlights').value = p?.highlights || '';
 
@@ -1168,14 +1524,20 @@ function openEditor(pkgId) {
   itineraryItems = parseItinerary(p?.itinerary || '');
   renderItineraryRows();
 
-  previewMain(p?.image_url||'');
+  // Build unified image array — filter out blob: URLs (temporary, don't persist)
   let imgs = [];
   if (p?.images) {
-    if (Array.isArray(p.images)) imgs = p.images.filter(x=>typeof x==='string'&&x);
+    if (Array.isArray(p.images)) imgs = p.images.filter(x => typeof x === 'string' && x);
     else { try { imgs = JSON.parse(p.images); } catch(e){} }
   }
-  galUrls = [...imgs];
-  renderGal();
+  const allImgs = [p?.image_url, ...imgs].filter(Boolean);
+  const validImgs = allImgs.filter(u => !u.startsWith('blob:'));
+  const hadBlobs = allImgs.length > validImgs.length;
+  pkgImages = validImgs;
+  renderImgStrip();
+  if (hadBlobs) {
+    setTimeout(() => showToast('Algunas imágenes anteriores eran temporales y se perdieron. Volvé a subirlas.', 'error'), 400);
+  }
 
   // Reset to first tab
   document.querySelectorAll('.ed-tab').forEach((t,i)=>t.classList.toggle('active',i===0));
@@ -1183,6 +1545,7 @@ function openEditor(pkgId) {
 
   document.getElementById('editorPanel').classList.add('open');
   document.getElementById('editorPanel').scrollTop = 0;
+  setTimeout(updateEditorTabDots, 50);
 }
 
 function closeEditor() {
@@ -1190,79 +1553,332 @@ function closeEditor() {
   editingId = null;
 }
 
-function previewMain(url) {
-  const w = document.getElementById('mainImgWrap');
-  if (!w) return;
-  if (url?.trim()) {
-    w.innerHTML = `<img class="img-preview" src="${url}" alt="Preview" onerror="this.parentElement.innerHTML='<div class=img-ph><span class=ms style=font-size:28px>broken_image</span><span>URL inválida</span></div>'">`;
-  } else {
-    w.innerHTML = `<div class="img-ph"><span class="ms material-symbols-outlined" style="font-size:28px">image</span><span>Sin imagen</span></div>`;
-  }
-}
+// ══════════════ PKG IMAGE STRIP ══════════════
+let pkgImages = [];
 
-// ── Gallery ──
-function renderGal() {
-  const list = document.getElementById('galList');
-  if (!list) return;
-  list.innerHTML = galUrls.map((url,i)=>`
-  <div class="gal-item">
-    <img class="gal-thumb" src="${url}" alt="" onerror="this.style.opacity='.2'">
-    <input type="text" class="gal-inp" value="${url}" placeholder="https://…"
-      oninput="galUrls[${i}]=this.value;const t=this.closest('.gal-item').querySelector('.gal-thumb');t.src=this.value;t.style.opacity='1'">
-    <button type="button" class="gal-rm" onclick="removeGal(${i})"><span class="ms material-symbols-outlined" style="font-size:15px">close</span></button>
-  </div>`).join('');
-}
-function addGalItem() { galUrls.push(''); renderGal(); document.querySelectorAll('.gal-inp')[galUrls.length-1]?.focus(); }
-function removeGal(i) { galUrls.splice(i,1); renderGal(); }
-
-// ── Drag & Drop ──
-function handleDragOver(e, zoneId) {
-  e.preventDefault();
-  document.getElementById(zoneId)?.classList.add('drag-over');
-}
-function handleDragLeave(zoneId) {
-  document.getElementById(zoneId)?.classList.remove('drag-over');
-}
-function handleDrop(e, target) {
-  e.preventDefault();
-  const zoneId = target === 'main' ? 'mainDropZone' : 'galDropZone';
-  document.getElementById(zoneId)?.classList.remove('drag-over');
-  const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
-  files.forEach(file => processImageFile(file, target));
-}
-function handleFileSelect(e, target) {
-  const files = Array.from(e.target.files).filter(f=>f.type.startsWith('image/'));
-  files.forEach(file => processImageFile(file, target));
-  e.target.value = '';
-}
-
-async function processImageFile(file, target) {
-  // Upload to Supabase Storage
-  const bucket = 'corradi-images';
-  const path = `packages/${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi,'_')}`;
-  showToast(`Subiendo ${file.name}…`,'success');
-
-  const { data, error } = await db.storage.from(bucket).upload(path, file, { upsert:true });
-  if (error) {
-    // Fallback: use local object URL for preview
-    const url = URL.createObjectURL(file);
-    applyImageUrl(url, target);
-    showToast('Imagen lista (URL temporal) — configurá Supabase Storage para URLs permanentes','success');
+function renderImgStrip() {
+  const strip = document.getElementById('pkgImgStrip');
+  if (!strip) return;
+  document.getElementById('fImgUrl').value = pkgImages[0] || '';
+  if (!pkgImages.length) {
+    strip.innerHTML = `<div class="pis-empty" onclick="openImgManager()">
+      <span class="ms material-symbols-outlined" style="font-size:34px">add_photo_alternate</span>
+      <span>Tocá para agregar imágenes</span>
+    </div>`;
     return;
   }
-  const { data: pub } = db.storage.from(bucket).getPublicUrl(path);
-  applyImageUrl(pub.publicUrl, target);
-  showToast('Imagen subida ✓','success');
+  strip.innerHTML = pkgImages.map((url, i) => {
+    const isBlob = url.startsWith('blob:');
+    return `<div class="pis-thumb${i===0?' main-img':''}" draggable="true"
+      ondragstart="pisDragStart(event,${i})"
+      ondragenter="pisDragEnter(event,${i})"
+      ondragover="event.preventDefault()"
+      ondragleave="pisDragLeave(event)"
+      ondrop="pisDrop(event,${i})"
+      ondragend="pisDragEnd(event)">
+      ${isBlob
+        ? `<div onclick="openImgManager()" style="width:180px;height:130px;border-radius:10px;background:rgba(239,68,68,0.12);border:2px dashed rgba(239,68,68,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer">
+             <span class="ms material-symbols-outlined" style="font-size:18px;color:#f87171">broken_image</span>
+             <span style="font-size:9px;color:#f87171;font-weight:600;text-align:center;line-height:1.3">URL<br>temporal</span>
+           </div>`
+        : `<img src="${url}" alt="" onerror="this.style.opacity='.2'" onclick="openImgManager()">`
+      }
+      ${i===0?'<span class="pis-badge">PRINCIPAL</span>':''}
+      <span class="pis-num">${i+1}</span>
+      <button type="button" class="pis-rm" onclick="event.stopPropagation();removePkgImg(${i})" title="Quitar del paquete">
+        <span class="ms material-symbols-outlined">close</span>
+      </button>
+    </div>`;
+  }).join('')
+  + `<div class="pis-add" onclick="openImgManager()" title="Administrar imágenes">
+      <span class="ms material-symbols-outlined">add</span>
+    </div>`;
 }
 
-function applyImageUrl(url, target) {
-  if (target === 'main') {
-    document.getElementById('fImgUrl').value = url;
-    previewMain(url);
-  } else {
-    galUrls.push(url);
-    renderGal();
+function removePkgImg(i) { pkgImages.splice(i,1); renderImgStrip(); }
+
+// ── Strip drag-reorder ──
+let pisDragIdx = null;
+function pisDragStart(e, i) {
+  pisDragIdx = i;
+  e.dataTransfer.effectAllowed = 'move';
+  requestAnimationFrame(() => e.target.closest('.pis-thumb')?.classList.add('pis-dragging'));
+}
+function pisDragEnter(e, i) {
+  e.preventDefault();
+  if (pisDragIdx === null || pisDragIdx === i) return;
+  document.querySelectorAll('#pkgImgStrip .pis-thumb').forEach(el => el.classList.remove('pis-drop-before','pis-drop-after'));
+  const el = e.currentTarget;
+  el.classList.add(i > pisDragIdx ? 'pis-drop-after' : 'pis-drop-before');
+}
+function pisDragLeave(e) {
+  if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.classList.remove('pis-drop-before','pis-drop-after');
+}
+function pisDrop(e, i) {
+  e.preventDefault();
+  document.querySelectorAll('#pkgImgStrip .pis-thumb').forEach(el => el.classList.remove('pis-drop-before','pis-drop-after','pis-dragging'));
+  if (pisDragIdx === null || pisDragIdx === i) { pisDragIdx=null; return; }
+  const [moved] = pkgImages.splice(pisDragIdx, 1);
+  pkgImages.splice(i, 0, moved);
+  pisDragIdx = null;
+  renderImgStrip();
+  // animate landed item
+  requestAnimationFrame(() => {
+    const thumbs = document.querySelectorAll('#pkgImgStrip .pis-thumb');
+    thumbs[i]?.classList.add('pis-landed');
+    thumbs[i]?.addEventListener('animationend', () => thumbs[i]?.classList.remove('pis-landed'), {once:true});
+  });
+}
+function pisDragEnd(e) {
+  document.querySelectorAll('#pkgImgStrip .pis-thumb').forEach(el => el.classList.remove('pis-dragging','pis-drop-before','pis-drop-after'));
+  pisDragIdx = null;
+}
+
+// ════════════════ IMAGE MANAGER MODAL ════════════════
+let imgMgrOrder = [];
+let imgMgrDragIdx = null;
+
+async function openImgManager() {
+  imgMgrOrder = [...pkgImages];
+  document.getElementById('imgMgrModal')?.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'imgMgrModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px)';
+  modal.innerHTML = `
+    <div id="imgMgrBox" style="background:#0f1a2e;border:1px solid rgba(255,255,255,0.09);border-radius:22px;padding:0;max-width:820px;width:96%;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 50px 100px rgba(0,0,0,0.7);overflow:hidden">
+
+      <!-- Header -->
+      <div style="display:flex;align-items:center;gap:10px;padding:20px 22px 16px;border-bottom:1px solid rgba(255,255,255,0.07)">
+        <span class="ms material-symbols-outlined" style="color:#7ab3e0;font-size:21px;font-variation-settings:'FILL' 1">photo_library</span>
+        <h3 style="font-size:16px;font-weight:700;flex:1">Imágenes del paquete</h3>
+        <label class="btn btn-primary btn-sm" style="cursor:pointer">
+          <span class="ms material-symbols-outlined" style="font-size:15px">upload</span>Subir imagen
+          <input type="file" accept="image/*" multiple onchange="imgMgrUpload(event)" style="display:none">
+        </label>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="document.getElementById('imgMgrModal').remove()">
+          <span class="ms material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div style="overflow-y:auto;flex:1;padding:20px 22px">
+
+        <!-- SELECTED / ORDER section -->
+        <div style="margin-bottom:22px">
+          <div style="font-size:11px;font-weight:700;letter-spacing:.8px;color:rgba(255,255,255,0.35);margin-bottom:10px;text-transform:uppercase">
+            Orden para este paquete · La primera es la principal
+          </div>
+          <div id="imgMgrSelected" style="display:flex;flex-wrap:wrap;gap:10px;min-height:80px"></div>
+        </div>
+
+        <!-- LIBRARY section -->
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:.8px;color:rgba(255,255,255,0.35);margin-bottom:10px;text-transform:uppercase">
+            Biblioteca · Tocá para agregar · Arrastrá archivos acá para subir
+          </div>
+          <div id="imgMgrDropZone" style="border:2px dashed rgba(255,255,255,0.08);border-radius:14px;padding:12px;transition:border-color .2s">
+            <div id="imgMgrLib"></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 22px;border-top:1px solid rgba(255,255,255,0.07)">
+        <span style="font-size:12px;color:rgba(255,255,255,0.35);flex:1" id="imgMgrHint">Arrastrá las miniaturas de arriba para reordenar</span>
+        <button class="btn btn-ghost" onclick="document.getElementById('imgMgrModal').remove()">Cancelar</button>
+        <button class="btn btn-primary" onclick="imgMgrConfirm()">
+          <span class="ms material-symbols-outlined" style="font-size:16px">check</span>Guardar orden
+        </button>
+      </div>
+    </div>`;
+
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+
+  // Drag-to-upload on the drop zone
+  const dz = modal.querySelector('#imgMgrDropZone');
+  dz.addEventListener('dragover', e => { e.preventDefault(); dz.style.borderColor='rgba(55,120,184,0.6)'; });
+  dz.addEventListener('dragleave', () => { dz.style.borderColor='rgba(255,255,255,0.08)'; });
+  dz.addEventListener('drop', async e => {
+    e.preventDefault();
+    dz.style.borderColor='rgba(255,255,255,0.08)';
+    const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+    if (!files.length) return;
+    await imgMgrUploadFiles(files);
+  });
+
+  renderImgMgrSelected();
+  await loadImgMgrLib();
+}
+
+function renderImgMgrSelected() {
+  const sel = document.getElementById('imgMgrSelected');
+  if (!sel) return;
+  if (!imgMgrOrder.length) {
+    sel.innerHTML = `<div style="color:rgba(255,255,255,0.2);font-size:13px;padding:20px 0;width:100%;text-align:center">Ninguna imagen seleccionada — elegí de la biblioteca</div>`;
+    return;
   }
+  sel.innerHTML = imgMgrOrder.map((url,i) => `
+    <div class="imm-sel-thumb${i===0?' imm-main':''}" draggable="true"
+      ondragstart="imgMgrDragStart(event,${i})"
+      ondragenter="imgMgrDragEnter(event,${i})"
+      ondragover="event.preventDefault()"
+      ondragleave="imgMgrDragLeave(event)"
+      ondrop="imgMgrDrop(event,${i})"
+      ondragend="imgMgrDragEnd(event)"
+      title="Arrastrá para reordenar">
+      <img src="${url}" alt="" onerror="this.style.opacity='.2'">
+      ${i===0?'<span class="imm-badge">PRINCIPAL</span>':''}
+      <span class="imm-num">${i+1}</span>
+      <button class="imm-rm" onclick="imgMgrRemove(${i})" title="Quitar del paquete">
+        <span class="ms material-symbols-outlined">close</span>
+      </button>
+    </div>`).join('');
+}
+
+function imgMgrRemove(i) { imgMgrOrder.splice(i,1); renderImgMgrSelected(); refreshLibSelection(); }
+
+// Drag reorder inside modal selected zone
+function imgMgrDragStart(e, i) {
+  imgMgrDragIdx = i;
+  e.dataTransfer.effectAllowed = 'move';
+  requestAnimationFrame(() => e.target.closest('.imm-sel-thumb')?.classList.add('imm-dragging'));
+}
+function imgMgrDragEnter(e, i) {
+  e.preventDefault();
+  if (imgMgrDragIdx === null || imgMgrDragIdx === i) return;
+  document.querySelectorAll('#imgMgrSelected .imm-sel-thumb').forEach(el => el.classList.remove('imm-drop-before','imm-drop-after'));
+  e.currentTarget.classList.add(i > imgMgrDragIdx ? 'imm-drop-after' : 'imm-drop-before');
+}
+function imgMgrDragLeave(e) {
+  if (!e.currentTarget.contains(e.relatedTarget)) e.currentTarget.classList.remove('imm-drop-before','imm-drop-after');
+}
+function imgMgrDrop(e, i) {
+  e.preventDefault();
+  document.querySelectorAll('#imgMgrSelected .imm-sel-thumb').forEach(el => el.classList.remove('imm-drop-before','imm-drop-after','imm-dragging'));
+  if (imgMgrDragIdx === null || imgMgrDragIdx === i) { imgMgrDragIdx=null; return; }
+  const [moved] = imgMgrOrder.splice(imgMgrDragIdx, 1);
+  imgMgrOrder.splice(i, 0, moved);
+  imgMgrDragIdx = null;
+  renderImgMgrSelected();
+  requestAnimationFrame(() => {
+    const thumbs = document.querySelectorAll('#imgMgrSelected .imm-sel-thumb');
+    thumbs[i]?.classList.add('imm-landed');
+    thumbs[i]?.addEventListener('animationend', () => thumbs[i]?.classList.remove('imm-landed'), {once:true});
+  });
+}
+function imgMgrDragEnd(e) {
+  document.querySelectorAll('#imgMgrSelected .imm-sel-thumb').forEach(el => el.classList.remove('imm-dragging','imm-drop-before','imm-drop-after'));
+  imgMgrDragIdx = null;
+}
+
+async function loadImgMgrLib() {
+  const lib = document.getElementById('imgMgrLib');
+  if (!lib) return;
+  lib.innerHTML = `<div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.35);padding:20px 0"><span class="spinner"></span>Cargando…</div>`;
+  const { data, error } = await db.storage.from(MEDIA_BUCKET).list(MEDIA_FOLDER, { limit:500, sortBy:{column:'created_at',order:'desc'} });
+  if (error) { lib.innerHTML=`<p style="color:#f87171;font-size:12px;padding:10px">Error: ${error.message}</p>`; return; }
+  const files = (data||[]).filter(f=>f.name&&!f.name.endsWith('/'));
+  if (!files.length) { lib.innerHTML=`<p style="font-size:12px;color:rgba(255,255,255,0.3);padding:10px">No hay imágenes. Subí la primera.</p>`; return; }
+  lib.innerHTML = `<div class="img-adder-grid">${files.map(f=>{
+    const url=`${SUPABASE_URL}/storage/v1/object/public/${MEDIA_BUCKET}/${MEDIA_FOLDER}/${encodeURIComponent(f.name)}`;
+    const sel=imgMgrOrder.includes(url);
+    return `<div class="img-adder-item${sel?' selected':''}" onclick="imgMgrToggleLib(this,'${url}')" title="${f.name.replace(/^\d+_/,'')}">
+      <img src="${url}" alt="" loading="lazy" onerror="this.style.opacity='.2'">
+      <div class="sel-check"><span class="ms material-symbols-outlined">check</span></div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function imgMgrToggleLib(el, url) {
+  const idx = imgMgrOrder.indexOf(url);
+  if (idx === -1) { imgMgrOrder.push(url); el.classList.add('selected'); }
+  else { imgMgrOrder.splice(idx,1); el.classList.remove('selected'); }
+  renderImgMgrSelected();
+}
+
+function refreshLibSelection() {
+  document.querySelectorAll('#imgMgrLib .img-adder-item').forEach(el => {
+    const url = el.getAttribute('onclick')?.match(/'([^']+)'/)?.[1];
+    if (url) el.classList.toggle('selected', imgMgrOrder.includes(url));
+  });
+}
+
+async function imgMgrUpload(e) {
+  const files = Array.from(e.target.files).filter(f=>f.type.startsWith('image/'));
+  e.target.value='';
+  await imgMgrUploadFiles(files);
+}
+
+async function imgMgrUploadFiles(files) {
+  const lib = document.getElementById('imgMgrLib');
+  if (lib) lib.innerHTML=`<div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.35);padding:20px 0"><span class="spinner"></span>Subiendo ${files.length} imagen${files.length>1?'es':''}…</div>`;
+  const newUrls = [];
+  for (const file of files) {
+    const path=`${MEDIA_FOLDER}/${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi,'_')}`;
+    const { error } = await db.storage.from(MEDIA_BUCKET).upload(path, file, { upsert:true });
+    if (!error) {
+      const { data:pub } = db.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+      newUrls.push(pub.publicUrl);
+    }
+  }
+  newUrls.forEach(u=>{ if(!imgMgrOrder.includes(u)) imgMgrOrder.push(u); });
+  renderImgMgrSelected();
+  await loadImgMgrLib();
+  if (newUrls.length) showToast(`${newUrls.length} imagen${newUrls.length>1?'es':''} subida${newUrls.length>1?'s':''} y agregada${newUrls.length>1?'s':''} ✓`,'success');
+}
+
+function imgMgrConfirm() {
+  pkgImages = [...imgMgrOrder];
+  renderImgStrip();
+  document.getElementById('imgMgrModal')?.remove();
+}
+
+// ── Quick upload from strip ──
+async function stripQuickUpload(e) {
+  const files = Array.from(e.target.files).filter(f=>f.type.startsWith('image/'));
+  e.target.value='';
+  await stripUploadFiles(files);
+}
+function stripUploadZoneOver(e) {
+  e.preventDefault();
+  const z = document.getElementById('stripUploadZone');
+  if (z) { z.style.borderColor='rgba(55,120,184,0.7)'; z.style.background='rgba(55,120,184,0.07)'; }
+}
+function stripUploadZoneLeave() {
+  const z = document.getElementById('stripUploadZone');
+  if (z) { z.style.borderColor='rgba(255,255,255,0.12)'; z.style.background=''; }
+}
+async function stripDropUpload(e) {
+  e.preventDefault();
+  stripUploadZoneLeave();
+  const files = Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/'));
+  await stripUploadFiles(files);
+}
+async function stripUploadFiles(files) {
+  if (!files.length) return;
+  showToast(`Subiendo ${files.length} imagen${files.length>1?'es':''}…`,'success');
+  for (const file of files) {
+    const path=`${MEDIA_FOLDER}/${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi,'_')}`;
+    const { error } = await db.storage.from(MEDIA_BUCKET).upload(path, file, { upsert:true });
+    if (!error) {
+      const { data:pub } = db.storage.from(MEDIA_BUCKET).getPublicUrl(path);
+      if (!pkgImages.includes(pub.publicUrl)) pkgImages.push(pub.publicUrl);
+    } else {
+      showToast('Error: '+error.message,'error');
+    }
+  }
+  renderImgStrip();
+  showToast('Imágenes guardadas en biblioteca y agregadas al paquete ✓','success');
+}
+
+// compat stubs
+function previewMain() {}
+function renderGal() {}
+function applyImageUrl(url) {
+  if (!pkgImages.includes(url)) pkgImages.push(url);
+  renderImgStrip();
 }
 
 // ── Duplicate ──
@@ -1286,7 +1902,7 @@ async function duplicatePackageById(id) {
 async function savePackage() {
   const name    = document.getElementById('fName').value.trim();
   const dest    = document.getElementById('fDest').value.trim();
-  const country = document.getElementById('fCountry').value.trim();
+  const country = document.getElementById('fCountry').value;
   const days    = parseInt(document.getElementById('fDays').value);
   const price   = parseFloat(document.getElementById('fPrice').value);
   if (!name || !dest || !country || !days || isNaN(price)) {
@@ -1304,8 +1920,8 @@ async function savePackage() {
     badge:    document.getElementById('fBadge').value.trim()||null,
     active:   document.getElementById('fActive').checked,
     featured: document.getElementById('fFeatured').checked,
-    image_url:document.getElementById('fImgUrl').value.trim()||null,
-    images:   galUrls.filter(u=>u.trim()),
+    image_url: pkgImages[0] || null,
+    images:    pkgImages.slice(1),
     description: document.getElementById('fDesc').value.trim()||null,
     highlights:  document.getElementById('fHighlights').value.trim()||null,
     includes:    getBulletsText('includes')||null,
@@ -1437,6 +2053,151 @@ async function onDrop(e, destId) {
   } finally {
     isSavingOrder = false;
   }
+}
+
+// ═══════════════ MEDIA LIBRARY ═════════
+const MEDIA_BUCKET = 'corradi-images';
+const MEDIA_FOLDER = 'packages';
+let mediaPickerTarget = null; // 'main' | 'gallery' | null
+
+async function loadMediaLibrary() {
+  const grid = document.getElementById('mediaGrid');
+  const stats = document.getElementById('mediaStats');
+  if (!grid) return;
+  grid.innerHTML = `<div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.4);padding:40px 0"><span class="spinner"></span>Cargando imágenes…</div>`;
+
+  const { data, error } = await db.storage.from(MEDIA_BUCKET).list(MEDIA_FOLDER, {
+    limit: 500, sortBy: { column: 'created_at', order: 'desc' }
+  });
+  if (error) {
+    console.error('[Media list error]', error);
+    grid.innerHTML = `<div class="empty">
+      <span class="ms material-symbols-outlined">lock</span>
+      <p style="color:#f87171;margin-bottom:8px">Error: ${error.message}</p>
+      <p style="font-size:12px;max-width:400px;line-height:1.6">Falta la política SELECT en Supabase.<br>
+      Ir a Storage → Policies → bucket <b>corradi-images</b> → New policy → SELECT → anon → guardar.</p>
+    </div>`;
+    return;
+  }
+  const files = (data || []).filter(f => f.name && !f.name.endsWith('/'));
+  if (stats) stats.textContent = `${files.length} imagen${files.length !== 1 ? 'es' : ''} almacenada${files.length !== 1 ? 's' : ''}`;
+  if (!files.length) {
+    grid.innerHTML = `<div class="empty"><span class="ms material-symbols-outlined">photo_library</span><p>No hay imágenes todavía. Subí la primera desde aquí o desde un paquete.</p></div>`;
+    return;
+  }
+  grid.innerHTML = `<div class="media-grid">${files.map(f => renderMediaCard(f, false)).join('')}</div>`;
+}
+
+function renderMediaCard(f, pickerMode) {
+  const url = `${SUPABASE_URL}/storage/v1/object/public/${MEDIA_BUCKET}/${MEDIA_FOLDER}/${encodeURIComponent(f.name)}`;
+  const date = f.created_at ? formatDate(f.created_at) : '';
+  const extraClass = pickerMode ? ' picker-mode' : '';
+  const clickHandler = pickerMode
+    ? `pickMediaImage('${url}')`
+    : `copyMediaUrl('${url}')`;
+  return `
+  <div class="media-card${extraClass}" onclick="${clickHandler}" title="${f.name}">
+    <img src="${url}" alt="${f.name}" loading="lazy" onerror="this.style.background='rgba(255,255,255,0.05)'">
+    <div class="media-card-body">
+      <div class="media-card-name">${f.name.replace(/^\d+_/, '')}</div>
+      <div class="media-card-date">${date}</div>
+      ${!pickerMode ? `<div class="media-card-actions">
+        <button class="media-btn media-btn-copy" onclick="event.stopPropagation();copyMediaUrl('${url}')">Copiar URL</button>
+        <button class="media-btn media-btn-del" onclick="event.stopPropagation();deleteMediaFile('${f.name}')" title="Eliminar">✕</button>
+      </div>` : ''}
+    </div>
+  </div>`;
+}
+
+function copyMediaUrl(url) {
+  navigator.clipboard.writeText(url).then(() => showToast('URL copiada ✓', 'success'));
+}
+
+async function deleteMediaFile(name) {
+  if (!confirm(`¿Eliminar "${name.replace(/^\d+_/, '')}"? Esta acción no se puede deshacer.`)) return;
+  const { error } = await db.storage.from(MEDIA_BUCKET).remove([`${MEDIA_FOLDER}/${name}`]);
+  if (error) { showToast('Error al eliminar: ' + error.message, 'error'); return; }
+  showToast('Imagen eliminada', 'success');
+  loadMediaLibrary();
+}
+
+async function mediaUpload(e) {
+  const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+  if (!files.length) return;
+  showToast(`Subiendo ${files.length} imagen${files.length > 1 ? 'es' : ''}…`, 'success');
+  let ok = 0;
+  for (const file of files) {
+    const path = `${MEDIA_FOLDER}/${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi, '_')}`;
+    const { error } = await db.storage.from(MEDIA_BUCKET).upload(path, file, { upsert: true });
+    if (!error) ok++;
+  }
+  e.target.value = '';
+  showToast(`${ok} imagen${ok > 1 ? 'es' : ''} subida${ok > 1 ? 's' : ''} ✓`, 'success');
+  loadMediaLibrary();
+}
+
+function openMediaPicker(target) {
+  mediaPickerTarget = target;
+  const existing = document.getElementById('mediaPickerModal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'mediaPickerModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px)';
+  modal.innerHTML = `
+    <div style="background:#111c2d;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:24px;max-width:820px;width:95%;max-height:85vh;display:flex;flex-direction:column;box-shadow:0 40px 80px rgba(0,0,0,0.6)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <span class="ms material-symbols-outlined" style="color:#7ab3e0;font-size:22px;font-variation-settings:'FILL' 1">photo_library</span>
+        <h3 style="font-size:17px;font-weight:700;flex:1">Elegir imagen de la biblioteca</h3>
+        <label class="btn btn-ghost btn-sm" style="cursor:pointer;font-size:12px">
+          <span class="ms material-symbols-outlined" style="font-size:15px">upload</span>Subir nueva
+          <input type="file" accept="image/*" onchange="mediaUploadFromPicker(event)" style="display:none">
+        </label>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="document.getElementById('mediaPickerModal').remove()">
+          <span class="ms material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="mediaPickerGrid" style="overflow-y:auto;flex:1">
+        <div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.4);padding:30px 0"><span class="spinner"></span>Cargando…</div>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  loadPickerGrid();
+}
+
+async function loadPickerGrid() {
+  const grid = document.getElementById('mediaPickerGrid');
+  if (!grid) return;
+  const { data, error } = await db.storage.from(MEDIA_BUCKET).list(MEDIA_FOLDER, {
+    limit: 500, sortBy: { column: 'created_at', order: 'desc' }
+  });
+  if (error) { grid.innerHTML = `<p style="color:#f87171;font-size:13px;padding:20px">Error: ${error.message}<br><br>Agregá una política SELECT para anon en Supabase Storage.</p>`; return; }
+  const files = (data || []).filter(f => f.name && !f.name.endsWith('/'));
+  if (!files.length) {
+    grid.innerHTML = `<div class="empty"><span class="ms material-symbols-outlined">photo_library</span><p>No hay imágenes. Subí una primero.</p></div>`;
+    return;
+  }
+  grid.innerHTML = `<div class="media-grid">${files.map(f => renderMediaCard(f, true)).join('')}</div>`;
+}
+
+async function mediaUploadFromPicker(e) {
+  const files = Array.from(e.target.files).filter(f => f.type.startsWith('image/'));
+  if (!files.length) return;
+  const grid = document.getElementById('mediaPickerGrid');
+  if (grid) grid.innerHTML = `<div style="display:flex;align-items:center;gap:10px;color:rgba(255,255,255,0.4);padding:30px 0"><span class="spinner"></span>Subiendo…</div>`;
+  for (const file of files) {
+    const path = `${MEDIA_FOLDER}/${Date.now()}_${file.name.replace(/[^a-z0-9.]/gi, '_')}`;
+    await db.storage.from(MEDIA_BUCKET).upload(path, file, { upsert: true });
+  }
+  e.target.value = '';
+  loadPickerGrid();
+}
+
+function pickMediaImage(url) {
+  applyImageUrl(url, mediaPickerTarget);
+  document.getElementById('mediaPickerModal')?.remove();
+  showToast('Imagen seleccionada ✓', 'success');
 }
 
 // ═══════════════ BULLET LISTS ═════════
@@ -1658,6 +2419,669 @@ document.addEventListener('click', e => {
     document.getElementById('emojiPopup')?.classList.remove('show');
   }
   if (!document.getElementById('ctxMenu').contains(e.target)) hideCtxMenu();
+});
+
+// ═══════════════ COUNTRY PICKER ══════════
+const CP_COUNTRIES = [
+  { group:'Europa', flag:'🇦🇩', name:'Andorra' },
+  { group:'Europa', flag:'🇦🇱', name:'Albania' },
+  { group:'Europa', flag:'🇩🇪', name:'Alemania' },
+  { group:'Europa', flag:'🇦🇹', name:'Austria' },
+  { group:'Europa', flag:'🇧🇪', name:'Bélgica' },
+  { group:'Europa', flag:'🇧🇬', name:'Bulgaria' },
+  { group:'Europa', flag:'🇨🇾', name:'Chipre' },
+  { group:'Europa', flag:'🇭🇷', name:'Croacia' },
+  { group:'Europa', flag:'🇩🇰', name:'Dinamarca' },
+  { group:'Europa', flag:'🏴󠁧󠁢󠁳󠁣󠁴󠁿', name:'Escocia' },
+  { group:'Europa', flag:'🇸洛', name:'Eslovaquia' },
+  { group:'Europa', flag:'🇸🇮', name:'Eslovenia' },
+  { group:'Europa', flag:'🇪🇸', name:'España' },
+  { group:'Europa', flag:'🇪🇪', name:'Estonia' },
+  { group:'Europa', flag:'🇫🇮', name:'Finlandia' },
+  { group:'Europa', flag:'🇫🇷', name:'Francia' },
+  { group:'Europa', flag:'🇬🇮', name:'Gibraltar' },
+  { group:'Europa', flag:'🇬🇷', name:'Grecia' },
+  { group:'Europa', flag:'🇳🇱', name:'Holanda' },
+  { group:'Europa', flag:'🇭🇺', name:'Hungría' },
+  { group:'Europa', flag:'🇮🇪', name:'Irlanda' },
+  { group:'Europa', flag:'🇮🇸', name:'Islandia' },
+  { group:'Europa', flag:'🇮🇹', name:'Italia' },
+  { group:'Europa', flag:'🇱🇻', name:'Letonia' },
+  { group:'Europa', flag:'🇱🇹', name:'Lituania' },
+  { group:'Europa', flag:'🇱🇺', name:'Luxemburgo' },
+  { group:'Europa', flag:'🇲🇹', name:'Malta' },
+  { group:'Europa', flag:'🇲🇨', name:'Mónaco' },
+  { group:'Europa', flag:'🇳🇴', name:'Noruega' },
+  { group:'Europa', flag:'🇵🇱', name:'Polonia' },
+  { group:'Europa', flag:'🇵🇹', name:'Portugal' },
+  { group:'Europa', flag:'🇬🇧', name:'Reino Unido' },
+  { group:'Europa', flag:'🇨🇿', name:'República Checa' },
+  { group:'Europa', flag:'🇷🇴', name:'Rumania' },
+  { group:'Europa', flag:'🇷🇺', name:'Rusia' },
+  { group:'Europa', flag:'🇸🇪', name:'Suecia' },
+  { group:'Europa', flag:'🇨🇭', name:'Suiza' },
+  { group:'Europa', flag:'🇹🇷', name:'Turquía' },
+  { group:'Europa', flag:'🇺🇦', name:'Ucrania' },
+  
+  { group:'América del Norte y Caribe', flag:'🇦🇮', name:'Anguila' },
+  { group:'América del Norte y Caribe', flag:'🇦🇼', name:'Aruba' },
+  { group:'América del Norte y Caribe', flag:'🇧🇸', name:'Bahamas' },
+  { group:'América del Norte y Caribe', flag:'🇧🇧', name:'Barbados' },
+  { group:'América del Norte y Caribe', flag:'🇧🇿', name:'Belice' },
+  { group:'América del Norte y Caribe', flag:'🇨🇦', name:'Canadá' },
+  { group:'América del Norte y Caribe', flag:'🇨🇷', name:'Costa Rica' },
+  { group:'América del Norte y Caribe', flag:'🇨🇺', name:'Cuba' },
+  { group:'América del Norte y Caribe', flag:'🇨🇼', name:'Curazao' },
+  { group:'América del Norte y Caribe', flag:'🇩🇲', name:'Dominica' },
+  { group:'América del Norte y Caribe', flag:'🇸🇻', name:'El Salvador' },
+  { group:'América del Norte y Caribe', flag:'🇺🇸', name:'Estados Unidos' },
+  { group:'América del Norte y Caribe', flag:'🇬🇩', name:'Granada' },
+  { group:'América del Norte y Caribe', flag:'🇬🇵', name:'Guadalupe' },
+  { group:'América del Norte y Caribe', flag:'🇬🇹', name:'Guatemala' },
+  { group:'América del Norte y Caribe', flag:'🇭🇹', name:'Haití' },
+  { group:'América del Norte y Caribe', flag:'🇭🇳', name:'Honduras' },
+  { group:'América del Norte y Caribe', flag:'🇮维', name:'Islas Vírgenes' },
+  { group:'América del Norte y Caribe', flag:'🇯🇲', name:'Jamaica' },
+  { group:'América del Norte y Caribe', flag:'🇲🇶', name:'Martinica' },
+  { group:'América del Norte y Caribe', flag:'🇲🇽', name:'México' },
+  { group:'América del Norte y Caribe', flag:'🇳🇮', name:'Nicaragua' },
+  { group:'América del Norte y Caribe', flag:'🇵🇦', name:'Panamá' },
+  { group:'América del Norte y Caribe', flag:'🇵🇷', name:'Puerto Rico' },
+  { group:'América del Norte y Caribe', flag:'🇩🇴', name:'República Dominicana' },
+  { group:'América del Norte y Caribe', flag:'🇱🇨', name:'Santa Lucía' },
+  { group:'América del Norte y Caribe', flag:'🇹🇹', name:'Trinidad y Tobago' },
+
+  { group:'América del Sur', flag:'🇦🇷', name:'Argentina' },
+  { group:'América del Sur', flag:'🇧🇴', name:'Bolivia' },
+  { group:'América del Sur', flag:'🇧🇷', name:'Brasil' },
+  { group:'América del Sur', flag:'🇨🇱', name:'Chile' },
+  { group:'América del Sur', flag:'🇨🇴', name:'Colombia' },
+  { group:'América del Sur', flag:'🇪🇨', name:'Ecuador' },
+  { group:'América del Sur', flag:'🇬🇾', name:'Guyana' },
+  { group:'América del Sur', flag:'🇵🇾', name:'Paraguay' },
+  { group:'América del Sur', flag:'🇵🇪', name:'Perú' },
+  { group:'América del Sur', flag:'🇸🇷', name:'Surinam' },
+  { group:'América del Sur', flag:'🇺🇾', name:'Uruguay' },
+  { group:'América del Sur', flag:'🇻🇪', name:'Venezuela' },
+
+  { group:'Asia', flag:'🇸🇦', name:'Arabia Saudita' },
+  { group:'Asia', flag:'🇦🇲', name:'Armenia' },
+  { group:'Asia', flag:'🇦🇿', name:'Azerbaiyán' },
+  { group:'Asia', flag:'🇮🇩', name:'Bali (Indonesia)' },
+  { group:'Asia', flag:'🇶🇦', name:'Catar' },
+  { group:'Asia', flag:'🇨🇳', name:'China' },
+  { group:'Asia', flag:'🇰🇷', name:'Corea del Sur' },
+  { group:'Asia', flag:'🇦🇪', name:'Dubai (EAU)' },
+  { group:'Asia', flag:'🇵🇭', name:'Filipinas' },
+  { group:'Asia', flag:'🇬🇪', name:'Georgia' },
+  { group:'Asia', flag:'🇮🇳', name:'India' },
+  { group:'Asia', flag:'🇮🇱', name:'Israel' },
+  { group:'Asia', flag:'🇯🇵', name:'Japón' },
+  { group:'Asia', flag:'🇯🇴', name:'Jordania' },
+  { group:'Asia', flag:'🇱🇧', name:'Líbano' },
+  { group:'Asia', flag:'🇲🇻', name:'Maldivas' },
+  { group:'Asia', flag:'🇲🇾', name:'Malasia' },
+  { group:'Asia', flag:'🇳🇵', name:'Nepal' },
+  { group:'Asia', flag:'🇴🇲', name:'Omán' },
+  { group:'Asia', flag:'🇸🇬', name:'Singapur' },
+  { group:'Asia', flag:'🇱🇰', name:'Sri Lanka' },
+  { group:'Asia', flag:'🇹🇭', name:'Tailandia' },
+  { group:'Asia', flag:'🇻🇳', name:'Vietnam' },
+
+  { group:'África', flag:'🇩🇿', name:'Argelia' },
+  { group:'África', flag:'🇨🇻', name:'Cabo Verde' },
+  { group:'África', flag:'🇪🇬', name:'Egipto' },
+  { group:'África', flag:'🇪🇹', name:'Etiopía' },
+  { group:'África', flag:'🇰🇪', name:'Kenya' },
+  { group:'África', flag:'🇲🇦', name:'Marruecos' },
+  { group:'África', flag:'🇲🇺', name:'Mauricio' },
+  { group:'África', flag:'🇳🇦', name:'Namibia' },
+  { group:'África', flag:'🇳🇬', name:'Nigeria' },
+  { group:'África', flag:'🇸🇪', name:'Seychelles' },
+  { group:'África', flag:'🇿🇦', name:'Sudáfrica' },
+  { group:'África', flag:'🇹🇿', name:'Tanzania' },
+  { group:'África', flag:'🇹🇳', name:'Túnez' },
+  { group:'África', flag:'🇹🇿', name:'Zanzibar' },
+
+  { group:'Oceanía', flag:'🇦🇺', name:'Australia' },
+  { group:'Oceanía', flag:'🇫🇯', name:'Fiyi' },
+  { group:'Oceanía', flag:'🇳🇿', name:'Nueva Zelanda' },
+  { group:'Oceanía', flag:'🇵🇫', name:'Polinesia Francesa' },
+
+  { group:'Multipaís', flag:'🗺️', name:'Europa Central' },
+  { group:'Multipaís', flag:'🗺️', name:'Europa del Este' },
+  { group:'Multipaís', flag:'🌍', name:'Varios países' },
+];
+
+let cpOpen = false;
+let cpHighlightIdx = -1;
+let cpFilteredItems = [];
+
+function cpRender(query) {
+  const q = (query||'').toLowerCase().trim();
+  const list = document.getElementById('cpList');
+  if (!list) return;
+  const usedCountries = new Set(packages.map(p => p.country).filter(Boolean));
+  cpFilteredItems = CP_COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.group.toLowerCase().includes(q));
+  if (!q && usedCountries.size) {
+    cpFilteredItems = [
+      ...cpFilteredItems.filter(c => usedCountries.has(c.name)),
+      ...cpFilteredItems.filter(c => !usedCountries.has(c.name)),
+    ];
+  }
+  if (!cpFilteredItems.length) {
+    list.innerHTML = `<div class="cp-no-results">No se encontró ningún país</div>`;
+    cpHighlightIdx = -1;
+    return;
+  }
+  const groups = {};
+  cpFilteredItems.forEach((c, i) => {
+    const key = (!q && usedCountries.has(c.name)) ? '⭐ Ya usados' : c.group;
+    if (!groups[key]) groups[key] = [];
+    groups[key].push({...c, _idx: i});
+  });
+  let html = '';
+  const showGroups = !q || usedCountries.size;
+  for (const [grp, items] of Object.entries(groups)) {
+    if (showGroups && !q) html += `<div class="cp-group-label">${grp}</div>`;
+    items.forEach(c => {
+      const sel = document.getElementById('fCountry').value === c.name ? ' selected' : '';
+      const used = usedCountries.has(c.name);
+      const count = used ? packages.filter(p => p.country === c.name).length : 0;
+      const badge = used ? `<span style="margin-left:auto;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(55,120,184,0.25);color:#7ab3e0">${count} pkg</span>` : '';
+      html += `<div class="cp-option${sel}" data-idx="${c._idx}" data-name="${c.name}" data-flag="${c.flag}"
+        onmousedown="cpSelect('${c.name.replace(/'/g,"\\'")}','${c.flag}')">${c.flag} ${c.name}${badge}</div>`;
+    });
+  }
+  list.innerHTML = html;
+  cpHighlightIdx = -1;
+}
+
+function cpToggle() {
+  if (cpOpen) { cpClose(); return; }
+  cpOpen = true;
+  const dd = document.getElementById('cpDropdown');
+  const disp = document.getElementById('cpDisplay');
+  document.body.appendChild(dd);
+  const rect = disp.getBoundingClientRect();
+  dd.style.display = 'block';
+  dd.style.top  = (rect.bottom + 5) + 'px';
+  dd.style.left = rect.left + 'px';
+  dd.style.width = rect.width + 'px';
+  disp.classList.add('open');
+  cpRender('');
+  requestAnimationFrame(() => {
+    const search = document.getElementById('cpSearch');
+    if (search) search.focus();
+    const sel = document.querySelector('#cpList .cp-option.selected');
+    if (sel) sel.scrollIntoView({block:'nearest'});
+  });
+}
+
+function cpClose() {
+  cpOpen = false;
+  const dd = document.getElementById('cpDropdown');
+  if (dd) dd.style.display = 'none';
+  const disp = document.getElementById('cpDisplay');
+  if (disp) disp.classList.remove('open');
+  if (document.getElementById('cpSearch')) document.getElementById('cpSearch').value = '';
+}
+
+function cpSelect(name, flag) {
+  document.getElementById('fCountry').value = name;
+  const disp = document.getElementById('cpDisplay');
+  document.getElementById('cpFlag').textContent = flag;
+  document.getElementById('cpLabel').textContent = name;
+  disp.classList.remove('empty');
+
+  // Auto-set Category (Continent)
+  const countryData = CP_COUNTRIES.find(c => c.name === name);
+  if (countryData) {
+    const catSelect = document.getElementById('fCat');
+    if (name === 'Argentina') {
+      catSelect.value = 'argentina';
+    } else {
+      const mapping = {
+        'Europa': 'europa',
+        'América del Norte y Caribe': 'caribe',
+        'América del Sur': 'america_del_sur',
+        'Asia': 'asia',
+        'África': 'africa',
+        'Oceanía': 'oceania',
+        'Multipaís': 'general'
+      };
+      const catVal = mapping[countryData.group];
+      if (catVal) catSelect.value = catVal;
+    }
+  }
+
+  cpClose();
+}
+
+function cpSetValue(name) {
+  const country = CP_COUNTRIES.find(c => c.name === name);
+  if (name && country) {
+    cpSelect(name, country.flag);
+  } else if (name) {
+    document.getElementById('fCountry').value = name;
+    document.getElementById('cpFlag').textContent = '🌍';
+    document.getElementById('cpLabel').textContent = name;
+    document.getElementById('cpDisplay').classList.remove('empty');
+  } else {
+    document.getElementById('fCountry').value = '';
+    document.getElementById('cpFlag').textContent = '';
+    document.getElementById('cpLabel').textContent = '— Seleccioná un país —';
+    document.getElementById('cpDisplay').classList.add('empty');
+  }
+}
+
+function cpFilter(q) { cpRender(q); cpHighlightIdx = -1; }
+
+function cpSearchKey(e) {
+  const items = document.querySelectorAll('#cpList .cp-option');
+  if (!items.length) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); cpHighlightIdx = Math.min(cpHighlightIdx + 1, items.length - 1); cpUpdateHighlight(items); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); cpHighlightIdx = Math.max(cpHighlightIdx - 1, 0); cpUpdateHighlight(items); }
+  else if (e.key === 'Enter') { e.preventDefault(); if (cpHighlightIdx >= 0 && items[cpHighlightIdx]) { const el = items[cpHighlightIdx]; cpSelect(el.dataset.name, el.dataset.flag); } else if (cpFilteredItems.length === 1) { const c = cpFilteredItems[0]; cpSelect(c.name, c.flag); } }
+  else if (e.key === 'Escape') { cpClose(); }
+}
+
+function cpUpdateHighlight(items) {
+  items.forEach((el, i) => { el.style.background = i === cpHighlightIdx ? 'rgba(55,120,184,0.3)' : ''; el.style.color = i === cpHighlightIdx ? '#fff' : ''; });
+  if (cpHighlightIdx >= 0) items[cpHighlightIdx].scrollIntoView({block:'nearest'});
+}
+
+// ═══════════════ DEST PICKER ═══════════════
+function dpRender(q) {
+  const dd = document.getElementById('dpDropdown');
+  const inp = document.getElementById('fDest');
+  if (!dd || !inp) return;
+  if (!q.trim()) { dd.style.display = 'none'; return; }
+
+  const filtered = CP_COUNTRIES.filter(c => c.name.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
+  if (!filtered.length) { dd.style.display = 'none'; return; }
+
+  document.body.appendChild(dd);
+  const rect = inp.getBoundingClientRect();
+  dd.style.display = 'block';
+  dd.style.top = (rect.bottom + 2) + 'px';
+  dd.style.left = rect.left + 'px';
+  dd.style.width = rect.width + 'px';
+
+  let html = '';
+  filtered.forEach(c => {
+    html += `<div class="dp-option" onmousedown="dpSelect('${c.name.replace(/'/g,"\\'")}','${c.flag}')">
+      <span style="font-size:14px">${c.flag}</span>
+      <span>${c.name}</span>
+    </div>`;
+  });
+  dd.innerHTML = html;
+}
+
+function dpSelect(name, flag) {
+  document.getElementById('fDest').value = name;
+  cpSetValue(name); // Also update Country picker
+  closeDp();
+}
+
+function closeDp() {
+  const dd = document.getElementById('dpDropdown');
+  if (dd) dd.style.display = 'none';
+}
+
+// ═══════════════ AI ASSISTANT ══════════════
+function showAIModal() {
+  const existing = document.getElementById('aiModal');
+  if (existing) existing.remove();
+
+  const currentName = document.getElementById('fName').value.trim();
+  const currentDest = document.getElementById('fDest').value.trim();
+  const currentCountry = document.getElementById('fCountry').value.trim();
+  const currentDays = document.getElementById('fDays').value.trim();
+
+  const modal = document.createElement('div');
+  modal.id = 'aiModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px)';
+  modal.innerHTML = `
+    <div style="background:#111c2d;border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:30px;max-width:500px;width:95%;box-shadow:0 40px 80px rgba(0,0,0,0.6);max-height:90vh;overflow-y:auto">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span class="material-symbols-outlined" style="color:#10a37f;font-size:24px;font-variation-settings:'FILL' 1">auto_fix_high</span>
+        <h3 style="font-size:19px;font-weight:700">Generar paquete con IA</h3>
+      </div>
+      <p style="color:rgba(255,255,255,0.4);font-size:13px;margin-bottom:22px;line-height:1.6">
+        Contale a la IA lo que sabés del paquete. Cuanto más detalle des, mejor resultado.
+      </p>
+
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div class="fg">
+          <label class="fl">Nombre del paquete *</label>
+          <input type="text" id="aiName" class="fi" placeholder="Ej: Europa Clásica 12 días" value="${escHtml(currentName)}">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="fg">
+            <label class="fl">Destino / Ciudad</label>
+            <input type="text" id="aiDest" class="fi" placeholder="Ej: París, Roma, Cancún" value="${escHtml(currentDest)}">
+          </div>
+          <div class="fg">
+            <label class="fl">País</label>
+            <input type="text" id="aiCountry" class="fi" placeholder="Ej: Francia, Italia" value="${escHtml(currentCountry)}">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="fg">
+            <label class="fl">Cantidad de días</label>
+            <input type="number" id="aiDays" class="fi" placeholder="10" min="1" value="${escHtml(currentDays)}">
+          </div>
+          <div class="fg">
+            <label class="fl">Precio aprox. USD</label>
+            <input type="number" id="aiPrice" class="fi" placeholder="2500" min="0">
+          </div>
+        </div>
+        <div class="fg">
+          <label class="fl">Descripción libre <span style="color:rgba(255,255,255,0.3);font-weight:400;text-transform:none;letter-spacing:0"> — contale todo lo que sepas</span></label>
+          <textarea id="aiNotes" class="ft" style="min-height:110px" placeholder="Ej: Viaje de luna de miel a Grecia visitando Santorini y Mykonos. Hoteles boutique con vista al mar. 10 noches. Vuelo directo desde Buenos Aires. Incluye cenas románticas y excursión en barco..."></textarea>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:22px">
+        <button class="btn btn-ghost" onclick="document.getElementById('aiModal').remove()">Cancelar</button>
+        <button class="btn btn-primary" id="aiModalGenBtn" onclick="runAIFromModal()" style="background:linear-gradient(135deg,#10a37f,#1a7a60)">
+          <span class="ms material-symbols-outlined">auto_fix_high</span>Generar todo
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  setTimeout(() => {
+    const nameInput = document.getElementById('aiName');
+    if (nameInput) { nameInput.focus(); if (!nameInput.value) return; nameInput.select(); }
+  }, 80);
+}
+
+async function runAIFromModal() {
+  const name    = document.getElementById('aiName')?.value.trim();
+  const dest    = document.getElementById('aiDest')?.value.trim();
+  const country = document.getElementById('aiCountry')?.value.trim();
+  const days    = document.getElementById('aiDays')?.value.trim();
+  const price   = document.getElementById('aiPrice')?.value.trim();
+  const notes   = document.getElementById('aiNotes')?.value.trim();
+
+  if (!name) {
+    document.getElementById('aiName')?.focus();
+    showToast('Ingresá al menos el nombre del paquete', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('aiModalGenBtn');
+  if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Generando…`; btn.disabled = true; }
+
+  const context = [
+    `Nombre: "${name}"`,
+    dest    ? `Destino: ${dest}` : '',
+    country ? `País: ${country}` : '',
+    days    ? `Días: ${days}` : '',
+    price   ? `Precio aprox USD: ${price}` : '',
+    notes   ? `Información adicional: ${notes}` : '',
+  ].filter(Boolean).join('\n');
+
+  const apiKey = localStorage.getItem('corradi_ai_key') || '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';
+
+  const prompt = `Sos el asistente de Corradi Viajes, agencia de viajes de Rosario, Argentina. Con la siguiente información generá los datos completos del paquete turístico:
+
+${context}
+
+Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
+{
+  "name": "nombre del paquete (pulido y atractivo)",
+  "destination": "ciudad o zona principal",
+  "country": "país en español (Francia, Italia, México, España, etc.)",
+  "days": número entero,
+  "price_usd": número en USD,
+  "description": "2-3 oraciones atractivas y específicas del destino. Sin frases genéricas.",
+  "highlights": ["punto 1 concreto", "punto 2", "punto 3", "punto 4", "punto 5"],
+  "includes": ["item 1", "item 2", "item 3", "item 4", "item 5"],
+  "excludes": ["item 1", "item 2", "item 3"],
+  "itinerary": [
+    {"day": "Día 1", "desc": "descripción específica con lugares y actividades reales"},
+    {"day": "Día 2", "desc": "descripción del día"}
+  ]
+}
+El itinerario debe tener exactamente tantos ítems como el campo "days". Sé específico y usa lugares reales.`;
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'authorization': `Bearer ${apiKey}`, 'content-type': 'application/json' },
+      body: JSON.stringify({ model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 2500, messages: [{ role: 'user', content: prompt }] }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || `Error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const rawText = data.choices?.[0]?.message?.content || '';
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Respuesta inesperada de la IA');
+    const pkg = JSON.parse(jsonMatch[0]);
+
+    document.getElementById('aiModal')?.remove();
+
+    // Llenar todos los campos del formulario
+    if (pkg.name)        document.getElementById('fName').value = pkg.name;
+    if (pkg.destination) document.getElementById('fDest').value = pkg.destination;
+    if (pkg.country)     cpSetValue(pkg.country);
+    if (pkg.days)        document.getElementById('fDays').value = pkg.days;
+    if (pkg.price_usd && !document.getElementById('fPrice').value)
+      document.getElementById('fPrice').value = pkg.price_usd;
+
+    if (pkg.description)
+      document.getElementById('fDesc').value = pkg.description;
+    if (pkg.highlights?.length)
+      document.getElementById('fHighlights').value = pkg.highlights.map(h => `• ${h}`).join('\n');
+    if (pkg.includes?.length) { includesItems = pkg.includes; renderBullets('includes'); }
+    if (pkg.excludes?.length) { excludesItems = pkg.excludes; renderBullets('excludes'); }
+    if (pkg.itinerary?.length) {
+      itineraryItems = pkg.itinerary.map(d => ({ day: d.day || '', desc: d.desc || '' }));
+      renderItineraryRows();
+    }
+
+    showToast('¡Paquete generado! Revisá y ajustá los detalles antes de guardar.', 'success');
+  } catch (err) {
+    console.error('[AI]', err);
+    if (btn) { btn.innerHTML = `<span class="ms material-symbols-outlined">auto_fix_high</span>Generar todo`; btn.disabled = false; }
+    showToast('Error: ' + err.message, 'error');
+  }
+}
+
+function showAIKeyModal() {
+  const existing = document.getElementById('aiKeyModal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'aiKeyModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px)';
+  modal.innerHTML = `
+    <div style="background:#111c2d;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;max-width:440px;width:90%;box-shadow:0 30px 60px rgba(0,0,0,0.5)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+        <span class="material-symbols-outlined" style="color:#10a37f;font-size:22px">psychology</span>
+        <h3 style="font-size:18px;font-weight:700">Configurar IA (ChatGPT)</h3>
+      </div>
+      <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:20px;line-height:1.65">
+        Ingresá tu API Key de OpenAI para activar la generación automática con IA. Se guarda solo en este navegador.
+      </p>
+      <div style="margin-bottom:8px">
+        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,0.38);display:block;margin-bottom:6px">API Key de OpenAI</label>
+        <input type="password" id="aiKeyInput" class="fi" placeholder="sk-proj-…" style="width:100%;font-family:monospace;font-size:12px;letter-spacing:.03em">
+      </div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:22px">
+        Obtené tu clave en <strong style="color:#10a37f">platform.openai.com/api-keys</strong>
+      </p>
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <button class="btn btn-ghost" onclick="document.getElementById('aiKeyModal').remove()">Cancelar</button>
+        <button class="btn btn-primary" onclick="saveAIKey()">
+          <span class="ms material-symbols-outlined">save</span>Guardar y Generar
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  setTimeout(() => document.getElementById('aiKeyInput')?.focus(), 80);
+}
+
+function saveAIKey() {
+  const key = document.getElementById('aiKeyInput')?.value.trim();
+  if (!key) {
+    showToast('Ingresá tu API Key de Gemini', 'error');
+    return;
+  }
+  localStorage.setItem('corradi_ai_key', key);
+  updateAIKeyStatus();
+  document.getElementById('aiKeyModal')?.remove();
+  generateWithAI();
+}
+
+async function generateWithAI() {
+  const name    = document.getElementById('fName').value.trim();
+  const dest    = document.getElementById('fDest').value.trim();
+  const country = document.getElementById('fCountry').value.trim();
+  const days    = document.getElementById('fDays').value.trim();
+  const cat     = document.getElementById('fCat').value;
+
+  if (!name) {
+    showToast('Escribí el nombre del paquete primero', 'error');
+    return;
+  }
+
+  const apiKey = localStorage.getItem('corradi_ai_key') || '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';
+
+  const btn = document.getElementById('btnAI');
+  const oldHTML = btn.innerHTML;
+  btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Generando con IA…`;
+  btn.disabled = true;
+
+  const context = [
+    `Paquete: "${name}"`,
+    dest    ? `Destino sugerido: ${dest}` : '',
+    country ? `País: ${country}` : '',
+    days    ? `Días: ${days}` : '',
+    cat && cat !== 'general' ? `Categoría: ${cat}` : '',
+  ].filter(Boolean).join('\n');
+
+  const prompt = `Sos el asistente de Corradi Viajes, agencia de viajes de Rosario, Argentina. Generá los datos completos para el siguiente paquete turístico:
+
+${context}
+
+Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin explicaciones) con esta estructura exacta:
+{
+  "destination": "ciudad o zona principal del viaje",
+  "country": "país en español (Francia, Italia, México, España, etc.)",
+  "days": número entero,
+  "price_usd": número (precio real desde Argentina en USD),
+  "description": "2 oraciones atractivas y específicas del destino. Sin frases genéricas.",
+  "highlights": ["punto 1 concreto", "punto 2", "punto 3", "punto 4", "punto 5"],
+  "includes": ["Vuelos internacionales ida y vuelta", "Traslados aeropuerto-hotel", "Alojamiento con desayuno", "Seguro de viaje", "Guía de habla hispana"],
+  "excludes": ["Gastos personales y propinas", "Excursiones opcionales", "Comidas no especificadas"],
+  "itinerary": [
+    {"day": "Día 1", "desc": "descripción específica con lugares y actividades reales"},
+    {"day": "Día 2", "desc": "descripción del día 2"}
+  ]
+}
+
+El itinerario debe tener exactamente tantos ítems como el campo "days". Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
+
+  try {
+    const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'authorization': `Bearer ${apiKey}`,
+        'content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        temperature: 0.7,
+        max_tokens: 2048,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      if (res.status === 401) {
+        localStorage.removeItem('corradi_ai_key');
+        showToast('API Key inválida. Configurá una nueva.', 'error');
+        showAIKeyModal();
+        return;
+      }
+      throw new Error(err.error?.message || `Error ${res.status}`);
+    }
+
+    const data = await res.json();
+    const rawText = data.choices?.[0]?.message?.content || '';
+    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('Respuesta inesperada de la IA');
+    const pkg = JSON.parse(jsonMatch[0]);
+
+    if (pkg.destination && !dest)   document.getElementById('fDest').value = pkg.destination;
+    if (pkg.country    && !country) cpSetValue(pkg.country);
+    if (pkg.days       && !days)    document.getElementById('fDays').value = pkg.days;
+    if (pkg.price_usd  && !document.getElementById('fPrice').value)
+      document.getElementById('fPrice').value = pkg.price_usd;
+
+    if (pkg.description)
+      document.getElementById('fDesc').value = pkg.description;
+
+    if (pkg.highlights?.length)
+      document.getElementById('fHighlights').value = pkg.highlights.map(h => `• ${h}`).join('\n');
+
+    if (pkg.includes?.length) {
+      includesItems = pkg.includes;
+      renderBullets('includes');
+    }
+    if (pkg.excludes?.length) {
+      excludesItems = pkg.excludes;
+      renderBullets('excludes');
+    }
+    if (pkg.itinerary?.length) {
+      itineraryItems = pkg.itinerary.map(d => ({ day: d.day || '', desc: d.desc || '' }));
+      renderItineraryRows();
+    }
+
+    showToast('¡Paquete generado con IA! Revisá y ajustá antes de guardar.', 'success');
+  } catch (err) {
+    console.error('[AI]', err);
+    showToast('Error: ' + err.message, 'error');
+  } finally {
+    btn.innerHTML = oldHTML;
+    btn.disabled = false;
+  }
+}
+
+// GLOBAL CLICKS
+document.addEventListener('mousedown', e => {
+  const wrap = document.getElementById('cpWrap');
+  const dd = document.getElementById('cpDropdown');
+  if (cpOpen && wrap && !wrap.contains(e.target) && dd && !dd.contains(e.target)) cpClose();
+  
+  const dp = document.getElementById('dpDropdown');
+  const destInp = document.getElementById('fDest');
+  if (dp && dp.style.display === 'block' && !dp.contains(e.target) && e.target !== destInp) closeDp();
+});
+
+// Update position when scrolling
+document.getElementById('editorPanel')?.addEventListener('scroll', () => {
+  if (cpOpen) {
+    const disp = document.getElementById('cpDisplay');
+    const dd = document.getElementById('cpDropdown');
+    const rect = disp.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > window.innerHeight) cpClose();
+    else { dd.style.top = (rect.bottom + 5) + 'px'; dd.style.left = rect.left + 'px'; }
+  }
+  const dp = document.getElementById('dpDropdown');
+  if (dp && dp.style.display === 'block') {
+    const inp = document.getElementById('fDest');
+    const rect = inp.getBoundingClientRect();
+    if (rect.bottom < 0 || rect.top > window.innerHeight) closeDp();
+    else { dp.style.top = (rect.bottom + 2) + 'px'; dp.style.left = rect.left + 'px'; }
+  }
 });
 
 // ═══════════════ START ════════════════

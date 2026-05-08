@@ -35,7 +35,7 @@
 <!-- Flatpickr for Date Range -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<script src="https://npmcdn.com/flatpickr/dist/l10n/es.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
 <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -633,6 +633,11 @@
     const destInput = document.getElementById('searchDestHidden');
 
     if (destContainer && destPopover) {
+      // Restore readonly
+      destDisplay.setAttribute('readonly', true);
+      destDisplay.style.pointerEvents = 'none';
+      destDisplay.style.cursor = 'pointer';
+
       // Countries dictionary for flags
       const COUNTRY_CODES = {
         'argentina': 'ar', 'brasil': 'br', 'chile': 'cl', 'peru': 'pe', 'perú': 'pe', 'colombia': 'co',
@@ -655,57 +660,118 @@
         return `<span class="material-symbols-outlined text-[14px] opacity-50 shrink-0">public</span>`;
       }
 
-      // Populate countries from allPackages once loaded
-      const populateDestinations = () => {
-        if (!window.allPackages || window.allPackages.length === 0) return;
-        const countries = [...new Set(window.allPackages.map(p => (p.country || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
+      let allDestCountries = [];
+
+      const renderDestList = (filter = '') => {
+        const q = filter.toLowerCase().trim();
+        const listContainer = document.getElementById('destOptionsList');
+        if (!listContainer) return;
+
+        const filtered = allDestCountries.filter(c => c.toLowerCase().includes(q));
         
-        let html = `
-          <div class="dest-option flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="all" data-label="Todos los destinos">
-            <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-primary">public</span>
-            <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
-          </div>`;
+        let html = '';
+        if (!q) {
+          html += `
+            <div class="dest-option flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="all" data-label="Todos los destinos">
+              <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-primary">public</span>
+              <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
+            </div>`;
+        }
         
-        countries.forEach(c => {
+        filtered.forEach(c => {
           html += `
             <div class="dest-option flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="${c}" data-label="${c}">
               ${getFlagHtml(c)}
               <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">${c}</span>
             </div>`;
         });
-        // Remove last border
-        html = html.replace(/border-b border-slate-100(?=[^>]*>([^<]*<)(?!\/div>))/g, 'border-b border-slate-100');
-        // Actually, just let the last item have a border-b, or we can use CSS :last-child. 
-        // It's fine with the py-1 wrapper padding.
-        destPopover.innerHTML = html;
-        
-        destPopover.querySelectorAll('.dest-option').forEach(opt => {
-          opt.addEventListener('click', () => {
+
+        if (filtered.length === 0 && q) {
+          html = `<div class="py-6 px-4 text-center text-slate-400 text-sm italic">No se encontraron destinos</div>`;
+        }
+
+        listContainer.innerHTML = html;
+
+        listContainer.querySelectorAll('.dest-option').forEach(opt => {
+          opt.onclick = (e) => {
+            e.stopPropagation();
             destDisplay.value = opt.getAttribute('data-label');
             destInput.value = opt.getAttribute('data-val');
             destPopover.classList.add('hidden');
-          });
+          };
         });
       };
 
-      // Poll until packages load
-      const checkPackages = setInterval(() => {
-        if (window.allPackages && window.allPackages.length > 0) {
-          populateDestinations();
-          clearInterval(checkPackages);
-        }
-      }, 500);
+      const initDestPopover = () => {
+        destPopover.innerHTML = `
+          <div class="sticky top-0 bg-white p-1.5 border-b border-slate-100 z-10" onclick="event.stopPropagation()">
+            <div class="relative flex items-center bg-slate-50 rounded-xl px-3 py-1.5 border border-slate-200 focus-within:border-primary transition-all">
+              <span class="material-symbols-outlined text-[18px] text-slate-400 mr-2">search</span>
+              <input type="text" id="destSearch" placeholder="Buscar destino..." class="bg-transparent border-none p-0 focus:ring-0 text-sm text-slate-800 w-full outline-none" autocomplete="off">
+            </div>
+          </div>
+          <div id="destOptionsList"></div>
+        `;
+        const searchInput = document.getElementById('destSearch');
+        searchInput.oninput = (e) => renderDestList(e.target.value);
+      };
+
+      const populateDestinations = () => {
+        if (!window.allPackages || window.allPackages.length === 0) return;
+        allDestCountries = [...new Set(window.allPackages.map(p => (p.country || '').trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'es'));
+        if (!document.getElementById('destOptionsList')) initDestPopover();
+        renderDestList();
+      };
+
+      if (window.allPackages?.length > 0) {
+        populateDestinations();
+      } else {
+        window.addEventListener('corradiPackagesLoaded', populateDestinations, { once: true });
+      }
 
       destContainer.addEventListener('click', (e) => {
         if (destPopover.contains(e.target)) return;
         e.stopPropagation();
         if (monthPopover) monthPopover.classList.add('hidden');
         if (pricePopover) pricePopover.classList.add('hidden');
+        
         const isHidden = destPopover.classList.contains('hidden');
-        if (isHidden) { positionBelow(destContainer, destPopover); destPopover.classList.remove('hidden'); }
+        if (isHidden) { 
+          positionBelow(destContainer, destPopover); 
+          destPopover.classList.remove('hidden'); 
+          if (!document.getElementById('destOptionsList')) initDestPopover();
+          const searchInput = document.getElementById('destSearch');
+          if (searchInput) { searchInput.value = ''; searchInput.focus(); }
+          renderDestList(); 
+        }
         else { destPopover.classList.add('hidden'); }
       });
-      document.addEventListener('click', (e) => { if (!destContainer.contains(e.target) && !destPopover.contains(e.target)) destPopover.classList.add('hidden'); });
+
+      document.addEventListener('click', (e) => { 
+        if (!destContainer.contains(e.target) && !destPopover.contains(e.target)) {
+          destPopover.classList.add('hidden'); 
+        }
+      });
+
+      // Jump to letter logic
+      document.addEventListener('keydown', (e) => {
+        if (destPopover.classList.contains('hidden')) return;
+        if (e.target.id === 'destSearch') return;
+
+        if (e.key.length === 1 && e.key.match(/[a-z]/i)) {
+          const letter = e.key.toLowerCase();
+          const options = destPopover.querySelectorAll('.dest-option');
+          for (let opt of options) {
+            const label = opt.getAttribute('data-label').toLowerCase();
+            if (label.startsWith(letter)) {
+              opt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+              opt.style.background = '#eff6ff';
+              setTimeout(() => opt.style.background = '', 500);
+              break;
+            }
+          }
+        }
+      });
     }
 
     // Month picker
@@ -800,8 +866,11 @@
       track.innerHTML = cardsHTML + cardsHTML; // duplicate for seamless loop
       let pos = 0;
       let paused = false;
+      let visible = false;
+      const io = new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0 });
+      io.observe(track.parentElement);
       function animate() {
-        if (!paused) {
+        if (!paused && visible) {
           pos -= 0.5;
           const halfWidth = track.scrollWidth / 2;
           if (Math.abs(pos) >= halfWidth) pos = 0;
@@ -810,157 +879,11 @@
         requestAnimationFrame(animate);
       }
       animate();
-      // Pause on hover
       track.parentElement.addEventListener('mouseenter', () => paused = true);
       track.parentElement.addEventListener('mouseleave', () => paused = false);
     }
   });
 
-  // ── Search Bar 2 (Cinematic Video Section) ──────────────
-  document.addEventListener('DOMContentLoaded', () => {
-    const destPopover2  = document.getElementById('destPopover2');
-    const monthPopover2 = document.getElementById('monthPopover2');
-    const pricePopover2 = document.getElementById('pricePopover2');
-    if (destPopover2)  document.body.appendChild(destPopover2);
-    if (monthPopover2) document.body.appendChild(monthPopover2);
-    if (pricePopover2) document.body.appendChild(pricePopover2);
-
-    // ── Destination dropdown ──
-    const destContainer2 = document.getElementById('destContainer2');
-    const destDisplay2   = document.getElementById('searchDest2');
-    const destInput2     = document.getElementById('searchDestHidden2');
-
-    if (destContainer2 && destPopover2) {
-      const COUNTRY_CODES = {
-        'argentina':'ar','brasil':'br','chile':'cl','peru':'pe','perú':'pe','colombia':'co',
-        'uruguay':'uy','bolivia':'bo','paraguay':'py','ecuador':'ec','venezuela':'ve',
-        'mexico':'mx','méxico':'mx','cuba':'cu','jamaica':'jm','república dominicana':'do',
-        'costa rica':'cr','panamá':'pa','panama':'pa','estados unidos':'us','canadá':'ca','canada':'ca',
-        'españa':'es','espana':'es','francia':'fr','italia':'it','grecia':'gr','portugal':'pt',
-        'alemania':'de','suiza':'ch','austria':'at','holanda':'nl','países bajos':'nl','paises bajos':'nl',
-        'reino unido':'gb','inglaterra':'gb','irlanda':'ie','croacia':'hr','turquía':'tr','turquia':'tr',
-        'noruega':'no','suecia':'se','dinamarca':'dk','finlandia':'fi','egipto':'eg','marruecos':'ma',
-        'sudáfrica':'za','kenia':'ke','japón':'jp','japon':'jp','china':'cn','tailandia':'th',
-        'indonesia':'id','india':'in','vietnam':'vn','cambodia':'kh','emiratos árabes':'ae','dubai':'ae',
-        'israel':'il','maldivas':'mv','australia':'au','nueva zelanda':'nz','antillas holandesas':'cw',
-        'rep. checa':'cz','república checa':'cz','republica checa':'cz','rep. dominicana':'do'
-      };
-      function getFlagHtml2(country) {
-        const code = COUNTRY_CODES[(country||'').toLowerCase().trim()];
-        if (code) return `<img src="https://flagcdn.com/w20/${code}.png" class="w-[18px] h-[14px] object-cover rounded-[2px] shrink-0" style="box-shadow:0 0 0 1px rgba(0,0,0,0.1) inset;" alt="${code}">`;
-        return `<span class="material-symbols-outlined text-[14px] opacity-50 shrink-0">public</span>`;
-      }
-
-      const populateDest2 = () => {
-        if (!window.allPackages || !window.allPackages.length) return;
-        const countries = [...new Set(window.allPackages.map(p => (p.country||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));
-        let html = `<div class="dest-option2 flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="all" data-label="Todos los destinos">
-          <span class="material-symbols-outlined text-[16px] text-slate-400 group-hover:text-primary">public</span>
-          <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">Todos los destinos</span>
-        </div>`;
-        countries.forEach(c => {
-          html += `<div class="dest-option2 flex items-center gap-3 py-2.5 px-4 hover:bg-slate-50 cursor-pointer transition-colors border-b border-slate-100 group" data-val="${c}" data-label="${c}">
-            ${getFlagHtml2(c)}
-            <span class="text-[15px] font-medium text-slate-700 group-hover:text-slate-900 flex-1 truncate">${c}</span>
-          </div>`;
-        });
-        destPopover2.innerHTML = html;
-        destPopover2.querySelectorAll('.dest-option2').forEach(opt => {
-          opt.addEventListener('click', () => {
-            destDisplay2.value = opt.getAttribute('data-label');
-            destInput2.value   = opt.getAttribute('data-val');
-            destPopover2.classList.add('hidden');
-          });
-        });
-      };
-
-      const poll2 = setInterval(() => {
-        if (window.allPackages && window.allPackages.length > 0) { populateDest2(); clearInterval(poll2); }
-      }, 500);
-
-      destContainer2.addEventListener('click', e => {
-        if (destPopover2.contains(e.target)) return;
-        e.stopPropagation();
-        if (monthPopover2) monthPopover2.classList.add('hidden');
-        if (pricePopover2) pricePopover2.classList.add('hidden');
-        const isHidden = destPopover2.classList.contains('hidden');
-        if (isHidden) { positionBelow(destContainer2, destPopover2); destPopover2.classList.remove('hidden'); }
-        else { destPopover2.classList.add('hidden'); }
-      });
-      document.addEventListener('click', e => { if (!destContainer2.contains(e.target) && !destPopover2.contains(e.target)) destPopover2.classList.add('hidden'); });
-    }
-
-    // ── Month picker ──
-    const monthContainer2 = document.getElementById('monthContainer2');
-    const monthGrid2      = document.getElementById('monthGrid2');
-    const monthDisplay2   = document.getElementById('searchMonthDisplay2');
-    const monthInput2     = document.getElementById('searchMonth2');
-
-    if (monthContainer2 && monthPopover2 && monthGrid2) {
-      const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-      const today  = new Date(), curMonth = today.getMonth(), curYear = today.getFullYear();
-      let html = '';
-      for (let i = 0; i < 12; i++) {
-        const m = (curMonth + i) % 12;
-        const y = curYear + Math.floor((curMonth + i) / 12);
-        const label = `${months[m]} ${y}`;
-        html += `<div class="month-option2 text-center py-2 px-1 rounded-lg hover:bg-blue-50 cursor-pointer text-[15px] font-medium transition-colors" data-val="${label}">${months[m].substring(0,3)} ${y}</div>`;
-      }
-      monthGrid2.innerHTML = html;
-      monthContainer2.addEventListener('click', e => {
-        if (monthPopover2.contains(e.target)) return;
-        e.stopPropagation();
-        if (pricePopover2) pricePopover2.classList.add('hidden');
-        if (destPopover2)  destPopover2.classList.add('hidden');
-        const isHidden = monthPopover2.classList.contains('hidden');
-        if (isHidden) { positionBelow(monthContainer2, monthPopover2); monthPopover2.classList.remove('hidden'); }
-        else { monthPopover2.classList.add('hidden'); }
-      });
-      monthGrid2.addEventListener('click', e => {
-        const opt = e.target.closest('.month-option2');
-        if (opt) { monthDisplay2.value = opt.getAttribute('data-val'); monthInput2.value = opt.getAttribute('data-val'); monthPopover2.classList.add('hidden'); }
-      });
-      document.addEventListener('click', e => { if (!monthContainer2.contains(e.target) && !monthPopover2.contains(e.target)) monthPopover2.classList.add('hidden'); });
-    }
-
-    // ── Price picker ──
-    const priceContainer2 = document.getElementById('priceContainer2');
-    const priceDisplay2   = document.getElementById('searchPriceDisplay2');
-    const priceInput2     = document.getElementById('searchPrice2');
-    if (priceContainer2 && pricePopover2) {
-      priceContainer2.addEventListener('click', e => {
-        if (pricePopover2.contains(e.target)) return;
-        e.stopPropagation();
-        if (monthPopover2) monthPopover2.classList.add('hidden');
-        if (destPopover2)  destPopover2.classList.add('hidden');
-        const isHidden = pricePopover2.classList.contains('hidden');
-        if (isHidden) { positionBelow(priceContainer2, pricePopover2); pricePopover2.classList.remove('hidden'); }
-        else { pricePopover2.classList.add('hidden'); }
-      });
-      pricePopover2.querySelectorAll('.price-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-          priceDisplay2.value = opt.getAttribute('data-label');
-          priceInput2.value   = opt.getAttribute('data-val');
-          pricePopover2.classList.add('hidden');
-        });
-      });
-      document.addEventListener('click', e => { if (!priceContainer2.contains(e.target) && !pricePopover2.contains(e.target)) pricePopover2.classList.add('hidden'); });
-    }
-  });
-
-  // ── triggerSearch2 ──────────────────────────────
-  function triggerSearch2() {
-    const hiddenDest = document.getElementById('searchDestHidden2');
-    let q = hiddenDest ? hiddenDest.value : (document.getElementById('searchDest2')?.value || '');
-    if (q === 'all' || q === 'Todos los destinos') q = '';
-    const month = document.getElementById('searchMonth2')?.value || '';
-    const price = document.getElementById('searchPrice2')?.value || '';
-    const params = new URLSearchParams();
-    if (q)     params.append('country', q);
-    if (month) params.append('month', month);
-    if (price) params.append('price', price);
-    window.location.href = 'busqueda.html' + (params.toString() ? '?' + params.toString() : '');
-  }
 </script>
 <script src="js/theme.js" defer></script>
 </body>
