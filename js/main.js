@@ -241,8 +241,8 @@ function renderOffersCarousel() {
   function buildCard(p) {
     const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
     const waLink = typeof whatsappLink === 'function' ? whatsappLink(p.name) : 'contacto.html';
-    const badge = p.featured ? 'Destacado' : 'Oferta';
-    const badgeColor = p.featured ? 'background:#3778b8;color:#fff' : 'background:#ebb03a20;color:#a07820';
+    const badge = p.featured ? 'Destacado' : 'OFERTA';
+    const badgeColor = p.featured ? 'background:#3778b8;color:#fff' : 'background:#ef4444;color:#fff;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,0.25);box-shadow:0 2px 8px rgba(239,68,68,0.4)';
     return `
     <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-400"
       style="width:320px;will-change:transform,opacity,box-shadow" data-id="${p.id}">
