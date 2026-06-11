@@ -20,7 +20,7 @@ const VIDEOS = {
 // 📱 NÚMERO DE WHATSAPP — actualizar con el real
 // Formato: código país + área + número sin guiones
 // ─────────────────────────────────────────────
-const WHATSAPP_NUMBER = '5493411234567';
+const WHATSAPP_NUMBER = '5493416057588';
 
 function whatsappLink(packageName) {
   const msg = packageName
