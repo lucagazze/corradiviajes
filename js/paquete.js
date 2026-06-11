@@ -96,13 +96,12 @@ function renderPackage(pkg) {
       let days = typeof pkg.itinerary === 'string' ? JSON.parse(pkg.itinerary) : pkg.itinerary;
       if (Array.isArray(days) && days.length > 0) {
         itBlock.style.display = 'block';
-        itEl.innerHTML = days.map(d => `
+        itEl.innerHTML = days.map((d, i) => `
           <div class="flex gap-4 pb-6 border-b border-slate-100 last:border-0 last:pb-0">
-            <div class="shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm font-['Plus_Jakarta_Sans']">${d.day}</div>
+            <div class="shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm font-['Plus_Jakarta_Sans']">${i+1}</div>
             <div class="flex-1">
-              <h4 class="font-semibold text-slate-900 text-base mb-1">${d.title}</h4>
-              <p class="text-slate-500 text-sm leading-relaxed">${d.description}</p>
-              ${d.meals ? `<span class="inline-flex items-center gap-1 mt-2 text-[11px] font-medium text-slate-400 bg-slate-50 px-2 py-1 rounded-full">🍽 ${d.meals}</span>` : ''}
+              <h4 class="font-semibold text-slate-900 text-base mb-1">${d.day}</h4>
+              <p class="text-slate-500 text-sm leading-relaxed">${d.desc || d.description || ''}</p>
             </div>
           </div>`).join('');
       } else if (typeof pkg.itinerary === 'string' && pkg.itinerary.trim()) {

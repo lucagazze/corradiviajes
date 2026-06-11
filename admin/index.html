@@ -2324,34 +2324,26 @@ function removeItineraryRow(index) {
 
 function parseItinerary(text) {
   if (!text) return [];
-  // Detect if it's the new format (with <strong>) or legacy
-  // Split by double line break or <br><br>
+  // Try JSON array first
+  try {
+    const arr = JSON.parse(text);
+    if (Array.isArray(arr)) return arr.map(d => ({ day: String(d.day || ''), desc: d.desc || d.description || '' }));
+  } catch(e) {}
+  // Legacy HTML/text fallback
   const parts = text.split(/<br\s*\/?>\s*<br\s*\/?>|\n\n/gi);
   return parts.map(p => {
-    // Check for "<strong>Día X</strong> — Description" or "Día X — Description"
-    const match = p.match(/^(?:<strong>)?(D[íi]a\s*\d+)(?:<\/strong>)?\s*[—\-:]?\s*(.*)/is);
+    const match = p.match(/^(?:<strong>)?(D[íi]a\s*[\d\w]+)(?:<\/strong>)?\s*[—\-:]?\s*(.*)/is);
     if (match) {
-      return { 
-        day: match[1].trim(), 
-        desc: match[2].replace(/<br\s*\/?>/gi, '\n').replace(/<\/?[^>]+(>|$)/g, "").trim() 
-      };
+      return { day: match[1].trim(), desc: match[2].replace(/<br\s*\/?>/gi, '\n').replace(/<\/?[^>]+(>|$)/g, '').trim() };
     }
-    // Fallback: entire part as description
-    return { day: '', desc: p.replace(/<\/?[^>]+(>|$)/g, "").trim() };
+    return { day: '', desc: p.replace(/<\/?[^>]+(>|$)/g, '').trim() };
   }).filter(x => x.day || x.desc);
 }
 
 function serializeItinerary() {
   if (!itineraryItems.length) return null;
-  return itineraryItems
-    .filter(it => it.day.trim() || it.desc.trim())
-    .map(it => {
-      const day = it.day.trim();
-      const desc = it.desc.trim().replace(/\n/g, '<br>');
-      if (day) return `<div style="margin-bottom: 24px;"><strong>${day}</strong> — ${desc}</div>`;
-      return `<div style="margin-bottom: 24px;">${desc}</div>`;
-    })
-    .join('');
+  const items = itineraryItems.filter(it => it.day.trim() || it.desc.trim()).map(it => ({ day: it.day.trim(), desc: it.desc.trim() }));
+  return items.length ? JSON.stringify(items) : null;
 }
 
 function renderBullets(type) {
