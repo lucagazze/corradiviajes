@@ -660,20 +660,22 @@ function buildGallery(images, pkg) {
     if (pkg.itinerary) {
       const itBlock = document.getElementById('pkgItineraryBlock');
       const itContent = document.getElementById('pkgItinerary');
-      itBlock.classList.remove('hidden');
-      itBlock.style.display = '';
-      let itin = pkg.itinerary;
-      // Ensure "Día X" is bolded and has spacing if it's plain text
-      if (!itin.includes('<div') && !itin.includes('<p')) {
-        itin = itin.replace(/(D[íi]a\s*\d+)/gi, '<div style="margin-bottom: 24px;"><strong>$1</strong>');
-        // Close the divs (approximate for plain text)
-        itin = itin.replace(/<strong>D[íi]a\s*\d+<\/strong>.*?(?=<strong>D[íi]a|$)/gis, (match) => match + '</div>');
-      } else {
-        // Just ensure bolding if it's already HTML
-        itin = itin.replace(/(?<!<strong>)(D[íi]a\s*\d+)(?!<\/strong>)/gi, '<strong>$1</strong>');
-      }
-      
-      itContent.innerHTML = itin;
+      try {
+        const days = typeof pkg.itinerary === 'string' ? JSON.parse(pkg.itinerary) : pkg.itinerary;
+        if (Array.isArray(days) && days.length > 0) {
+          itBlock.classList.remove('hidden');
+          itBlock.style.display = '';
+          itContent.innerHTML = days.map(d => `
+            <div class="flex gap-4 pb-6 border-b border-white/10 last:border-0 last:pb-0">
+              <div class="shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background:rgba(59,130,246,0.18);color:#7ab3e0">${d.day}</div>
+              <div class="flex-1">
+                <h4 class="font-semibold text-white text-base mb-1">${d.title}</h4>
+                <p class="text-sm leading-relaxed" style="color:rgba(255,255,255,0.75)">${d.description}</p>
+                ${d.meals ? `<span class="inline-flex items-center gap-1 mt-2 text-[11px] font-medium px-2.5 py-1 rounded-full" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.55)">🍽 ${d.meals}</span>` : ''}
+              </div>
+            </div>`).join('');
+        }
+      } catch(e) { console.warn('Itinerary parse error:', e); }
     }
 
     // Gallery
