@@ -96,14 +96,21 @@ function renderPackage(pkg) {
       let days = typeof pkg.itinerary === 'string' ? JSON.parse(pkg.itinerary) : pkg.itinerary;
       if (Array.isArray(days) && days.length > 0) {
         itBlock.style.display = 'block';
-        itEl.innerHTML = days.map((d, i) => `
-          <div class="flex gap-4 pb-6 border-b border-slate-100 last:border-0 last:pb-0">
-            <div class="shrink-0 w-10 h-10 rounded-full bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-sm font-['Plus_Jakarta_Sans']">${i+1}</div>
-            <div class="flex-1">
-              <h4 class="font-semibold text-slate-900 text-base mb-1">${d.day}</h4>
-              <p class="text-slate-500 text-sm leading-relaxed">${d.desc || d.description || ''}</p>
+        itEl.innerHTML = days.map((d, i) => {
+          const raw = d.desc || d.description || '';
+          const parts = raw.split(' | ');
+          const desc = parts[0].trim();
+          const meals = parts[1] ? parts[1].replace(/\.$/, '').trim() : '';
+          return `
+          <div class="flex gap-4 pb-6 border-b border-white/10 last:border-0 last:pb-0">
+            <div class="shrink-0 w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm" style="background:rgba(59,130,246,0.22);color:#7ab3e0">${i+1}</div>
+            <div class="flex-1 min-w-0">
+              <h4 class="font-semibold text-white text-[15px] mb-1.5 leading-snug">${d.day}</h4>
+              <p class="text-[13.5px] leading-relaxed mb-2" style="color:rgba(255,255,255,0.7)">${desc}</p>
+              ${meals ? `<span class="inline-flex items-center gap-1.5 text-[12px] font-medium px-3 py-1 rounded-full" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.08)">🍽 ${meals}</span>` : ''}
             </div>
-          </div>`).join('');
+          </div>`;
+        }).join('');
       } else if (typeof pkg.itinerary === 'string' && pkg.itinerary.trim()) {
         itBlock.style.display = 'block';
         itEl.innerHTML = typeof marked !== 'undefined'
