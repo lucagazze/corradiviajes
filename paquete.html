@@ -637,6 +637,10 @@ function buildGallery(images, pkg) {
     // Includes / Excludes
     function parseLines(str) {
       if (!str) return [];
+      try {
+        const arr = JSON.parse(str);
+        if (Array.isArray(arr)) return arr.map(s => String(s).trim()).filter(Boolean);
+      } catch(e) {}
       return str.split('\n').map(l => l.replace(/^[•\-\*]\s*/, '').trim()).filter(Boolean);
     }
     const includesLines = parseLines(pkg.includes);
