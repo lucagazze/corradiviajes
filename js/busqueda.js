@@ -145,7 +145,7 @@ function renderResults() {
     <article class="rounded-[16px] overflow-hidden flex flex-col group cursor-pointer transition-all duration-300 hover:-translate-y-1"
       style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.15)"
       onclick="window.location.href='paquete.html?id=${p.id}${extraParams}'">
-      <div class="relative overflow-hidden" style="height:210px">
+      <div class="relative overflow-hidden" style="aspect-ratio:4/3">
         <img alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           src="${p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'}"
           onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"/>
