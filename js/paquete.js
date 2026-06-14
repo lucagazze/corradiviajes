@@ -126,8 +126,8 @@ function renderGallery(pkg) {
   const price = pkg.price_usd ? `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}` : 'Consultar precio';
 
   grid.innerHTML = `
-    <div class="relative overflow-hidden rounded-[28px] bg-slate-900 shadow-[0_28px_90px_rgba(0,0,0,0.35)]" style="min-height:420px;">
-      <img id="heroImage" src="${_images[_currentImg]}" alt="${pkg.name}" class="w-full h-[420px] md:h-[520px] object-cover transition-transform duration-700" />
+    <div class="relative overflow-hidden rounded-[28px] bg-slate-900 shadow-[0_28px_90px_rgba(0,0,0,0.35)]" style="aspect-ratio:4/3">
+      <img id="heroImage" src="${_images[_currentImg]}" alt="${pkg.name}" class="w-full h-full object-cover transition-transform duration-700" />
       <div class="absolute inset-0 bg-gradient-to-t from-slate-950/95 via-slate-950/30 to-transparent"></div>
       <div class="absolute inset-x-0 bottom-0 px-6 pb-6 pt-16 md:px-10 md:pb-10 md:pt-20 text-white">
         <span class="inline-flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.22em] mb-3" style="color:rgba(255,255,255,0.75)">
