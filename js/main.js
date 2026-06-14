@@ -246,7 +246,7 @@ function renderOffersCarousel() {
     return `
     <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-400"
       style="width:320px;will-change:transform,opacity,box-shadow" data-id="${p.id}">
-      <div class="relative overflow-hidden" style="aspect-ratio:4/3">
+      <div class="relative overflow-hidden" style="aspect-ratio:16/9">
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
