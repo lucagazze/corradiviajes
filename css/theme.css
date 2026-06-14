@@ -4,6 +4,10 @@
                     fondo blanco → letra azul oscuro
    ═══════════════════════════════════════════ */
 
+/* ── Image aspect ratio — responsive ──────── */
+.img-box { aspect-ratio: 16/9; }
+@media(max-width:640px) { .img-box { aspect-ratio: 21/9; } }
+
 /* ── LIGHT MODE ────────────────────────────── */
 
 html[data-theme="light"] body {
