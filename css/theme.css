@@ -5,8 +5,8 @@
    ═══════════════════════════════════════════ */
 
 /* ── Image aspect ratio — responsive ──────── */
-.img-box { aspect-ratio: 16/9; }
-@media(max-width:640px) { .img-box { aspect-ratio: 21/9; } }
+.img-box { aspect-ratio: 4/3; }
+@media(max-width:640px) { .img-box { aspect-ratio: 16/9; } }
 
 /* ── LIGHT MODE ────────────────────────────── */
 
