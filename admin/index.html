@@ -822,6 +822,17 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
               <div class="tgl-info"><div class="tgl-name">Destacado ★</div><div class="tgl-desc">Aparece primero con badge especial</div></div>
               <label class="tgl"><input type="checkbox" id="fFeatured"><span class="tgl-s"></span></label>
             </div>
+            <div class="fg" style="margin-top:6px">
+              <label class="fl">Sección de la web *</label>
+              <select id="fSection" class="fs">
+                <option value="salida_grupal">👥 Salida Grupal Acompañada (sección 1 - destacada)</option>
+                <option value="inspirador" selected>✨ Viaje Inspirador (sección 2 - destinos)</option>
+                <option value="oferta">🔥 Paquete en Oferta (sección 3 - promo)</option>
+              </select>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;line-height:1.4">
+                Define en qué bloque del home aparece el paquete.
+              </div>
+            </div>
           </div>
         </div>
 
@@ -889,6 +900,26 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
             <div class="fg"><label class="fl">Precio USD *</label><input type="number" id="fPrice" class="fi" placeholder="1500" min="0" step="0.01"></div>
             <div class="fg"><label class="fl">Precio original (tachado)</label><input type="number" id="fPriceOrig" class="fi" placeholder="1800" min="0" step="0.01"></div>
             <div class="fg"><label class="fl">Badge</label><input type="text" id="fBadge" class="fi" placeholder="OFERTA / NUEVO / HOT"></div>
+          </div>
+        </div>
+
+        <!-- Fecha de baja automática -->
+        <div class="form-section">
+          <div class="form-section-title"><span class="ms material-symbols-outlined">event_busy</span>Baja automática</div>
+          <div class="grid2">
+            <div class="fg">
+              <label class="fl">Fecha de expiración</label>
+              <input type="datetime-local" id="fExpires" class="fi">
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;line-height:1.4">
+                A partir de esta fecha el paquete deja de mostrarse en la web (sin tener que tocar nada).<br>
+                Dejá vacío si no querés que expire.
+              </div>
+            </div>
+            <div class="fg" style="display:flex;align-items:end;gap:8px">
+              <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('fExpires').value=''">
+                <span class="ms material-symbols-outlined" style="font-size:15px">close</span>Quitar fecha
+              </button>
+            </div>
           </div>
         </div>
 
@@ -1378,6 +1409,8 @@ function renderPkgCard(p, num) {
           <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
             ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
             ${p.featured?'<span class="pill pill-featured">★</span>':''}
+            ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(235,176,58,0.14);color:#ebb03a;border:1px solid rgba(235,176,58,0.25)">Grupal</span>':p.section==='oferta'?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':''}
+            ${p.expires_at?`<span class="pill" style="background:rgba(148,163,184,0.12);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)" title="Expira ${new Date(p.expires_at).toLocaleString('es-AR')}">⏱ ${new Date(p.expires_at).toLocaleDateString('es-AR',{day:'2-digit',month:'short'})}</span>`:''}
             ${p.badge?`<span class="pill pill-badge">${p.badge}</span>`:''}
           </div>
           ${p.created_at?`<div class="pkg-card-date">${formatDate(p.created_at)}</div>`:''}
@@ -1540,6 +1573,20 @@ function openEditor(pkgId) {
   document.getElementById('fBadge').value      = p?.badge || '';
   document.getElementById('fActive').checked   = p ? p.active : true;
   document.getElementById('fFeatured').checked = p?.featured || false;
+  document.getElementById('fSection').value    = p?.section || 'inspirador';
+  // Datetime-local necesita formato 'YYYY-MM-DDTHH:mm'
+  if (p?.expires_at) {
+    const d = new Date(p.expires_at);
+    if (!isNaN(d)) {
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('fExpires').value =
+        `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+    } else {
+      document.getElementById('fExpires').value = '';
+    }
+  } else {
+    document.getElementById('fExpires').value = '';
+  }
   document.getElementById('fDesc').value       = p?.description || '';
   document.getElementById('fHighlights').value = p?.highlights || '';
 
@@ -1949,6 +1996,11 @@ async function savePackage() {
     badge:    document.getElementById('fBadge').value.trim()||null,
     active:   document.getElementById('fActive').checked,
     featured: document.getElementById('fFeatured').checked,
+    section:  document.getElementById('fSection').value || 'inspirador',
+    expires_at: (() => {
+      const v = document.getElementById('fExpires').value;
+      return v ? new Date(v).toISOString() : null;
+    })(),
     image_url: pkgImages[0] || null,
     images:    pkgImages.slice(1),
     description: document.getElementById('fDesc').value.trim()||null,

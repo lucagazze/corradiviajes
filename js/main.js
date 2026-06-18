@@ -5,7 +5,20 @@ const USE_LOCAL = SUPABASE_ANON_KEY.includes('REEMPLAZAR');
 const LOCAL_API = 'http://localhost:5000/api';
 
 let allPackages = [];
+let groupTrips = [];
+let inspirationalTrips = [];
+let offerTrips = [];
 let visibleCount = 5;
+
+// Filtro: paquete activo y no expirado
+function isLive(p) {
+  if (!p.active) return false;
+  if (p.expires_at) {
+    const exp = new Date(p.expires_at);
+    if (!isNaN(exp) && exp.getTime() < Date.now()) return false;
+  }
+  return true;
+}
 
 // ── Load packages ────────────────────────────────
 async function loadPackages() {
@@ -23,12 +36,21 @@ async function loadPackages() {
         .order('featured', { ascending: false })
         .order('id');
       if (error) throw error;
-      allPackages = data;
+      allPackages = (data || []).filter(isLive);
     }
+    // Segmentar por section
+    groupTrips         = allPackages.filter(p => p.section === 'salida_grupal');
+    offerTrips         = allPackages.filter(p => p.section === 'oferta');
+    inspirationalTrips = allPackages.filter(p => !p.section || p.section === 'inspirador');
+
     window.allPackages = allPackages;
+    window.groupTrips = groupTrips;
+    window.inspirationalTrips = inspirationalTrips;
+    window.offerTrips = offerTrips;
     window.dispatchEvent(new CustomEvent('corradiPackagesLoaded'));
     renderPackages();
     renderOffersCarousel();
+    renderPromoOffers();
     setupAutocomplete();
   } catch (e) {
     if (grid) grid.innerHTML = `<div class="col-span-full text-center py-10 text-red-500">No se pudieron cargar los destinos.</div>`;
@@ -43,7 +65,7 @@ function renderPackages() {
   const container = document.getElementById('pkgGrid');
   if (!container) return;
 
-  const sorted = [...allPackages].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+  const sorted = [...inspirationalTrips].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
 
   if (!sorted.length) {
     container.innerHTML = '<div class="col-span-full text-center py-10 text-slate-500">No hay destinos disponibles.</div>';
@@ -203,10 +225,10 @@ function renderOffersCarousel() {
   const nextBtn = document.getElementById('offersNext');
   if (!track || !viewport) return;
 
-  if (!allPackages.length) {
-    track.innerHTML = '<div class="flex items-center justify-center h-72 w-full text-slate-400">No hay ofertas disponibles.</div>';
+  if (!groupTrips.length) {
+    track.innerHTML = '<div class="flex items-center justify-center h-72 w-full text-white/40">Próximamente nuevas salidas grupales.</div>';
     const mt = document.getElementById('offersTrackMobile');
-    if (mt) mt.innerHTML = '<div class="flex items-center justify-center h-72 w-[78vw] shrink-0 text-white/40">No hay ofertas.</div>';
+    if (mt) mt.innerHTML = '<div class="flex items-center justify-center h-72 w-[78vw] shrink-0 text-white/40">Próximamente.</div>';
     return;
   }
 
@@ -214,7 +236,7 @@ function renderOffersCarousel() {
   const mobileTrack = document.getElementById('offersTrackMobile');
   const mobileDots  = document.getElementById('offersDotsMobile');
   if (mobileTrack) {
-    mobileTrack.innerHTML = allPackages.map(p => {
+    mobileTrack.innerHTML = groupTrips.map(p => {
       const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
       return `
       <div class="offer-card-mobile group shrink-0 snap-start w-[78vw] rounded-[18px] overflow-hidden cursor-pointer relative"
@@ -222,7 +244,7 @@ function renderOffersCarousel() {
         <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
         <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
-        ${p.featured ? `<span class="absolute top-3 left-3 px-2.5 py-1 bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wide rounded-full">Destacado</span>` : ''}
+        <span class="absolute top-3 left-3 px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#ebb03a;color:#0d1b2e">Grupal</span>
         <div class="absolute bottom-0 left-0 right-0 p-4">
           <span class="text-white/70 text-[11px] font-medium uppercase tracking-wider">${p.country}</span>
           <h3 class="text-white font-bold text-[16px] font-['Plus_Jakarta_Sans'] leading-tight mt-0.5">${p.name}</h3>
@@ -231,7 +253,7 @@ function renderOffersCarousel() {
       </div>`;
     }).join('');
     if (mobileDots) {
-      mobileDots.innerHTML = allPackages.map((_, i) =>
+      mobileDots.innerHTML = groupTrips.map((_, i) =>
         `<div class="w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === 0 ? 'bg-[#3778b8] w-4' : 'bg-slate-300'}"></div>`
       ).join('');
     }
@@ -241,8 +263,8 @@ function renderOffersCarousel() {
   function buildCard(p) {
     const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
     const waLink = typeof whatsappLink === 'function' ? whatsappLink(p.name) : 'contacto.html';
-    const badge = p.featured ? 'Destacado' : 'OFERTA';
-    const badgeColor = p.featured ? 'background:#3778b8;color:#fff' : 'background:#ef4444;color:#fff;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,0.25);box-shadow:0 2px 8px rgba(239,68,68,0.4)';
+    const badge = 'Salida Grupal';
+    const badgeColor = 'background:#ebb03a;color:#0d1b2e;font-weight:700;text-shadow:none;box-shadow:0 2px 8px rgba(235,176,58,0.4)';
     return `
     <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-400"
       style="width:320px;will-change:transform,opacity,box-shadow" data-id="${p.id}">
@@ -273,7 +295,7 @@ function renderOffersCarousel() {
     </div>`;
   }
 
-  const origCards = allPackages;
+  const origCards = groupTrips;
   const CARD_W = 320;
   const GAP = 20;
   const STEP = CARD_W + GAP;
@@ -384,18 +406,79 @@ function renderOffersCarousel() {
   });
 }
 
+// ── Render Paquetes en Oferta (3ra sección) ──────
+function renderPromoOffers() {
+  const grid = document.getElementById('promoGrid');
+  const actions = document.getElementById('promoActions');
+  if (!grid) return;
+
+  if (!offerTrips.length) {
+    grid.innerHTML = `<div class="col-span-full text-center py-12 text-white/40">
+      <span class="material-symbols-outlined text-[40px] block mb-2 opacity-60">local_fire_department</span>
+      Próximamente nuevas promociones.
+    </div>`;
+    if (actions) actions.style.display = 'none';
+    return;
+  }
+
+  if (actions) actions.style.display = 'flex';
+
+  grid.innerHTML = offerTrips.slice(0, 6).map(p => {
+    const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
+    const orig = Number(p.price_original_usd) || 0;
+    const price = Number(p.price_usd) || 0;
+    const discount = orig > price && orig > 0 ? Math.round((1 - price / orig) * 100) : 0;
+    const expiresLabel = p.expires_at ? (() => {
+      const d = new Date(p.expires_at);
+      if (isNaN(d)) return '';
+      const diff = Math.ceil((d - Date.now()) / 86400000);
+      if (diff <= 0) return '';
+      if (diff === 1) return 'Termina mañana';
+      if (diff <= 7) return `Termina en ${diff} días`;
+      return `Hasta ${d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}`;
+    })() : '';
+
+    return `
+      <div class="group relative rounded-[22px] overflow-hidden cursor-pointer bg-[#152741] border border-white/10 hover:border-red-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(239,68,68,0.18)]"
+        onclick="window.location.href='paquete.html?id=${p.id}'">
+        <div class="relative overflow-hidden" style="height:220px">
+          <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)"></div>
+          ${discount > 0 ? `<span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#fff;box-shadow:0 4px 14px rgba(239,68,68,0.45)">-${discount}%</span>` : `<span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#fff;box-shadow:0 4px 14px rgba(239,68,68,0.45)">Oferta</span>`}
+          <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-slate-800 rounded-full px-3 py-1 text-[11px] font-semibold">${p.country || ''}</span>
+          ${expiresLabel ? `<span class="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-black/55 backdrop-blur-sm text-white rounded-full px-2.5 py-1 text-[11px] font-medium"><span class="material-symbols-outlined text-[13px]">schedule</span>${expiresLabel}</span>` : ''}
+        </div>
+        <div class="p-5">
+          <h3 class="font-['Geomanist'] font-medium text-[17px] text-white leading-tight mb-1">${p.name}</h3>
+          <p class="text-white/50 text-[13px] font-light line-clamp-2 mb-4">${p.description || ''}</p>
+          <div class="flex items-end justify-between">
+            <div>
+              <span class="block text-white/40 text-[10px] uppercase tracking-wider font-semibold">Desde</span>
+              <div class="flex items-baseline gap-2">
+                ${orig > price && orig > 0 ? `<span class="text-white/40 text-[13px] line-through">USD ${orig.toLocaleString('es-AR')}</span>` : ''}
+                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#ebb03a">USD ${price.toLocaleString('es-AR')}</span>
+              </div>
+            </div>
+            <span class="inline-flex items-center gap-1 text-white/80 text-sm font-medium group-hover:text-white transition-colors">
+              Ver <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+            </span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
 // ── Search ──────────────────────────────────────
 function triggerSearch() {
   const hiddenDest = document.getElementById('searchDestHidden');
   let q = hiddenDest ? hiddenDest.value : (document.getElementById('searchDest')?.value || '');
   if (q === 'all' || q === 'Todos los destinos') q = '';
-  
-  const month = document.getElementById('searchMonth')?.value || '';
+
   const price = document.getElementById('searchPrice')?.value || '';
 
   const params = new URLSearchParams();
   if (q) params.append('country', q);
-  if (month) params.append('month', month);
   if (price) params.append('price', price);
 
   window.location.href = 'busqueda.html' + (params.toString() ? '?' + params.toString() : '');
@@ -475,17 +558,6 @@ function setupAutocomplete() {
   input.addEventListener('input', function() { positionList(); renderAutocompleteList(this.value.toLowerCase().trim(), list, input); });
   input.addEventListener('blur', () => { setTimeout(() => list.classList.add('hidden'), 150); });
   window.addEventListener('resize', () => { if (!list.classList.contains('hidden')) positionList(); });
-}
-
-// ── Date Picker ─────────────────────────────────
-if (typeof flatpickr !== 'undefined') {
-  flatpickr("#searchDate", {
-    mode: "range",
-    minDate: "today",
-    dateFormat: "d M, Y",
-    locale: "es",
-    showMonths: window.innerWidth >= 768 ? 2 : 1
-  });
 }
 
 // ── Guests Popover ──────────────────────────────

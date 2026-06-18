@@ -67,7 +67,11 @@ async function loadPackages() {
         .order('sort_order', { ascending: true, nullsFirst: false })
         .order('id');
       if (error) throw error;
-      allPackages = data || [];
+      allPackages = (data || []).filter(p => {
+        if (!p.expires_at) return true;
+        const exp = new Date(p.expires_at);
+        return isNaN(exp) || exp.getTime() >= Date.now();
+      });
     }
     populateCountrySelect();
     renderResults();

@@ -242,26 +242,6 @@
           
           <div class="hidden md:block w-[1px] h-10 bg-outline-variant"></div>
           
-          <!-- Date Month Picker -->
-          <div class="flex-1 flex items-center bg-transparent md:bg-white hover:bg-slate-50 w-full md:w-auto rounded-full px-4 py-2.5 md:px-6 md:py-2 border-b border-black/8 md:border md:border-transparent md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative group cursor-pointer" id="monthContainer">
-            <span class="material-symbols-outlined text-outline mr-2 text-[20px] group-hover:text-primary transition-colors">calendar_month</span>
-            <div class="flex flex-col w-full text-left">
-              <span class="font-label-md text-slate-500 uppercase text-[9px] md:text-[10px] font-bold tracking-wide">Cuándo</span>
-              <input id="searchMonthDisplay" class="bg-transparent border-none p-0 focus:ring-0 text-slate-800 font-medium text-sm md:text-base w-full placeholder-slate-400 outline-none cursor-pointer pointer-events-none" placeholder="Cualquier mes" type="text" readonly value=""/>
-              <input type="hidden" id="searchMonth" value="">
-            </div>
-            <span class="material-symbols-outlined text-slate-400 text-[18px] ml-2 group-hover:text-primary transition-colors">expand_more</span>
-            <!-- Popover Panel -->
-            <div id="monthPopover" class="bg-white rounded-2xl shadow-[0_20px_40px_rgba(0,0,0,0.15)] border border-slate-100 p-4 hidden cursor-default max-h-[340px] overflow-y-auto custom-scrollbar-light" style="position:absolute;top:calc(100% + 12px);left:0;z-index:50;min-width:320px">
-              <h4 class="font-medium text-sm text-slate-400 mb-3 ml-1 uppercase tracking-wider">Seleccionar Mes</h4>
-              <div class="grid grid-cols-3 gap-2" id="monthGrid">
-                <!-- Months populated by JS -->
-              </div>
-            </div>
-          </div>
-          
-          <div class="hidden md:block w-[1px] h-10 bg-outline-variant"></div>
-          
           <!-- Price Filter -->
           <div class="flex-1 flex items-center bg-transparent md:bg-white hover:bg-slate-50 w-full md:w-auto rounded-full px-4 py-2.5 md:px-6 md:py-2 border-b border-black/8 md:border md:border-transparent md:focus-within:border-primary md:focus-within:ring-1 md:focus-within:ring-primary transition-all relative group cursor-pointer" id="priceContainer">
             <span class="material-symbols-outlined text-outline mr-2 text-[20px] group-hover:text-primary transition-colors">payments</span>
@@ -309,27 +289,30 @@
   </section>
 
 
-  <!-- Current Offers Carousel - Full Width Infinite -->
+  <!-- Salidas Grupales Acompañadas - Sección destacada principal -->
   <section class="w-full" style="background:#0d1b2e;padding-top:4rem;padding-bottom:4rem">
     <div class="max-w-7xl mx-auto px-6 hidden md:block">
       <div class="mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
         <div>
-          <h2 class="font-['Geomanist'] font-medium text-[32px] text-white mb-1">Paquetes en Oferta</h2>
-          <p class="text-white/60 font-light text-base">Descuentos exclusivos para escapadas espontáneas.</p>
+          <div class="inline-flex items-center gap-2 bg-[#ebb03a]/15 text-[#ebb03a] text-xs font-semibold px-3 py-1.5 rounded-full mb-3 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">groups</span>
+            Acompañadas por Corradi Viajes
+          </div>
+          <h2 class="font-['Geomanist'] font-medium text-[32px] text-white mb-1">Salidas Grupales Acompañadas</h2>
+          <p class="text-white/60 font-light text-base">Viajá con nuestro equipo. Grupos cerrados, fechas confirmadas y experiencia compartida.</p>
         </div>
-        <a href="ofertas.html" class="flex items-center gap-1 font-medium text-sm text-[#3778b8] hover:underline transition-colors">
-          Ver Todas <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-        </a>
       </div>
     </div>
 
-    <!-- MOBILE header: left-aligned like Destinos Populares -->
+    <!-- MOBILE header -->
     <div class="md:hidden px-4 mb-8">
-      <div class="flex justify-between items-end">
-        <div>
-          <h2 class="font-['Geomanist'] font-medium text-[28px] text-white mb-1">Paquetes en Oferta</h2>
-          <p class="text-white/60 font-light text-sm">Descuentos exclusivos para escapadas espontáneas.</p>
+      <div class="flex flex-col gap-2">
+        <div class="inline-flex items-center gap-2 bg-[#ebb03a]/15 text-[#ebb03a] text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider w-max">
+          <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
+          Acompañadas por Corradi
         </div>
+        <h2 class="font-['Geomanist'] font-medium text-[28px] text-white mb-1">Salidas Grupales Acompañadas</h2>
+        <p class="text-white/60 font-light text-sm">Viajá con nuestro equipo. Fechas confirmadas, experiencia compartida.</p>
       </div>
     </div>
 
@@ -341,9 +324,6 @@
         <div class="flex items-center justify-center h-72 w-[78vw] shrink-0 text-white/40">Cargando...</div>
       </div>
       <div id="offersDotsMobile" class="flex justify-center gap-1.5 mt-1"></div>
-      <a href="ofertas.html" class="mt-2 w-max mx-auto flex items-center justify-center gap-1 font-medium text-sm text-[#3778b8] border border-[#3778b8] rounded-full px-8 py-3 transition-colors">
-        Ver Todas las Ofertas
-      </a>
     </div>
 
     <!-- DESKTOP: center-focused scale carousel -->
@@ -368,20 +348,15 @@
     </div>
 
     </div>
-    <div class="hidden md:flex max-w-7xl mx-auto px-6 mt-8 justify-center">
-      <a href="ofertas.html" class="flex items-center justify-center gap-2 font-medium text-sm text-[#3778b8] border border-[#3778b8] hover:bg-[#3778b8]/10 rounded-full px-8 py-3 transition-all">
-        Ver Todas las Ofertas <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-      </a>
-    </div>
   </section>
 
-  <!-- Popular Destinations Bento Grid -->
+  <!-- Viajes Inspiradores Bento Grid -->
   <section id="destinos" class="w-full py-xl" style="background:#111c2d">
     <div class="max-w-[1500px] mx-auto px-margin-mobile md:px-margin-desktop">
     <div class="flex justify-between items-end mb-lg">
       <div>
-        <h2 class="font-h2 text-h2 text-white mb-xs">Destinos Populares</h2>
-        <p class="font-body-md text-body-md text-white/60">Los lugares más elegidos por nuestros viajeros.</p>
+        <h2 class="font-h2 text-h2 text-white mb-xs">Viajes Inspiradores</h2>
+        <p class="font-body-md text-body-md text-white/60">Destinos curados para soñar tu próxima aventura.</p>
       </div>
       <a href="busqueda.html" class="hidden md:flex items-center gap-1 font-label-md text-label-md transition-colors" style="color: #75a7ec">
         Ver Todos <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
@@ -399,6 +374,35 @@
         Ver todos los destinos <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
       </a>
     </div>
+    </div>
+  </section>
+
+  <!-- Paquetes en Oferta - Promos por tiempo limitado -->
+  <section id="ofertas" class="w-full py-xl" style="background:#0d1b2e">
+    <div class="max-w-[1500px] mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex justify-between items-end mb-lg">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-red-500/15 text-red-400 text-xs font-semibold px-3 py-1.5 rounded-full mb-3 uppercase tracking-wider">
+            <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+            Tiempo limitado
+          </div>
+          <h2 class="font-h2 text-h2 text-white mb-xs">Paquetes en Oferta</h2>
+          <p class="font-body-md text-body-md text-white/60">Promociones de último momento. Las que no querés perderte.</p>
+        </div>
+        <a href="ofertas.html" class="hidden md:flex items-center gap-1 font-label-md text-label-md transition-colors" style="color: #75a7ec">
+          Ver Todas <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </a>
+      </div>
+
+      <div id="promoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        <div class="col-span-full text-center py-10 text-slate-500">Cargando ofertas...</div>
+      </div>
+
+      <div class="mt-8 flex justify-center" id="promoActions" style="display:none">
+        <a href="ofertas.html" class="flex items-center justify-center gap-2 font-medium text-sm text-[#3778b8] border border-[#3778b8] hover:bg-[#3778b8]/10 rounded-full px-8 py-3 transition-all">
+          Ver todas las ofertas <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -721,10 +725,9 @@
   document.addEventListener('DOMContentLoaded', () => {
     // Move popovers to body so overflow:hidden on hero doesn't clip them
     const destPopover = document.getElementById('destPopover');
-    const monthPopover = document.getElementById('monthPopover');
+    const monthPopover = null;
     const pricePopover = document.getElementById('pricePopover');
     if (destPopover) document.body.appendChild(destPopover);
-    if (monthPopover) document.body.appendChild(monthPopover);
     if (pricePopover) document.body.appendChild(pricePopover);
 
     // Destination Custom Dropdown
@@ -872,42 +875,6 @@
           }
         }
       });
-    }
-
-    // Month picker
-    const monthContainer = document.getElementById('monthContainer');
-    const monthGrid = document.getElementById('monthGrid');
-    const monthDisplay = document.getElementById('searchMonthDisplay');
-    const monthInput = document.getElementById('searchMonth');
-
-    if (monthContainer && monthPopover && monthGrid) {
-      const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-      const today = new Date();
-      const currentMonth = today.getMonth();
-      const currentYear = today.getFullYear();
-      let html = '';
-      for (let i = 0; i < 12; i++) {
-        let m = (currentMonth + i) % 12;
-        let y = currentYear + Math.floor((currentMonth + i) / 12);
-        let monthName = months[m];
-        let label = `${monthName} ${y}`;
-        html += `<div class="month-option text-center py-2 px-1 rounded-lg hover:bg-blue-50 cursor-pointer text-[15px] font-medium transition-colors" data-val="${label}">${monthName.substring(0,3)} ${y}</div>`;
-      }
-      monthGrid.innerHTML = html;
-      monthContainer.addEventListener('click', (e) => {
-        if (monthPopover.contains(e.target)) return;
-        e.stopPropagation();
-        if (pricePopover) pricePopover.classList.add('hidden');
-        if (destPopover) destPopover.classList.add('hidden');
-        const isHidden = monthPopover.classList.contains('hidden');
-        if (isHidden) { positionBelow(monthContainer, monthPopover); monthPopover.classList.remove('hidden'); }
-        else { monthPopover.classList.add('hidden'); }
-      });
-      monthGrid.addEventListener('click', (e) => {
-        const option = e.target.closest('.month-option');
-        if (option) { monthDisplay.value = option.getAttribute('data-val'); monthInput.value = option.getAttribute('data-val'); monthPopover.classList.add('hidden'); }
-      });
-      document.addEventListener('click', (e) => { if (!monthContainer.contains(e.target) && !monthPopover.contains(e.target)) monthPopover.classList.add('hidden'); });
     }
 
     // Price picker

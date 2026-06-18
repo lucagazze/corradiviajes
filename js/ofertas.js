@@ -25,8 +25,18 @@ document.getElementById('searchInput')?.addEventListener('input', function() {
   renderResults();
 });
 
+function isLive(p) {
+  if (!p.expires_at) return true;
+  const exp = new Date(p.expires_at);
+  return isNaN(exp) || exp.getTime() >= Date.now();
+}
+
 function isOffer(p) {
-  return p.badge || (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd));
+  if (!isLive(p)) return false;
+  // Considerado oferta si: section='oferta', badge, o precio rebajado
+  return p.section === 'oferta'
+      || p.badge
+      || (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd));
 }
 
 async function loadPackages() {
