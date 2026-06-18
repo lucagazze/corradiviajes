@@ -262,33 +262,30 @@ function renderOffersCarousel() {
   // Build card HTML
   function buildCard(p) {
     const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
-    const waLink = typeof whatsappLink === 'function' ? whatsappLink(p.name) : 'contacto.html';
-    const badge = 'Salida Grupal';
     const badgeColor = 'background:#ebb03a;color:#0d1b2e;font-weight:700;text-shadow:none;box-shadow:0 2px 8px rgba(235,176,58,0.4)';
     return `
-    <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-400"
-      style="width:320px;will-change:transform,opacity,box-shadow" data-id="${p.id}">
-      <div class="relative overflow-hidden" style="height:200px">
+    <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(235,176,58,0.25)] hover:-translate-y-1"
+      style="width:340px" data-id="${p.id}">
+      <div class="relative overflow-hidden" style="height:220px">
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
-        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-medium uppercase tracking-wide" style="${badgeColor}">${badge}</span>
+        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="${badgeColor}">Salida Grupal</span>
         <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country}</span>
       </div>
       <div class="p-5 flex flex-col flex-1 justify-between pointer-events-none">
         <div>
-          <h3 class="font-['Geomanist'] font-medium text-[16px] text-slate-900 leading-tight mb-1">${p.name}</h3>
+          <h3 class="font-['Geomanist'] font-medium text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
           <p class="text-slate-400 text-[13px] font-light line-clamp-2">${p.description || ''}</p>
         </div>
-        <div class="flex items-center justify-between mt-4">
+        <div class="flex items-center justify-between mt-5 gap-3">
           <div>
-            <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wider block">Desde</span>
+            <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Desde</span>
             <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
           </div>
-          <div class="flex items-center gap-1.5 text-white text-sm font-medium px-5 py-2.5 rounded-full transition-all"
-            style="background:#3778b8">
-            <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+          <div class="flex items-center gap-1.5 text-white text-[13px] font-medium px-4 py-2 rounded-full whitespace-nowrap" style="background:#3778b8">
             Ver paquete
+            <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
           </div>
         </div>
       </div>
@@ -296,7 +293,31 @@ function renderOffersCarousel() {
   }
 
   const origCards = groupTrips;
-  const CARD_W = 320;
+  const total = origCards.length;
+
+  // ── Modo simple: pocos paquetes → centrar estático sin scale carousel ──
+  if (total <= 3) {
+    if (prevBtn) prevBtn.style.display = 'none';
+    if (nextBtn) nextBtn.style.display = 'none';
+    track.style.transition = 'none';
+    track.style.transform = 'none';
+    track.style.justifyContent = 'center';
+    track.style.gap = '24px';
+    track.innerHTML = origCards.map(p => buildCard(p)).join('');
+    // Click → ir al paquete
+    track.querySelectorAll('.offer-card').forEach(el => {
+      el.addEventListener('click', () => {
+        window.location.href = `paquete.html?id=${el.dataset.id}`;
+      });
+    });
+    return;
+  }
+
+  // ── Modo carrusel: 4+ paquetes ──
+  if (prevBtn) prevBtn.style.display = '';
+  if (nextBtn) nextBtn.style.display = '';
+  track.style.justifyContent = '';
+  const CARD_W = 340;
   const GAP = 20;
   const STEP = CARD_W + GAP;
 
@@ -306,7 +327,6 @@ function renderOffersCarousel() {
   track.style.transition = 'none';
 
   const cardEls = [...track.querySelectorAll('.offer-card')];
-  const total = origCards.length;
   let idx = total; // start at the middle set
 
   function getOffset() {
