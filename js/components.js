@@ -7,25 +7,33 @@ class AppNavbar extends HTMLElement {
     const currentPath = window.location.pathname;
 
     const links = [
-      { id: 'nav-inicio',   href: 'index.html',    label: 'Inicio',    isIndex: true },
-      { id: 'nav-destinos', href: 'busqueda.html',  label: 'Destinos',  match: 'busqueda' },
-      { id: 'nav-ofertas',  href: 'ofertas.html',   label: 'Ofertas',   match: 'ofertas' },
-      { id: 'nav-nosotros', href: 'nosotros.html',  label: 'Nosotros',  match: 'nosotros' },
-      { id: 'nav-contacto', href: 'contacto.html',  label: 'Contacto',  match: 'contacto' },
+      { id: 'nav-inicio',    href: 'index.html',           label: 'Inicio',          isIndex: true },
+      { id: 'nav-grupales',  href: 'salidas-grupales.html', label: 'Salidas Grupales', match: 'salidas-grupales' },
+      { id: 'nav-destinos',  href: 'busqueda.html',        label: 'Destinos',        match: 'busqueda' },
+      { id: 'nav-ofertas',   href: 'ofertas.html',         label: 'Ofertas',         match: 'ofertas' },
+      { id: 'nav-nosotros',  href: 'nosotros.html',        label: 'Nosotros',        match: 'nosotros' },
+      { id: 'nav-contacto',  href: 'contacto.html',        label: 'Contacto',        match: 'contacto' },
     ];
 
     const mobileNavItems = [
-      { href: 'index.html',   label: 'Inicio',    icon: 'home',          isIndex: true },
-      { href: 'busqueda.html', label: 'Destinos', icon: 'travel_explore', match: 'busqueda' },
-      { href: 'ofertas.html',  label: 'Ofertas',  icon: 'local_offer',    match: 'ofertas' },
-      { href: 'nosotros.html', label: 'Nosotros', icon: 'groups',         match: 'nosotros' },
-      { href: 'contacto.html', label: 'Contacto', icon: 'mail',           match: 'contacto' },
+      { href: 'index.html',            label: 'Inicio',           icon: 'home',           isIndex: true },
+      { href: 'salidas-grupales.html', label: 'Salidas Grupales', icon: 'groups',          match: 'salidas-grupales' },
+      { href: 'busqueda.html',         label: 'Destinos',         icon: 'travel_explore', match: 'busqueda' },
+      { href: 'ofertas.html',          label: 'Ofertas',          icon: 'local_offer',    match: 'ofertas' },
+      { href: 'nosotros.html',         label: 'Nosotros',         icon: 'flag',           match: 'nosotros' },
+      { href: 'contacto.html',         label: 'Contacto',         icon: 'mail',           match: 'contacto' },
     ];
 
     const isHomePage = currentPath.endsWith('/') || currentPath.endsWith('index.html') || currentPath === '';
 
     const desktopLinks = links.map(l => {
       const isActive = l.isIndex ? isHomePage : currentPath.includes(l.match);
+      const isGroup = l.id === 'nav-grupales';
+      if (isGroup) {
+        return `<a id="${l.id}" href="${l.href}" class="font-medium font-['Geomanist'] text-base inline-flex items-center gap-1.5 transition-all" style="color:${isActive ? '#ebb03a' : '#ebb03a'};text-shadow:0 0 12px rgba(235,176,58,0.25)">
+          <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">groups</span>${l.label}
+        </a>`;
+      }
       return `<a id="${l.id}" href="${l.href}" class="${isActive
         ? "text-blue-400 font-medium font-['Geomanist'] text-base"
         : "text-white/70 font-medium font-['Geomanist'] text-base hover:text-white transition-colors"}">${l.label}</a>`;
