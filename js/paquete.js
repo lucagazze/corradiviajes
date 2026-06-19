@@ -63,10 +63,10 @@ function renderPackage(pkg) {
   const searchDate = urlParams.get('date');
   const searchGuests = urlParams.get('guests');
   if (searchDate || searchGuests) {
-    let msg = 'Hola, quisiera consultar por este paquete';
+    let msg = `Hola Corradi 👋 Me interesa el paquete *${pkg.name}*`;
     if (searchGuests) msg += ` para ${searchGuests} persona(s)`;
     if (searchDate) msg += ` en la fecha ${searchDate}`;
-    msg += '.';
+    msg += '. ¡Gracias!';
     const msgEl = document.getElementById('message');
     if (msgEl) msgEl.value = msg;
   }

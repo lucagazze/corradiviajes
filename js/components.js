@@ -94,7 +94,7 @@ class AppNavbar extends HTMLElement {
         </div>
         <!-- WhatsApp CTA at bottom of menu -->
         <div class="px-4 pb-6 pt-2">
-          <a href="https://wa.me/${typeof WHATSAPP_NUMBER !== 'undefined' ? WHATSAPP_NUMBER : '5493411234567'}?text=Hola%20Corradi%20Viajes%2C%20me%20gustar%C3%ADa%20consultar%20sobre%20un%20viaje"
+          <a href="${typeof whatsappLink === 'function' ? whatsappLink() : 'https://wa.me/'+(typeof WHATSAPP_NUMBER !== 'undefined' ? WHATSAPP_NUMBER : '5493416057588')}"
             target="_blank" rel="noopener"
             class="flex items-center justify-center gap-2 w-full hover:opacity-90 font-semibold font-['Geomanist'] text-sm px-4 py-3.5 rounded-[14px] transition-all shadow-[0_4px_14px_rgba(37,211,102,0.3)]"
             style="background:#25D366;color:#fff">

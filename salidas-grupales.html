@@ -83,7 +83,7 @@
       <div class="relative z-10 w-full max-w-4xl flex flex-col items-center text-center px-4">
         <div class="inline-flex items-center gap-2 bg-[#f2b352]/15 border border-[#f2b352]/40 backdrop-blur-md text-[#f2b352] text-[11px] md:text-xs font-bold px-3 py-1.5 rounded-full mb-5 uppercase tracking-[0.18em]">
           <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">groups</span>
-          Acompañadas por Corradi Viajes
+          Acompañados por Corradi
         </div>
         <h1 class="font-['Geomanist'] text-3xl md:text-[48px] font-bold text-white tracking-tight mb-3 drop-shadow-md leading-[1.1]">
           Viajá con nuestro equipo.<br class="hidden md:block">
@@ -274,12 +274,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // WhatsApp CTAs
-  const links = [document.getElementById('ctaWa'), document.getElementById('ctaHeroWa')];
-  links.forEach(el => {
-    if (el && typeof whatsappLink === 'function') {
-      el.href = whatsappLink('Salidas Grupales Acompañadas');
-    }
+  // WhatsApp CTAs — mensaje dedicado para Salidas Grupales
+  const grupalMsg = 'Hola Corradi 👋 Me interesan los viajes *Acompañados por Corradi*. ¿Me pasan más info? ¡Gracias!';
+  const grupalLink = `https://wa.me/${typeof WHATSAPP_NUMBER !== 'undefined' ? WHATSAPP_NUMBER : '5493416057588'}?text=${encodeURIComponent(grupalMsg)}`;
+  ['ctaWa', 'ctaHeroWa'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.href = grupalLink;
   });
 
   async function loadGrupales() {

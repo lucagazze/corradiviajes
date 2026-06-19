@@ -22,10 +22,17 @@ const VIDEOS = {
 // ─────────────────────────────────────────────
 const WHATSAPP_NUMBER = '5493416057588';
 
-function whatsappLink(packageName) {
-  const msg = packageName
-    ? `Hola Corradi Viajes! Me gustaría consultar sobre el paquete: *${packageName}*`
-    : 'Hola Corradi Viajes! Me gustaría consultar sobre un viaje.';
+// whatsappLink(target?, kind?)
+//   target: nombre del paquete o tema (ej. "Egipto Crucero Nilo" o "Salidas Grupales")
+//   kind:   'package' (default si hay target) | 'topic' | 'general'
+function whatsappLink(target, kind) {
+  if (!target) {
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent('Hola Corradi 👋 Quisiera recibir información sobre un viaje. ¡Gracias!')}`;
+  }
+  const isTopic = kind === 'topic';
+  const msg = isTopic
+    ? `Hola Corradi 👋 Quisiera recibir información sobre *${target}*. ¡Gracias!`
+    : `Hola Corradi 👋 Me interesa el paquete *${target}*. ¿Me pasan más info? ¡Gracias!`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`;
 }
 
