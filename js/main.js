@@ -244,7 +244,7 @@ function renderOffersCarousel() {
         <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
         <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
-        <span class="absolute top-3 left-3 px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#ebb03a;color:#0d1b2e">Grupal</span>
+        <span class="absolute top-3 left-3 px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#f2b352;color:#0d1b2e">Grupal</span>
         <div class="absolute bottom-0 left-0 right-0 p-4">
           <span class="text-white/70 text-[11px] font-medium uppercase tracking-wider">${p.country}</span>
           <h3 class="text-white font-bold text-[16px] font-['Plus_Jakarta_Sans'] leading-tight mt-0.5">${p.name}</h3>
@@ -262,9 +262,9 @@ function renderOffersCarousel() {
   // Build card HTML
   function buildCard(p) {
     const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
-    const badgeColor = 'background:#ebb03a;color:#0d1b2e;font-weight:700;text-shadow:none;box-shadow:0 2px 8px rgba(235,176,58,0.4)';
+    const badgeColor = 'background:#f2b352;color:#0d1b2e;font-weight:700;text-shadow:none;box-shadow:0 2px 8px rgba(242,179,82,0.4)';
     return `
-    <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(235,176,58,0.25)] hover:-translate-y-1"
+    <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
       style="width:340px" data-id="${p.id}">
       <div class="relative overflow-hidden" style="height:220px">
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
@@ -477,7 +477,7 @@ function renderPromoOffers() {
               <span class="block text-white/40 text-[10px] uppercase tracking-wider font-semibold">Desde</span>
               <div class="flex items-baseline gap-2">
                 ${orig > price && orig > 0 ? `<span class="text-white/40 text-[13px] line-through">USD ${orig.toLocaleString('es-AR')}</span>` : ''}
-                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#ebb03a">USD ${price.toLocaleString('es-AR')}</span>
+                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#f2b352">USD ${price.toLocaleString('es-AR')}</span>
               </div>
             </div>
             <span class="inline-flex items-center gap-1 text-white/80 text-sm font-medium group-hover:text-white transition-colors">

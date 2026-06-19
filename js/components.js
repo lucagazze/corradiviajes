@@ -30,7 +30,7 @@ class AppNavbar extends HTMLElement {
       const isActive = l.isIndex ? isHomePage : currentPath.includes(l.match);
       const isGroup = l.id === 'nav-grupales';
       if (isGroup) {
-        return `<a id="${l.id}" href="${l.href}" class="font-medium font-['Geomanist'] text-base whitespace-nowrap transition-all" style="color:#ebb03a;text-shadow:0 0 12px rgba(235,176,58,0.25)">${l.label}</a>`;
+        return `<a id="${l.id}" href="${l.href}" class="font-medium font-['Geomanist'] text-base whitespace-nowrap transition-all" style="color:#f2b352;text-shadow:0 0 12px rgba(242,179,82,0.25)">${l.label}</a>`;
       }
       return `<a id="${l.id}" href="${l.href}" class="whitespace-nowrap ${isActive
         ? "text-blue-400 font-medium font-['Geomanist'] text-base"

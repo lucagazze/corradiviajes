@@ -1409,7 +1409,7 @@ function renderPkgCard(p, num) {
           <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
             ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
             ${p.featured?'<span class="pill pill-featured">★</span>':''}
-            ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(235,176,58,0.14);color:#ebb03a;border:1px solid rgba(235,176,58,0.25)">Grupal</span>':p.section==='oferta'?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':''}
+            ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':p.section==='oferta'?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':''}
             ${p.expires_at?`<span class="pill" style="background:rgba(148,163,184,0.12);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)" title="Expira ${new Date(p.expires_at).toLocaleString('es-AR')}">⏱ ${new Date(p.expires_at).toLocaleDateString('es-AR',{day:'2-digit',month:'short'})}</span>`:''}
             ${p.badge?`<span class="pill pill-badge">${p.badge}</span>`:''}
           </div>
