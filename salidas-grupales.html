@@ -110,8 +110,29 @@
     </div>
   </section>
 
+  <!-- PRÓXIMAS SALIDAS -->
+  <section id="salidas" class="w-full py-xl" style="background:#0d1b2e">
+    <div class="max-w-[1500px] mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex justify-between items-end mb-lg">
+        <div>
+          <span class="inline-block text-[#ebb03a] text-[11px] font-bold uppercase tracking-[0.18em] mb-2">Próximas salidas</span>
+          <h2 class="font-['Geomanist'] font-medium text-[28px] md:text-[32px] text-white mb-1">Elegí tu próximo viaje</h2>
+          <p class="font-body-md text-white/60 font-light text-base">Estos son los viajes con cupos abiertos.</p>
+        </div>
+        <span id="groupCount" class="hidden md:inline-flex items-center gap-1.5 text-white/40 text-[13px] font-medium"></span>
+      </div>
+
+      <div id="grupalesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+        <div class="col-span-full text-center py-16 text-white/40">
+          <span class="material-symbols-outlined text-[40px] block mb-2 opacity-60">hourglass_empty</span>
+          Cargando salidas...
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- BENEFICIOS / POR QUE GRUPAL -->
-  <section class="w-full py-xl" style="background:#0d1b2e">
+  <section class="w-full py-xl" style="background:#111c2d">
     <div class="max-w-[1500px] mx-auto px-margin-mobile md:px-margin-desktop">
       <div class="text-center mb-14">
         <span class="inline-block text-[#ebb03a] text-[11px] font-bold uppercase tracking-[0.18em] mb-3">¿Por qué grupal?</span>
@@ -150,27 +171,6 @@
           </div>
           <h3 class="text-white font-medium text-[17px] mb-1.5">Hoteles seleccionados</h3>
           <p class="text-white/55 font-light text-[13.5px] leading-relaxed">Categoría 4★ y 5★ en todos los destinos. Curados por nosotros, no por un buscador online.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- PRÓXIMAS SALIDAS -->
-  <section id="salidas" class="w-full py-xl" style="background:#111c2d">
-    <div class="max-w-[1500px] mx-auto px-margin-mobile md:px-margin-desktop">
-      <div class="flex justify-between items-end mb-lg">
-        <div>
-          <span class="inline-block text-[#ebb03a] text-[11px] font-bold uppercase tracking-[0.18em] mb-2">Próximas salidas</span>
-          <h2 class="font-['Geomanist'] font-medium text-[28px] md:text-[32px] text-white mb-1">Elegí tu próximo viaje</h2>
-          <p class="font-body-md text-white/60 font-light text-base">Estos son los viajes con cupos abiertos.</p>
-        </div>
-        <span id="groupCount" class="hidden md:inline-flex items-center gap-1.5 text-white/40 text-[13px] font-medium"></span>
-      </div>
-
-      <div id="grupalesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
-        <div class="col-span-full text-center py-16 text-white/40">
-          <span class="material-symbols-outlined text-[40px] block mb-2 opacity-60">hourglass_empty</span>
-          Cargando salidas...
         </div>
       </div>
     </div>
