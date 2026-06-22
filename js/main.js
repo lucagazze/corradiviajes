@@ -536,7 +536,6 @@ function renderPromoOffers() {
     </div>` : ''}
   `;
 }
-}
 
 // ── Search ──────────────────────────────────────
 function triggerSearch() {
