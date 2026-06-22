@@ -314,3 +314,19 @@ html[data-theme="light"] a[href="busqueda.html"],
 html[data-theme="light"] a[href="ofertas.html"] {
   color: #3778b8 !important;
 }
+
+/* Polishes for promo/offer cards in light mode */
+html[data-theme="light"] #promoGrid .group span.inline-flex {
+  color: #3778b8 !important;
+}
+html[data-theme="light"] #promoGrid .group:hover span.inline-flex {
+  color: #2563eb !important;
+}
+html[data-theme="light"] #promoGrid .group span.block,
+html[data-theme="light"] #searchResultsGrid article span.block {
+  color: #64748b !important;
+}
+html[data-theme="light"] #promoGrid .group .line-through,
+html[data-theme="light"] #searchResultsGrid article .line-through {
+  color: #94a3b8 !important;
+}

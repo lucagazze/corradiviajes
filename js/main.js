@@ -457,7 +457,8 @@ function renderPromoOffers() {
     })() : '';
 
     return `
-      <div class="group relative rounded-[22px] overflow-hidden cursor-pointer bg-[#152741] border border-white/10 hover:border-red-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(239,68,68,0.18)]"
+      <div class="group relative rounded-[22px] overflow-hidden cursor-pointer hover:border-red-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(239,68,68,0.18)]"
+        style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.15)"
         onclick="window.location.href='paquete.html?id=${p.id}'">
         <div class="relative overflow-hidden" style="height:220px">
           <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
