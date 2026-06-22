@@ -88,7 +88,7 @@ function renderPackages() {
           <div class="group shrink-0 snap-start w-[78vw] rounded-[18px] overflow-hidden cursor-pointer relative pkg-card-mobile" style="aspect-ratio:3/4;"
             onclick="window.location.href='paquete.html?id=${p.id}'">
             <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
-              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+              class="w-full h-full object-cover"/>
             <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
             ${p.featured ? `<span class="absolute top-3 left-3 px-2.5 py-1 bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wide rounded-full">Destacado</span>` : ''}
             <div class="absolute bottom-0 left-0 right-0 p-4">
@@ -124,7 +124,7 @@ function renderPackages() {
             <div class="group relative col-span-1 row-span-2 rounded-[18px] overflow-hidden cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.07)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.12)] transition-all transform hover:-translate-y-1"
               onclick="window.location.href='paquete.html?id=${p.id}'">
               <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                class="w-full h-full object-cover"/>
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
               ${p.featured ? `<span class="absolute top-4 left-4 px-3 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#3778b8">Destacado</span>` : ''}
               <div class="absolute bottom-0 left-0 p-6 w-full">
@@ -140,7 +140,7 @@ function renderPackages() {
             <div class="group relative col-span-1 row-span-1 rounded-[18px] overflow-hidden cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.07)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.12)] transition-all transform hover:-translate-y-1"
               onclick="window.location.href='paquete.html?id=${p.id}'">
               <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
-                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+                class="w-full h-full object-cover"/>
               <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
               <div class="absolute bottom-0 left-0 p-4 w-full">
                 <h3 class="text-white font-semibold text-[15px] font-['Plus_Jakarta_Sans'] leading-tight">${p.name}</h3>
@@ -243,7 +243,7 @@ function renderOffersCarousel() {
       <div class="offer-card-mobile group shrink-0 snap-start w-[78vw] rounded-[18px] overflow-hidden cursor-pointer relative"
         style="aspect-ratio:3/4;" onclick="window.location.href='paquete.html?id=${p.id}'">
         <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"/>
+          class="w-full h-full object-cover"/>
         <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
         <span class="absolute top-3 left-3 px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#f2b352;color:#0d1b2e">Grupal</span>
         <div class="absolute bottom-0 left-0 right-0 p-4">
@@ -269,7 +269,7 @@ function renderOffersCarousel() {
       style="width:340px" data-id="${p.id}">
       <div class="relative overflow-hidden" style="height:220px">
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
-          class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none">
+          class="w-full h-full object-cover pointer-events-none">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
         <span class="group-label-badge absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="${badgeColor}">Salida Grupal</span>
         <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country}</span>
@@ -474,7 +474,7 @@ function renderPromoOffers() {
         onclick="window.location.href='paquete.html?id=${p.id}'">
         <div class="relative overflow-hidden" style="height:220px">
           <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"/>
+            class="w-full h-full object-cover pointer-events-none"/>
           <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
           <span class="offer-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
             <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>

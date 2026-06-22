@@ -129,7 +129,7 @@ function renderResults() {
     <article class="rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
       onclick="window.location.href='paquete.html?id=${p.id}'">
       <div class="relative overflow-hidden" style="height:220px">
-        <img alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
+        <img alt="${p.name}" class="w-full h-full object-cover pointer-events-none"
           src="${p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'}"
           onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"/>
         <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>

@@ -332,14 +332,27 @@ html[data-theme="light"] #searchResultsGrid article .line-through {
 }
 
 /* Force white text on the red Oferta label regardless of theme */
+html[data-theme] .offer-label-badge,
+html[data-theme] .offer-label-badge *,
+html[data-theme="light"] #promoGrid .group .offer-label-badge,
+html[data-theme="light"] #promoGrid .group .offer-label-badge *,
+html[data-theme="light"] #searchResultsGrid .offer-label-badge,
+html[data-theme="light"] #searchResultsGrid .offer-label-badge *,
 .offer-label-badge,
 .offer-label-badge * {
   color: #ffffff !important;
 }
 
 /* Force dark text on the yellow Salida Grupal label regardless of theme */
+html[data-theme] .group-label-badge,
+html[data-theme] .group-label-badge *,
+html[data-theme="light"] #promoGrid .group .group-label-badge,
+html[data-theme="light"] #promoGrid .group .group-label-badge *,
+html[data-theme="light"] #searchResultsGrid .group-label-badge,
+html[data-theme="light"] #searchResultsGrid .group-label-badge *,
 .group-label-badge,
 .group-label-badge * {
   color: #0d1b2e !important;
 }
+
 
