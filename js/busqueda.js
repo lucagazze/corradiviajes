@@ -152,7 +152,7 @@ function renderResults() {
     const isOffer = p.section === 'oferta' || p.badge || hasDiscount;
 
     const leftBadge = isGroup
-      ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
+      ? `<span class="group-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
           <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
           Grupal
          </span>`

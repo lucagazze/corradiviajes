@@ -60,6 +60,7 @@ async function loadPackages() {
 
 // ── Render bento carousel (desktop: groups of 5 bento, mobile: snap scroll) ─
 let _bentoPage = 0;
+let _promoPage = 0;
 
 function renderPackages() {
   const container = document.getElementById('pkgGrid');
@@ -270,7 +271,7 @@ function renderOffersCarousel() {
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
           class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
-        <span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="${badgeColor}">Salida Grupal</span>
+        <span class="group-label-badge absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="${badgeColor}">Salida Grupal</span>
         <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country}</span>
       </div>
       <div class="p-5 flex flex-col flex-1 justify-between pointer-events-none">
@@ -428,9 +429,9 @@ function renderOffersCarousel() {
 
 // ── Render Paquetes en Oferta (3ra sección) ──────
 function renderPromoOffers() {
-  const grid = document.getElementById('promoGrid');
+  const container = document.getElementById('promoContainer');
   const actions = document.getElementById('promoActions');
-  if (!grid) return;
+  if (!container) return;
 
   const sec = document.getElementById('ofertas');
   if (!offerTrips.length) {
@@ -441,7 +442,11 @@ function renderPromoOffers() {
 
   if (actions) actions.style.display = 'flex';
 
-  grid.innerHTML = offerTrips.slice(0, 6).map(p => {
+  const totalPromoPages = Math.ceil(offerTrips.length / 6);
+  _promoPage = Math.max(0, Math.min(_promoPage, totalPromoPages - 1));
+  const slice = offerTrips.slice(_promoPage * 6, _promoPage * 6 + 6);
+
+  const cardsHtml = slice.map(p => {
     const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
     const orig = Number(p.price_original_usd) || 0;
     const price = Number(p.price_usd) || 0;
@@ -505,6 +510,32 @@ function renderPromoOffers() {
         </div>
       </div>`;
   }).join('');
+
+  container.innerHTML = `
+    <!-- Nav arrows for desktop -->
+    ${totalPromoPages > 1 ? `
+    <button onclick="_promoPage=Math.max(0,_promoPage-1);renderPromoOffers()"
+      class="hidden md:flex absolute -left-16 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-slate-100 items-center justify-center hover:bg-slate-50 transition-all active:scale-95 text-blue-600 hover:text-blue-700 hover:scale-105 ${_promoPage === 0 ? 'opacity-30 pointer-events-none' : ''}">
+      <span class="material-symbols-outlined font-bold text-[24px]">chevron_left</span>
+    </button>
+    <button onclick="_promoPage=Math.min(${totalPromoPages-1},_promoPage+1);renderPromoOffers()"
+      class="hidden md:flex absolute -right-16 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-slate-100 items-center justify-center hover:bg-slate-50 transition-all active:scale-95 text-blue-600 hover:text-blue-700 hover:scale-105 ${_promoPage === totalPromoPages - 1 ? 'opacity-30 pointer-events-none' : ''}">
+      <span class="material-symbols-outlined font-bold text-[24px]">chevron_right</span>
+    </button>` : ''}
+
+    <div id="promoGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+      ${cardsHtml}
+    </div>
+
+    <!-- Dots for pagination -->
+    ${totalPromoPages > 1 ? `
+    <div class="flex justify-center gap-2 mt-8">
+      ${Array.from({length: totalPromoPages}, (_, i) => `
+        <button onclick="_promoPage=${i};renderPromoOffers()"
+          class="w-2 h-2 rounded-full transition-all ${i === _promoPage ? 'w-5' : 'bg-slate-300 hover:bg-slate-400'}" style="${i === _promoPage ? 'background:#3778b8' : ''}"></button>`).join('')}
+    </div>` : ''}
+  `;
+}
 }
 
 // ── Search ──────────────────────────────────────

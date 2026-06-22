@@ -336,3 +336,10 @@ html[data-theme="light"] #searchResultsGrid article .line-through {
 .offer-label-badge * {
   color: #ffffff !important;
 }
+
+/* Force dark text on the yellow Salida Grupal label regardless of theme */
+.group-label-badge,
+.group-label-badge * {
+  color: #0d1b2e !important;
+}
+
