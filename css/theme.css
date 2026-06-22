@@ -330,3 +330,9 @@ html[data-theme="light"] #promoGrid .group .line-through,
 html[data-theme="light"] #searchResultsGrid article .line-through {
   color: #94a3b8 !important;
 }
+
+/* Force white text on the red Oferta label regardless of theme */
+.offer-label-badge,
+.offer-label-badge * {
+  color: #ffffff !important;
+}
