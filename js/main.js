@@ -432,14 +432,12 @@ function renderPromoOffers() {
   const actions = document.getElementById('promoActions');
   if (!grid) return;
 
+  const sec = document.getElementById('ofertas');
   if (!offerTrips.length) {
-    grid.innerHTML = `<div class="col-span-full text-center py-12 text-white/40">
-      <span class="material-symbols-outlined text-[40px] block mb-2 opacity-60">local_fire_department</span>
-      Próximamente nuevas promociones.
-    </div>`;
-    if (actions) actions.style.display = 'none';
+    if (sec) sec.style.display = 'none';
     return;
   }
+  if (sec) sec.style.display = '';
 
   if (actions) actions.style.display = 'flex';
 
