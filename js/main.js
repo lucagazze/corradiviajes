@@ -456,32 +456,51 @@ function renderPromoOffers() {
       return `Hasta ${d.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' })}`;
     })() : '';
 
+    const badgeRight = p.badge 
+      ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>`
+      : (discount > 0 ? `<span class="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">-${discount}%</span>` : '');
+
+    const highlights = p.highlights 
+      ? p.highlights.split(/\n|·/).map(h => h.trim().replace(/^⭐\s*|^•\s*/, '')).filter(Boolean).slice(0, 3) 
+      : [];
+
     return `
-      <div class="group relative rounded-[22px] overflow-hidden cursor-pointer hover:border-red-400/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_50px_rgba(239,68,68,0.18)]"
-        style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.15)"
+      <div class="group relative rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
         onclick="window.location.href='paquete.html?id=${p.id}'">
         <div class="relative overflow-hidden" style="height:220px">
           <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
-            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"/>
-          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%)"></div>
-          ${discount > 0 ? `<span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#fff;box-shadow:0 4px 14px rgba(239,68,68,0.45)">-${discount}%</span>` : `<span class="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#fff;box-shadow:0 4px 14px rgba(239,68,68,0.45)">Oferta</span>`}
-          <span class="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-slate-800 rounded-full px-3 py-1 text-[11px] font-semibold">${p.country || ''}</span>
+            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"/>
+          <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
+          <span class="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
+            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+            Oferta
+          </span>
+          ${badgeRight}
+          <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country || ''}${p.days ? ' · '+p.days+' días' : ''}</span>
           ${expiresLabel ? `<span class="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-black/55 backdrop-blur-sm text-white rounded-full px-2.5 py-1 text-[11px] font-medium"><span class="material-symbols-outlined text-[13px]">schedule</span>${expiresLabel}</span>` : ''}
         </div>
-        <div class="p-5">
-          <h3 class="font-['Geomanist'] font-medium text-[17px] text-white leading-tight mb-1">${p.name}</h3>
-          <p class="text-white/50 text-[13px] font-light line-clamp-2 mb-4">${p.description || ''}</p>
-          <div class="flex items-end justify-between">
-            <div>
-              <span class="block text-white/40 text-[10px] uppercase tracking-wider font-semibold">Desde</span>
-              <div class="flex items-baseline gap-2">
-                ${orig > price && orig > 0 ? `<span class="text-white/40 text-[13px] line-through">USD ${orig.toLocaleString('es-AR')}</span>` : ''}
-                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#f2b352">USD ${price.toLocaleString('es-AR')}</span>
+        <div class="p-5 flex flex-col flex-1">
+          <div>
+            <h3 class="font-['Geomanist'] font-semibold text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
+            <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${p.description || ''}</p>
+            ${highlights.length ? `<div class="flex flex-wrap gap-1.5 mb-4">
+              ${highlights.map(h => `<span class="text-[10.5px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full font-medium">${h}</span>`).join('')}
+            </div>` : ''}
+          </div>
+          <div class="mt-auto flex items-end justify-between gap-3 pt-2 border-t border-slate-100">
+            <div class="pt-3">
+              <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block mb-0.5">Desde</span>
+              <div class="flex items-baseline gap-1.5">
+                ${orig > price && orig > 0 ? `<span class="text-slate-400 text-[13px] line-through">USD ${orig.toLocaleString('es-AR')}</span>` : ''}
+                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${price.toLocaleString('es-AR')}</span>
               </div>
             </div>
-            <span class="inline-flex items-center gap-1 text-white/80 text-sm font-medium group-hover:text-white transition-colors">
-              Ver <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
-            </span>
+            <div class="pt-3">
+              <div class="flex items-center gap-1.5 text-white text-[13px] font-medium px-4 py-2 rounded-full whitespace-nowrap" style="background:#3778b8">
+                Ver paquete
+                <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>`;

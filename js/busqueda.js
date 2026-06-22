@@ -145,34 +145,72 @@ function renderResults() {
   if (searchDate) extraParams += `&date=${searchDate}`;
   if (searchGuests) extraParams += `&guests=${searchGuests}`;
 
-  grid.innerHTML = filtered.map(p => `
-    <article class="rounded-[16px] overflow-hidden flex flex-col group cursor-pointer transition-all duration-300 hover:-translate-y-1"
-      style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);box-shadow:0 4px 20px rgba(0,0,0,0.15)"
+  grid.innerHTML = filtered.map(p => {
+    const hasDiscount = p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd);
+    const discountPct = hasDiscount ? Math.round((1 - p.price_usd / p.price_original_usd) * 100) : null;
+    const isGroup = p.section === 'salida_grupal';
+    const isOffer = p.section === 'oferta' || p.badge || hasDiscount;
+
+    const leftBadge = isGroup
+      ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
+          <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
+          Grupal
+         </span>`
+      : (p.featured
+          ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>`
+          : (isOffer
+              ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
+                  <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+                  Oferta
+                 </span>`
+              : ''));
+
+    const badgeRight = p.badge 
+      ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>`
+      : (discountPct ? `<span class="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">-${discountPct}%</span>` : '');
+
+    const highlights = p.highlights 
+      ? p.highlights.split(/\n|·/).map(h => h.trim().replace(/^⭐\s*|^•\s*/, '')).filter(Boolean).slice(0, 3) 
+      : [];
+
+    return `
+    <article class="rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
       onclick="window.location.href='paquete.html?id=${p.id}${extraParams}'">
-      <div class="relative overflow-hidden" style="height:210px">
-        <img alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+      <div class="relative overflow-hidden" style="height:220px">
+        <img alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 pointer-events-none"
           src="${p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'}"
           onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"/>
         <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>
-        ${p.featured ? '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#fff">Destacado</span>' : ''}
-        ${p.badge ? `<span class="absolute top-3 ${p.featured ? 'left-[110px]' : 'left-3'} px-2.5 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#fff">${p.badge}</span>` : ''}
-        ${p.price_original_usd && p.price_original_usd > p.price_usd ? `<span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[11px] font-bold" style="background:rgba(239,68,68,0.9);color:#fff">-${Math.round((1 - p.price_usd / p.price_original_usd) * 100)}%</span>` : ''}
-        <span class="absolute bottom-3 right-3 text-[11px] font-medium px-2.5 py-1 rounded-full" style="background:rgba(255,255,255,0.15);color:#ffffff;backdrop-filter:blur(8px)">${p.country}</span>
+        ${leftBadge}
+        ${badgeRight}
+        <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country || ''}${p.days ? ' · '+p.days+' días' : ''}</span>
       </div>
-      <div class="p-4 flex flex-col flex-grow">
-        <h3 class="font-bold text-[17px] text-white line-clamp-1 leading-tight mb-1">${p.name}</h3>
-        <p class="text-sm mb-4 line-clamp-2" style="color:rgba(255,255,255,0.5)">${p.description || p.destination || ''}</p>
-        <div class="mt-auto flex justify-between items-center">
-          <div>
-            <span class="uppercase tracking-wider text-[10px] font-medium block mb-0.5" style="color:rgba(255,255,255,0.4)">Desde</span>
-            ${p.price_original_usd && p.price_original_usd > p.price_usd ? `<span class="font-medium text-[14px] line-through mr-2" style="color:rgba(255,255,255,0.6)">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</span>` : ''}
-            <span class="font-bold text-[20px]" style="color:#3778b8">USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+      <div class="p-5 flex flex-col flex-grow justify-between">
+        <div>
+          <h3 class="font-['Geomanist'] font-semibold text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
+          <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${p.description || p.destination || ''}</p>
+          ${highlights.length ? `<div class="flex flex-wrap gap-1.5 mb-4">
+            ${highlights.map(h => `<span class="text-[10.5px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full font-medium">${h}</span>`).join('')}
+          </div>` : ''}
+        </div>
+        <div class="mt-auto flex items-end justify-between gap-3 pt-2 border-t border-slate-100">
+          <div class="pt-3">
+            <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block mb-0.5">Desde</span>
+            <div class="flex items-baseline gap-1.5">
+              ${hasDiscount ? `<span class="text-slate-400 text-[13px] line-through">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</span>` : ''}
+              <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+            </div>
           </div>
-          <div class="text-white text-sm font-medium px-4 py-2 rounded-full transition-opacity hover:opacity-80" style="background:#3778b8">Ver detalle</div>
+          <div class="pt-3">
+            <div class="flex items-center gap-1.5 text-white text-[13px] font-medium px-4 py-2 rounded-full whitespace-nowrap" style="background:#3778b8">
+              Ver paquete
+              <span class="material-symbols-outlined text-[15px]">arrow_forward</span>
+            </div>
+          </div>
         </div>
       </div>
-    </article>
-  `).join('');
+    </article>`;
+  }).join('');
 }
 
 loadPackages();
