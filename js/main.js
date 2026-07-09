@@ -33,15 +33,14 @@ async function loadPackages() {
         .select('*')
         .eq('active', true)
         .order('sort_order', { ascending: true, nullsFirst: false })
-        .order('featured', { ascending: false })
         .order('id');
       if (error) throw error;
       allPackages = (data || []).filter(isLive);
     }
     // Segmentar por section
     groupTrips         = allPackages.filter(p => p.section === 'salida_grupal');
-    offerTrips         = allPackages.filter(p => p.section === 'oferta');
-    inspirationalTrips = allPackages.filter(p => !p.section || p.section === 'inspirador');
+    offerTrips         = allPackages.filter(p => p.section !== 'salida_grupal' && p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd));
+    inspirationalTrips = allPackages.filter(p => p.section !== 'salida_grupal' && !(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
 
     window.allPackages = allPackages;
     window.groupTrips = groupTrips;
@@ -66,7 +65,7 @@ function renderPackages() {
   const container = document.getElementById('pkgGrid');
   if (!container) return;
 
-  const sorted = [...inspirationalTrips].sort((a, b) => (b.featured ? 1 : 0) - (a.featured ? 1 : 0));
+  const sorted = inspirationalTrips;
 
   if (!sorted.length) {
     container.innerHTML = '<div class="col-span-full text-center py-10 text-slate-500">No hay destinos disponibles.</div>';
@@ -86,15 +85,16 @@ function renderPackages() {
           const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
           return `
           <div class="group shrink-0 snap-start w-[78vw] rounded-[18px] overflow-hidden cursor-pointer relative pkg-card-mobile" style="aspect-ratio:3/4;"
-            onclick="window.location.href='paquete.html?id=${p.id}'">
+            data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}"
+            onclick="handlePkgCardClick(this)">
             <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
               class="w-full h-full object-cover"/>
             <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
-            ${p.featured ? `<span class="absolute top-3 left-3 px-2.5 py-1 bg-blue-600 text-white text-[11px] font-bold uppercase tracking-wide rounded-full">Destacado</span>` : ''}
+            ${p.featured ? `<span class="featured-badge absolute top-3 left-3 px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#3778b8">Destacado</span>` : ''}
             <div class="absolute bottom-0 left-0 right-0 p-4">
               <span class="text-white/70 text-[11px] font-medium uppercase tracking-wider">${p.country}</span>
               <h3 class="text-white font-bold text-[16px] font-['Plus_Jakarta_Sans'] leading-tight mt-0.5">${p.name}</h3>
-              <span class="text-white/90 font-semibold text-sm block mt-1">Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+              <span class="text-white/90 font-semibold text-sm block mt-1">${p.price_usd ? `Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}` : 'A consultar'}</span>
             </div>
           </div>`;
         }).join('')}
@@ -104,7 +104,7 @@ function renderPackages() {
         ${sorted.map((_, i) => `<div class="w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === 0 ? 'bg-blue-600 w-4' : 'bg-slate-300'}"></div>`).join('')}
       </div>
     </div>
-
+ 
     <!-- DESKTOP: Bento grid (group of 5) with nav arrows -->
     <div class="hidden md:block relative">
       ${totalGroups > 1 ? `
@@ -116,35 +116,38 @@ function renderPackages() {
         class="absolute -right-16 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-slate-100 flex items-center justify-center hover:bg-slate-50 transition-all active:scale-95 text-blue-600 hover:text-blue-700 hover:scale-105 ${_bentoPage === totalGroups - 1 ? 'opacity-30 pointer-events-none' : ''}">
         <span class="material-symbols-outlined font-bold text-[24px]">chevron_right</span>
       </button>` : ''}
-
+ 
       <div class="grid grid-cols-3 gap-gutter" style="grid-template-rows: repeat(2, 240px);">
         ${slice.map((p, i) => {
           const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
           if (i === 0) return `
             <div class="group relative col-span-1 row-span-2 rounded-[18px] overflow-hidden cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.07)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.12)] transition-all transform hover:-translate-y-1"
-              onclick="window.location.href='paquete.html?id=${p.id}'">
+              data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}"
+              onclick="handlePkgCardClick(this)">
               <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
                 class="w-full h-full object-cover"/>
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-              ${p.featured ? `<span class="absolute top-4 left-4 px-3 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#3778b8">Destacado</span>` : ''}
+              ${p.featured ? `<span class="featured-badge absolute top-4 left-4 px-3 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#3778b8">Destacado</span>` : ''}
               <div class="absolute bottom-0 left-0 p-6 w-full">
                 <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-sm text-white rounded-full text-[11px] font-medium mb-2">${p.country}</span>
                 <h3 class="text-white font-bold text-[22px] font-['Plus_Jakarta_Sans'] leading-tight">${p.name}</h3>
                 <div class="flex items-baseline gap-1.5 mt-2">
-                  <span class="text-white/80 text-sm">Desde</span>
-                  <span class="text-white font-bold text-xl font-['Plus_Jakarta_Sans'] drop-shadow-sm">USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+                  ${p.price_usd ? `<span class="text-white/80 text-sm">Desde</span>
+                  <span class="text-white font-bold text-xl font-['Plus_Jakarta_Sans'] drop-shadow-sm">USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>` : `<span class="text-white font-bold text-lg font-['Plus_Jakarta_Sans'] drop-shadow-sm">A consultar</span>`}
                 </div>
               </div>
             </div>`;
           return `
             <div class="group relative col-span-1 row-span-1 rounded-[18px] overflow-hidden cursor-pointer shadow-[0_4px_20px_rgba(0,0,0,0.07)] hover:shadow-[0_12px_30px_rgba(0,0,0,0.12)] transition-all transform hover:-translate-y-1"
-              onclick="window.location.href='paquete.html?id=${p.id}'">
+              data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}"
+              onclick="handlePkgCardClick(this)">
               <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
                 class="w-full h-full object-cover"/>
               <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
+              ${p.featured ? `<span class="featured-badge absolute top-3 left-3 px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#3778b8">Destacado</span>` : ''}
               <div class="absolute bottom-0 left-0 p-4 w-full">
                 <h3 class="text-white font-semibold text-[15px] font-['Plus_Jakarta_Sans'] leading-tight">${p.name}</h3>
-                <span class="text-white text-sm font-bold drop-shadow-sm">Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+                <span class="text-white text-sm font-bold drop-shadow-sm">${p.price_usd ? `Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}` : 'A consultar'}</span>
               </div>
             </div>`;
         }).join('')}
@@ -241,15 +244,17 @@ function renderOffersCarousel() {
       const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
       return `
       <div class="offer-card-mobile group shrink-0 snap-start w-[78vw] rounded-[18px] overflow-hidden cursor-pointer relative"
-        style="aspect-ratio:3/4;" onclick="window.location.href='paquete.html?id=${p.id}'">
+        style="aspect-ratio:3/4;" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}"
+        onclick="handlePkgCardClick(this)">
         <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
           class="w-full h-full object-cover"/>
         <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
         <span class="absolute top-3 left-3 px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#f2b352;color:#0d1b2e">Grupal</span>
+        ${p.featured ? `<span class="featured-badge absolute top-3 left-[82px] px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full" style="background:#3778b8">Destacado</span>` : ''}
         <div class="absolute bottom-0 left-0 right-0 p-4">
           <span class="text-white/70 text-[11px] font-medium uppercase tracking-wider">${p.country}</span>
           <h3 class="text-white font-bold text-[16px] font-['Plus_Jakarta_Sans'] leading-tight mt-0.5">${p.name}</h3>
-          <span class="text-white/90 font-semibold text-sm block mt-1">Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+          <span class="text-white/90 font-semibold text-sm block mt-1">${p.price_usd ? `Desde USD ${Number(p.price_usd).toLocaleString('es-AR')}` : 'A consultar'}</span>
         </div>
       </div>`;
     }).join('');
@@ -266,12 +271,13 @@ function renderOffersCarousel() {
     const badgeColor = 'background:#f2b352;color:#0d1b2e;font-weight:700;text-shadow:none;box-shadow:0 2px 8px rgba(242,179,82,0.4)';
     return `
     <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
-      style="width:340px" data-id="${p.id}">
+      style="width:340px" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}">
       <div class="relative overflow-hidden" style="height:220px">
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
           class="w-full h-full object-cover pointer-events-none">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
         <span class="group-label-badge absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="${badgeColor}">Salida Grupal</span>
+        ${p.featured ? `<span class="featured-badge absolute top-3 left-[122px] inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
         <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country}</span>
       </div>
       <div class="p-5 flex flex-col flex-1 justify-between pointer-events-none">
@@ -282,7 +288,7 @@ function renderOffersCarousel() {
         <div class="flex items-center justify-between mt-5 gap-3">
           <div>
             <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Desde</span>
-            <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+            <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">${p.price_usd ? `USD ${Number(p.price_usd).toLocaleString('es-AR')}` : 'A consultar'}</span>
           </div>
           <div class="flex items-center gap-1.5 text-white text-[13px] font-medium px-4 py-2 rounded-full whitespace-nowrap" style="background:#3778b8">
             Ver paquete
@@ -308,7 +314,7 @@ function renderOffersCarousel() {
     // Click → ir al paquete
     track.querySelectorAll('.offer-card').forEach(el => {
       el.addEventListener('click', () => {
-        window.location.href = `paquete.html?id=${el.dataset.id}`;
+        window.handlePkgCardClick(el);
       });
     });
     return;
@@ -413,7 +419,7 @@ function renderOffersCarousel() {
     el.addEventListener('click', (e) => {
       if (didDrag) return; // Prevent click if we were dragging
       if (i === idx) {
-        window.location.href = `paquete.html?id=${el.dataset.id}`;
+        window.handlePkgCardClick(el);
       } else {
         idx = i;
         applyStyles(true);
@@ -463,7 +469,7 @@ function renderPromoOffers() {
 
     const badgeRight = p.badge 
       ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>`
-      : (discount > 0 ? `<span class="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">-${discount}%</span>` : '');
+      : (discount > 0 ? `<span class="discount-badge absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">-${discount}%</span>` : '');
 
     const highlights = p.highlights 
       ? p.highlights.split(/\n|·/).map(h => h.trim().replace(/^⭐\s*|^•\s*/, '')).filter(Boolean).slice(0, 3) 
@@ -471,12 +477,14 @@ function renderPromoOffers() {
 
     return `
       <div class="group relative rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
-        onclick="window.location.href='paquete.html?id=${p.id}'">
+        data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}"
+        onclick="handlePkgCardClick(this)">
         <div class="relative overflow-hidden" style="height:220px">
           <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
             class="w-full h-full object-cover pointer-events-none"/>
           <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
-          <span class="offer-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
+          ${p.featured ? `<span class="featured-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
+          <span class="offer-label-badge absolute top-3 ${p.featured ? 'left-[110px]' : 'left-3'} inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
             <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
             Oferta
           </span>
@@ -494,10 +502,10 @@ function renderPromoOffers() {
           </div>
           <div class="mt-auto flex items-end justify-between gap-3 pt-2 border-t border-slate-100">
             <div class="pt-3">
-              <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block mb-0.5">Desde</span>
+              <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block mb-0.5">${price > 0 ? 'Desde' : 'Precio'}</span>
               <div class="flex items-baseline gap-1.5">
-                ${orig > price && orig > 0 ? `<span class="text-slate-400 text-[13px] line-through">USD ${orig.toLocaleString('es-AR')}</span>` : ''}
-                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${price.toLocaleString('es-AR')}</span>
+                ${orig > price && orig > 0 && price > 0 ? `<span class="text-slate-400 text-[13px] line-through">USD ${orig.toLocaleString('es-AR')}</span>` : ''}
+                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">${price > 0 ? `USD ${price.toLocaleString('es-AR')}` : 'A consultar'}</span>
               </div>
             </div>
             <div class="pt-3">

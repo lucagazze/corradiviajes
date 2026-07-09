@@ -115,7 +115,7 @@ function renderResults() {
     if (activeFeature === 'destacados') {
       filtered = filtered.filter(p => p.featured);
     } else if (activeFeature === 'oferta') {
-      filtered = filtered.filter(p => p.badge || (p.price_original_usd && p.price_original_usd > p.price_usd));
+      filtered = filtered.filter(p => p.section !== 'salida_grupal' && p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd));
     }
   }
 
@@ -149,25 +149,37 @@ function renderResults() {
     const hasDiscount = p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd);
     const discountPct = hasDiscount ? Math.round((1 - p.price_usd / p.price_original_usd) * 100) : null;
     const isGroup = p.section === 'salida_grupal';
-    const isOffer = p.section === 'oferta' || p.badge || hasDiscount;
+    const isOffer = !isGroup && hasDiscount;
 
-    const leftBadge = isGroup
-      ? `<span class="group-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
+    let leftBadge = '';
+    if (isGroup) {
+      leftBadge += `<span class="group-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
           <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
           Grupal
-         </span>`
-      : (p.featured
-          ? `<span class="absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>`
-          : (isOffer
-              ? `<span class="offer-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
-                  <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
-                  Oferta
-                 </span>`
-              : ''));
+         </span>`;
+      if (p.featured) {
+        leftBadge += `<span class="featured-badge absolute top-3 left-[92px] inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>`;
+      }
+    } else {
+      if (p.featured) {
+        leftBadge += `<span class="featured-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>`;
+        if (isOffer) {
+          leftBadge += `<span class="offer-label-badge absolute top-3 left-[110px] inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
+              <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+              Oferta
+             </span>`;
+        }
+      } else if (isOffer) {
+        leftBadge += `<span class="offer-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
+            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+            Oferta
+           </span>`;
+      }
+    }
 
     const badgeRight = p.badge 
       ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>`
-      : (discountPct ? `<span class="absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">-${discountPct}%</span>` : '');
+      : (discountPct ? `<span class="discount-badge absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">-${discountPct}%</span>` : '');
 
     const highlights = p.highlights 
       ? p.highlights.split(/\n|·/).map(h => h.trim().replace(/^⭐\s*|^•\s*/, '')).filter(Boolean).slice(0, 3) 
@@ -175,7 +187,8 @@ function renderResults() {
 
     return `
     <article class="rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
-      onclick="window.location.href='paquete.html?id=${p.id}${extraParams}'">
+      data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}" data-extra-params="${extraParams}"
+      onclick="handlePkgCardClick(this)">
       <div class="relative overflow-hidden" style="height:220px">
         <img alt="${p.name}" class="w-full h-full object-cover pointer-events-none"
           src="${p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'}"
@@ -188,17 +201,17 @@ function renderResults() {
       <div class="p-5 flex flex-col flex-grow justify-between">
         <div>
           <h3 class="font-['Geomanist'] font-semibold text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
-          <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${p.description || p.destination || ''}</p>
+          <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${p.description ? p.description.replace(/<[^>]*>/g, ' ') : p.destination || ''}</p>
           ${highlights.length ? `<div class="flex flex-wrap gap-1.5 mb-4">
             ${highlights.map(h => `<span class="text-[10.5px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full font-medium">${h}</span>`).join('')}
           </div>` : ''}
         </div>
         <div class="mt-auto flex items-end justify-between gap-3 pt-2 border-t border-slate-100">
           <div class="pt-3">
-            <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block mb-0.5">Desde</span>
+            <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block mb-0.5">${p.price_usd ? 'Desde' : 'Precio'}</span>
             <div class="flex items-baseline gap-1.5">
-              ${hasDiscount ? `<span class="text-slate-400 text-[13px] line-through">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</span>` : ''}
-              <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${Number(p.price_usd).toLocaleString('es-AR')}</span>
+              ${hasDiscount && p.price_usd ? `<span class="text-slate-400 text-[13px] line-through">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</span>` : ''}
+              <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">${p.price_usd ? `USD ${Number(p.price_usd).toLocaleString('es-AR')}` : 'A consultar'}</span>
             </div>
           </div>
           <div class="pt-3">

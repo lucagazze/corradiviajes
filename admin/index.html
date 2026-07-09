@@ -9,13 +9,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <style>
+@font-face {
+  font-family: "Twemoji Country Flags";
+  src: url("https://cdn.jsdelivr.net/npm/country-flag-emoji-polyfill@0.1.3/dist/TwemojiCountryFlags.woff2") format("woff2");
+  unicode-range: U+1F1E6-1F1FF, U+1F3F4, U+1F3F5, U+1F3F7-1F3FF, U+1F90D-1F90F, U+1F9D1-1F9D4, U+200D;
+}
 @font-face{font-family:'Geomanist';src:url('../geomanist-regular-webfont.woff2') format('woff2'),url('../geomanist-regular-webfont.woff') format('woff');font-weight:400}
 @font-face{font-family:'Geomanist';src:url('../geomanist-medium.woff') format('woff');font-weight:500}
 @font-face{font-family:'Geomanist';src:url('../geomanist-medium.woff') format('woff');font-weight:600}
 @font-face{font-family:'Geomanist';src:url('../geomanist-medium.woff') format('woff');font-weight:700}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:'Geomanist','Plus Jakarta Sans',sans-serif;background:#0b1525;color:#fff;min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s}
+body{font-family:'Twemoji Country Flags','Geomanist','Plus Jakarta Sans',sans-serif;background:#0b1525;color:#fff;min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s}
 img{display:block;max-width:100%}
 button,input,select,textarea{font-family:inherit}
 textarea{resize:vertical}
@@ -109,6 +114,66 @@ body.light .afb-chip-rm{color:#1d4ed8}
 body.light .afb-clear{color:rgba(0,0,0,0.45);background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.12)}
 body.light .pill-inactive{background:rgba(239,68,68,0.08);color:#dc2626;border-color:rgba(239,68,68,0.2)}
 body.light .sb-sub-count{color:rgba(0,0,0,0.4);background:rgba(0,0,0,0.06)}
+
+body.light .cp-display { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.12); color: #1e293b; }
+body.light .cp-display.empty { color: rgba(0,0,0,0.38); }
+body.light .cp-chevron { color: rgba(0,0,0,0.4); }
+body.light .cp-dropdown { background: #fff; border-color: rgba(55,120,184,0.3); box-shadow: 0 16px 48px rgba(0,0,0,0.15); }
+body.light .cp-search { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.12); color: #1e293b; }
+body.light .cp-search::placeholder { color: rgba(0,0,0,0.35); }
+body.light .cp-option { color: #334155; }
+body.light .cp-option:hover { background: rgba(55,120,184,0.12); color: #1e40af; }
+body.light .cp-option.selected { background: rgba(55,120,184,0.18); color: #1d4ed8; }
+body.light .cp-group-label { color: rgba(0,0,0,0.35); }
+body.light .cp-no-results { color: rgba(0,0,0,0.35); }
+
+body.light .dp-dropdown { background: #fff; border-color: rgba(55,120,184,0.3); box-shadow: 0 12px 36px rgba(0,0,0,0.15); }
+body.light .dp-option { color: #334155; }
+body.light .dp-option:hover { background: rgba(55,120,184,0.12); color: #1e40af; }
+
+body.light .drop-zone { border-color: rgba(0,0,0,0.15); color: rgba(0,0,0,0.55); }
+body.light .pis-add { border-color: rgba(0,0,0,0.15); color: rgba(0,0,0,0.35); }
+body.light .pis-empty { border-color: rgba(0,0,0,0.12); color: rgba(0,0,0,0.35); }
+body.light .bullet-inp { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.12); color: #1e293b; }
+body.light .bullet-inp::placeholder { color: rgba(0,0,0,0.3); }
+body.light .bullet-inp:focus { background: #fff; }
+body.light .gal-inp { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.12); color: #1e293b; }
+body.light .gal-inp::placeholder { color: rgba(0,0,0,0.3); }
+body.light .gal-inp:focus { background: #fff; }
+
+body.light .media-card-name { color: #1e293b; font-weight: 600; }
+body.light .view-header p { color: rgba(0,0,0,0.45) !important; }
+body.light .view-header h1 { color: #1e293b !important; }
+body.light .form-section p { color: rgba(0,0,0,0.45) !important; }
+
+/* Light Mode Rich Editor & Emoji Picker */
+body.light .rich-toolbar { background: rgba(0,0,0,0.03); border-color: rgba(0,0,0,0.12); }
+body.light .rich-editor { background: #fff; border-color: rgba(0,0,0,0.12); color: #1e293b; }
+body.light .rich-editor h1, body.light .rich-editor strong { color: #1e293b; }
+body.light .rich-editor h2 { color: #1d4ed8; }
+body.light .rich-editor h3 { color: rgba(0,0,0,0.6); }
+body.light .rich-editor p { color: #1e293b; }
+body.light .rich-editor:empty:before { color: rgba(0,0,0,0.38); }
+body.light .tb-btn { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.1); color: #475569; }
+body.light .tb-btn:hover { background: rgba(0,0,0,0.08); color: #1e293b; }
+body.light .tb-sep { background: rgba(0,0,0,0.1); }
+body.light .emoji-popup { background: #fff; border-color: rgba(0,0,0,0.12); box-shadow: 0 12px 36px rgba(0,0,0,0.15); }
+body.light .emoji-btn { color: #1e293b; }
+body.light .emoji-btn:hover { background: rgba(0,0,0,0.06); }
+
+/* Light Mode Image Manager & Sorter Modals */
+body.light #imgMgrBox, body.light #sorterBox { background: #ffffff !important; border-color: rgba(0,0,0,0.12) !important; color: #1e293b !important; }
+body.light #imgMgrBox h3, body.light #sorterBox h3 { color: #1e293b !important; }
+body.light #imgMgrBox h4, body.light #sorterBox h4 { color: rgba(0,0,0,0.55) !important; }
+body.light #imgMgrBox > div, body.light #sorterBox > div { border-color: rgba(0,0,0,0.08) !important; color: #1e293b !important; }
+body.light .imm-sel-thumb img { border-color: rgba(0,0,0,0.1) !important; }
+body.light .imm-sel-thumb.imm-main img { border-color: #3778b8 !important; }
+body.light .imm-badge { background: #3778b8 !important; color: #fff !important; }
+body.light .imm-num { background: rgba(0,0,0,0.55) !important; color: #fff !important; }
+body.light #imgMgrLib p { color: rgba(0,0,0,0.45) !important; }
+body.light .sorter-item { background: rgba(0,0,0,0.03) !important; border-color: rgba(0,0,0,0.05) !important; color: #1e293b !important; }
+body.light .sorter-item:hover { background: rgba(0,0,0,0.06) !important; border-color: rgba(0,0,0,0.1) !important; }
+body.light .sorter-list { background: rgba(0,0,0,0.02) !important; border-color: rgba(0,0,0,0.05) !important; }
 
 /* ── LOGIN ── */
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%,#1a3a6b 0%,#0b1525 65%)}
@@ -219,6 +284,138 @@ body.light .sb-sub-count{color:rgba(0,0,0,0.4);background:rgba(0,0,0,0.06)}
 .pkg-quick{position:absolute;top:8px;right:8px;display:flex;gap:5px}
 .pkg-qbtn{width:32px;height:32px;border-radius:9px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;backdrop-filter:blur(10px);box-shadow:0 2px 8px rgba(0,0,0,0.35)}
 .pkg-qbtn:hover{transform:scale(1.12)}
+/* Rich text editor formatting */
+.rich-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-bottom: none;
+  border-radius: 10px 10px 0 0;
+  padding: 6px 10px;
+  align-items: center;
+  margin-top: 5px;
+}
+.rich-editor {
+  min-height: 250px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0 0 10px 10px;
+  padding: 12px 14px;
+  color: #fff;
+  font-size: 14px;
+  outline: none;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+.rich-editor:focus {
+  border-color: #3778b8;
+  background: rgba(255, 255, 255, 0.08);
+}
+.rich-editor h1, .rich-editor h2, .rich-editor h3 {
+  margin-top: 14px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+.rich-editor h1 { font-size: 19px; }
+.rich-editor h2 { font-size: 16px; }
+.rich-editor h3 { font-size: 14px; }
+.rich-editor ul, .rich-editor ol {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+.rich-editor ul {
+  list-style-type: disc;
+}
+.rich-editor ol {
+  list-style-type: decimal;
+}
+.rich-editor p {
+  margin-bottom: 8px;
+}
+.tb-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 4px 10px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  user-select: none;
+  font-family: inherit;
+}
+.tb-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+.tb-sep {
+  width: 1px;
+  height: 18px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 0 4px;
+}
+.rich-editor[placeholder]:empty:before {
+  content: attr(placeholder);
+  color: rgba(255, 255, 255, 0.28);
+  cursor: text;
+}
+/* Reorder buttons colors */
+.pkg-list-actions .pkg-qbtn {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+.pkg-list-actions .pkg-qbtn .ms {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+body.light .pkg-list-actions .pkg-qbtn {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+body.light .pkg-list-actions .pkg-qbtn .ms {
+  color: rgba(30, 41, 59, 0.7) !important;
+}
+/* Quick price input styling */
+.quick-price-input {
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.quick-price-input:focus {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: #3778b8 !important;
+  outline: none;
+}
+body.light .quick-price-input {
+  background: rgba(0,0,0,0.06) !important;
+  border-color: rgba(0,0,0,0.18) !important;
+  color: #1d4ed8 !important;
+}
+body.light .quick-price-input:focus {
+  background: #fff !important;
+  border-color: #3778b8 !important;
+}
+body.light .quick-price-input::placeholder { color: rgba(0,0,0,0.38) !important; }
+body.light .pkg-list-price { color: rgba(0,0,0,0.45); }
+body.light .pkg-list-price .qprice-label { color: rgba(0,0,0,0.5); }
+body.light .quick-badge-input {
+  background: rgba(0,0,0,0.06) !important;
+  border-color: rgba(0,0,0,0.18) !important;
+  color: #1e293b !important;
+}
+body.light .quick-badge-input::placeholder { color: rgba(0,0,0,0.35) !important; }
+body.light .quick-badge-input:focus {
+  background: #fff !important;
+  border-color: #3778b8 !important;
+}
+.quick-badge-input {
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.quick-badge-input:focus {
+  background: rgba(255,255,255,0.15) !important;
+  border-color: #3778b8 !important;
+  outline: none;
+}
 .pkg-qbtn .ms{font-size:16px}
 
 /* ── CONTEXT MENU ── */
@@ -483,7 +680,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 .pkg-list-info{flex:1;min-width:0;overflow:hidden}
 .pkg-list-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pkg-list-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pkg-list-price{font-size:13px;font-weight:700;color:#3778b8;flex-shrink:0;min-width:96px;text-align:right}
+.pkg-list-price{font-size:13px;font-weight:700;color:#3778b8;flex-shrink:0;min-width:360px;text-align:right}
 .pkg-list-pills{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;min-width:80px;justify-content:flex-end}
 .pkg-list-actions{display:flex;gap:4px;flex-shrink:0}
 
@@ -543,6 +740,36 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
   .mobile-topbar{display:flex}
   .dash-grid{grid-template-columns:1fr 1fr}
 }
+/* Bulk selection and actions */
+.pkg-bulk-check-wrap {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 10;
+  background: rgba(15, 25, 45, 0.8);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pkg-bulk-check-wrap:hover {
+  background: rgba(55, 120, 184, 0.9);
+  border-color: #7ab3e0;
+}
+.pkg-bulk-check {
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  accent-color: #3778b8;
+}
+.sorter-item:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
 </style>
 </head>
 <body>
@@ -586,14 +813,19 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
           <span class="ms material-symbols-outlined">apps</span>Todos
           <span class="sb-sub-count" id="sbCountAll">—</span>
         </div>
-        <div class="sb-sub-item" id="sbFilterFeatured" onclick="switchPkgFilter('featured','all')">
-          <span class="ms material-symbols-outlined" style="color:#fbbf24">star</span>Destacados
-          <span class="sb-sub-count" id="sbCountFeatured" style="color:#fbbf24;background:rgba(251,191,36,0.1)">—</span>
+        <div class="sb-sub-item" id="sbFilterGrupal" onclick="switchPkgFilter('sec_grupal','all')">
+          <span class="ms material-symbols-outlined" style="color:#7ab3e0">groups</span>Grupales
+          <span class="sb-sub-count" id="sbCountGrupal" style="color:#7ab3e0;background:rgba(122,179,224,0.1)">—</span>
         </div>
-        <div class="sb-sub-item" id="sbFilterOffer" onclick="switchPkgFilter('offer','all')">
-          <span class="ms material-symbols-outlined" style="color:#f87171">local_offer</span>En oferta
-          <span class="sb-sub-count" id="sbCountOffer" style="color:#f87171;background:rgba(239,68,68,0.08)">—</span>
+        <div class="sb-sub-item" id="sbFilterInspirador" onclick="switchPkgFilter('sec_inspirador','all')">
+          <span class="ms material-symbols-outlined" style="color:#a855f7">auto_awesome</span>Viajes Sin Oferta
+          <span class="sb-sub-count" id="sbCountInspirador" style="color:#a855f7;background:rgba(168,85,247,0.1)">—</span>
         </div>
+        <div class="sb-sub-item" id="sbFilterSecOferta" onclick="switchPkgFilter('sec_oferta','all')">
+          <span class="ms material-symbols-outlined" style="color:#f43f5e">local_fire_department</span>Viajes en Oferta
+          <span class="sb-sub-count" id="sbCountSecOferta" style="color:#f43f5e;background:rgba(244,63,94,0.1)">—</span>
+        </div>
+        <div class="sb-divider" style="margin: 8px 16px; opacity: 0.3;"></div>
         <div class="sb-sub-item" id="sbFilterActive" onclick="switchPkgFilter('active','all')">
           <span class="ms material-symbols-outlined" style="color:#4ade80">check_circle</span>Activos
           <span class="sb-sub-count" id="sbCountActive" style="color:#4ade80;background:rgba(74,222,128,0.08)">—</span>
@@ -686,7 +918,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
       <!-- Recent packages -->
       <div class="form-section" style="margin-top:20px">
         <div class="form-section-title" style="margin-bottom:16px"><span class="ms material-symbols-outlined">schedule</span>Últimos paquetes agregados</div>
-        <div id="recentPkgs" class="pkg-grid"></div>
+        <div id="recentPkgs" style="display:flex;flex-direction:column;gap:6px"></div>
       </div>
     </div>
 
@@ -695,7 +927,10 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
       <div class="view-header">
         <h1>Paquetes</h1>
         <div class="spacer"></div>
-        <button class="btn btn-ghost btn-sm" onclick="loadPackages()">
+        <button class="btn btn-ghost btn-sm" onclick="openQuickSorter()" title="Organizar orden visualmente" style="margin-right:6px">
+          <span class="ms material-symbols-outlined" style="font-size:15px">sort</span> Reordenar rápido
+        </button>
+        <button class="btn btn-ghost btn-sm" onclick="loadPackages()" style="margin-right:6px">
           <span class="ms material-symbols-outlined">refresh</span>
         </button>
         <button class="btn btn-primary" onclick="openEditor(null)">
@@ -707,8 +942,6 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
         <div class="stat-card"><div class="stat-num" id="sTotal">—</div><div class="stat-label">Total</div></div>
         <div class="stat-card"><div class="stat-num" id="sActive" style="color:#4ade80">—</div><div class="stat-label">Activos</div></div>
         <div class="stat-card"><div class="stat-num" id="sInactive" style="color:#f87171">—</div><div class="stat-label">Inactivos</div></div>
-        <div class="stat-card"><div class="stat-num" id="sFeatured" style="color:#fbbf24">—</div><div class="stat-label">Destacados</div></div>
-        <div class="stat-card"><div class="stat-num" id="sOffers" style="color:#ef4444">—</div><div class="stat-label">En oferta</div></div>
       </div>
 
       <!-- Filter bar -->
@@ -718,11 +951,12 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
           <input type="text" id="pkgSearch" placeholder="Buscar paquete…" oninput="renderPkgView()">
         </div>
         <select class="select-filter" id="filterStatus" onchange="renderPkgView()">
-          <option value="all">Todos los estados</option>
+          <option value="all">Todos los paquetes</option>
           <option value="active">Activos</option>
           <option value="inactive">Inactivos</option>
-          <option value="featured">Destacados</option>
-          <option value="offer">Con oferta</option>
+          <option value="sec_grupal">👥 Grupales</option>
+          <option value="sec_inspirador">✨ Viajes Ind Sin Oferta</option>
+          <option value="sec_oferta">🔥 Viajes Ind en Oferta</option>
         </select>
         <select class="select-filter" id="filterContinent" onchange="renderPkgView()">
           <option value="all">Todos los continentes</option>
@@ -734,6 +968,10 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
           <option value="oceania">🦘 Oceanía</option>
           <option value="general">General</option>
         </select>
+        <div class="search-box" style="min-width:160px">
+          <span class="material-symbols-outlined" style="color:rgba(255,255,255,0.35);font-size:18px">flag</span>
+          <input type="text" id="countrySearch" placeholder="País…" oninput="renderPkgView()" style="width:110px">
+        </div>
         <select class="select-filter" id="filterSort" onchange="renderPkgView()">
           <option value="newest" selected>Más nuevos primero</option>
           <option value="oldest">Más antiguos primero</option>
@@ -741,10 +979,9 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
           <option value="price_asc">Precio ↑</option>
           <option value="price_desc">Precio ↓</option>
           <option value="name_az">Nombre A–Z</option>
-          <option value="featured_first">Destacados primero</option>
         </select>
-        <button id="viewToggleBtn" onclick="toggleViewMode()" class="btn btn-ghost btn-icon" title="Cambiar vista (cuadrícula / lista)">
-          <span class="ms material-symbols-outlined" id="viewToggleIcon">view_list</span>
+        <button id="viewToggleBtn" onclick="toggleViewMode()" class="btn btn-ghost btn-icon" title="Cambiar a cuadrícula">
+          <span class="ms material-symbols-outlined" id="viewToggleIcon">grid_view</span>
         </button>
       </div>
       <div id="activeFiltersBar" style="display:none;align-items:center;gap:8px;margin-bottom:14px;margin-top:-6px;flex-wrap:wrap"></div>
@@ -800,8 +1037,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
     <div class="ed-tabs">
       <div class="ed-tab active" onclick="switchEdTab('info',this)">📋 Información</div>
       <div class="ed-tab" onclick="switchEdTab('media',this)">🖼️ Imágenes</div>
-      <div class="ed-tab" onclick="switchEdTab('details',this)">📝 Descripción</div>
-      <div class="ed-tab" onclick="switchEdTab('itinerary',this)">🗺️ Itinerario</div>
+      <div class="ed-tab" onclick="switchEdTab('details',this)">📝 Descripción y Detalles</div>
     </div>
 
     <div class="ed-body">
@@ -809,6 +1045,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 
       <!-- TAB: Información -->
       <div class="ed-panel active" id="tab-info">
+
 
         <!-- Estado rápido -->
         <div class="form-section">
@@ -819,18 +1056,17 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
               <label class="tgl"><input type="checkbox" id="fActive" checked><span class="tgl-s"></span></label>
             </div>
             <div class="tgl-row">
-              <div class="tgl-info"><div class="tgl-name">Destacado ★</div><div class="tgl-desc">Aparece primero con badge especial</div></div>
+              <div class="tgl-info"><div class="tgl-name">Destacado ★</div><div class="tgl-desc">Muestra la insignia de destacado en la web</div></div>
               <label class="tgl"><input type="checkbox" id="fFeatured"><span class="tgl-s"></span></label>
             </div>
             <div class="fg" style="margin-top:6px">
               <label class="fl">Sección de la web *</label>
               <select id="fSection" class="fs">
-                <option value="salida_grupal">👥 Salida Grupal Acompañada (sección 1 - destacada)</option>
-                <option value="inspirador" selected>✨ Viaje Inspirador (sección 2 - destinos)</option>
-                <option value="oferta">🔥 Paquete en Oferta (sección 3 - promo)</option>
+                <option value="salida_grupal">👥 Salida Grupal Acompañada (Sección 1)</option>
+                <option value="inspirador" selected>✨ Viaje Normal / Individual (Sección 2/3)</option>
               </select>
               <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;line-height:1.4">
-                Define en qué bloque del home aparece el paquete.
+                Define el tipo de viaje. Si es Viaje Normal y tiene precio original (tachado), se moverá automáticamente a la sección de Ofertas.
               </div>
             </div>
           </div>
@@ -886,7 +1122,6 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
                 <option value="asia">⛩️ Asia & Pacífico</option>
                 <option value="africa">🦁 África</option>
                 <option value="oceania">🦘 Oceanía</option>
-                <option value="argentina">🇦🇷 Argentina</option>
               </select>
             </div>
           </div>
@@ -897,7 +1132,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
         <div class="form-section">
           <div class="form-section-title"><span class="ms material-symbols-outlined">payments</span>Precios & Badge</div>
           <div class="grid3">
-            <div class="fg"><label class="fl">Precio USD *</label><input type="number" id="fPrice" class="fi" placeholder="1500" min="0" step="0.01"></div>
+            <div class="fg"><label class="fl">Precio USD</label><input type="number" id="fPrice" class="fi" placeholder="A consultar" min="0" step="0.01"></div>
             <div class="fg"><label class="fl">Precio original (tachado)</label><input type="number" id="fPriceOrig" class="fi" placeholder="1800" min="0" step="0.01"></div>
             <div class="fg"><label class="fl">Badge</label><input type="text" id="fBadge" class="fi" placeholder="OFERTA / NUEVO / HOT"></div>
           </div>
@@ -906,19 +1141,23 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
         <!-- Fecha de baja automática -->
         <div class="form-section">
           <div class="form-section-title"><span class="ms material-symbols-outlined">event_busy</span>Baja automática</div>
-          <div class="grid2">
+          <div class="grid1">
             <div class="fg">
               <label class="fl">Fecha de expiración</label>
-              <input type="datetime-local" id="fExpires" class="fi">
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;line-height:1.4">
-                A partir de esta fecha el paquete deja de mostrarse en la web (sin tener que tocar nada).<br>
-                Dejá vacío si no querés que expire.
+              <input type="datetime-local" id="fExpires" class="fi" onclick="try{this.showPicker()}catch(e){}" style="cursor:pointer">
+              
+              <!-- Quick expiration presets -->
+              <div class="expire-presets" style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+                <button type="button" class="btn btn-ghost btn-xs" onclick="addExpireDays(7)" style="font-size:11px;padding:4px 8px">+7 días</button>
+                <button type="button" class="btn btn-ghost btn-xs" onclick="addExpireDays(15)" style="font-size:11px;padding:4px 8px">+15 días</button>
+                <button type="button" class="btn btn-ghost btn-xs" onclick="addExpireDays(30)" style="font-size:11px;padding:4px 8px">+30 días</button>
+                <button type="button" class="btn btn-ghost btn-xs" onclick="addExpireDays(60)" style="font-size:11px;padding:4px 8px">+60 días</button>
+                <button type="button" class="btn btn-ghost btn-xs btn-danger" onclick="document.getElementById('fExpires').value=''" style="font-size:11px;padding:4px 8px;color:#f87171;border-color:rgba(239,68,68,0.2)">Quitar fecha</button>
               </div>
-            </div>
-            <div class="fg" style="display:flex;align-items:end;gap:8px">
-              <button type="button" class="btn btn-ghost btn-sm" onclick="document.getElementById('fExpires').value=''">
-                <span class="ms material-symbols-outlined" style="font-size:15px">close</span>Quitar fecha
-              </button>
+
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:8px;line-height:1.4">
+                A partir de esta fecha el paquete deja de mostrarse en la web de forma automática. Dejá vacío si no querés que expire.
+              </div>
             </div>
           </div>
         </div>
@@ -962,61 +1201,189 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 
       </div><!-- /tab-media -->
 
-      <!-- TAB: Descripción -->
+      <!-- TAB: Descripción y Detalles -->
       <div class="ed-panel" id="tab-details">
 
+        <!-- 1. Destacados del viaje -->
         <div class="form-section">
-          <div class="form-section-title"><span class="ms material-symbols-outlined">description</span>Texto</div>
-          <div class="grid1" style="gap:12px">
-            <div class="fg"><label class="fl">Descripción</label><textarea id="fDesc" class="ft" style="min-height:100px" placeholder="Descripción completa del paquete…"></textarea></div>
-            <div class="fg"><label class="fl">Highlights</label><textarea id="fHighlights" class="ft" style="min-height:80px" placeholder="Puntos clave del viaje…"></textarea></div>
+          <div class="tgl-row" style="margin-bottom: 0px">
+            <div class="tgl-info">
+              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
+                <span class="ms material-symbols-outlined" style="color:#fbbf24">star</span>¿Incluir destacados del viaje?
+              </div>
+              <div class="tgl-desc">Activa el resumen rápido de atractivos clave</div>
+            </div>
+            <label class="tgl">
+              <input type="checkbox" id="fHighlightsEnabled" onchange="toggleHighlightsSection(this.checked)">
+              <span class="tgl-s"></span>
+            </label>
+          </div>
+
+          <div id="highlightsContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
+            <div class="fg">
+              <textarea id="fHighlights" class="ft" style="min-height:80px" placeholder="Ej: • Vuelos directos incluidos • Coordinador permanente de la empresa"></textarea>
+              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;line-height:1.4">
+                Colocá los puntos principales del viaje, uno por línea (escribiendo un punto o asterisco inicial).
+              </div>
+            </div>
           </div>
         </div>
 
+        <!-- 2. Incluye / No incluye -->
         <div class="form-section">
-          <div class="form-section-title"><span class="ms material-symbols-outlined">checklist</span>Incluye / No incluye</div>
-          <p style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:14px;margin-top:-6px"><kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> para agregar · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío para borrar</p>
-          <div class="grid2">
-            <div class="fg">
-              <label class="fl" style="color:rgba(74,222,128,0.65);margin-bottom:6px">✓ Incluye</label>
-              <div id="includesList" class="bullet-list"></div>
-              <button type="button" class="add-gal" onclick="addBullet('includes')">
-                <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
+          <div class="tgl-row" style="margin-bottom: 0px">
+            <div class="tgl-info">
+              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
+                <span class="ms material-symbols-outlined" style="color:#4ade80">checklist</span>¿Incluir servicios (Incluye/No incluye)?
+              </div>
+              <div class="tgl-desc">Activa el listado detallado de elementos incluidos y no incluidos</div>
+            </div>
+            <label class="tgl">
+              <input type="checkbox" id="fBulletsEnabled" onchange="toggleBulletsSection(this.checked)">
+              <span class="tgl-s"></span>
+            </label>
+          </div>
+
+          <div id="bulletsContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
+            <p style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:14px">
+              Agregá ítems para especificar qué cubre el precio y qué no. Presioná <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> para añadir fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío para borrar.
+            </p>
+            <div class="grid2">
+              <div class="fg">
+                <label class="fl" style="color:rgba(74,222,128,0.65);margin-bottom:6px">✓ Incluye</label>
+                <div id="includesList" class="bullet-list"></div>
+                <button type="button" class="add-gal" onclick="addBullet('includes')">
+                  <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
+                </button>
+              </div>
+              <div class="fg">
+                <label class="fl" style="color:rgba(248,113,113,0.65);margin-bottom:6px">✗ No Incluye</label>
+                <div id="excludesList" class="bullet-list"></div>
+                <button type="button" class="add-gal" onclick="addBullet('excludes')">
+                  <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Itinerario día por día -->
+        <div class="form-section">
+          <div class="tgl-row" style="margin-bottom: 0px">
+            <div class="tgl-info">
+              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
+                <span class="ms material-symbols-outlined" style="color:#7ab3e0">route</span>¿Incluir itinerario detallado?
+              </div>
+              <div class="tgl-desc">Activa el itinerario día por día para este paquete</div>
+            </div>
+            <label class="tgl">
+              <input type="checkbox" id="fItineraryEnabled" onchange="toggleItinerarySection(this.checked)">
+              <span class="tgl-s"></span>
+            </label>
+          </div>
+
+          <div id="itineraryContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4)">Itinerario estructurado</span>
+              <button type="button" class="btn btn-primary btn-sm" onclick="autoGenerateDays()" id="btnAutodays" title="Genera filas vacías según los días del paquete">
+                <span class="ms material-symbols-outlined" style="font-size:15px">auto_fix_high</span>Generar días
               </button>
             </div>
+            <p style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:12px;line-height:1.4">
+              Día a la izquierda · descripción a la derecha · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> agrega fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío borra.
+            </p>
+            <div id="itineraryRows"></div>
+            <button type="button" class="add-gal" onclick="addItineraryRow()" style="margin-top:12px;border-style:solid;border-color:#3778b8;color:#7ab3e0">
+              <span class="ms material-symbols-outlined" style="font-size:18px">add_circle</span>Agregar día
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. Descripción general -->
+        <div class="form-section">
+          <div class="tgl-row" style="margin-bottom: 0px">
+            <div class="tgl-info">
+              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
+                <span class="ms material-symbols-outlined" style="color:#e2e8f0">description</span>¿Incluir descripción general del viaje?
+              </div>
+              <div class="tgl-desc">Activa el bloque de texto descriptivo libre tipo Word</div>
+            </div>
+            <label class="tgl">
+              <input type="checkbox" id="fDescEnabled" onchange="toggleDescSection(this.checked)">
+              <span class="tgl-s"></span>
+            </label>
+          </div>
+
+          <div id="descContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
+            <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-bottom:12px;line-height:1.4">
+              Escribí el texto general del viaje. Podés formatear el texto, agregar negritas, títulos y listas.
+            </p>
             <div class="fg">
-              <label class="fl" style="color:rgba(248,113,113,0.65);margin-bottom:6px">✗ No Incluye</label>
-              <div id="excludesList" class="bullet-list"></div>
-              <button type="button" class="add-gal" onclick="addBullet('excludes')">
-                <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
-              </button>
+              <div class="rich-toolbar">
+                <button type="button" class="tb-btn" onclick="execCmd('bold')" title="Negrita"><b>B</b></button>
+                <button type="button" class="tb-btn" onclick="execCmd('italic')" title="Itálica"><i>I</i></button>
+                <button type="button" class="tb-btn" onclick="execCmd('underline')" title="Subrayado"><u>U</u></button>
+                <div class="tb-sep"></div>
+                <button type="button" class="tb-btn" onclick="execCmd('fontSize', '3')" title="Texto Normal">Normal</button>
+                <button type="button" class="tb-btn" onclick="execCmd('fontSize', '5')" title="Título Mediano"><span style="font-size:14px;font-weight:bold">H2</span></button>
+                <button type="button" class="tb-btn" onclick="execCmd('fontSize', '6')" title="Título Grande"><span style="font-size:16px;font-weight:bold">H1</span></button>
+                <div class="tb-sep"></div>
+                <button type="button" class="tb-btn" onclick="execCmd('insertUnorderedList')" title="Lista viñetas"><span class="ms material-symbols-outlined" style="font-size:16px">format_list_bulleted</span></button>
+                <button type="button" class="tb-btn" onclick="execCmd('insertOrderedList')" title="Lista numerada"><span class="ms material-symbols-outlined" style="font-size:16px">format_list_numbered</span></button>
+                <div class="tb-sep"></div>
+                <button type="button" class="tb-btn" onclick="openEmojiPopup(event)" title="Insertar Emoji">😀</button>
+              </div>
+              <div id="fDescRich" class="rich-editor" contenteditable="true" placeholder="Escribí la descripción libre del viaje acá..."></div>
+              <input type="hidden" id="fDesc">
             </div>
           </div>
         </div>
 
       </div><!-- /tab-details -->
 
-      <div class="ed-panel" id="tab-itinerary">
-        <div class="form-section">
-          <div class="form-section-title" style="justify-content:space-between">
-            <span style="display:flex;align-items:center;gap:7px"><span class="ms material-symbols-outlined">route</span>Itinerario día por día</span>
-            <button type="button" class="btn btn-primary btn-sm" onclick="autoGenerateDays()" id="btnAutodays" title="Genera filas vacías según los días del paquete">
-              <span class="ms material-symbols-outlined" style="font-size:15px">auto_fix_high</span>Generar días
-            </button>
-          </div>
-          <p style="font-size:12px;color:rgba(255,255,255,0.35);margin-bottom:16px;margin-top:-4px">
-            Día a la izquierda · descripción a la derecha · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> agrega fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío borra
-          </p>
-          <div id="itineraryRows"></div>
-          <button type="button" class="add-gal" onclick="addItineraryRow()" style="margin-top:12px;border-style:solid;border-color:#3778b8;color:#7ab3e0">
-            <span class="ms material-symbols-outlined" style="font-size:18px">add_circle</span>Agregar día
-          </button>
-        </div>
-      </div><!-- /tab-itinerary -->
-
     </div><!-- /ed-body -->
   </div><!-- /editorPanel -->
 
+  <!-- Bulk Actions Floating Bar -->
+  <div id="bulkActionsBar" style="display:none;position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:9999;background:#0f1a2e;border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:12px 24px;box-shadow:0 20px 50px rgba(0,0,0,0.6);align-items:center;gap:16px;backdrop-filter:blur(8px)">
+    <span style="font-size:13px;font-weight:600;color:#7ab3e0" id="bulkSelectedCount">0 seleccionados</span>
+    <div style="width:1px;height:20px;background:rgba(255,255,255,0.1)"></div>
+    
+    <button class="btn btn-ghost btn-sm" onclick="bulkToggleActive(true)" title="Activar seleccionados" style="padding: 6px 12px; font-size: 12px;">
+      <span class="ms material-symbols-outlined" style="font-size:15px;color:#4ade80">power_settings_new</span> Activar
+    </button>
+    <button class="btn btn-ghost btn-sm" onclick="bulkToggleActive(false)" title="Desactivar seleccionados" style="padding: 6px 12px; font-size: 12px;">
+      <span class="ms material-symbols-outlined" style="font-size:15px;color:#f87171">power_settings_new</span> Desactivar
+    </button>
+    <button class="btn btn-ghost btn-sm" onclick="bulkToggleFeatured(true)" title="Destacar seleccionados" style="padding: 6px 12px; font-size: 12px;">
+      <span class="ms material-symbols-outlined" style="font-size:15px;color:#fbbf24">star</span> Destacar
+    </button>
+    <button class="btn btn-ghost btn-sm" onclick="bulkToggleFeatured(false)" title="Quitar destacado en lote" style="padding: 6px 12px; font-size: 12px;">
+      <span class="ms material-symbols-outlined" style="font-size:15px;color:rgba(255,255,255,0.4)">star_border</span> Quitar Destacado
+    </button>
+    
+    <div style="display:flex;align-items:center;gap:6px">
+      <span style="font-size:11.5px;color:rgba(255,255,255,0.5)">Categoría:</span>
+      <select class="select-filter" id="bulkCatSelect" onchange="bulkChangeCategory()" style="padding:4px 8px;font-size:12px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1)">
+        <option value="">-- Cambiar --</option>
+        <option value="general">General</option>
+        <option value="europa">🏰 Europa</option>
+        <option value="caribe">🏝️ Caribe & México</option>
+        <option value="america_del_sur">🌎 Sudamérica</option>
+        <option value="asia">⛩️ Asia & Pacífico</option>
+        <option value="africa">🦁 África</option>
+        <option value="oceania">🦘 Oceanía</option>
+      </select>
+    </div>
+    
+    <div style="width:1px;height:20px;background:rgba(255,255,255,0.1)"></div>
+    <button class="btn btn-danger btn-sm" onclick="bulkDelete()" title="Eliminar seleccionados" style="padding: 6px 12px; font-size: 12px;">
+      <span class="ms material-symbols-outlined" style="font-size:15px">delete</span> Eliminar
+    </button>
+    <button class="btn btn-ghost btn-sm btn-icon" onclick="clearBulkSelection()" title="Deseleccionar todos" style="width:28px;height:28px">
+      <span class="ms material-symbols-outlined" style="font-size:15px">close</span>
+    </button>
+  </div>
 </div><!-- /app -->
 
 <!-- Context Menu -->
@@ -1025,6 +1392,12 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
   <div class="ctx-item" id="ctxToggle" onclick="ctxAction('toggle')"><span class="ms material-symbols-outlined" id="ctxToggleIcon">toggle_on</span><span id="ctxToggleLabel">Activar</span></div>
   <div class="ctx-item" id="ctxFeatured" onclick="ctxAction('featured')"><span class="ms material-symbols-outlined" id="ctxFeaturedIcon">star</span><span id="ctxFeaturedLabel">Marcar destacado</span></div>
   <div class="ctx-item" onclick="ctxAction('duplicate')"><span class="ms material-symbols-outlined">content_copy</span>Duplicar</div>
+  <div class="ctx-sep"></div>
+  <div class="ctx-item" onclick="ctxMoveAction('top')"><span class="ms material-symbols-outlined">keyboard_double_arrow_up</span>Mover al inicio</div>
+  <div class="ctx-item" onclick="ctxMoveAction('up')"><span class="ms material-symbols-outlined">keyboard_arrow_up</span>Subir un puesto</div>
+  <div class="ctx-item" onclick="ctxMoveAction('down')"><span class="ms material-symbols-outlined">keyboard_arrow_down</span>Bajar un puesto</div>
+  <div class="ctx-item" onclick="ctxMoveAction('bottom')"><span class="ms material-symbols-outlined">keyboard_double_arrow_down</span>Mover al final</div>
+  <div class="ctx-item" onclick="ctxMoveAction('pos')"><span class="ms material-symbols-outlined">123</span>Mover a posición exacta...</div>
   <div class="ctx-sep"></div>
   <div class="ctx-item danger" onclick="ctxAction('delete')"><span class="ms material-symbols-outlined">delete</span>Eliminar</div>
 </div>
@@ -1061,7 +1434,7 @@ let editingId = null;
 let galUrls = [];
 let confirmCb = null;
 let toastTimer;
-let viewMode = 'grid'; // 'grid' | 'list'
+let viewMode = 'list'; // 'grid' | 'list'
 let ctxPackageId = null;
 let includesItems = [];
 let excludesItems = [];
@@ -1229,6 +1602,7 @@ function updateEditorTabDots() {
 // ── Sidebar quick filters ──
 let activeSbFilter = 'all';
 function switchPkgFilter(status, cont) {
+  closeEditor();
   switchView('packages');
   const statusEl = document.getElementById('filterStatus');
   const contEl   = document.getElementById('filterContinent');
@@ -1236,21 +1610,31 @@ function switchPkgFilter(status, cont) {
   if (contEl)   contEl.value   = cont || 'all';
   activeSbFilter = status;
   document.querySelectorAll('.sb-sub-item').forEach(el => el.classList.remove('active'));
-  const map = { all:'sbFilterAll', featured:'sbFilterFeatured', offer:'sbFilterOffer', active:'sbFilterActive', inactive:'sbFilterInactive' };
+  const map = {
+    all:'sbFilterAll',
+    active:'sbFilterActive',
+    inactive:'sbFilterInactive',
+    sec_grupal:'sbFilterGrupal',
+    sec_inspirador:'sbFilterInspirador',
+    sec_oferta:'sbFilterSecOferta'
+  };
   document.getElementById(map[status])?.classList.add('active');
   renderPkgView();
 }
 function updateSbCounts() {
   const tot  = packages.length;
   const act  = packages.filter(p=>p.active).length;
-  const feat = packages.filter(p=>p.featured).length;
-  const offs = packages.filter(p=>p.badge||(p.price_original_usd&&p.price_original_usd>p.price_usd)).length;
   const inact= tot - act;
   document.getElementById('sbCountAll').textContent      = tot;
-  document.getElementById('sbCountFeatured').textContent = feat;
-  document.getElementById('sbCountOffer').textContent    = offs;
   document.getElementById('sbCountActive').textContent   = act;
   document.getElementById('sbCountInactive').textContent = inact;
+
+  const secGrupales = packages.filter(p=>p.section==='salida_grupal').length;
+  const secInspirador = packages.filter(p=>p.section!=='salida_grupal' && !(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd))).length;
+  const secOferta = packages.filter(p=>p.section!=='salida_grupal' && (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd))).length;
+  document.getElementById('sbCountGrupal').textContent   = secGrupales;
+  document.getElementById('sbCountInspirador').textContent = secInspirador;
+  document.getElementById('sbCountSecOferta').textContent = secOferta;
 }
 
 // ═══════════════ PACKAGES ═════════════
@@ -1266,31 +1650,38 @@ async function loadPackages() {
 function updateStats() {
   const tot  = packages.length;
   const act  = packages.filter(p=>p.active).length;
-  const feat = packages.filter(p=>p.featured).length;
-  const offs = packages.filter(p=>p.badge||(p.price_original_usd&&p.price_original_usd>p.price_usd)).length;
   document.getElementById('sTotal').textContent    = tot;
   document.getElementById('sActive').textContent   = act;
   document.getElementById('sInactive').textContent = tot-act;
-  document.getElementById('sFeatured').textContent = feat;
-  document.getElementById('sOffers').textContent   = offs;
   updateSbCounts();
 }
 
 function renderDashboard() {
   const tot   = packages.length;
   const act   = packages.filter(p=>p.active).length;
-  const feat  = packages.filter(p=>p.featured).length;
-  const offs  = packages.filter(p=>p.badge||( p.price_original_usd&&p.price_original_usd>p.price_usd)).length;
   const inact = tot - act;
+  const feat  = packages.filter(p=>p.featured).length;
+  const offers= packages.filter(p=>p.price_original_usd&&Number(p.price_original_usd)>Number(p.price_usd)).length;
   document.getElementById('dTotal').textContent    = tot;
   document.getElementById('dActive').textContent   = act;
-  document.getElementById('dFeatured').textContent = feat;
-  document.getElementById('dOffers').textContent   = offs;
   document.getElementById('dInactive').textContent = inact;
-  // Recent 4 packages
-  const recent = packages.slice(0,4);
-  document.getElementById('recentPkgs').innerHTML = recent.map(p => renderPkgCard(p)).join('');
+  if (document.getElementById('dFeatured')) document.getElementById('dFeatured').textContent = feat;
+  if (document.getElementById('dOffers'))   document.getElementById('dOffers').textContent   = offers;
+  // Recent 5 packages in list mode
+  const sorted = [...packages].sort((a,b)=>b.id-a.id).slice(0,5);
+  document.getElementById('recentPkgs').innerHTML = sorted.map(p => renderPkgListItem(p)).join('');
   bindCardEvents();
+}
+
+function sortList(list, sort) {
+  switch(sort) {
+    case 'manual':        list.sort((a,b)=>(a.sort_order??99999)-(b.sort_order??99999)); break;
+    case 'oldest':        list.sort((a,b)=>a.id-b.id); break;
+    case 'price_asc':     list.sort((a,b)=>a.price_usd-b.price_usd); break;
+    case 'price_desc':    list.sort((a,b)=>b.price_usd-a.price_usd); break;
+    case 'name_az':       list.sort((a,b)=>a.name?.localeCompare(b.name)); break;
+    default:              list.sort((a,b)=>b.id-a.id);
+  }
 }
 
 function getFilteredPackages() {
@@ -1305,21 +1696,19 @@ function getFilteredPackages() {
     p.destination?.toLowerCase().includes(q)||
     p.country?.toLowerCase().includes(q)
   );
+  // Country search
+  const cq = (document.getElementById('countrySearch')?.value||'').toLowerCase().trim();
+  if (cq) list = list.filter(p => p.country?.toLowerCase().includes(cq));
   if (stat==='active')   list = list.filter(p=>p.active);
   if (stat==='inactive') list = list.filter(p=>!p.active);
-  if (stat==='featured') list = list.filter(p=>p.featured);
-  if (stat==='offer')    list = list.filter(p=>p.badge||(p.price_original_usd&&p.price_original_usd>p.price_usd));
+  
+  if (stat==='sec_grupal')     list = list.filter(p=>p.section==='salida_grupal');
+  if (stat==='sec_inspirador') list = list.filter(p=>p.section!=='salida_grupal' && !(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
+  if (stat==='sec_oferta')     list = list.filter(p=>p.section!=='salida_grupal' && (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
+
   if (cont!=='all')      list = list.filter(p=>p.category===cont);
 
-  switch(sort) {
-    case 'manual':        list.sort((a,b)=>(a.sort_order??99999)-(b.sort_order??99999)); break;
-    case 'oldest':        list.sort((a,b)=>a.id-b.id); break;
-    case 'price_asc':     list.sort((a,b)=>a.price_usd-b.price_usd); break;
-    case 'price_desc':    list.sort((a,b)=>b.price_usd-a.price_usd); break;
-    case 'name_az':       list.sort((a,b)=>a.name?.localeCompare(b.name)); break;
-    case 'featured_first':list.sort((a,b)=>(b.featured?1:0)-(a.featured?1:0)); break;
-    default:              list.sort((a,b)=>b.id-a.id);
-  }
+  sortList(list, sort);
   return list;
 }
 
@@ -1330,7 +1719,6 @@ const CAT_META = {
   asia:           { label:'Asia & Pacífico',  emoji:'⛩️' },
   africa:         { label:'África',           emoji:'🦁' },
   oceania:        { label:'Oceanía',          emoji:'🦘' },
-  argentina:      { label:'Argentina',        emoji:'🇦🇷' },
   general:        { label:'General',          emoji:'🌍' },
 };
 
@@ -1352,29 +1740,59 @@ function renderPkgView() {
   const container = document.getElementById('pkgViewContainer');
   if (!container) return;
   updateActiveFiltersBar();
-  const list = getFilteredPackages();
-  if (!list.length) {
-    const q = document.getElementById('pkgSearch')?.value;
-    const hasFilters = q || document.getElementById('filterStatus')?.value !== 'all' || document.getElementById('filterContinent')?.value !== 'all';
-    container.innerHTML = `<div class="empty">
-      <span class="ms material-symbols-outlined">travel_off</span>
-      <p>${hasFilters ? 'No hay paquetes con esos filtros' : 'No hay paquetes todavía'}</p>
-      ${hasFilters
-        ? `<button class="btn btn-ghost btn-sm" style="margin-top:12px" onclick="clearAllFilters()"><span class="ms material-symbols-outlined" style="font-size:15px">filter_alt_off</span>Limpiar filtros</button>`
-        : `<button class="btn btn-primary btn-sm" style="margin-top:12px" onclick="openEditor(null)"><span class="ms material-symbols-outlined" style="font-size:15px">add</span>Crear primer paquete</button>`
-      }
-    </div>`;
-    return;
-  }
-  const isManual = (document.getElementById('filterSort')?.value === 'manual');
-  const manualHint = isManual ? `<div class="manual-hint">
-      <span class="ms material-symbols-outlined" style="font-size:15px;color:#3778b8">drag_indicator</span>
-      Arrastrá las tarjetas para cambiar el orden. Se guarda automáticamente.
-    </div>` : '';
+  
+  const q    = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
+  const stat = document.getElementById('filterStatus')?.value || 'all';
+  const cont = document.getElementById('filterContinent')?.value || 'all';
+  const sort = document.getElementById('filterSort')?.value || 'newest';
+  
+  const isGroupedView = (stat === 'all' && !q && cont === 'all');
   const isList = viewMode === 'list';
   const renderFn = isList ? renderPkgListItem : renderPkgCard;
   const wrapClass = isList ? 'pkg-list' : 'pkg-grid';
-  container.innerHTML = manualHint + `<div class="${wrapClass}">${list.map((p,i)=>renderFn(p,i+1)).join('')}</div>`;
+  const isManual = (sort === 'manual');
+  
+  const manualHint = isManual ? `<div class="manual-hint">
+      <span class="ms material-symbols-outlined" style="font-size:15px;color:#3778b8">drag_indicator</span>
+      Arrastrá las tarjetas dentro de su sección para cambiar el orden. Se guarda automáticamente.
+    </div>` : '';
+    
+  if (isGroupedView) {
+    let grupales = packages.filter(p => p.section === 'salida_grupal');
+    sortList(grupales, sort);
+    
+    let inspiradores = packages.filter(p => p.section !== 'salida_grupal' && !(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
+    sortList(inspiradores, sort);
+    
+    let ofertas = packages.filter(p => p.section !== 'salida_grupal' && (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
+    sortList(ofertas, sort);
+    
+    container.innerHTML = manualHint + `
+      <div class="pkg-section-group" data-section-group="salida_grupal" style="margin-bottom: 30px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #7ab3e0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+          <span class="ms material-symbols-outlined">groups</span> 👥 Sección 1: Salidas Grupales (${grupales.length})
+        </h3>
+        ${grupales.length ? `<div class="${wrapClass}">${grupales.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
+      </div>
+      
+      <div class="pkg-section-group" data-section-group="inspirador" style="margin-bottom: 30px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #a855f7; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+          <span class="ms material-symbols-outlined">auto_awesome</span> ✨ Sección 2: Viajes Ind Sin Oferta (${inspiradores.length})
+        </h3>
+        ${inspiradores.length ? `<div class="${wrapClass}">${inspiradores.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
+      </div>
+      
+      <div class="pkg-section-group" data-section-group="oferta" style="margin-bottom: 30px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #f43f5e; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+          <span class="ms material-symbols-outlined">local_fire_department</span> 🔥 Sección 3: Viajes Ind en Oferta (${ofertas.length})
+        </h3>
+        ${ofertas.length ? `<div class="${wrapClass}">${ofertas.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
+      </div>
+    `;
+  } else {
+    const list = getFilteredPackages();
+    container.innerHTML = manualHint + `<div class="${wrapClass}">${list.map((p,i)=>renderFn(p,i+1)).join('')}</div>`;
+  }
   bindCardEvents();
 }
 
@@ -1382,11 +1800,15 @@ function renderPkgCard(p, num) {
   const img = p.image_url
     ? `<img class="pkg-img" src="${p.image_url}" alt="${p.name}" onerror="this.style.display='none'">`
     : `<div class="pkg-img-placeholder"><span class="ms material-symbols-outlined" style="font-size:30px;opacity:.2">image</span></div>`;
+  const checked = bulkSelectedIds.includes(p.id) ? 'checked' : '';
   return `
   <div class="pkg-card" data-id="${p.id}" draggable="true"
     onclick="openEditor(${p.id})" oncontextmenu="showCtxMenu(event,${p.id})"
     ondragstart="onDragStart(event,${p.id})" ondragover="onDragOver(event,${p.id})"
     ondragleave="onDragLeave(event)" ondrop="onDrop(event,${p.id})" ondragend="onDragEnd(event)">
+    <div class="pkg-bulk-check-wrap" onclick="event.stopPropagation()">
+      <input type="checkbox" class="pkg-bulk-check" data-id="${p.id}" ${checked} onchange="onBulkCheckChange(event)">
+    </div>
     ${img}
     <div class="pkg-drag-handle" title="Arrastrar para reordenar"><span class="ms material-symbols-outlined">drag_indicator</span></div>
     <div class="pkg-quick">
@@ -1400,16 +1822,29 @@ function renderPkgCard(p, num) {
     <div class="pkg-body">
       <div class="pkg-name">${p.name}</div>
       <div class="pkg-sub">${p.destination||''} · ${p.days} días</div>
-      <div class="pkg-footer">
-        <div>
-          <div class="pkg-price">USD ${Number(p.price_usd).toLocaleString('es-AR')}</div>
-          ${p.price_original_usd&&p.price_original_usd>p.price_usd?`<div style="font-size:10px;color:rgba(255,255,255,0.33);text-decoration:line-through;margin-top:1px">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</div>`:''}
+      <div class="pkg-footer" onclick="event.stopPropagation()">
+        <div style="display:flex;flex-direction:column;gap:3px">
+          <!-- Badge quick edit -->
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em">Badge</span>
+            <input type="text" class="quick-badge-input" value="${p.badge||''}" placeholder="—" onchange="quickUpdateBadge(${p.id}, this.value)" title="Badge personalizado" style="width:68px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:2px 5px;text-align:center;color:#fbbf24;font-weight:700;font-family:inherit;font-size:11px">
+          </div>
+          <!-- Orig price editable -->
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em">Orig</span>
+            <input type="number" class="quick-price-input" value="${p.price_original_usd||''}" placeholder="—" onchange="quickUpdatePriceOrig(${p.id}, this.value)" title="Precio original (tachado)" style="width:68px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:6px;padding:2px 5px;text-align:right;color:rgba(255,255,255,0.4);font-weight:600;font-family:inherit;font-size:12px;text-decoration:${p.price_original_usd&&p.price_original_usd>p.price_usd?'line-through':'none'}">
+          </div>
+          <!-- Current price editable -->
+          <div class="pkg-price" style="display:flex;align-items:center;gap:4px;font-size:12px;color:rgba(255,255,255,0.4)">
+            <span style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em">USD</span>
+            <input type="number" class="quick-price-input" value="${p.price_usd || ''}" placeholder="Consultar" onchange="quickUpdatePrice(${p.id}, this.value)" style="width: 68px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 2px 5px; text-align: right; color: #7ab3e0; font-weight: 700; font-family: inherit; font-size: 13px;">
+          </div>
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
           <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
             ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
             ${p.featured?'<span class="pill pill-featured">★</span>':''}
-            ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':p.section==='oferta'?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':''}
+            ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(p.price_original_usd&&Number(p.price_original_usd)>Number(p.price_usd)?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
             ${p.expires_at?`<span class="pill" style="background:rgba(148,163,184,0.12);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)" title="Expira ${new Date(p.expires_at).toLocaleString('es-AR')}">⏱ ${new Date(p.expires_at).toLocaleDateString('es-AR',{day:'2-digit',month:'short'})}</span>`:''}
             ${p.badge?`<span class="pill pill-badge">${p.badge}</span>`:''}
           </div>
@@ -1425,11 +1860,15 @@ function renderPkgListItem(p, num) {
   const thumb = p.image_url
     ? `<img class="pkg-list-thumb" src="${p.image_url}" alt="${p.name}" onerror="this.style.display='none'">`
     : `<div class="pkg-list-thumb-ph"><span class="ms material-symbols-outlined" style="font-size:18px;opacity:.2">image</span></div>`;
+  const checked = bulkSelectedIds.includes(p.id) ? 'checked' : '';
   return `
   <div class="pkg-list-item" data-id="${p.id}" draggable="true"
     onclick="openEditor(${p.id})" oncontextmenu="showCtxMenu(event,${p.id})"
     ondragstart="onDragStart(event,${p.id})" ondragover="onDragOver(event,${p.id})"
     ondragleave="onDragLeave(event)" ondrop="onDrop(event,${p.id})" ondragend="onDragEnd(event)">
+    <div onclick="event.stopPropagation()" style="display:flex;align-items:center;padding:0 8px">
+      <input type="checkbox" class="pkg-bulk-check" data-id="${p.id}" ${checked} onchange="onBulkCheckChange(event)">
+    </div>
     <div class="drag-list-handle" title="Arrastrar para reordenar"><span class="ms material-symbols-outlined">drag_indicator</span></div>
     ${num!==undefined?`<div class="pkg-list-order-num">${num}</div>`:''}
     ${thumb}
@@ -1437,14 +1876,31 @@ function renderPkgListItem(p, num) {
       <div class="pkg-list-name">${p.name}</div>
       <div class="pkg-list-sub">${p.destination||''}${p.country?' · '+p.country:''} · ${p.days} días${p.created_at?' · <span class="pkg-card-date">'+formatDate(p.created_at)+'</span>':''}</div>
     </div>
-    <div class="pkg-list-price">
-      USD ${Number(p.price_usd).toLocaleString('es-AR')}
-      ${p.price_original_usd&&p.price_original_usd>p.price_usd?`<div style="font-size:10px;color:rgba(255,255,255,0.3);text-decoration:line-through;font-weight:500">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</div>`:''}
+    <div class="pkg-list-price" onclick="event.stopPropagation()" style="display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:10px">
+      <!-- Country pill -->
+      ${p.country ? `<span style="flex-shrink:0;background:rgba(55,120,184,0.15);border:1px solid rgba(55,120,184,0.3);color:#7ab3e0;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;white-space:nowrap">${p.country}</span>` : ''}
+      <div style="width:1px;height:32px;background:rgba(255,255,255,0.07);flex-shrink:0"></div>
+      <!-- Badge quick edit -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
+        <span class="qprice-label" style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Badge</span>
+        <input type="text" class="quick-badge-input" value="${p.badge||''}" placeholder="—" onchange="quickUpdateBadge(${p.id}, this.value)" title="Badge personalizado" style="width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:3px 6px;text-align:center;color:#fbbf24;font-weight:700;font-family:inherit;font-size:11px">
+      </div>
+      <div style="width:1px;height:32px;background:rgba(255,255,255,0.07);flex-shrink:0"></div>
+      <!-- Precio Original -->
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">
+        <span class="qprice-label" style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Precio Original</span>
+        <input type="number" class="quick-price-input" value="${p.price_original_usd||''}" placeholder="—" onchange="quickUpdatePriceOrig(${p.id}, this.value)" title="Precio original (tachado)" style="width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:6px;padding:3px 6px;text-align:right;color:rgba(255,255,255,0.5);font-weight:600;font-family:inherit;font-size:12px">
+      </div>
+      <!-- Precio Descuento -->
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">
+        <span class="qprice-label" style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Precio Descuento</span>
+        <input type="number" class="quick-price-input" value="${p.price_usd||''}" placeholder="Consultar" onchange="quickUpdatePrice(${p.id}, this.value)" title="Precio actual" style="width:90px;background:rgba(255,255,255,0.06);border:1px solid rgba(55,120,184,0.3);border-radius:6px;padding:3px 6px;text-align:right;color:#7ab3e0;font-weight:700;font-family:inherit;font-size:14px">
+      </div>
     </div>
     <div class="pkg-list-pills">
       ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
       ${p.featured?'<span class="pill pill-featured">★</span>':''}
-      ${p.badge?`<span class="pill pill-badge">${p.badge}</span>`:''}
+      ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(p.price_original_usd&&Number(p.price_original_usd)>Number(p.price_usd)?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
     </div>
     <div class="pkg-list-actions" onclick="event.stopPropagation()">
       <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.2)':'rgba(255,255,255,0.05)'};width:30px;height:30px" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
@@ -1489,6 +1945,60 @@ async function quickToggleActive(id) {
   updateStats();
   renderPkgView();
   renderDashboard();
+}
+
+async function quickUpdatePrice(id, val) {
+  const p = packages.find(x=>x.id===id);
+  if (!p) return;
+  const price = val.trim() === '' ? 0 : parseFloat(val);
+  if (isNaN(price)) {
+    showToast('Precio inválido', 'error');
+    return;
+  }
+  p.price_usd = price;
+  const { error } = await db.from('corradi_packages').update({price_usd:price}).eq('id',id);
+  if (error) {
+    showToast('Error al actualizar precio', 'error');
+    return;
+  }
+  showToast('Precio actualizado ✓', 'success');
+  updateStats();
+  renderPkgView();
+  renderDashboard();
+}
+
+async function quickUpdatePriceOrig(id, val) {
+  const p = packages.find(x=>x.id===id);
+  if (!p) return;
+  const price = val === '' || val === null ? null : parseFloat(val);
+  if (price !== null && isNaN(price)) {
+    showToast('Precio original inválido', 'error');
+    return;
+  }
+  p.price_original_usd = price;
+  const { error } = await db.from('corradi_packages').update({price_original_usd: price}).eq('id',id);
+  if (error) {
+    showToast('Error al actualizar precio original', 'error');
+    return;
+  }
+  showToast('Precio original actualizado ✓', 'success');
+  updateStats();
+  renderPkgView();
+  renderDashboard();
+}
+
+async function quickUpdateBadge(id, val) {
+  const p = packages.find(x=>x.id===id);
+  if (!p) return;
+  const badge = val.trim() || null;
+  p.badge = badge;
+  const { error } = await db.from('corradi_packages').update({badge}).eq('id',id);
+  if (error) {
+    showToast('Error al actualizar badge', 'error');
+    return;
+  }
+  showToast('Badge actualizado ✓', 'success');
+  renderPkgView();
 }
 
 // ── Context menu ──
@@ -1561,6 +2071,8 @@ function openEditor(pkgId) {
   document.getElementById('btnDuplicate').style.display = p ? 'inline-flex' : 'none';
   document.getElementById('editId').value = p?.id || '';
 
+  document.getElementById('templateSection').style.display = pkgId ? 'none' : 'block';
+
   document.getElementById('fName').value       = p?.name || '';
   document.getElementById('fDest').value       = p?.destination || '';
   cpSetValue(p?.country || '');
@@ -1587,18 +2099,34 @@ function openEditor(pkgId) {
   } else {
     document.getElementById('fExpires').value = '';
   }
-  document.getElementById('fDesc').value       = p?.description || '';
-  document.getElementById('fHighlights').value = p?.highlights || '';
+  const descText = p?.description || '';
+  document.getElementById('fDescRich').innerHTML = descText;
+  document.getElementById('fDesc').value         = descText;
+  const hasDesc = p ? !!descText.trim() : true;
+  document.getElementById('fDescEnabled').checked = hasDesc;
+  toggleDescSection(hasDesc);
+
+  const highlightsText = p?.highlights || '';
+  document.getElementById('fHighlights').value   = highlightsText;
+  const hasHighlights = p ? !!highlightsText.trim() : true;
+  document.getElementById('fHighlightsEnabled').checked = hasHighlights;
+  toggleHighlightsSection(hasHighlights);
 
   // Bullet lists
   includesItems = parseBullets(p?.includes || '');
   excludesItems = parseBullets(p?.excludes || '');
   renderBullets('includes');
   renderBullets('excludes');
+  const hasBullets = p ? (includesItems.length > 0 || excludesItems.length > 0) : true;
+  document.getElementById('fBulletsEnabled').checked = hasBullets;
+  toggleBulletsSection(hasBullets);
 
   // Itinerary items
   itineraryItems = parseItinerary(p?.itinerary || '');
   renderItineraryRows();
+  const hasItin = p ? (itineraryItems && itineraryItems.length > 0) : false;
+  document.getElementById('fItineraryEnabled').checked = hasItin;
+  toggleItinerarySection(hasItin);
 
   // Build unified image array — filter out blob: URLs (temporary, don't persist)
   let imgs = [];
@@ -1627,6 +2155,66 @@ function openEditor(pkgId) {
 function closeEditor() {
   document.getElementById('editorPanel').classList.remove('open');
   editingId = null;
+}
+
+function toggleItinerarySection(enabled) {
+  const container = document.getElementById('itineraryContainerSection');
+  if (container) container.style.display = enabled ? 'block' : 'none';
+}
+
+function toggleHighlightsSection(enabled) {
+  const container = document.getElementById('highlightsContainerSection');
+  if (container) container.style.display = enabled ? 'block' : 'none';
+}
+
+function toggleBulletsSection(enabled) {
+  const container = document.getElementById('bulletsContainerSection');
+  if (container) container.style.display = enabled ? 'block' : 'none';
+}
+
+function toggleDescSection(enabled) {
+  const container = document.getElementById('descContainerSection');
+  if (container) container.style.display = enabled ? 'block' : 'none';
+}
+
+function execCmd(command, value = null) {
+  document.execCommand(command, false, value);
+  document.getElementById('fDescRich').focus();
+}
+
+function openEmojiPopup(event) {
+  event.stopPropagation();
+  let popup = document.getElementById('emojiPopup');
+  if (popup) {
+    popup.remove();
+    return;
+  }
+  popup = document.createElement('div');
+  popup.id = 'emojiPopup';
+  popup.className = 'emoji-popup';
+  popup.style.cssText = 'position:fixed;background:#112240;border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:8px;display:grid;grid-template-columns:repeat(6, 1fr);gap:4px;z-index:99999;box-shadow:0 8px 24px rgba(0,0,0,0.5);width:200px;max-height:150px;overflow-y:auto';
+  
+  const emojis = ['✈️', '🏝️', '🏨', '🏰', '🌍', '🌎', '🗺️', '🍽️', '🍷', '🥂', '🎭', '🎟️', '📸', '🚌', '🚢', '🚆', '⭐', '✨', '🔥', '👥', '☀️', '⛰️', '🌊', '🏛️', '⛪', '💡', '🏷️', '✅', '❌', 'ℹ️'];
+  popup.innerHTML = emojis.map(em => `<button type="button" class="emoji-btn" onclick="insertEmoji('${em}')" style="background:none;border:none;cursor:pointer;font-size:16px;padding:4px;border-radius:6px;transition:background 0.15s">${em}</button>`).join('');
+  
+  document.body.appendChild(popup);
+  const rect = event.target.getBoundingClientRect();
+  popup.style.top = (rect.bottom + 5) + 'px';
+  popup.style.left = Math.min(rect.left, window.innerWidth - 210) + 'px';
+  
+  const closePopup = (e) => {
+    if (!popup.contains(e.target) && e.target !== event.target) {
+      popup.remove();
+      document.removeEventListener('click', closePopup);
+    }
+  };
+  document.addEventListener('click', closePopup);
+}
+
+function insertEmoji(em) {
+  document.getElementById('fDescRich').focus();
+  document.execCommand('insertText', false, em);
+  document.getElementById('emojiPopup')?.remove();
 }
 
 // ══════════════ PKG IMAGE STRIP ══════════════
@@ -1980,8 +2568,9 @@ async function savePackage() {
   const dest    = document.getElementById('fDest').value.trim();
   const country = document.getElementById('fCountry').value;
   const days    = parseInt(document.getElementById('fDays').value);
-  const price   = parseFloat(document.getElementById('fPrice').value);
-  if (!name || !dest || !country || !days || isNaN(price)) {
+  const priceVal = document.getElementById('fPrice').value.trim();
+  const price = priceVal === '' ? 0 : parseFloat(priceVal);
+  if (!name || !dest || !country || !days || (priceVal !== '' && isNaN(price))) {
     showToast('Completá los campos obligatorios (*)','error'); return;
   }
   const btn = document.getElementById('btnSave');
@@ -2003,11 +2592,16 @@ async function savePackage() {
     })(),
     image_url: pkgImages[0] || null,
     images:    pkgImages.slice(1),
-    description: document.getElementById('fDesc').value.trim()||null,
-    highlights:  document.getElementById('fHighlights').value.trim()||null,
-    includes:    getBulletsText('includes')||null,
-    excludes:    getBulletsText('excludes')||null,
-    itinerary:   serializeItinerary(),
+    description: (() => {
+      if (!document.getElementById('fDescEnabled').checked) return null;
+      let html = document.getElementById('fDescRich').innerHTML.trim();
+      if (html === '<br>' || html === '<p><br></p>' || html === '<div><br></div>') html = '';
+      return html || null;
+    })(),
+    highlights:  document.getElementById('fHighlightsEnabled').checked ? document.getElementById('fHighlights').value.trim()||null : null,
+    includes:    document.getElementById('fBulletsEnabled').checked ? getBulletsText('includes')||null : null,
+    excludes:    document.getElementById('fBulletsEnabled').checked ? getBulletsText('excludes')||null : null,
+    itinerary:   document.getElementById('fItineraryEnabled').checked ? serializeItinerary() : null,
   };
 
   let res;
@@ -2061,9 +2655,13 @@ function showToast(msg, type='success') {
   toastTimer = setTimeout(()=>document.getElementById('toast').classList.remove('show'), 3500);
 }
 
-// ═══════════════ DRAG & DROP ORDER ════
+// ── DRAG & DROP ORDER ════
+let dragSrcSection = null;
+
 function onDragStart(e, id) {
   dragSrcId = id;
+  const p = packages.find(x => x.id === id);
+  dragSrcSection = getSectionGroup(p);
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/plain', id);
   setTimeout(() => {
@@ -2113,6 +2711,8 @@ function onDragOver(e, id) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
   if (dragSrcId === id) return;
+  const target = packages.find(x => x.id === id);
+  if (dragSrcSection !== getSectionGroup(target)) return; // Restrict to same section group
   const el = document.querySelector(`[data-id="${id}"]`);
   if (!el) return;
   const rect = el.getBoundingClientRect();
@@ -2132,6 +2732,7 @@ function onDragEnd(e) {
   cleanupDrag();
   dragSrcId  = null;
   dropDestId = null;
+  dragSrcSection = null;
 }
 
 function getPhInsertIndex(srcId) {
@@ -2157,21 +2758,40 @@ async function onDrop(e, destId) {
 }
 
 async function executeDropByIndex(srcId, insertIndex) {
-  const list = getFilteredPackages();
-  const srcIdx = list.findIndex(p => p.id === srcId);
+  const p = packages.find(x => x.id === srcId);
+  if (!p) return;
+  
+  const q = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
+  const stat = document.getElementById('filterStatus')?.value || 'all';
+  const cont = document.getElementById('filterContinent')?.value || 'all';
+  const isGroupedView = (stat === 'all' && !q && cont === 'all');
+  
+  let list;
+  if (isGroupedView) {
+    const sec = getSectionGroup(p);
+    list = packages.filter(x => getSectionGroup(x) === sec);
+  } else {
+    list = getFilteredPackages();
+  }
+  
+  const srcIdx = list.findIndex(x => x.id === srcId);
   if (srcIdx === -1) return;
+  
   const [moved] = list.splice(srcIdx, 1);
   const clampedIdx = Math.min(Math.max(insertIndex, 0), list.length);
   list.splice(clampedIdx, 0, moved);
-  list.forEach((p, i) => { p.sort_order = i + 1; });
-  list.forEach(p => { const g = packages.find(x => x.id === p.id); if (g) g.sort_order = p.sort_order; });
+  
+  list.forEach((x, i) => { x.sort_order = i + 1; });
+  list.forEach(x => { const g = packages.find(y => y.id === x.id); if (g) g.sort_order = x.sort_order; });
+  
   const sortEl = document.getElementById('filterSort');
   if (sortEl) sortEl.value = 'manual';
   renderPkgView();
+  
   if (isSavingOrder) return;
   isSavingOrder = true;
   try {
-    await Promise.all(list.map(p => db.from('corradi_packages').update({ sort_order: p.sort_order }).eq('id', p.id)));
+    await Promise.all(list.map(x => db.from('corradi_packages').update({ sort_order: x.sort_order }).eq('id', x.id)));
     showToast('Orden guardado ✓', 'success');
   } catch(err) {
     showToast('Error al guardar orden', 'error');
@@ -2346,7 +2966,7 @@ function renderItineraryRows() {
   }
 
   container.innerHTML = itineraryItems.map((item, index) => `
-    <div class="itinerary-row" style="display:grid; grid-template-columns: 120px 1fr 36px; gap: 12px; margin-bottom: 8px; align-items: start;">
+    <div class="itinerary-row" style="display:grid; grid-template-columns: 180px 1fr 36px; gap: 12px; margin-bottom: 8px; align-items: start;">
       <div class="fg">
         <input type="text" class="fi" value="${item.day}" placeholder="Día X" 
           oninput="itineraryItems[${index}].day = this.value" style="font-weight: 700;">
@@ -2707,7 +3327,7 @@ function cpRender(query) {
       const count = used ? packages.filter(p => p.country === c.name).length : 0;
       const badge = used ? `<span style="margin-left:auto;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(55,120,184,0.25);color:#7ab3e0">${count} pkg</span>` : '';
       html += `<div class="cp-option${sel}" data-idx="${c._idx}" data-name="${c.name}" data-flag="${c.flag}"
-        onmousedown="cpSelect('${c.name.replace(/'/g,"\\'")}','${c.flag}')">${c.flag} ${c.name}${badge}</div>`;
+        onmousedown="cpSelect('${c.name.replace(/'/g,"\\'")}','${c.flag}', true)">${c.flag} ${c.name}${badge}</div>`;
     });
   }
   list.innerHTML = html;
@@ -2744,7 +3364,7 @@ function cpClose() {
   if (document.getElementById('cpSearch')) document.getElementById('cpSearch').value = '';
 }
 
-function cpSelect(name, flag) {
+function cpSelect(name, flag, autoSetCategory = false) {
   document.getElementById('fCountry').value = name;
   const disp = document.getElementById('cpDisplay');
   document.getElementById('cpFlag').textContent = flag;
@@ -2752,23 +3372,25 @@ function cpSelect(name, flag) {
   disp.classList.remove('empty');
 
   // Auto-set Category (Continent)
-  const countryData = CP_COUNTRIES.find(c => c.name === name);
-  if (countryData) {
-    const catSelect = document.getElementById('fCat');
-    if (name === 'Argentina') {
-      catSelect.value = 'argentina';
-    } else {
-      const mapping = {
-        'Europa': 'europa',
-        'América del Norte y Caribe': 'caribe',
-        'América del Sur': 'america_del_sur',
-        'Asia': 'asia',
-        'África': 'africa',
-        'Oceanía': 'oceania',
-        'Multipaís': 'general'
-      };
-      const catVal = mapping[countryData.group];
-      if (catVal) catSelect.value = catVal;
+  if (autoSetCategory) {
+    const countryData = CP_COUNTRIES.find(c => c.name === name);
+    if (countryData) {
+      const catSelect = document.getElementById('fCat');
+      if (name === 'Argentina') {
+        catSelect.value = 'america_del_sur';
+      } else {
+        const mapping = {
+          'Europa': 'europa',
+          'América del Norte y Caribe': 'caribe',
+          'América del Sur': 'america_del_sur',
+          'Asia': 'asia',
+          'África': 'africa',
+          'Oceanía': 'oceania',
+          'Multipaís': 'general'
+        };
+        const catVal = mapping[countryData.group];
+        if (catVal) catSelect.value = catVal;
+      }
     }
   }
 
@@ -2799,7 +3421,7 @@ function cpSearchKey(e) {
   if (!items.length) return;
   if (e.key === 'ArrowDown') { e.preventDefault(); cpHighlightIdx = Math.min(cpHighlightIdx + 1, items.length - 1); cpUpdateHighlight(items); }
   else if (e.key === 'ArrowUp') { e.preventDefault(); cpHighlightIdx = Math.max(cpHighlightIdx - 1, 0); cpUpdateHighlight(items); }
-  else if (e.key === 'Enter') { e.preventDefault(); if (cpHighlightIdx >= 0 && items[cpHighlightIdx]) { const el = items[cpHighlightIdx]; cpSelect(el.dataset.name, el.dataset.flag); } else if (cpFilteredItems.length === 1) { const c = cpFilteredItems[0]; cpSelect(c.name, c.flag); } }
+  else if (e.key === 'Enter') { e.preventDefault(); if (cpHighlightIdx >= 0 && items[cpHighlightIdx]) { const el = items[cpHighlightIdx]; cpSelect(el.dataset.name, el.dataset.flag, true); } else if (cpFilteredItems.length === 1) { const c = cpFilteredItems[0]; cpSelect(c.name, c.flag, true); } }
   else if (e.key === 'Escape') { cpClose(); }
 }
 
@@ -3200,6 +3822,445 @@ document.getElementById('editorPanel')?.addEventListener('scroll', () => {
     else { dp.style.top = (rect.bottom + 2) + 'px'; dp.style.left = rect.left + 'px'; }
   }
 });
+
+// ── Presets & Calendar Shortcuts ──
+function addExpireDays(days) {
+  const d = new Date();
+  d.setDate(d.getDate() + days);
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('fExpires').value =
+    `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// ── Reorder Quick Actions ──
+function getSectionGroup(p) {
+  if (!p) return 'inspirador';
+  if (p.section === 'salida_grupal') return 'salida_grupal';
+  if (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)) return 'oferta';
+  return 'inspirador';
+}
+
+function ctxMoveAction(action) {
+  const id = ctxPackageId;
+  hideCtxMenu();
+  if (id) quickMove(id, action);
+}
+
+async function quickMove(id, action) {
+  const p = packages.find(x => x.id === id);
+  if (!p) return;
+  const section = getSectionGroup(p);
+  
+  let list = packages.filter(x => getSectionGroup(x) === section);
+  list.sort((a,b)=>(a.sort_order??99999)-(b.sort_order??99999));
+  
+  const idx = list.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  
+  let newIdx = idx;
+  if (action === 'top') {
+    newIdx = 0;
+  } else if (action === 'bottom') {
+    newIdx = list.length - 1;
+  } else if (action === 'up') {
+    newIdx = Math.max(0, idx - 1);
+  } else if (action === 'down') {
+    newIdx = Math.min(list.length - 1, idx + 1);
+  } else if (action === 'pos') {
+    const val = prompt(`Ingresá la posición destino (1 a ${list.length}):`, idx + 1);
+    if (val === null) return;
+    const num = parseInt(val);
+    if (isNaN(num) || num < 1 || num > list.length) {
+      showToast('Posición inválida','error');
+      return;
+    }
+    newIdx = num - 1;
+  }
+  
+  if (newIdx === idx) return;
+  
+  const [moved] = list.splice(idx, 1);
+  list.splice(newIdx, 0, moved);
+  
+  list.forEach((x, i) => { x.sort_order = i + 1; });
+  list.forEach(x => { const g = packages.find(y => y.id === x.id); if (g) g.sort_order = x.sort_order; });
+  
+  const sortEl = document.getElementById('filterSort');
+  if (sortEl) sortEl.value = 'manual';
+  renderPkgView();
+  
+  try {
+    await Promise.all(list.map(x => db.from('corradi_packages').update({ sort_order: x.sort_order }).eq('id', x.id)));
+    showToast('Orden actualizado ✓', 'success');
+  } catch(err) {
+    showToast('Error al guardar el nuevo orden', 'error');
+  }
+}
+
+// ── Sorter Modal ──
+function openQuickSorter() {
+  document.getElementById('sorterModal')?.remove();
+  const modal = document.createElement('div');
+  modal.id = 'sorterModal';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px)';
+  
+  modal.innerHTML = `
+    <div id="sorterBox" style="background:#0f1a2e;border:1px solid rgba(255,255,255,0.09);border-radius:22px;padding:0;max-width:680px;width:96%;max-height:90vh;display:flex;flex-direction:column;box-shadow:0 50px 100px rgba(0,0,0,0.7);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:20px 22px 16px;border-bottom:1px solid rgba(255,255,255,0.07)">
+        <span class="ms material-symbols-outlined" style="color:#7ab3e0;font-size:21px">sort</span>
+        <h3 style="font-size:16px;font-weight:700;flex:1">Reordenamiento Rápido de Viajes</h3>
+        <button class="btn btn-ghost btn-sm btn-icon" onclick="document.getElementById('sorterModal').remove()">
+          <span class="ms material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div style="overflow-y:auto;flex:1;padding:20px 22px;display:flex;flex-direction:column;gap:24px" id="sorterListsContainer"></div>
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 22px;border-top:1px solid rgba(255,255,255,0.07);justify-content:flex-end">
+        <button class="btn btn-primary" onclick="document.getElementById('sorterModal').remove()">Listo</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+  renderSorterLists();
+}
+
+function renderSorterLists() {
+  const container = document.getElementById('sorterListsContainer');
+  if (!container) return;
+  
+  const sections = [
+    { title: '👥 Sección 1: Salidas Grupales', key: 'salida_grupal', color: '#7ab3e0' },
+    { title: '✨ Sección 2: Viajes Ind Sin Oferta', key: 'inspirador', color: '#a855f7' },
+    { title: '🔥 Sección 3: Viajes Ind en Oferta', key: 'oferta', color: '#f43f5e' }
+  ];
+  
+  container.innerHTML = sections.map(sec => {
+    let list = packages.filter(p => getSectionGroup(p) === sec.key);
+    list.sort((a,b)=>(a.sort_order??99999)-(b.sort_order??99999));
+    
+    return `
+      <div>
+        <h4 style="font-size:13px;font-weight:700;color:${sec.color};margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px">${sec.title} (${list.length})</h4>
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:8px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:6px" class="sorter-list" data-sec="${sec.key}">
+          ${list.length ? list.map((p, i) => `
+            <div style="display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.04);border-radius:8px;padding:6px 10px;font-size:12.5px" draggable="true" class="sorter-item" data-id="${p.id}"
+                 ondragstart="sorterDragStart(event, ${p.id}, '${sec.key}')"
+                 ondragover="sorterDragOver(event)"
+                 ondrop="sorterDrop(event, ${p.id}, '${sec.key}')">
+              <span class="ms material-symbols-outlined" style="font-size:16px;color:rgba(255,255,255,0.25);cursor:grab">drag_indicator</span>
+              <span style="font-weight:700;color:rgba(255,255,255,0.3);min-width:18px">${i+1}</span>
+              ${p.image_url ? `<img src="${p.image_url}" style="width:28px;height:20px;object-fit:cover;border-radius:4px">` : `<div style="width:28px;height:20px;background:rgba(255,255,255,0.08);border-radius:4px"></div>`}
+              <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.name}</span>
+              <div style="display:flex;gap:2px">
+                <button class="pkg-qbtn" style="background:rgba(255,255,255,0.04);width:22px;height:22px;border:none;cursor:pointer" onclick="quickMoveSorter(${p.id}, 'up')" title="Subir">▲</button>
+                <button class="pkg-qbtn" style="background:rgba(255,255,255,0.04);width:22px;height:22px;border:none;cursor:pointer" onclick="quickMoveSorter(${p.id}, 'down')" title="Bajar">▼</button>
+              </div>
+            </div>
+          `).join('') : `<div style="color:rgba(255,255,255,0.2);font-size:12px;padding:12px;text-align:center">No hay viajes en esta sección</div>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+let sorterDragId = null;
+let sorterDragSec = null;
+
+function sorterDragStart(e, id, sec) {
+  sorterDragId = id;
+  sorterDragSec = sec;
+  e.dataTransfer.effectAllowed = 'move';
+}
+function sorterDragOver(e) {
+  e.preventDefault();
+}
+async function sorterDrop(e, destId, sec) {
+  e.preventDefault();
+  if (sorterDragId === null || sorterDragSec !== sec || sorterDragId === destId) return;
+  
+  let list = packages.filter(x => getSectionGroup(x) === sec);
+  list.sort((a,b)=>(a.sort_order??99999)-(b.sort_order??99999));
+  
+  const srcIdx = list.findIndex(x => x.id === sorterDragId);
+  const destIdx = list.findIndex(x => x.id === destId);
+  if (srcIdx === -1 || destIdx === -1) return;
+  
+  const [moved] = list.splice(srcIdx, 1);
+  list.splice(destIdx, 0, moved);
+  
+  list.forEach((x, i) => { x.sort_order = i + 1; });
+  list.forEach(x => { const g = packages.find(y => y.id === x.id); if (g) g.sort_order = x.sort_order; });
+  
+  renderSorterLists();
+  renderPkgView();
+  
+  try {
+    await Promise.all(list.map(x => db.from('corradi_packages').update({ sort_order: x.sort_order }).eq('id', x.id)));
+  } catch(err) {
+    showToast('Error al guardar orden', 'error');
+  }
+}
+
+async function quickMoveSorter(id, dir) {
+  const p = packages.find(x => x.id === id);
+  if (!p) return;
+  const sec = getSectionGroup(p);
+  
+  let list = packages.filter(x => getSectionGroup(x) === sec);
+  list.sort((a,b)=>(a.sort_order??99999)-(b.sort_order??99999));
+  
+  const idx = list.findIndex(x => x.id === id);
+  if (idx === -1) return;
+  
+  const newIdx = dir === 'up' ? Math.max(0, idx - 1) : Math.min(list.length - 1, idx + 1);
+  if (newIdx === idx) return;
+  
+  const [moved] = list.splice(idx, 1);
+  list.splice(newIdx, 0, moved);
+  
+  list.forEach((x, i) => { x.sort_order = i + 1; });
+  list.forEach(x => { const g = packages.find(y => y.id === x.id); if (g) g.sort_order = x.sort_order; });
+  
+  renderSorterLists();
+  renderPkgView();
+  
+  try {
+    await Promise.all(list.map(x => db.from('corradi_packages').update({ sort_order: x.sort_order }).eq('id', x.id)));
+  } catch(err) {
+    showToast('Error al guardar orden', 'error');
+  }
+}
+
+// ── Templates ──
+const TEMPLATES = {
+  grupal: {
+    name: 'Salida Grupal: Europa Soñada',
+    departure_city: 'Rosario',
+    days: 15,
+    category: 'europa',
+    country: 'España',
+    section: 'salida_grupal',
+    description: 'Acompañanos en esta increíble salida grupal acompañada recorriendo los puntos más emblemáticos de Europa. Todo resuelto para que solo te dediques a disfrutar.',
+    highlights: '• Coordinador permanente desde Rosario\n• Vuelos y traslados incluidos\n• Hoteles de categoría con desayuno\n• Excursiones con guías locales en español',
+    includes: ['Vuelos internacionales desde Rosario', 'Coordinador permanente de la empresa', '14 noches de alojamiento con desayuno', 'Todos los traslados y excursiones detalladas', 'Asistencia al viajero con cobertura médica'],
+    excludes: ['Gastos de índole personal', 'Comidas no especificadas en el itinerario', 'Propinas para guías y choferes'],
+    itinerary: [
+      { day: 'Día 1', desc: 'Salida en vuelo internacional desde Rosario con destino a Madrid. Noche a bordo.' },
+      { day: 'Día 2', desc: 'Llegada a Madrid, recepción en aeropuerto y traslado al hotel. Tarde libre.' },
+      { day: 'Día 3', desc: 'City tour por Madrid con guía local. Cena de bienvenida incluida.' },
+      { day: 'Día 4', desc: 'Día libre para actividades personales o excursiones opcionales.' }
+    ]
+  },
+  caribe: {
+    name: 'Punta Cana All Inclusive',
+    departure_city: 'Rosario',
+    days: 7,
+    category: 'caribe',
+    country: 'República Dominicana',
+    section: 'inspirador',
+    description: 'Disfrutá de las mejores playas de arena blanca y aguas turquesas del Caribe en un increíble resort con todo incluido.',
+    highlights: '• Régimen All Inclusive en el hotel\n• Traslados de llegada y salida en destino\n• Acceso directo a playa privada',
+    includes: ['Pasajes aéreos ida y vuelta desde Rosario', 'Traslados aeropuerto - hotel - aeropuerto', '7 noches de alojamiento en resort seleccionado', 'Régimen de comidas y bebidas All Inclusive', 'Asistencia médica internacional'],
+    excludes: ['Excursiones opcionales en Punta Cana', 'Impuestos locales de salida del país'],
+    itinerary: [
+      { day: 'Día 1', desc: 'Vuelo hacia Punta Cana. Arribo, recepción y traslado al hotel. Comienzo del All Inclusive.' },
+      { day: 'Días 2 al 6', desc: 'Días libres para disfrutar del hotel, la playa y las actividades de recreación.' },
+      { day: 'Día 7', desc: 'Mañana libre. A la hora indicada, traslado al aeropuerto para emprender el vuelo de regreso.' }
+    ]
+  },
+  europa: {
+    name: 'Europa Clásica: España, Francia e Italia',
+    departure_city: 'Rosario',
+    days: 12,
+    category: 'europa',
+    country: 'España',
+    section: 'inspirador',
+    description: 'Un circuito clásico diseñado para conocer las capitales y ciudades más importantes de Europa en un viaje inolvidable.',
+    highlights: '• Recorrido por Madrid, París, Florencia y Roma\n• Guía acompañante durante todo el circuito\n• Entradas a monumentos principales incluidas',
+    includes: ['Vuelos ida y vuelta desde Rosario', 'Recorrido en autocar de turismo con guía de habla hispana', '11 noches de alojamiento con desayuno buffet', 'Visitas panorámicas con guías locales', 'Seguro de viaje obligatorio'],
+    excludes: ['Tasas hoteleras locales (a pagar en destino)', 'Bebidas en las comidas', 'Entradas no especificadas'],
+    itinerary: [
+      { day: 'Día 1', desc: 'Salida de Rosario en vuelo hacia Madrid.' },
+      { day: 'Día 2', desc: 'Llegada a Madrid y traslado al hotel. Tiempo libre para descansar.' },
+      { day: 'Día 3', desc: 'Visita panorámica de Madrid y traslado por la tarde hacia Barcelona.' },
+      { day: 'Día 4', desc: 'Salida desde Barcelona cruzando la frontera hacia la Costa Azul de Francia.' }
+    ]
+  },
+  argentina: {
+    name: 'Escapada a Calafate y Ushuaia',
+    departure_city: 'Rosario',
+    days: 6,
+    category: 'argentina',
+    country: 'Argentina',
+    section: 'inspirador',
+    description: 'Descubrí los glaciares imponentes de El Calafate y el fin del mundo en Ushuaia en una escapada espectacular.',
+    highlights: '• Excursión al Glaciar Perito Moreno con pasarelas\n• Navegación por el Canal de Beagle\n• Vuelos de cabotaje incluidos',
+    includes: ['Vuelo Rosario - Calafate - Ushuaia - Rosario', 'Traslados de llegada y salida en ambas ciudades', '3 noches en Calafate y 2 noches en Ushuaia con desayuno', 'Excursión al Glaciar Perito Moreno (sin entrada)', 'Excursión Parque Nacional Tierra del Fuego'],
+    excludes: ['Entradas a Parques Nacionales', 'Almuerzos y cenas', 'Tasa de puerto en Ushuaia'],
+    itinerary: [
+      { day: 'Día 1', desc: 'Vuelo desde Rosario hacia El Calafate. Recepción y traslado al hotel.' },
+      { day: 'Día 2', desc: 'Excursión de día completo al imponente Glaciar Perito Moreno.' },
+      { day: 'Día 3', desc: 'Traslado al aeropuerto y vuelo hacia Ushuaia. Recepción y traslado al hotel.' },
+      { day: 'Día 4', desc: 'Excursión al Parque Nacional Tierra del Fuego. Por la tarde, navegación Canal Beagle.' },
+      { day: 'Día 5', desc: 'Día libre para recorrer Ushuaia o realizar excursión a los Lagos Fagnano y Escondido.' },
+      { day: 'Día 6', desc: 'Traslado al aeropuerto y vuelo de regreso hacia Rosario.' }
+    ]
+  }
+};
+
+function applyTemplate(type) {
+  const t = TEMPLATES[type];
+  if (!t) return;
+  
+  document.getElementById('fName').value = t.name;
+  document.getElementById('fDeptCity').value = t.departure_city;
+  document.getElementById('fDays').value = t.days;
+  document.getElementById('fCat').value = t.category;
+  
+  if (t.country) cpSetValue(t.country);
+  
+  document.getElementById('fSection').value = t.section;
+  document.getElementById('fDesc').value = t.description;
+  document.getElementById('fDescRich').innerHTML = t.description;
+  document.getElementById('fHighlights').value = t.highlights;
+  
+  includesItems = [...t.includes];
+  excludesItems = [...t.excludes];
+  renderBullets('includes');
+  renderBullets('excludes');
+  
+  itineraryItems = t.itinerary.map(item => ({ day: item.day, desc: item.desc }));
+  renderItineraryRows();
+  
+  const hasItin = itineraryItems && itineraryItems.length > 0;
+  document.getElementById('fItineraryEnabled').checked = hasItin;
+  toggleItinerarySection(hasItin);
+  
+  showToast(`Plantilla "${type.toUpperCase()}" aplicada ✓`, 'success');
+}
+
+// ── Bulk Actions ──
+let bulkSelectedIds = [];
+
+function onBulkCheckChange(e) {
+  if (e) e.stopPropagation();
+  const checks = document.querySelectorAll('.pkg-bulk-check:checked');
+  bulkSelectedIds = Array.from(checks).map(c => parseInt(c.dataset.id));
+  
+  const bar = document.getElementById('bulkActionsBar');
+  const countEl = document.getElementById('bulkSelectedCount');
+  if (bulkSelectedIds.length > 0) {
+    bar.style.display = 'flex';
+    countEl.textContent = `${bulkSelectedIds.length} seleccionado${bulkSelectedIds.length > 1 ? 's' : ''}`;
+  } else {
+    bar.style.display = 'none';
+  }
+}
+
+function clearBulkSelection() {
+  document.querySelectorAll('.pkg-bulk-check').forEach(c => c.checked = false);
+  onBulkCheckChange();
+}
+
+async function bulkToggleActive(active) {
+  if (!bulkSelectedIds.length) return;
+  showToast(`Actualizando ${bulkSelectedIds.length} paquetes...`, 'success');
+  
+  const { error } = await db.from('corradi_packages')
+    .update({ active })
+    .in('id', bulkSelectedIds);
+     
+  if (error) {
+    showToast('Error al actualizar paquetes', 'error');
+    return;
+  }
+  
+  packages.forEach(p => {
+    if (bulkSelectedIds.includes(p.id)) p.active = active;
+  });
+  
+  showToast(`${bulkSelectedIds.length} paquetes actualizados ✓`, 'success');
+  clearBulkSelection();
+  updateStats();
+  renderPkgView();
+  renderDashboard();
+}
+
+async function bulkToggleFeatured(featured) {
+  if (!bulkSelectedIds.length) return;
+  showToast(`Actualizando ${bulkSelectedIds.length} paquetes...`, 'success');
+  
+  const { error } = await db.from('corradi_packages')
+    .update({ featured })
+    .in('id', bulkSelectedIds);
+     
+  if (error) {
+    showToast('Error al actualizar paquetes', 'error');
+    return;
+  }
+  
+  packages.forEach(p => {
+    if (bulkSelectedIds.includes(p.id)) p.featured = featured;
+  });
+  
+  showToast(`${bulkSelectedIds.length} paquetes actualizados ✓`, 'success');
+  clearBulkSelection();
+  updateStats();
+  renderPkgView();
+  renderDashboard();
+}
+
+async function bulkChangeCategory() {
+  const cat = document.getElementById('bulkCatSelect').value;
+  if (!cat || !bulkSelectedIds.length) return;
+  
+  showToast(`Actualizando categoría para ${bulkSelectedIds.length} paquetes...`, 'success');
+  
+  const { error } = await db.from('corradi_packages')
+    .update({ category: cat })
+    .in('id', bulkSelectedIds);
+     
+  if (error) {
+    showToast('Error al actualizar categoría', 'error');
+    document.getElementById('bulkCatSelect').value = '';
+    return;
+  }
+  
+  packages.forEach(p => {
+    if (bulkSelectedIds.includes(p.id)) p.category = cat;
+  });
+  
+  showToast(`${bulkSelectedIds.length} paquetes actualizados ✓`, 'success');
+  document.getElementById('bulkCatSelect').value = '';
+  clearBulkSelection();
+  updateStats();
+  renderPkgView();
+}
+
+async function bulkDelete() {
+  if (!bulkSelectedIds.length) return;
+  if (!confirm(`¿Estás seguro de que querés eliminar los ${bulkSelectedIds.length} paquetes seleccionados permanentemente?`)) return;
+  
+  showToast(`Eliminando ${bulkSelectedIds.length} paquetes...`, 'success');
+  
+  const { error } = await db.from('corradi_packages')
+    .delete()
+    .in('id', bulkSelectedIds);
+     
+  if (error) {
+    showToast('Error al eliminar paquetes', 'error');
+    return;
+  }
+  
+  packages = packages.filter(p => !bulkSelectedIds.includes(p.id));
+  
+  showToast(`${bulkSelectedIds.length} paquetes eliminados ✓`, 'success');
+  clearBulkSelection();
+  updateStats();
+  renderPkgView();
+  renderDashboard();
+}
 
 // ═══════════════ START ════════════════
 initEmojiGrid();

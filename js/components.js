@@ -200,3 +200,29 @@ class AppFooter extends HTMLElement {
 customElements.define('app-navbar', AppNavbar);
 customElements.define('app-bottom-nav', AppBottomNav);
 customElements.define('app-footer', AppFooter);
+
+window.getPkgClickAction = function(p) {
+  if (!p) return "event.stopPropagation()";
+  const desc = (p.description || '').trim();
+  if (!desc) {
+    const msg = `Hola Corradi 👋 Me interesa el viaje *${p.name}*. ¿Me brindan más información? ¡Gracias!`;
+    const wa = `https://wa.me/5493416057588?text=${encodeURIComponent(msg)}`;
+    return `window.open('${wa}', '_blank')`;
+  }
+  return `window.location.href='paquete.html?id=${p.id}'`;
+};
+
+window.handlePkgCardClick = function(el) {
+  if (!el) return;
+  const hasDesc = el.getAttribute('data-has-desc') === 'true';
+  const name = el.getAttribute('data-name');
+  const id = el.getAttribute('data-id');
+  const extra = el.getAttribute('data-extra-params') || '';
+  if (!hasDesc) {
+    const msg = `Hola Corradi 👋 Me interesa el viaje *${name}*. ¿Me brindan más información? ¡Gracias!`;
+    const wa = `https://wa.me/5493416057588?text=${encodeURIComponent(msg)}`;
+    window.open(wa, '_blank');
+  } else {
+    window.location.href = `paquete.html?id=${id}${extra}`;
+  }
+};

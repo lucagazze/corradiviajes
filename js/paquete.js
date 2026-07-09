@@ -49,12 +49,45 @@ function renderPackage(pkg) {
   document.getElementById('pkgTitle').textContent = pkg.name;
   document.getElementById('pkgLocation').textContent = `${pkg.destination}, ${pkg.country}`;
   document.getElementById('pkgCategory').textContent = pkg.category || 'Paquete';
-  document.getElementById('pkgDesc').textContent = pkg.description || '';
+  document.getElementById('pkgDesc').innerHTML = pkg.description || '';
 
-  const price = `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}`;
-  document.getElementById('pkgPrice').textContent = price;
-  const mp = document.getElementById('mobilePrice');
-  if (mp) mp.textContent = price;
+  const hasPrice = pkg.price_usd && Number(pkg.price_usd) > 0;
+  const priceText = hasPrice ? `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}` : 'A consultar';
+  
+  const pkgPriceEl = document.getElementById('pkgPrice');
+  if (pkgPriceEl) {
+    pkgPriceEl.textContent = priceText;
+    if (pkgPriceEl.previousElementSibling) {
+      pkgPriceEl.previousElementSibling.textContent = hasPrice ? 'Desde' : 'Precio';
+    }
+  }
+  
+  const pkgPriceMobileEl = document.getElementById('pkgPriceMobile');
+  if (pkgPriceMobileEl) {
+    pkgPriceMobileEl.textContent = priceText;
+    if (pkgPriceMobileEl.previousElementSibling) {
+      pkgPriceMobileEl.previousElementSibling.textContent = hasPrice ? 'Desde' : 'Precio';
+    }
+  }
+
+  const pkgPriceOrigEl = document.getElementById('pkgPriceOrig');
+  const pkgPriceOrigMobileEl = document.getElementById('pkgPriceOrigMobile');
+  const hasOrig = pkg.price_original_usd && Number(pkg.price_original_usd) > Number(pkg.price_usd);
+  
+  if (hasOrig && hasPrice) {
+    const origText = `USD ${Number(pkg.price_original_usd).toLocaleString('es-AR')}`;
+    if (pkgPriceOrigEl) {
+      pkgPriceOrigEl.textContent = origText;
+      pkgPriceOrigEl.classList.remove('hidden');
+    }
+    if (pkgPriceOrigMobileEl) {
+      pkgPriceOrigMobileEl.textContent = origText;
+      pkgPriceOrigMobileEl.classList.remove('hidden');
+    }
+  } else {
+    if (pkgPriceOrigEl) pkgPriceOrigEl.classList.add('hidden');
+    if (pkgPriceOrigMobileEl) pkgPriceOrigMobileEl.classList.add('hidden');
+  }
 
   const destField = document.getElementById('destination');
   if (destField) destField.value = pkg.name;
@@ -123,7 +156,7 @@ function renderGallery(pkg) {
   const grid = document.getElementById('galleryGrid');
   if (!grid) return;
   const total = _images.length;
-  const price = pkg.price_usd ? `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}` : 'Consultar precio';
+  const price = pkg.price_usd ? `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}` : 'A consultar';
 
   grid.innerHTML = `
     <div class="relative overflow-hidden rounded-[28px] bg-slate-900 shadow-[0_28px_90px_rgba(0,0,0,0.35)]" style="min-height:470px;">

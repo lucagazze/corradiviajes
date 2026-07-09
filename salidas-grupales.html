@@ -293,7 +293,6 @@ document.addEventListener('DOMContentLoaded', () => {
         .eq('active', true)
         .eq('section', 'salida_grupal')
         .order('sort_order', { ascending: true, nullsFirst: false })
-        .order('featured', { ascending: false })
         .order('id');
       if (error) throw error;
 
@@ -324,13 +323,14 @@ document.addEventListener('DOMContentLoaded', () => {
           ? `<div><span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Desde</span>
              <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${price.toLocaleString('es-AR')}</span></div>`
           : `<div><span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Precio</span>
-             <span class="font-['Geomanist'] font-medium text-[15px] text-slate-500 italic">A confirmar</span></div>`;
+             <span class="font-['Geomanist'] font-medium text-[15px] text-slate-500 italic">A consultar</span></div>`;
         const badge = p.badge ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>` : '';
         const highlights = p.highlights ? p.highlights.split('·').slice(0,3).map(h => h.trim()).filter(Boolean) : [];
 
         return `
         <article class="rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
-          onclick="window.location.href='paquete.html?id=${p.id}'">
+          data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}"
+          onclick="handlePkgCardClick(this)">
           <div class="relative overflow-hidden" style="height:220px">
             <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80'" alt="${p.name}"
               class="w-full h-full object-cover pointer-events-none">
@@ -339,6 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
               Salida Grupal
             </span>
+            ${p.featured ? `<span class="featured-badge absolute top-3 left-[136px] inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
             ${badge}
             <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country || ''}${p.days ? ' · '+p.days+' días' : ''}</span>
           </div>

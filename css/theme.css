@@ -316,10 +316,10 @@ html[data-theme="light"] a[href="ofertas.html"] {
 }
 
 /* Polishes for promo/offer cards in light mode */
-html[data-theme="light"] #promoGrid .group span.inline-flex {
+html[data-theme="light"] #promoGrid .group span.inline-flex:not(.offer-label-badge):not(.group-label-badge):not(.bg-black\/55) {
   color: #3778b8 !important;
 }
-html[data-theme="light"] #promoGrid .group:hover span.inline-flex {
+html[data-theme="light"] #promoGrid .group:hover span.inline-flex:not(.offer-label-badge):not(.group-label-badge):not(.bg-black\/55) {
   color: #2563eb !important;
 }
 html[data-theme="light"] #promoGrid .group span.block,
@@ -336,8 +336,12 @@ html[data-theme] .offer-label-badge,
 html[data-theme] .offer-label-badge *,
 html[data-theme="light"] #promoGrid .group .offer-label-badge,
 html[data-theme="light"] #promoGrid .group .offer-label-badge *,
+html[data-theme="light"] #promoGrid .group span.inline-flex.offer-label-badge,
+html[data-theme="light"] #promoGrid .group span.inline-flex.offer-label-badge *,
 html[data-theme="light"] #searchResultsGrid .offer-label-badge,
 html[data-theme="light"] #searchResultsGrid .offer-label-badge *,
+html[data-theme="light"] #searchResultsGrid span.inline-flex.offer-label-badge,
+html[data-theme="light"] #searchResultsGrid span.inline-flex.offer-label-badge *,
 .offer-label-badge,
 .offer-label-badge * {
   color: #ffffff !important;
@@ -348,11 +352,134 @@ html[data-theme] .group-label-badge,
 html[data-theme] .group-label-badge *,
 html[data-theme="light"] #promoGrid .group .group-label-badge,
 html[data-theme="light"] #promoGrid .group .group-label-badge *,
+html[data-theme="light"] #promoGrid .group span.inline-flex.group-label-badge,
+html[data-theme="light"] #promoGrid .group span.inline-flex.group-label-badge *,
 html[data-theme="light"] #searchResultsGrid .group-label-badge,
 html[data-theme="light"] #searchResultsGrid .group-label-badge *,
+html[data-theme="light"] #searchResultsGrid span.inline-flex.group-label-badge,
+html[data-theme="light"] #searchResultsGrid span.inline-flex.group-label-badge *,
 .group-label-badge,
 .group-label-badge * {
   color: #0d1b2e !important;
 }
 
+/* ═══════════════════════════════════════════════════════
+   FORCE WHITE TEXT — Featured (Destacado) badge
+   Always white regardless of theme — blue bg (#3778b8)
+   ═══════════════════════════════════════════════════════ */
+.featured-badge,
+.featured-badge *,
+html[data-theme] .featured-badge,
+html[data-theme] .featured-badge *,
+html[data-theme="light"] .featured-badge,
+html[data-theme="light"] .featured-badge * {
+  color: #ffffff !important;
+  background: #3778b8 !important;
+}
 
+/* ═══════════════════════════════════════════════════════
+   FORCE WHITE TEXT — Discount percentage badge (-XX%)
+   Always white regardless of theme — red bg (bg-red-500)
+   ═══════════════════════════════════════════════════════ */
+.discount-badge,
+.discount-badge *,
+html[data-theme] .discount-badge,
+html[data-theme] .discount-badge *,
+html[data-theme="light"] .discount-badge,
+html[data-theme="light"] .discount-badge * {
+  color: #ffffff !important;
+}
+
+/* ═══════════════════════════════════════════════════════
+   GLOBAL RESPONSIVE — Mobile / Tablet improvements
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Promo grid (ofertas, main) — responsive ── */
+@media (max-width: 640px) {
+  #promoGrid {
+    grid-template-columns: 1fr !important;
+    padding: 0 8px !important;
+  }
+  #promoGrid .group {
+    max-width: 100% !important;
+  }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  #promoGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ── Search results grid — responsive ── */
+@media (max-width: 640px) {
+  #searchResultsGrid {
+    grid-template-columns: 1fr !important;
+    padding: 0 8px !important;
+  }
+}
+@media (min-width: 641px) and (max-width: 900px) {
+  #searchResultsGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+/* ── Salidas grupales list — responsive ── */
+@media (max-width: 640px) {
+  #pkgList {
+    padding: 0 8px !important;
+  }
+}
+
+/* ── Paquete detail page — responsive ── */
+@media (max-width: 768px) {
+  .pkg-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── General container padding on small screens ── */
+@media (max-width: 480px) {
+  .container, [class*="max-w-"] {
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+  /* Hero text sizing */
+  h1 { font-size: clamp(2rem, 9vw, 3.5rem) !important; }
+  /* Prevent text overflow on cards */
+  .card-title { font-size: 1.15rem !important; }
+}
+
+/* ── Navbar mobile — hide desktop items ── */
+@media (max-width: 768px) {
+  .nav-links { display: none !important; }
+}
+
+/* ── Filter bar / chips wrapping on mobile ── */
+@media (max-width: 640px) {
+  .filter-bar, [id*="filterBar"], [id*="filterSection"] {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    overflow-x: visible !important;
+  }
+  .filter-bar button, [id*="filterBar"] button {
+    font-size: 0.75rem !important;
+    padding: 6px 12px !important;
+    white-space: nowrap;
+  }
+}
+
+/* ── Bottom navigation — responsive ── */
+@media (min-width: 769px) {
+  app-bottom-nav { display: none !important; }
+}
+
+/* ── Cards price font — don't overflow on mobile ── */
+@media (max-width: 480px) {
+  .card-price-amount { font-size: 1.45rem !important; }
+}
+
+/* ── Section headings on mobile ── */
+@media (max-width: 480px) {
+  .section-title { font-size: clamp(1.6rem, 6vw, 2.2rem) !important; }
+  .section-sub { font-size: 0.88rem !important; }
+}
