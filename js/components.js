@@ -188,7 +188,7 @@ class AppFooter extends HTMLElement {
         </div>
         <div class="flex gap-6 mb-4">
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros.html">Nosotros</a>
-          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="#">Términos</a>
+          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="salidas-grupales.html">Salidas Grupales</a>
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto.html">Contacto</a>
         </div>
         <p class="font-['Geomanist'] text-sm text-white/30">© 2026 Corradi Viajes. De Rosario al Mundo.</p>

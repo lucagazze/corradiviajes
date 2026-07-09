@@ -8,3 +8,16 @@ Thumbs.db
 # Editor
 .vscode/
 *.log
+
+# Scripts de desarrollo / carga de datos (no van a producción, contienen keys)
+_*.py
+_*.txt
+_img_temp/
+scraper_paquetes.py
+add_titles.py
+cleanup.py
+dark_filter.py
+revert_second_video.py
+update_html.py
+update_section.py
+rls_body.json

@@ -679,7 +679,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 .pkg-list-thumb-ph{width:60px;height:44px;border-radius:7px;background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .pkg-list-info{flex:1;min-width:0;overflow:hidden}
 .pkg-list-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.pkg-list-sub{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pkg-list-sub{font-size:11px;color:rgba(255,255,255,0.58);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pkg-list-price{font-size:13px;font-weight:700;color:#3778b8;flex-shrink:0;min-width:360px;text-align:right}
 .pkg-list-pills{display:flex;gap:4px;flex-shrink:0;flex-wrap:wrap;min-width:80px;justify-content:flex-end}
 .pkg-list-actions{display:flex;gap:4px;flex-shrink:0}
@@ -769,6 +769,44 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 .sorter-item:hover {
   background: rgba(255, 255, 255, 0.08) !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ════════════════════════════════════════════════
+   LISTA DE PAQUETES — fila rediseñada (v2.1)
+   Más clara, badge completo, "tocá para editar"
+   ════════════════════════════════════════════════ */
+.pkg-list-item[draggable=true]{cursor:pointer}
+.pkg-list-item:hover{border-color:rgba(55,120,184,0.5);background:rgba(55,120,184,0.06)}
+.pli-check{display:flex;align-items:center;padding:0 2px 0 6px}
+.pli-controls{display:flex;align-items:center;gap:18px;flex-shrink:0;cursor:default}
+.pli-field{display:flex;flex-direction:column;gap:4px}
+.pli-label{font-size:9.5px;font-weight:700;color:rgba(255,255,255,0.68);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+.pli-price-row{display:flex;align-items:center;gap:5px}
+.pli-arrow{font-size:13px;color:rgba(255,255,255,0.25);flex-shrink:0}
+/* Inputs rápidos: base de estilo (antes venía inline) */
+.quick-price-input,.quick-badge-input{
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
+  border-radius:7px;padding:5px 8px;font-family:inherit;outline:none;
+  transition:border-color .15s,background-color .15s}
+.quick-price-input{text-align:right;font-size:12px;color:rgba(255,255,255,0.82);font-weight:600}
+.pli-orig{width:80px;color:rgba(255,255,255,0.42)!important;text-decoration:line-through}
+.pli-orig:placeholder-shown{text-decoration:none;color:rgba(255,255,255,0.42)!important}
+.pli-current{width:96px;color:#7ab3e0!important;font-weight:700!important;font-size:14px!important;border-color:rgba(55,120,184,0.4)!important}
+.quick-badge-input{text-align:center;color:#fbbf24;font-weight:700;font-size:11.5px;min-width:96px;max-width:200px}
+.pli-pills{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.pli-pills .pill{white-space:nowrap}
+.pli-actions{display:flex;align-items:center;gap:5px}
+.pli-edit{width:auto!important;height:34px!important;padding:0 14px!important;gap:6px;
+  background:linear-gradient(135deg,#2563eb,#3778b8)!important;color:#fff!important;
+  font-size:12.5px;font-weight:700;font-family:inherit;white-space:nowrap;border-radius:9px!important}
+.pli-edit:hover{opacity:.9}
+.pli-edit .ms{font-size:16px;color:#fff!important}
+body.light .pli-label{color:rgba(0,0,0,0.6)}
+body.light .pli-arrow{color:rgba(0,0,0,0.25)}
+body.light .pli-orig{color:rgba(0,0,0,0.4)!important}
+@media(max-width:1150px){
+  .pkg-list-item{flex-wrap:wrap}
+  .pli-controls{width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);justify-content:flex-start;flex-wrap:wrap;gap:14px}
 }
 </style>
 </head>
@@ -986,7 +1024,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
       </div>
       <div id="activeFiltersBar" style="display:none;align-items:center;gap:8px;margin-bottom:14px;margin-top:-6px;flex-wrap:wrap"></div>
       <p class="pkg-view-hint">
-        Click derecho para opciones · Arrastrá para reordenar · Hover para acciones rápidas
+        <span class="ms material-symbols-outlined" style="font-size:13px;color:#7ab3e0;vertical-align:-2px">touch_app</span> Tocá cualquier paquete para editarlo · Cambiá precio y etiqueta directo desde la lista · Arrastrá <span class="ms material-symbols-outlined" style="font-size:13px;vertical-align:-2px">drag_indicator</span> para reordenar · Click derecho = más opciones
       </p>
 
       <div id="pkgViewContainer"></div>
@@ -1022,6 +1060,9 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
       <div class="spacer"></div>
       <button class="btn btn-green btn-sm" id="btnAI" onclick="showAIModal()" title="Generar paquete completo con IA">
         <span class="ms material-symbols-outlined">auto_fix</span>Generar con IA
+      </button>
+      <button class="btn btn-ghost btn-sm" id="btnView" onclick="viewPackageOnSite(editingId)" style="display:none" title="Abrir este viaje en el sitio web (nueva pestaña)">
+        <span class="ms material-symbols-outlined">open_in_new</span>Ver en la web
       </button>
       <button class="btn btn-ghost btn-sm" id="btnDuplicate" onclick="duplicatePackage()" style="display:none">
         <span class="ms material-symbols-outlined">content_copy</span>Duplicar
@@ -1204,102 +1245,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
       <!-- TAB: Descripción y Detalles -->
       <div class="ed-panel" id="tab-details">
 
-        <!-- 1. Destacados del viaje -->
-        <div class="form-section">
-          <div class="tgl-row" style="margin-bottom: 0px">
-            <div class="tgl-info">
-              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
-                <span class="ms material-symbols-outlined" style="color:#fbbf24">star</span>¿Incluir destacados del viaje?
-              </div>
-              <div class="tgl-desc">Activa el resumen rápido de atractivos clave</div>
-            </div>
-            <label class="tgl">
-              <input type="checkbox" id="fHighlightsEnabled" onchange="toggleHighlightsSection(this.checked)">
-              <span class="tgl-s"></span>
-            </label>
-          </div>
-
-          <div id="highlightsContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
-            <div class="fg">
-              <textarea id="fHighlights" class="ft" style="min-height:80px" placeholder="Ej: • Vuelos directos incluidos • Coordinador permanente de la empresa"></textarea>
-              <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:6px;line-height:1.4">
-                Colocá los puntos principales del viaje, uno por línea (escribiendo un punto o asterisco inicial).
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. Incluye / No incluye -->
-        <div class="form-section">
-          <div class="tgl-row" style="margin-bottom: 0px">
-            <div class="tgl-info">
-              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
-                <span class="ms material-symbols-outlined" style="color:#4ade80">checklist</span>¿Incluir servicios (Incluye/No incluye)?
-              </div>
-              <div class="tgl-desc">Activa el listado detallado de elementos incluidos y no incluidos</div>
-            </div>
-            <label class="tgl">
-              <input type="checkbox" id="fBulletsEnabled" onchange="toggleBulletsSection(this.checked)">
-              <span class="tgl-s"></span>
-            </label>
-          </div>
-
-          <div id="bulletsContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
-            <p style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:14px">
-              Agregá ítems para especificar qué cubre el precio y qué no. Presioná <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> para añadir fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío para borrar.
-            </p>
-            <div class="grid2">
-              <div class="fg">
-                <label class="fl" style="color:rgba(74,222,128,0.65);margin-bottom:6px">✓ Incluye</label>
-                <div id="includesList" class="bullet-list"></div>
-                <button type="button" class="add-gal" onclick="addBullet('includes')">
-                  <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
-                </button>
-              </div>
-              <div class="fg">
-                <label class="fl" style="color:rgba(248,113,113,0.65);margin-bottom:6px">✗ No Incluye</label>
-                <div id="excludesList" class="bullet-list"></div>
-                <button type="button" class="add-gal" onclick="addBullet('excludes')">
-                  <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3. Itinerario día por día -->
-        <div class="form-section">
-          <div class="tgl-row" style="margin-bottom: 0px">
-            <div class="tgl-info">
-              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
-                <span class="ms material-symbols-outlined" style="color:#7ab3e0">route</span>¿Incluir itinerario detallado?
-              </div>
-              <div class="tgl-desc">Activa el itinerario día por día para este paquete</div>
-            </div>
-            <label class="tgl">
-              <input type="checkbox" id="fItineraryEnabled" onchange="toggleItinerarySection(this.checked)">
-              <span class="tgl-s"></span>
-            </label>
-          </div>
-
-          <div id="itineraryContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-              <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4)">Itinerario estructurado</span>
-              <button type="button" class="btn btn-primary btn-sm" onclick="autoGenerateDays()" id="btnAutodays" title="Genera filas vacías según los días del paquete">
-                <span class="ms material-symbols-outlined" style="font-size:15px">auto_fix_high</span>Generar días
-              </button>
-            </div>
-            <p style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:12px;line-height:1.4">
-              Día a la izquierda · descripción a la derecha · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> agrega fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío borra.
-            </p>
-            <div id="itineraryRows"></div>
-            <button type="button" class="add-gal" onclick="addItineraryRow()" style="margin-top:12px;border-style:solid;border-color:#3778b8;color:#7ab3e0">
-              <span class="ms material-symbols-outlined" style="font-size:18px">add_circle</span>Agregar día
-            </button>
-          </div>
-        </div>
-
-        <!-- 4. Descripción general -->
+        <!-- 1. Descripción general (tal como se muestra primero en la web) -->
         <div class="form-section">
           <div class="tgl-row" style="margin-bottom: 0px">
             <div class="tgl-info">
@@ -1339,6 +1285,76 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
           </div>
         </div>
 
+        <!-- 2. Itinerario día por día -->
+        <div class="form-section">
+          <div class="tgl-row" style="margin-bottom: 0px">
+            <div class="tgl-info">
+              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
+                <span class="ms material-symbols-outlined" style="color:#7ab3e0">route</span>¿Incluir itinerario detallado?
+              </div>
+              <div class="tgl-desc">Activa el itinerario día por día para este paquete</div>
+            </div>
+            <label class="tgl">
+              <input type="checkbox" id="fItineraryEnabled" onchange="toggleItinerarySection(this.checked)">
+              <span class="tgl-s"></span>
+            </label>
+          </div>
+
+          <div id="itineraryContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+              <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,0.4)">Itinerario estructurado</span>
+              <button type="button" class="btn btn-primary btn-sm" onclick="autoGenerateDays()" id="btnAutodays" title="Genera filas vacías según los días del paquete">
+                <span class="ms material-symbols-outlined" style="font-size:15px">auto_fix_high</span>Generar días
+              </button>
+            </div>
+            <p style="font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:12px;line-height:1.4">
+              Día a la izquierda · descripción a la derecha · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> agrega fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío borra.
+            </p>
+            <div id="itineraryRows"></div>
+            <button type="button" class="add-gal" onclick="addItineraryRow()" style="margin-top:12px;border-style:solid;border-color:#3778b8;color:#7ab3e0">
+              <span class="ms material-symbols-outlined" style="font-size:18px">add_circle</span>Agregar día
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. Incluye / No incluye -->
+        <div class="form-section">
+          <div class="tgl-row" style="margin-bottom: 0px">
+            <div class="tgl-info">
+              <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
+                <span class="ms material-symbols-outlined" style="color:#4ade80">checklist</span>¿Incluir servicios (Incluye/No incluye)?
+              </div>
+              <div class="tgl-desc">Activa el listado detallado de elementos incluidos y no incluidos</div>
+            </div>
+            <label class="tgl">
+              <input type="checkbox" id="fBulletsEnabled" onchange="toggleBulletsSection(this.checked)">
+              <span class="tgl-s"></span>
+            </label>
+          </div>
+
+          <div id="bulletsContainerSection" style="display:none;margin-top:16px;border-top:1px dashed rgba(255,255,255,0.08);padding-top:16px">
+            <p style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:14px">
+              Agregá ítems para especificar qué cubre el precio y qué no. Presioná <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Enter</kbd> para añadir fila · <kbd style="background:rgba(255,255,255,0.08);padding:1px 5px;border-radius:4px;font-size:10px">Backspace</kbd> vacío para borrar.
+            </p>
+            <div class="grid2">
+              <div class="fg">
+                <label class="fl" style="color:rgba(74,222,128,0.65);margin-bottom:6px">✓ Incluye</label>
+                <div id="includesList" class="bullet-list"></div>
+                <button type="button" class="add-gal" onclick="addBullet('includes')">
+                  <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
+                </button>
+              </div>
+              <div class="fg">
+                <label class="fl" style="color:rgba(248,113,113,0.65);margin-bottom:6px">✗ No Incluye</label>
+                <div id="excludesList" class="bullet-list"></div>
+                <button type="button" class="add-gal" onclick="addBullet('excludes')">
+                  <span class="ms material-symbols-outlined" style="font-size:16px">add</span>Agregar ítem
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div><!-- /tab-details -->
 
     </div><!-- /ed-body -->
@@ -1361,20 +1377,6 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
     <button class="btn btn-ghost btn-sm" onclick="bulkToggleFeatured(false)" title="Quitar destacado en lote" style="padding: 6px 12px; font-size: 12px;">
       <span class="ms material-symbols-outlined" style="font-size:15px;color:rgba(255,255,255,0.4)">star_border</span> Quitar Destacado
     </button>
-    
-    <div style="display:flex;align-items:center;gap:6px">
-      <span style="font-size:11.5px;color:rgba(255,255,255,0.5)">Categoría:</span>
-      <select class="select-filter" id="bulkCatSelect" onchange="bulkChangeCategory()" style="padding:4px 8px;font-size:12px;background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1)">
-        <option value="">-- Cambiar --</option>
-        <option value="general">General</option>
-        <option value="europa">🏰 Europa</option>
-        <option value="caribe">🏝️ Caribe & México</option>
-        <option value="america_del_sur">🌎 Sudamérica</option>
-        <option value="asia">⛩️ Asia & Pacífico</option>
-        <option value="africa">🦁 África</option>
-        <option value="oceania">🦘 Oceanía</option>
-      </select>
-    </div>
     
     <div style="width:1px;height:20px;background:rgba(255,255,255,0.1)"></div>
     <button class="btn btn-danger btn-sm" onclick="bulkDelete()" title="Eliminar seleccionados" style="padding: 6px 12px; font-size: 12px;">
@@ -1422,7 +1424,7 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 // ═══════════════ CONFIG ═══════════════
 const SUPABASE_URL  = 'https://czocbnyoenjbpxmcqobn.supabase.co';
 const SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6b2NibnlvZW5qYnB4bWNxb2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NDI5MTMsImV4cCI6MjA2ODQxODkxM30.pNgJnwAY8uxb6yCQilJfD92VNwsCkntr4Ie_os2lI44';
-const ADMIN_PASS    = 'corradi2026';
+const ADMIN_EMAIL   = 'admin@corradiviajes.com';
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -1442,8 +1444,7 @@ let emojiSavedRange = null;
 let dragSrcId = null;
 let isSavingOrder = false;
 
-// ═══════════════ AUTH ═════════════════
-let isAuth = sessionStorage.getItem('corradi_adm') === '1';
+// ═══════════════ AUTH (Supabase Auth real) ═════════════════
 
 // ── Theme ──
 function applyTheme(light) {
@@ -1460,23 +1461,37 @@ function toggleTheme() {
 }
 applyTheme(localStorage.getItem('corradi_theme') === 'light');
 
-function doLogin() {
+async function doLogin() {
   const v = document.getElementById('passInput').value;
-  if (v === ADMIN_PASS) {
-    sessionStorage.setItem('corradi_adm','1');
+  const errEl = document.getElementById('loginErr');
+  const btn = document.querySelector('.login-btn');
+  errEl.textContent = '';
+  if (btn) { btn.disabled = true; btn.textContent = 'Ingresando…'; }
+  try {
+    const { data, error } = await db.auth.signInWithPassword({ email: ADMIN_EMAIL, password: v });
+    if (error || !data?.session) {
+      errEl.textContent = 'Contraseña incorrecta';
+      document.getElementById('passInput').select();
+      return;
+    }
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').classList.add('on');
     initApp();
-  } else {
-    document.getElementById('loginErr').textContent = 'Contraseña incorrecta';
-    document.getElementById('passInput').select();
+  } catch (e) {
+    errEl.textContent = 'No se pudo conectar. Revisá tu internet e intentá de nuevo.';
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Ingresar'; }
   }
 }
-function doLogout() { sessionStorage.removeItem('corradi_adm'); location.reload(); }
+async function doLogout() {
+  try { await db.auth.signOut(); } catch (e) {}
+  location.reload();
+}
 
 // ═══════════════ INIT ═════════════════
-function init() {
-  if (isAuth) {
+async function init() {
+  const { data } = await db.auth.getSession();
+  if (data?.session) {
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('app').classList.add('on');
     initApp();
@@ -1812,6 +1827,9 @@ function renderPkgCard(p, num) {
     ${img}
     <div class="pkg-drag-handle" title="Arrastrar para reordenar"><span class="ms material-symbols-outlined">drag_indicator</span></div>
     <div class="pkg-quick">
+      <button class="pkg-qbtn" style="background:rgba(15,25,45,0.75)" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
+        <span class="ms material-symbols-outlined" style="color:rgba(255,255,255,0.85)">open_in_new</span>
+      </button>
       <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.85)':'rgba(15,25,45,0.75)'}" onclick="event.stopPropagation();quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Marcar destacado'}">
         <span class="ms material-symbols-outlined" style="color:${p.featured?'#1a1200':'rgba(255,255,255,0.75)'};font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
       </button>
@@ -1826,17 +1844,17 @@ function renderPkgCard(p, num) {
         <div style="display:flex;flex-direction:column;gap:3px">
           <!-- Badge quick edit -->
           <div style="display:flex;align-items:center;gap:4px">
-            <span style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em">Badge</span>
-            <input type="text" class="quick-badge-input" value="${p.badge||''}" placeholder="—" onchange="quickUpdateBadge(${p.id}, this.value)" title="Badge personalizado" style="width:68px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:2px 5px;text-align:center;color:#fbbf24;font-weight:700;font-family:inherit;font-size:11px">
+            <span class="pli-label">Etiqueta</span>
+            <input type="text" class="quick-badge-input" value="${(p.badge||'').replace(/"/g,'&quot;')}" placeholder="—" title="Etiqueta sobre la foto" oninput="this.style.width=Math.min(160,Math.max(68,this.value.length*7+22))+'px'" onchange="quickUpdateBadge(${p.id}, this.value)" style="width:${Math.min(160,Math.max(68,(p.badge||'').length*7+22))}px;min-width:68px;padding:2px 5px;font-size:11px">
           </div>
           <!-- Orig price editable -->
           <div style="display:flex;align-items:center;gap:4px">
-            <span style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em">Orig</span>
+            <span class="pli-label">Orig</span>
             <input type="number" class="quick-price-input" value="${p.price_original_usd||''}" placeholder="—" onchange="quickUpdatePriceOrig(${p.id}, this.value)" title="Precio original (tachado)" style="width:68px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:6px;padding:2px 5px;text-align:right;color:rgba(255,255,255,0.4);font-weight:600;font-family:inherit;font-size:12px;text-decoration:${p.price_original_usd&&p.price_original_usd>p.price_usd?'line-through':'none'}">
           </div>
           <!-- Current price editable -->
           <div class="pkg-price" style="display:flex;align-items:center;gap:4px;font-size:12px;color:rgba(255,255,255,0.4)">
-            <span style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em">USD</span>
+            <span class="pli-label">USD</span>
             <input type="number" class="quick-price-input" value="${p.price_usd || ''}" placeholder="Consultar" onchange="quickUpdatePrice(${p.id}, this.value)" style="width: 68px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 2px 5px; text-align: right; color: #7ab3e0; font-weight: 700; font-family: inherit; font-size: 13px;">
           </div>
         </div>
@@ -1861,57 +1879,75 @@ function renderPkgListItem(p, num) {
     ? `<img class="pkg-list-thumb" src="${p.image_url}" alt="${p.name}" onerror="this.style.display='none'">`
     : `<div class="pkg-list-thumb-ph"><span class="ms material-symbols-outlined" style="font-size:18px;opacity:.2">image</span></div>`;
   const checked = bulkSelectedIds.includes(p.id) ? 'checked' : '';
+  const isGroup = p.section === 'salida_grupal';
+  const hasOffer = p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd);
+  const discountPct = hasOffer ? Math.round((1 - Number(p.price_usd) / Number(p.price_original_usd)) * 100) : 0;
+  const badgeW = Math.min(200, Math.max(96, (p.badge||'').length * 7.5 + 32));
+  const safeBadge = (p.badge||'').replace(/"/g,'&quot;');
   return `
   <div class="pkg-list-item" data-id="${p.id}" draggable="true"
     onclick="openEditor(${p.id})" oncontextmenu="showCtxMenu(event,${p.id})"
     ondragstart="onDragStart(event,${p.id})" ondragover="onDragOver(event,${p.id})"
     ondragleave="onDragLeave(event)" ondrop="onDrop(event,${p.id})" ondragend="onDragEnd(event)">
-    <div onclick="event.stopPropagation()" style="display:flex;align-items:center;padding:0 8px">
+
+    <div class="pli-check" onclick="event.stopPropagation()">
       <input type="checkbox" class="pkg-bulk-check" data-id="${p.id}" ${checked} onchange="onBulkCheckChange(event)">
     </div>
-    <div class="drag-list-handle" title="Arrastrar para reordenar"><span class="ms material-symbols-outlined">drag_indicator</span></div>
+    <div class="drag-list-handle" title="Arrastrá para reordenar" onclick="event.stopPropagation()"><span class="ms material-symbols-outlined">drag_indicator</span></div>
     ${num!==undefined?`<div class="pkg-list-order-num">${num}</div>`:''}
     ${thumb}
+
     <div class="pkg-list-info">
       <div class="pkg-list-name">${p.name}</div>
-      <div class="pkg-list-sub">${p.destination||''}${p.country?' · '+p.country:''} · ${p.days} días${p.created_at?' · <span class="pkg-card-date">'+formatDate(p.created_at)+'</span>':''}</div>
+      <div class="pkg-list-sub">${p.destination||''}${p.country?' · '+p.country:''} · ${p.days||'?'} días${p.created_at?' · '+formatDate(p.created_at):''}</div>
     </div>
-    <div class="pkg-list-price" onclick="event.stopPropagation()" style="display:flex;flex-direction:row;align-items:center;justify-content:flex-end;gap:10px">
-      <!-- Country pill -->
-      ${p.country ? `<span style="flex-shrink:0;background:rgba(55,120,184,0.15);border:1px solid rgba(55,120,184,0.3);color:#7ab3e0;border-radius:20px;padding:3px 10px;font-size:11px;font-weight:600;white-space:nowrap">${p.country}</span>` : ''}
-      <div style="width:1px;height:32px;background:rgba(255,255,255,0.07);flex-shrink:0"></div>
-      <!-- Badge quick edit -->
-      <div style="display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0">
-        <span class="qprice-label" style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Badge</span>
-        <input type="text" class="quick-badge-input" value="${p.badge||''}" placeholder="—" onchange="quickUpdateBadge(${p.id}, this.value)" title="Badge personalizado" style="width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;padding:3px 6px;text-align:center;color:#fbbf24;font-weight:700;font-family:inherit;font-size:11px">
+
+    <!-- Controles rápidos (no abren el editor) -->
+    <div class="pli-controls" onclick="event.stopPropagation()">
+      <!-- Badge / Etiqueta -->
+      <div class="pli-field">
+        <span class="pli-label">Etiqueta</span>
+        <input type="text" class="quick-badge-input" value="${safeBadge}" placeholder="— sin etiqueta —"
+          title="Texto que aparece sobre la foto. Ej: ¡Imperdible!, Cupos limitados, Diciembre 2026"
+          oninput="this.style.width=Math.min(200,Math.max(96,this.value.length*7.5+32))+'px'"
+          onchange="quickUpdateBadge(${p.id}, this.value)"
+          style="width:${badgeW}px">
       </div>
-      <div style="width:1px;height:32px;background:rgba(255,255,255,0.07);flex-shrink:0"></div>
-      <!-- Precio Original -->
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">
-        <span class="qprice-label" style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Precio Original</span>
-        <input type="number" class="quick-price-input" value="${p.price_original_usd||''}" placeholder="—" onchange="quickUpdatePriceOrig(${p.id}, this.value)" title="Precio original (tachado)" style="width:80px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:6px;padding:3px 6px;text-align:right;color:rgba(255,255,255,0.5);font-weight:600;font-family:inherit;font-size:12px">
+
+      <!-- Precio -->
+      <div class="pli-field">
+        <span class="pli-label">Precio USD${hasOffer?` · <span style="color:#f87171">-${discountPct}%</span>`:''}</span>
+        <div class="pli-price-row">
+          <input type="number" class="quick-price-input pli-orig" value="${p.price_original_usd||''}" placeholder="—"
+            title="Precio original (se muestra tachado). Vacío = sin oferta." onchange="quickUpdatePriceOrig(${p.id}, this.value)">
+          <span class="pli-arrow ms material-symbols-outlined">trending_flat</span>
+          <input type="number" class="quick-price-input pli-current" value="${p.price_usd||''}" placeholder="Consultar"
+            title="Precio final que ve el cliente" onchange="quickUpdatePrice(${p.id}, this.value)">
+        </div>
       </div>
-      <!-- Precio Descuento -->
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0">
-        <span class="qprice-label" style="font-size:9px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap">Precio Descuento</span>
-        <input type="number" class="quick-price-input" value="${p.price_usd||''}" placeholder="Consultar" onchange="quickUpdatePrice(${p.id}, this.value)" title="Precio actual" style="width:90px;background:rgba(255,255,255,0.06);border:1px solid rgba(55,120,184,0.3);border-radius:6px;padding:3px 6px;text-align:right;color:#7ab3e0;font-weight:700;font-family:inherit;font-size:14px">
+
+      <!-- Estado -->
+      <div class="pli-pills">
+        ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+        ${isGroup?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
+        ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
       </div>
-    </div>
-    <div class="pkg-list-pills">
-      ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
-      ${p.featured?'<span class="pill pill-featured">★</span>':''}
-      ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(p.price_original_usd&&Number(p.price_original_usd)>Number(p.price_usd)?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
-    </div>
-    <div class="pkg-list-actions" onclick="event.stopPropagation()">
-      <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.2)':'rgba(255,255,255,0.05)'};width:30px;height:30px" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
-        <span class="ms material-symbols-outlined" style="color:${p.featured?'#fbbf24':'rgba(255,255,255,0.4)'};font-size:15px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
-      </button>
-      <button class="pkg-qbtn" style="background:${p.active?'rgba(74,222,128,0.1)':'rgba(239,68,68,0.1)'};width:30px;height:30px" onclick="quickToggleActive(${p.id})" title="${p.active?'Desactivar':'Activar'}">
-        <span class="ms material-symbols-outlined" style="color:${p.active?'#4ade80':'#f87171'};font-size:15px">power_settings_new</span>
-      </button>
-      <button class="pkg-qbtn" style="background:rgba(55,120,184,0.1);width:30px;height:30px" onclick="openEditor(${p.id})" title="Editar">
-        <span class="ms material-symbols-outlined" style="color:#7ab3e0;font-size:15px">edit</span>
-      </button>
+
+      <!-- Acciones -->
+      <div class="pli-actions">
+        <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.2)':'rgba(255,255,255,0.05)'};width:34px;height:34px" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
+          <span class="ms material-symbols-outlined" style="color:${p.featured?'#fbbf24':'rgba(255,255,255,0.4)'};font-size:16px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
+        </button>
+        <button class="pkg-qbtn" style="background:${p.active?'rgba(74,222,128,0.1)':'rgba(239,68,68,0.1)'};width:34px;height:34px" onclick="quickToggleActive(${p.id})" title="${p.active?'Ocultar del sitio':'Publicar en el sitio'}">
+          <span class="ms material-symbols-outlined" style="color:${p.active?'#4ade80':'#f87171'};font-size:16px">power_settings_new</span>
+        </button>
+        <button class="pkg-qbtn" style="background:rgba(255,255,255,0.05);width:34px;height:34px" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
+          <span class="ms material-symbols-outlined" style="color:rgba(255,255,255,0.6);font-size:16px">open_in_new</span>
+        </button>
+        <button class="pkg-qbtn pli-edit" onclick="openEditor(${p.id})" title="Editar todo el paquete">
+          <span class="ms material-symbols-outlined">edit</span>Editar
+        </button>
+      </div>
     </div>
   </div>`;
 }
@@ -2069,9 +2105,11 @@ function openEditor(pkgId) {
   document.getElementById('edTitle').textContent = p ? `Editar: ${p.name}` : 'Nuevo Paquete';
   document.getElementById('btnDelete').style.display    = p ? 'inline-flex' : 'none';
   document.getElementById('btnDuplicate').style.display = p ? 'inline-flex' : 'none';
+  document.getElementById('btnView').style.display      = p ? 'inline-flex' : 'none';
   document.getElementById('editId').value = p?.id || '';
 
-  document.getElementById('templateSection').style.display = pkgId ? 'none' : 'block';
+  const _tplSection = document.getElementById('templateSection');
+  if (_tplSection) _tplSection.style.display = pkgId ? 'none' : 'block';
 
   document.getElementById('fName').value       = p?.name || '';
   document.getElementById('fDest').value       = p?.destination || '';
@@ -2105,12 +2143,6 @@ function openEditor(pkgId) {
   const hasDesc = p ? !!descText.trim() : true;
   document.getElementById('fDescEnabled').checked = hasDesc;
   toggleDescSection(hasDesc);
-
-  const highlightsText = p?.highlights || '';
-  document.getElementById('fHighlights').value   = highlightsText;
-  const hasHighlights = p ? !!highlightsText.trim() : true;
-  document.getElementById('fHighlightsEnabled').checked = hasHighlights;
-  toggleHighlightsSection(hasHighlights);
 
   // Bullet lists
   includesItems = parseBullets(p?.includes || '');
@@ -2157,13 +2189,14 @@ function closeEditor() {
   editingId = null;
 }
 
-function toggleItinerarySection(enabled) {
-  const container = document.getElementById('itineraryContainerSection');
-  if (container) container.style.display = enabled ? 'block' : 'none';
+// Abrir el paquete en el sitio público (nueva pestaña)
+function viewPackageOnSite(id) {
+  if (!id) return;
+  window.open(`../paquete.html?id=${id}`, '_blank', 'noopener');
 }
 
-function toggleHighlightsSection(enabled) {
-  const container = document.getElementById('highlightsContainerSection');
+function toggleItinerarySection(enabled) {
+  const container = document.getElementById('itineraryContainerSection');
   if (container) container.style.display = enabled ? 'block' : 'none';
 }
 
@@ -2598,7 +2631,7 @@ async function savePackage() {
       if (html === '<br>' || html === '<p><br></p>' || html === '<div><br></div>') html = '';
       return html || null;
     })(),
-    highlights:  document.getElementById('fHighlightsEnabled').checked ? document.getElementById('fHighlights').value.trim()||null : null,
+    highlights:  null,
     includes:    document.getElementById('fBulletsEnabled').checked ? getBulletsText('includes')||null : null,
     excludes:    document.getElementById('fBulletsEnabled').checked ? getBulletsText('excludes')||null : null,
     itinerary:   document.getElementById('fItineraryEnabled').checked ? serializeItinerary() : null,
@@ -3562,7 +3595,12 @@ async function runAIFromModal() {
     notes   ? `Información adicional: ${notes}` : '',
   ].filter(Boolean).join('\n');
 
-  const apiKey = localStorage.getItem('corradi_ai_key') || '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';
+  const apiKey = localStorage.getItem('corradi_ai_key');
+  if (!apiKey) {
+    showToast('Primero agregá tu API Key de IA (botón de la llave).', 'error');
+    showAIKeyModal();
+    return;
+  }
 
   const prompt = `Sos el asistente de Corradi Viajes, agencia de viajes de Rosario, Argentina. Con la siguiente información generá los datos completos del paquete turístico:
 
@@ -3616,8 +3654,6 @@ El itinerario debe tener exactamente tantos ítems como el campo "days". Sé esp
 
     if (pkg.description)
       document.getElementById('fDesc').value = pkg.description;
-    if (pkg.highlights?.length)
-      document.getElementById('fHighlights').value = pkg.highlights.map(h => `• ${h}`).join('\n');
     if (pkg.includes?.length) { includesItems = pkg.includes; renderBullets('includes'); }
     if (pkg.excludes?.length) { excludesItems = pkg.excludes; renderBullets('excludes'); }
     if (pkg.itinerary?.length) {
@@ -3690,7 +3726,12 @@ async function generateWithAI() {
     return;
   }
 
-  const apiKey = localStorage.getItem('corradi_ai_key') || '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';
+  const apiKey = localStorage.getItem('corradi_ai_key');
+  if (!apiKey) {
+    showToast('Primero agregá tu API Key de IA (botón de la llave).', 'error');
+    showAIKeyModal();
+    return;
+  }
 
   const btn = document.getElementById('btnAI');
   const oldHTML = btn.innerHTML;
@@ -4123,8 +4164,7 @@ function applyTemplate(type) {
   document.getElementById('fSection').value = t.section;
   document.getElementById('fDesc').value = t.description;
   document.getElementById('fDescRich').innerHTML = t.description;
-  document.getElementById('fHighlights').value = t.highlights;
-  
+
   includesItems = [...t.includes];
   excludesItems = [...t.excludes];
   renderBullets('includes');
