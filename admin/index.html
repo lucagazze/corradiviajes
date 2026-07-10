@@ -772,42 +772,55 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
 }
 
 /* ════════════════════════════════════════════════
-   LISTA DE PAQUETES — fila rediseñada (v2.1)
-   Más clara, badge completo, "tocá para editar"
+   LISTA DE PAQUETES — vista tabla alineada (v3)
+   Columnas fijas: check · drag · # · foto · paquete ·
+   etiqueta · precio · estado · acciones
    ════════════════════════════════════════════════ */
+#pkgViewContainer{overflow-x:auto}
+.pkg-list{display:flex;flex-direction:column;gap:5px;min-width:980px}
+.pkg-list-item,.pkg-list-head{
+  display:grid;
+  grid-template-columns:24px 20px 26px 58px minmax(130px,1fr) 176px 150px 108px 208px;
+  align-items:center;gap:10px}
 .pkg-list-item[draggable=true]{cursor:pointer}
 .pkg-list-item:hover{border-color:rgba(55,120,184,0.5);background:rgba(55,120,184,0.06)}
-.pli-check{display:flex;align-items:center;padding:0 2px 0 6px}
-.pli-controls{display:flex;align-items:center;gap:18px;flex-shrink:0;cursor:default}
-.pli-field{display:flex;flex-direction:column;gap:4px}
+/* Encabezado de columnas (tipo tabla) */
+.pkg-list-head{padding:2px 12px 7px 6px;border:none!important;background:none!important}
+.plh{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:rgba(255,255,255,0.5);white-space:nowrap}
+body.light .plh{color:rgba(0,0,0,0.45)}
+/* Celdas */
+.pli-cell{min-width:0}
+.pli-cell-etq{position:relative}
+.pli-cell-precio{display:flex;flex-direction:column;gap:4px}
+.pli-price-line{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+.pli-mini{font-size:8.5px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:.03em;width:32px;text-align:right;flex-shrink:0}
+.pli-cell-estado{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
+.pli-cell-estado .pill{white-space:nowrap}
+.pli-cell-acciones{display:flex;align-items:center;gap:5px;justify-content:flex-end}
+body.light .pli-mini{color:rgba(0,0,0,0.5)}
+/* Etiqueta legacy (usada por la vista cuadrícula) */
 .pli-label{font-size:9.5px;font-weight:700;color:rgba(255,255,255,0.68);text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
-.pli-price-row{display:flex;align-items:center;gap:5px}
-.pli-arrow{font-size:13px;color:rgba(255,255,255,0.25);flex-shrink:0}
-/* Inputs rápidos: base de estilo (antes venía inline) */
+body.light .pli-label{color:rgba(0,0,0,0.6)}
+/* Inputs rápidos: base de estilo */
 .quick-price-input,.quick-badge-input{
   background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);
   border-radius:7px;padding:5px 8px;font-family:inherit;outline:none;
-  transition:border-color .15s,background-color .15s}
-.quick-price-input{text-align:right;font-size:12px;color:rgba(255,255,255,0.82);font-weight:600}
-.pli-orig{width:80px;color:rgba(255,255,255,0.42)!important;text-decoration:line-through}
-.pli-orig:placeholder-shown{text-decoration:none;color:rgba(255,255,255,0.42)!important}
-.pli-current{width:96px;color:#7ab3e0!important;font-weight:700!important;font-size:14px!important;border-color:rgba(55,120,184,0.4)!important}
-.quick-badge-input{text-align:center;color:#fbbf24;font-weight:700;font-size:11.5px;min-width:96px;max-width:200px}
-.pli-pills{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
-.pli-pills .pill{white-space:nowrap}
-.pli-actions{display:flex;align-items:center;gap:5px}
-.pli-edit{width:auto!important;height:34px!important;padding:0 14px!important;gap:6px;
+  transition:width .18s,border-color .15s,background-color .15s,box-shadow .15s}
+.quick-price-input{text-align:right;font-size:12px;color:rgba(255,255,255,0.82);font-weight:600;width:88px}
+.pli-orig{color:rgba(255,255,255,0.45)!important;text-decoration:line-through}
+.pli-orig:placeholder-shown{text-decoration:none;color:rgba(255,255,255,0.45)!important}
+.pli-current{color:#7ab3e0!important;font-weight:700!important;font-size:13px!important;border-color:rgba(55,120,184,0.4)!important}
+/* Badge: ancho fijo en la tabla; al enfocarlo se expande para leerlo/editarlo entero */
+.quick-badge-input{width:100%;text-align:center;color:#fbbf24;font-weight:700;font-size:11.5px}
+.quick-badge-input:focus{position:relative;z-index:40;width:270px!important;text-align:left;background:#12233d!important;border-color:#3778b8!important;box-shadow:0 8px 24px rgba(0,0,0,0.55)}
+body.light .quick-badge-input:focus{background:#fff!important}
+body.light .pli-orig{color:rgba(0,0,0,0.42)!important}
+/* Botón Editar */
+.pli-edit{width:auto!important;height:34px!important;padding:0 12px!important;gap:6px;
   background:linear-gradient(135deg,#2563eb,#3778b8)!important;color:#fff!important;
-  font-size:12.5px;font-weight:700;font-family:inherit;white-space:nowrap;border-radius:9px!important}
+  font-size:12px;font-weight:700;font-family:inherit;white-space:nowrap;border-radius:9px!important}
 .pli-edit:hover{opacity:.9}
 .pli-edit .ms{font-size:16px;color:#fff!important}
-body.light .pli-label{color:rgba(0,0,0,0.6)}
-body.light .pli-arrow{color:rgba(0,0,0,0.25)}
-body.light .pli-orig{color:rgba(0,0,0,0.4)!important}
-@media(max-width:1150px){
-  .pkg-list-item{flex-wrap:wrap}
-  .pli-controls{width:100%;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.06);justify-content:flex-start;flex-wrap:wrap;gap:14px}
-}
 </style>
 </head>
 <body>
@@ -1765,6 +1778,7 @@ function renderPkgView() {
   const isList = viewMode === 'list';
   const renderFn = isList ? renderPkgListItem : renderPkgCard;
   const wrapClass = isList ? 'pkg-list' : 'pkg-grid';
+  const head = isList ? listHeadRow() : '';
   const isManual = (sort === 'manual');
   
   const manualHint = isManual ? `<div class="manual-hint">
@@ -1787,26 +1801,26 @@ function renderPkgView() {
         <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #7ab3e0; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
           <span class="ms material-symbols-outlined">groups</span> 👥 Sección 1: Salidas Grupales (${grupales.length})
         </h3>
-        ${grupales.length ? `<div class="${wrapClass}">${grupales.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
+        ${grupales.length ? `<div class="${wrapClass}">${head}${grupales.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
       </div>
       
       <div class="pkg-section-group" data-section-group="inspirador" style="margin-bottom: 30px;">
         <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #a855f7; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
           <span class="ms material-symbols-outlined">auto_awesome</span> ✨ Sección 2: Viajes Ind Sin Oferta (${inspiradores.length})
         </h3>
-        ${inspiradores.length ? `<div class="${wrapClass}">${inspiradores.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
+        ${inspiradores.length ? `<div class="${wrapClass}">${head}${inspiradores.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
       </div>
       
       <div class="pkg-section-group" data-section-group="oferta" style="margin-bottom: 30px;">
         <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #f43f5e; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
           <span class="ms material-symbols-outlined">local_fire_department</span> 🔥 Sección 3: Viajes Ind en Oferta (${ofertas.length})
         </h3>
-        ${ofertas.length ? `<div class="${wrapClass}">${ofertas.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
+        ${ofertas.length ? `<div class="${wrapClass}">${head}${ofertas.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color: rgba(255,255,255,0.25)">No hay viajes en esta sección</p></div>'}
       </div>
     `;
   } else {
     const list = getFilteredPackages();
-    container.innerHTML = manualHint + `<div class="${wrapClass}">${list.map((p,i)=>renderFn(p,i+1)).join('')}</div>`;
+    container.innerHTML = manualHint + `<div class="${wrapClass}">${head}${list.map((p,i)=>renderFn(p,i+1)).join('')}</div>`;
   }
   bindCardEvents();
 }
@@ -1881,8 +1895,6 @@ function renderPkgListItem(p, num) {
   const checked = bulkSelectedIds.includes(p.id) ? 'checked' : '';
   const isGroup = p.section === 'salida_grupal';
   const hasOffer = p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd);
-  const discountPct = hasOffer ? Math.round((1 - Number(p.price_usd) / Number(p.price_original_usd)) * 100) : 0;
-  const badgeW = Math.min(200, Math.max(96, (p.badge||'').length * 7.5 + 32));
   const safeBadge = (p.badge||'').replace(/"/g,'&quot;');
   return `
   <div class="pkg-list-item" data-id="${p.id}" draggable="true"
@@ -1890,65 +1902,77 @@ function renderPkgListItem(p, num) {
     ondragstart="onDragStart(event,${p.id})" ondragover="onDragOver(event,${p.id})"
     ondragleave="onDragLeave(event)" ondrop="onDrop(event,${p.id})" ondragend="onDragEnd(event)">
 
-    <div class="pli-check" onclick="event.stopPropagation()">
+    <!-- 1. Check -->
+    <div class="pli-cell" onclick="event.stopPropagation()">
       <input type="checkbox" class="pkg-bulk-check" data-id="${p.id}" ${checked} onchange="onBulkCheckChange(event)">
     </div>
+    <!-- 2. Drag -->
     <div class="drag-list-handle" title="Arrastrá para reordenar" onclick="event.stopPropagation()"><span class="ms material-symbols-outlined">drag_indicator</span></div>
-    ${num!==undefined?`<div class="pkg-list-order-num">${num}</div>`:''}
+    <!-- 3. Nº -->
+    <div class="pli-cell">${num!==undefined?`<div class="pkg-list-order-num">${num}</div>`:''}</div>
+    <!-- 4. Foto -->
     ${thumb}
-
+    <!-- 5. Paquete -->
     <div class="pkg-list-info">
       <div class="pkg-list-name">${p.name}</div>
       <div class="pkg-list-sub">${p.destination||''}${p.country?' · '+p.country:''} · ${p.days||'?'} días${p.created_at?' · '+formatDate(p.created_at):''}</div>
     </div>
 
-    <!-- Controles rápidos (no abren el editor) -->
-    <div class="pli-controls" onclick="event.stopPropagation()">
-      <!-- Badge / Etiqueta -->
-      <div class="pli-field">
-        <span class="pli-label">Etiqueta</span>
-        <input type="text" class="quick-badge-input" value="${safeBadge}" placeholder="— sin etiqueta —"
-          title="Texto que aparece sobre la foto. Ej: ¡Imperdible!, Cupos limitados, Diciembre 2026"
-          oninput="this.style.width=Math.min(200,Math.max(96,this.value.length*7.5+32))+'px'"
-          onchange="quickUpdateBadge(${p.id}, this.value)"
-          style="width:${badgeW}px">
-      </div>
+    <!-- 6. Etiqueta -->
+    <div class="pli-cell pli-cell-etq" onclick="event.stopPropagation()">
+      <input type="text" class="quick-badge-input" value="${safeBadge}" placeholder="— sin etiqueta —"
+        title="${safeBadge ? safeBadge + '  —  tocá para editar' : 'Etiqueta que aparece sobre la foto. Ej: ¡Imperdible!, Cupos limitados'}"
+        onchange="quickUpdateBadge(${p.id}, this.value)">
+    </div>
 
-      <!-- Precio -->
-      <div class="pli-field">
-        <span class="pli-label">Precio USD${hasOffer?` · <span style="color:#f87171">-${discountPct}%</span>`:''}</span>
-        <div class="pli-price-row">
-          <input type="number" class="quick-price-input pli-orig" value="${p.price_original_usd||''}" placeholder="—"
-            title="Precio original (se muestra tachado). Vacío = sin oferta." onchange="quickUpdatePriceOrig(${p.id}, this.value)">
-          <span class="pli-arrow ms material-symbols-outlined">trending_flat</span>
-          <input type="number" class="quick-price-input pli-current" value="${p.price_usd||''}" placeholder="Consultar"
-            title="Precio final que ve el cliente" onchange="quickUpdatePrice(${p.id}, this.value)">
-        </div>
+    <!-- 7. Precio (Original arriba, Descuento abajo) -->
+    <div class="pli-cell pli-cell-precio" onclick="event.stopPropagation()">
+      <div class="pli-price-line">
+        <span class="pli-mini">Orig.</span>
+        <input type="number" class="quick-price-input pli-orig" value="${p.price_original_usd||''}" placeholder="—"
+          title="Precio original (se muestra tachado). Vacío = sin oferta." onchange="quickUpdatePriceOrig(${p.id}, this.value)">
       </div>
-
-      <!-- Estado -->
-      <div class="pli-pills">
-        ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
-        ${isGroup?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
-        ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
-      </div>
-
-      <!-- Acciones -->
-      <div class="pli-actions">
-        <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.2)':'rgba(255,255,255,0.05)'};width:34px;height:34px" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
-          <span class="ms material-symbols-outlined" style="color:${p.featured?'#fbbf24':'rgba(255,255,255,0.4)'};font-size:16px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
-        </button>
-        <button class="pkg-qbtn" style="background:${p.active?'rgba(74,222,128,0.1)':'rgba(239,68,68,0.1)'};width:34px;height:34px" onclick="quickToggleActive(${p.id})" title="${p.active?'Ocultar del sitio':'Publicar en el sitio'}">
-          <span class="ms material-symbols-outlined" style="color:${p.active?'#4ade80':'#f87171'};font-size:16px">power_settings_new</span>
-        </button>
-        <button class="pkg-qbtn" style="background:rgba(255,255,255,0.05);width:34px;height:34px" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
-          <span class="ms material-symbols-outlined" style="color:rgba(255,255,255,0.6);font-size:16px">open_in_new</span>
-        </button>
-        <button class="pkg-qbtn pli-edit" onclick="openEditor(${p.id})" title="Editar todo el paquete">
-          <span class="ms material-symbols-outlined">edit</span>Editar
-        </button>
+      <div class="pli-price-line">
+        <span class="pli-mini">Desc.</span>
+        <input type="number" class="quick-price-input pli-current" value="${p.price_usd||''}" placeholder="Consultar"
+          title="Precio final que ve el cliente" onchange="quickUpdatePrice(${p.id}, this.value)">
       </div>
     </div>
+
+    <!-- 8. Estado -->
+    <div class="pli-cell pli-cell-estado">
+      ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+      ${isGroup?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
+      ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
+    </div>
+
+    <!-- 9. Acciones -->
+    <div class="pli-cell pli-cell-acciones" onclick="event.stopPropagation()">
+      <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.2)':'rgba(255,255,255,0.05)'};width:34px;height:34px" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
+        <span class="ms material-symbols-outlined" style="color:${p.featured?'#fbbf24':'rgba(255,255,255,0.4)'};font-size:16px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
+      </button>
+      <button class="pkg-qbtn" style="background:${p.active?'rgba(74,222,128,0.1)':'rgba(239,68,68,0.1)'};width:34px;height:34px" onclick="quickToggleActive(${p.id})" title="${p.active?'Ocultar del sitio':'Publicar en el sitio'}">
+        <span class="ms material-symbols-outlined" style="color:${p.active?'#4ade80':'#f87171'};font-size:16px">power_settings_new</span>
+      </button>
+      <button class="pkg-qbtn" style="background:rgba(255,255,255,0.05);width:34px;height:34px" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
+        <span class="ms material-symbols-outlined" style="color:rgba(255,255,255,0.6);font-size:16px">open_in_new</span>
+      </button>
+      <button class="pkg-qbtn pli-edit" onclick="openEditor(${p.id})" title="Editar todo el paquete">
+        <span class="ms material-symbols-outlined">edit</span>Editar
+      </button>
+    </div>
+  </div>`;
+}
+
+// Encabezado de columnas para la vista lista (tipo tabla)
+function listHeadRow() {
+  return `<div class="pkg-list-head">
+    <span></span><span></span><span></span><span></span>
+    <span class="plh">Paquete</span>
+    <span class="plh" style="text-align:center">Etiqueta</span>
+    <span class="plh" style="text-align:right">Precio USD</span>
+    <span class="plh">Estado</span>
+    <span class="plh" style="text-align:right;padding-right:6px">Acciones</span>
   </div>`;
 }
 
