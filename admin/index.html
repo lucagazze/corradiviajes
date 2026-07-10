@@ -777,10 +777,10 @@ body.light .pkg-list-order-num{background:rgba(55,120,184,0.12);color:#1d4ed8}
    etiqueta · precio · estado · acciones
    ════════════════════════════════════════════════ */
 #pkgViewContainer{overflow-x:auto}
-.pkg-list{display:flex;flex-direction:column;gap:5px;min-width:980px}
+.pkg-list{display:flex;flex-direction:column;gap:5px;min-width:1015px}
 .pkg-list-item,.pkg-list-head{
   display:grid;
-  grid-template-columns:24px 20px 26px 58px minmax(130px,1fr) 176px 150px 108px 208px;
+  grid-template-columns:24px 20px 26px 58px minmax(130px,1fr) 176px 172px 108px 208px;
   align-items:center;gap:10px}
 .pkg-list-item[draggable=true]{cursor:pointer}
 .pkg-list-item:hover{border-color:rgba(55,120,184,0.5);background:rgba(55,120,184,0.06)}
@@ -793,7 +793,7 @@ body.light .plh{color:rgba(0,0,0,0.45)}
 .pli-cell-etq{position:relative}
 .pli-cell-precio{display:flex;flex-direction:column;gap:4px}
 .pli-price-line{display:flex;align-items:center;gap:6px;justify-content:flex-end}
-.pli-mini{font-size:8.5px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:.03em;width:32px;text-align:right;flex-shrink:0}
+.pli-mini{font-size:8.5px;font-weight:700;color:rgba(255,255,255,0.45);text-transform:uppercase;letter-spacing:.02em;width:58px;text-align:right;flex-shrink:0}
 .pli-cell-estado{display:flex;flex-direction:column;gap:3px;align-items:flex-start}
 .pli-cell-estado .pill{white-space:nowrap}
 .pli-cell-acciones{display:flex;align-items:center;gap:5px;justify-content:flex-end}
@@ -807,9 +807,10 @@ body.light .pli-label{color:rgba(0,0,0,0.6)}
   border-radius:7px;padding:5px 8px;font-family:inherit;outline:none;
   transition:width .18s,border-color .15s,background-color .15s,box-shadow .15s}
 .quick-price-input{text-align:right;font-size:12px;color:rgba(255,255,255,0.82);font-weight:600;width:88px}
-.pli-orig{color:rgba(255,255,255,0.45)!important;text-decoration:line-through}
-.pli-orig:placeholder-shown{text-decoration:none;color:rgba(255,255,255,0.45)!important}
-.pli-current{color:#7ab3e0!important;font-weight:700!important;font-size:13px!important;border-color:rgba(55,120,184,0.4)!important}
+.pli-orig{color:rgba(255,255,255,0.85)!important}
+.pli-orig.pli-struck{color:rgba(255,255,255,0.42)!important;text-decoration:line-through}
+.pli-orig.pli-struck:placeholder-shown{text-decoration:none}
+.pli-desc{color:#7ab3e0!important;font-weight:700!important;font-size:13px!important;border-color:rgba(55,120,184,0.4)!important}
 /* Badge: ancho fijo en la tabla; al enfocarlo se expande para leerlo/editarlo entero */
 .quick-badge-input{width:100%;text-align:center;color:#fbbf24;font-weight:700;font-size:11.5px}
 .quick-badge-input:focus{position:relative;z-index:40;width:270px!important;text-align:left;background:#12233d!important;border-color:#3778b8!important;box-shadow:0 8px 24px rgba(0,0,0,0.55)}
@@ -821,6 +822,20 @@ body.light .pli-orig{color:rgba(0,0,0,0.42)!important}
   font-size:12px;font-weight:700;font-family:inherit;white-space:nowrap;border-radius:9px!important}
 .pli-edit:hover{opacity:.9}
 .pli-edit .ms{font-size:16px;color:#fff!important}
+/* Botones de accion (lista) — visibles en claro y oscuro */
+.pli-qbtn{background:rgba(255,255,255,0.06);width:34px;height:34px}
+.pli-qbtn:hover{background:rgba(255,255,255,0.12)}
+body.light .pli-qbtn{background:rgba(0,0,0,0.06)}
+body.light .pli-qbtn:hover{background:rgba(0,0,0,0.11)}
+/* Vista cuadricula — bloque de edicion prolijo */
+.pkg-cardedit{display:flex;flex-direction:column;gap:5px;margin-top:9px}
+.pce-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.pce-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:rgba(255,255,255,0.55);flex-shrink:0}
+body.light .pce-lbl{color:rgba(0,0,0,0.5)}
+.pce-inp{width:auto!important;flex:1;max-width:120px;padding:3px 7px!important;font-size:11.5px!important}
+.quick-badge-input.pce-inp{text-align:center;color:#f59e0b;font-size:11px!important}
+.quick-badge-input.pce-inp:focus{width:auto!important;max-width:120px!important;position:static!important;box-shadow:none!important}
+.pkg-cardpills{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
 </style>
 </head>
 <body>
@@ -1278,18 +1293,19 @@ body.light .pli-orig{color:rgba(0,0,0,0.42)!important}
               Escribí el texto general del viaje. Podés formatear el texto, agregar negritas, títulos y listas.
             </p>
             <div class="fg">
-              <div class="rich-toolbar">
-                <button type="button" class="tb-btn" onclick="execCmd('bold')" title="Negrita"><b>B</b></button>
-                <button type="button" class="tb-btn" onclick="execCmd('italic')" title="Itálica"><i>I</i></button>
-                <button type="button" class="tb-btn" onclick="execCmd('underline')" title="Subrayado"><u>U</u></button>
+              <div class="rich-toolbar" onmousedown="event.preventDefault()">
+                <button type="button" class="tb-btn" onclick="execCmd('bold')" title="Negrita (Ctrl+B)"><b>B</b></button>
+                <button type="button" class="tb-btn" onclick="execCmd('italic')" title="Itálica (Ctrl+I)"><i>I</i></button>
+                <button type="button" class="tb-btn" onclick="execCmd('underline')" title="Subrayado (Ctrl+U)"><u>U</u></button>
                 <div class="tb-sep"></div>
-                <button type="button" class="tb-btn" onclick="execCmd('fontSize', '3')" title="Texto Normal">Normal</button>
-                <button type="button" class="tb-btn" onclick="execCmd('fontSize', '5')" title="Título Mediano"><span style="font-size:14px;font-weight:bold">H2</span></button>
-                <button type="button" class="tb-btn" onclick="execCmd('fontSize', '6')" title="Título Grande"><span style="font-size:16px;font-weight:bold">H1</span></button>
+                <button type="button" class="tb-btn" onclick="execCmd('formatBlock','P')" title="Texto normal">Normal</button>
+                <button type="button" class="tb-btn" onclick="execCmd('formatBlock','H2')" title="Título"><span style="font-size:14px;font-weight:bold">Título</span></button>
+                <button type="button" class="tb-btn" onclick="execCmd('formatBlock','H3')" title="Subtítulo"><span style="font-size:12px;font-weight:bold">Subtítulo</span></button>
                 <div class="tb-sep"></div>
-                <button type="button" class="tb-btn" onclick="execCmd('insertUnorderedList')" title="Lista viñetas"><span class="ms material-symbols-outlined" style="font-size:16px">format_list_bulleted</span></button>
+                <button type="button" class="tb-btn" onclick="execCmd('insertUnorderedList')" title="Lista con viñetas"><span class="ms material-symbols-outlined" style="font-size:16px">format_list_bulleted</span></button>
                 <button type="button" class="tb-btn" onclick="execCmd('insertOrderedList')" title="Lista numerada"><span class="ms material-symbols-outlined" style="font-size:16px">format_list_numbered</span></button>
                 <div class="tb-sep"></div>
+                <button type="button" class="tb-btn" onclick="execCmd('removeFormat');execCmd('formatBlock','P')" title="Quitar formato"><span class="ms material-symbols-outlined" style="font-size:16px">format_clear</span></button>
                 <button type="button" class="tb-btn" onclick="openEmojiPopup(event)" title="Insertar Emoji">😀</button>
               </div>
               <div id="fDescRich" class="rich-editor" contenteditable="true" placeholder="Escribí la descripción libre del viaje acá..."></div>
@@ -1830,6 +1846,7 @@ function renderPkgCard(p, num) {
     ? `<img class="pkg-img" src="${p.image_url}" alt="${p.name}" onerror="this.style.display='none'">`
     : `<div class="pkg-img-placeholder"><span class="ms material-symbols-outlined" style="font-size:30px;opacity:.2">image</span></div>`;
   const checked = bulkSelectedIds.includes(p.id) ? 'checked' : '';
+  const hasOffer = p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd);
   return `
   <div class="pkg-card" data-id="${p.id}" draggable="true"
     onclick="openEditor(${p.id})" oncontextmenu="showCtxMenu(event,${p.id})"
@@ -1841,47 +1858,37 @@ function renderPkgCard(p, num) {
     ${img}
     <div class="pkg-drag-handle" title="Arrastrar para reordenar"><span class="ms material-symbols-outlined">drag_indicator</span></div>
     <div class="pkg-quick">
-      <button class="pkg-qbtn" style="background:rgba(15,25,45,0.75)" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
-        <span class="ms material-symbols-outlined" style="color:rgba(255,255,255,0.85)">open_in_new</span>
+      <button class="pkg-qbtn" style="background:rgba(15,25,45,0.78)" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
+        <span class="ms material-symbols-outlined" style="color:#fff">open_in_new</span>
       </button>
-      <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.85)':'rgba(15,25,45,0.75)'}" onclick="event.stopPropagation();quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Marcar destacado'}">
-        <span class="ms material-symbols-outlined" style="color:${p.featured?'#1a1200':'rgba(255,255,255,0.75)'};font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
+      <button class="pkg-qbtn" style="background:${p.featured?'#f59e0b':'rgba(15,25,45,0.78)'}" onclick="event.stopPropagation();quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Marcar destacado'}">
+        <span class="ms material-symbols-outlined" style="color:#fff;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
       </button>
-      <button class="pkg-qbtn" style="background:${p.active?'rgba(34,197,94,0.85)':'rgba(239,68,68,0.85)'}" onclick="event.stopPropagation();quickToggleActive(${p.id})" title="${p.active?'Desactivar':'Activar'}">
+      <button class="pkg-qbtn" style="background:${p.active?'#22c55e':'#ef4444'}" onclick="event.stopPropagation();quickToggleActive(${p.id})" title="${p.active?'Desactivar':'Activar'}">
         <span class="ms material-symbols-outlined" style="color:#fff">power_settings_new</span>
       </button>
     </div>
     <div class="pkg-body">
       <div class="pkg-name">${p.name}</div>
       <div class="pkg-sub">${p.destination||''} · ${p.days} días</div>
-      <div class="pkg-footer" onclick="event.stopPropagation()">
-        <div style="display:flex;flex-direction:column;gap:3px">
-          <!-- Badge quick edit -->
-          <div style="display:flex;align-items:center;gap:4px">
-            <span class="pli-label">Etiqueta</span>
-            <input type="text" class="quick-badge-input" value="${(p.badge||'').replace(/"/g,'&quot;')}" placeholder="—" title="Etiqueta sobre la foto" oninput="this.style.width=Math.min(160,Math.max(68,this.value.length*7+22))+'px'" onchange="quickUpdateBadge(${p.id}, this.value)" style="width:${Math.min(160,Math.max(68,(p.badge||'').length*7+22))}px;min-width:68px;padding:2px 5px;font-size:11px">
-          </div>
-          <!-- Orig price editable -->
-          <div style="display:flex;align-items:center;gap:4px">
-            <span class="pli-label">Orig</span>
-            <input type="number" class="quick-price-input" value="${p.price_original_usd||''}" placeholder="—" onchange="quickUpdatePriceOrig(${p.id}, this.value)" title="Precio original (tachado)" style="width:68px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);border-radius:6px;padding:2px 5px;text-align:right;color:rgba(255,255,255,0.4);font-weight:600;font-family:inherit;font-size:12px;text-decoration:${p.price_original_usd&&p.price_original_usd>p.price_usd?'line-through':'none'}">
-          </div>
-          <!-- Current price editable -->
-          <div class="pkg-price" style="display:flex;align-items:center;gap:4px;font-size:12px;color:rgba(255,255,255,0.4)">
-            <span class="pli-label">USD</span>
-            <input type="number" class="quick-price-input" value="${p.price_usd || ''}" placeholder="Consultar" onchange="quickUpdatePrice(${p.id}, this.value)" style="width: 68px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 6px; padding: 2px 5px; text-align: right; color: #7ab3e0; font-weight: 700; font-family: inherit; font-size: 13px;">
-          </div>
+      <div class="pkg-cardedit" onclick="event.stopPropagation()">
+        <div class="pce-row">
+          <span class="pce-lbl">Etiqueta</span>
+          <input type="text" class="quick-badge-input pce-inp" value="${(p.badge||'').replace(/"/g,'&quot;')}" placeholder="— sin etiqueta —" title="Etiqueta sobre la foto" onchange="quickUpdateBadge(${p.id}, this.value)">
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <div style="display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end">
-            ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
-            ${p.featured?'<span class="pill pill-featured">★</span>':''}
-            ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(p.price_original_usd&&Number(p.price_original_usd)>Number(p.price_usd)?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
-            ${p.expires_at?`<span class="pill" style="background:rgba(148,163,184,0.12);color:#94a3b8;border:1px solid rgba(148,163,184,0.2)" title="Expira ${new Date(p.expires_at).toLocaleString('es-AR')}">⏱ ${new Date(p.expires_at).toLocaleDateString('es-AR',{day:'2-digit',month:'short'})}</span>`:''}
-            ${p.badge?`<span class="pill pill-badge">${p.badge}</span>`:''}
-          </div>
-          ${p.created_at?`<div class="pkg-card-date">${formatDate(p.created_at)}</div>`:''}
+        <div class="pce-row">
+          <span class="pce-lbl">Original</span>
+          <input type="number" class="quick-price-input pli-orig pce-inp ${hasOffer?'pli-struck':''}" value="${hasOffer ? p.price_original_usd : (p.price_usd||'')}" placeholder="—" title="Precio normal del viaje" onchange="quickUpdatePrices(${p.id})">
         </div>
+        <div class="pce-row">
+          <span class="pce-lbl">Descuento</span>
+          <input type="number" class="quick-price-input pli-desc pce-inp" value="${hasOffer ? p.price_usd : ''}" placeholder="—" title="Precio con descuento. Si lo completás, pasa a Ofertas." onchange="quickUpdatePrices(${p.id})">
+        </div>
+      </div>
+      <div class="pkg-cardpills">
+        ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+        ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:rgba(239,68,68,0.12);color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
+        ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
       </div>
     </div>
     ${num!==undefined?`<div class="pkg-order-num">${num}</div>`:''}
@@ -1928,14 +1935,14 @@ function renderPkgListItem(p, num) {
     <!-- 7. Precio (Original arriba, Descuento abajo) -->
     <div class="pli-cell pli-cell-precio" onclick="event.stopPropagation()">
       <div class="pli-price-line">
-        <span class="pli-mini">Orig.</span>
-        <input type="number" class="quick-price-input pli-orig" value="${p.price_original_usd||''}" placeholder="—"
-          title="Precio original (se muestra tachado). Vacío = sin oferta." onchange="quickUpdatePriceOrig(${p.id}, this.value)">
+        <span class="pli-mini">Original</span>
+        <input type="number" class="quick-price-input pli-orig ${hasOffer?'pli-struck':''}" value="${hasOffer ? p.price_original_usd : (p.price_usd||'')}" placeholder="—"
+          title="Precio normal del viaje" onchange="quickUpdatePrices(${p.id})">
       </div>
       <div class="pli-price-line">
-        <span class="pli-mini">Desc.</span>
-        <input type="number" class="quick-price-input pli-current" value="${p.price_usd||''}" placeholder="Consultar"
-          title="Precio final que ve el cliente" onchange="quickUpdatePrice(${p.id}, this.value)">
+        <span class="pli-mini">Descuento</span>
+        <input type="number" class="quick-price-input pli-desc" value="${hasOffer ? p.price_usd : ''}" placeholder="—"
+          title="Precio con descuento. Si lo completás, el viaje pasa a Ofertas." onchange="quickUpdatePrices(${p.id})">
       </div>
     </div>
 
@@ -1948,14 +1955,14 @@ function renderPkgListItem(p, num) {
 
     <!-- 9. Acciones -->
     <div class="pli-cell pli-cell-acciones" onclick="event.stopPropagation()">
-      <button class="pkg-qbtn" style="background:${p.featured?'rgba(251,191,36,0.2)':'rgba(255,255,255,0.05)'};width:34px;height:34px" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
-        <span class="ms material-symbols-outlined" style="color:${p.featured?'#fbbf24':'rgba(255,255,255,0.4)'};font-size:16px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
+      <button class="pkg-qbtn pli-qbtn" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
+        <span class="ms material-symbols-outlined" style="color:${p.featured?'#f59e0b':'#94a3b8'};font-size:16px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
       </button>
-      <button class="pkg-qbtn" style="background:${p.active?'rgba(74,222,128,0.1)':'rgba(239,68,68,0.1)'};width:34px;height:34px" onclick="quickToggleActive(${p.id})" title="${p.active?'Ocultar del sitio':'Publicar en el sitio'}">
-        <span class="ms material-symbols-outlined" style="color:${p.active?'#4ade80':'#f87171'};font-size:16px">power_settings_new</span>
+      <button class="pkg-qbtn pli-qbtn" onclick="quickToggleActive(${p.id})" title="${p.active?'Ocultar del sitio':'Publicar en el sitio'}">
+        <span class="ms material-symbols-outlined" style="color:${p.active?'#22c55e':'#ef4444'};font-size:16px">power_settings_new</span>
       </button>
-      <button class="pkg-qbtn" style="background:rgba(255,255,255,0.05);width:34px;height:34px" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
-        <span class="ms material-symbols-outlined" style="color:rgba(255,255,255,0.6);font-size:16px">open_in_new</span>
+      <button class="pkg-qbtn pli-qbtn" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
+        <span class="ms material-symbols-outlined" style="color:#64748b;font-size:16px">open_in_new</span>
       </button>
       <button class="pkg-qbtn pli-edit" onclick="openEditor(${p.id})" title="Editar todo el paquete">
         <span class="ms material-symbols-outlined">edit</span>Editar
@@ -2045,6 +2052,37 @@ async function quickUpdatePriceOrig(id, val) {
   updateStats();
   renderPkgView();
   renderDashboard();
+}
+
+// Modelo Original/Descuento: si hay descuento => es OFERTA (precio original tachado)
+async function quickUpdatePrices(id) {
+  const p = packages.find(x=>x.id===id);
+  if (!p) return;
+  const row = document.querySelector(`.pkg-list-item[data-id="${id}"], .pkg-card[data-id="${id}"]`);
+  if (!row) return;
+  const oEl = row.querySelector('.pli-orig');
+  const dEl = row.querySelector('.pli-desc');
+  const oRaw = oEl ? oEl.value.trim() : '';
+  const dRaw = dEl ? dEl.value.trim() : '';
+  const o = oRaw === '' ? NaN : parseFloat(oRaw);
+  const d = dRaw === '' ? NaN : parseFloat(dRaw);
+  if ((oRaw !== '' && isNaN(o)) || (dRaw !== '' && isNaN(d))) {
+    showToast('Precio inválido', 'error'); return;
+  }
+  let price_usd, price_original_usd;
+  if (!isNaN(d) && d > 0) {            // hay descuento => oferta
+    price_usd = d;
+    price_original_usd = (!isNaN(o) && o > d) ? o : null;
+  } else {                             // sin descuento => precio normal
+    price_usd = (!isNaN(o) && o > 0) ? o : 0;
+    price_original_usd = null;
+  }
+  p.price_usd = price_usd;
+  p.price_original_usd = price_original_usd;
+  const { error } = await db.from('corradi_packages').update({ price_usd, price_original_usd }).eq('id', id);
+  if (error) { showToast('Error al actualizar precio', 'error'); return; }
+  showToast('Precio actualizado ✓', 'success');
+  updateStats(); renderPkgView(); renderDashboard();
 }
 
 async function quickUpdateBadge(id, val) {
