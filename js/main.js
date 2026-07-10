@@ -10,6 +10,15 @@ let inspirationalTrips = [];
 let offerTrips = [];
 let visibleCount = 5;
 
+// Convierte el HTML de la descripción larga a texto plano para las tarjetas
+// (evita que la descripción con formato se derrame completa debajo de la card)
+function descText(html) {
+  if (!html) return '';
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+}
+
 // Filtro: paquete activo y no expirado
 function isLive(p) {
   if (!p.active) return false;
@@ -283,12 +292,15 @@ function renderOffersCarousel() {
       <div class="p-5 flex flex-col flex-1 justify-between pointer-events-none">
         <div>
           <h3 class="font-['Geomanist'] font-medium text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
-          <p class="text-slate-400 text-[13px] font-light line-clamp-2">${p.description || ''}</p>
+          <p class="text-slate-400 text-[13px] font-light line-clamp-2">${descText(p.description)}</p>
         </div>
         <div class="flex items-center justify-between mt-5 gap-3">
           <div>
-            <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Desde</span>
-            <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">${p.price_usd ? `USD ${Number(p.price_usd).toLocaleString('es-AR')}` : 'A consultar'}</span>
+            <span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">${(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd) && Number(p.price_usd) > 0) ? 'Oferta' : 'Desde'}</span>
+            <div class="flex items-baseline gap-1.5">
+              ${(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd) && Number(p.price_usd) > 0) ? `<span class="text-slate-400 text-[13px] line-through">USD ${Number(p.price_original_usd).toLocaleString('es-AR')}</span>` : ''}
+              <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">${p.price_usd ? `USD ${Number(p.price_usd).toLocaleString('es-AR')}` : 'A consultar'}</span>
+            </div>
           </div>
           <div class="flex items-center gap-1.5 text-white text-[13px] font-medium px-4 py-2 rounded-full whitespace-nowrap" style="background:#3778b8">
             Ver paquete
@@ -357,15 +369,31 @@ function renderOffersCarousel() {
   // Initial position without animation
   requestAnimationFrame(() => { applyStyles(false); });
 
-  function navigate(dir) {
-    idx += dir;
-    applyStyles(true);
-    // Silent jump when near edges
-    setTimeout(() => {
-      if (idx >= total * 2) { idx -= total; applyStyles(false); }
-      if (idx < total) { idx += total; applyStyles(false); }
-    }, 460);
+  // ── Loop infinito robusto ──
+  // El "salto silencioso" al set del medio se hace al terminar la animación
+  // (transitionend), no con un setTimeout frágil. `animating` evita que clicks
+  // rápidos desincronicen el carrusel (era lo que causaba la animación rara).
+  let animating = false;
+  function settle() {
+    let jumped = false;
+    if (idx >= total * 2) { idx -= total; jumped = true; }
+    else if (idx < total) { idx += total; jumped = true; }
+    if (jumped) applyStyles(false);
+    animating = false;
   }
+  track.addEventListener('transitionend', (e) => {
+    if (e.target === track && e.propertyName === 'transform') settle();
+  });
+  function goTo(newIdx) {
+    if (animating) return;
+    if (newIdx === idx) return;
+    animating = true;
+    idx = newIdx;
+    applyStyles(true);
+    // Respaldo por si transitionend no dispara (reduced-motion / pestaña oculta)
+    setTimeout(() => { if (animating) settle(); }, 520);
+  }
+  function navigate(dir) { goTo(idx + dir); }
 
   if (prevBtn) prevBtn.addEventListener('click', () => navigate(-1));
   if (nextBtn) nextBtn.addEventListener('click', () => navigate(1));
@@ -421,13 +449,7 @@ function renderOffersCarousel() {
       if (i === idx) {
         window.handlePkgCardClick(el);
       } else {
-        idx = i;
-        applyStyles(true);
-        // Silent jump if needed
-        setTimeout(() => {
-          if (idx >= total * 2) { idx -= total; applyStyles(false); }
-          if (idx < total) { idx += total; applyStyles(false); }
-        }, 460);
+        goTo(i);
       }
     });
   });
@@ -495,7 +517,7 @@ function renderPromoOffers() {
         <div class="p-5 flex flex-col flex-1">
           <div>
             <h3 class="font-['Geomanist'] font-semibold text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
-            <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${p.description || ''}</p>
+            <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${descText(p.description)}</p>
           </div>
           <div class="mt-auto flex items-end justify-between gap-3 pt-2 border-t border-slate-100">
             <div class="pt-3">

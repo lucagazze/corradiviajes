@@ -72,6 +72,16 @@ class AppNavbar extends HTMLElement {
             Armá tu viaje
           </a>
 
+          <!-- Instagram -->
+          <a href="https://instagram.com/corradiviajes" target="_blank" rel="noopener" aria-label="Instagram de Corradi Viajes" title="Seguinos en Instagram"
+            class="flex items-center justify-center w-10 h-10 rounded-full transition-all hover:scale-110 active:scale-95" style="background:rgba(255,255,255,0.1)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+            </svg>
+          </a>
+
           <!-- Theme toggle button -->
           <button id="themeToggleBtn" onclick="event.stopPropagation();toggleTheme()" title="Cambiar tema">
             <span class="material-symbols-outlined" style="font-size:20px">light_mode</span>

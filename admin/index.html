@@ -1039,9 +1039,9 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <input type="text" id="countrySearch" placeholder="País…" oninput="renderPkgView()" style="width:110px">
         </div>
         <select class="select-filter" id="filterSort" onchange="renderPkgView()">
-          <option value="newest" selected>Más nuevos primero</option>
+          <option value="manual" selected>Orden de la web (arrastrá para ordenar) ↕</option>
+          <option value="newest">Más nuevos primero</option>
           <option value="oldest">Más antiguos primero</option>
-          <option value="manual">Orden manual ↕</option>
           <option value="price_asc">Precio ↑</option>
           <option value="price_desc">Precio ↓</option>
           <option value="name_az">Nombre A–Z</option>
@@ -1719,7 +1719,7 @@ function renderDashboard() {
 
 function sortList(list, sort) {
   switch(sort) {
-    case 'manual':        list.sort((a,b)=>(a.sort_order??99999)-(b.sort_order??99999)); break;
+    case 'manual':        list.sort((a,b)=>((a.sort_order??99999)-(b.sort_order??99999)) || (a.id-b.id)); break;
     case 'oldest':        list.sort((a,b)=>a.id-b.id); break;
     case 'price_asc':     list.sort((a,b)=>a.price_usd-b.price_usd); break;
     case 'price_desc':    list.sort((a,b)=>b.price_usd-a.price_usd); break;
@@ -1732,7 +1732,7 @@ function getFilteredPackages() {
   const q    = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
   const stat = document.getElementById('filterStatus')?.value || 'all';
   const cont = document.getElementById('filterContinent')?.value || 'all';
-  const sort = document.getElementById('filterSort')?.value || 'newest';
+  const sort = document.getElementById('filterSort')?.value || 'manual';
 
   let list = [...packages];
   if (q) list = list.filter(p =>
@@ -1788,7 +1788,7 @@ function renderPkgView() {
   const q    = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
   const stat = document.getElementById('filterStatus')?.value || 'all';
   const cont = document.getElementById('filterContinent')?.value || 'all';
-  const sort = document.getElementById('filterSort')?.value || 'newest';
+  const sort = document.getElementById('filterSort')?.value || 'manual';
   
   const isGroupedView = (stat === 'all' && !q && cont === 'all');
   const isList = viewMode === 'list';
@@ -2199,6 +2199,7 @@ function openEditor(pkgId) {
   } else {
     document.getElementById('fExpires').value = '';
   }
+  try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch(e) {}
   const descText = p?.description || '';
   document.getElementById('fDescRich').innerHTML = descText;
   document.getElementById('fDesc').value         = descText;
@@ -2708,9 +2709,13 @@ async function savePackage() {
 
   btn.innerHTML = '<span class="ms material-symbols-outlined">save</span> Guardar'; btn.disabled = false;
   if (res.error) { showToast('Error: '+res.error.message,'error'); return; }
-  showToast(editingId?'Paquete actualizado ✓':'Paquete creado ✓','success');
+  const wasNew = !editingId;
+  showToast(wasNew?'Paquete creado ✓':'Paquete actualizado ✓','success');
   await loadPackages();
-  closeEditor();
+  // El modal queda ABIERTO tras guardar. Si era nuevo, pasa a modo edición.
+  if (wasNew && res.data && res.data.id) {
+    openEditor(res.data.id);
+  }
 }
 
 // ── Delete ──

@@ -109,6 +109,22 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // ── Reproducción robusta de videos autoplay ──
+  // Arranca apenas puede reproducir y reintenta (evita el "congelado hasta scrollear")
+  document.querySelectorAll('video[autoplay]').forEach(v => {
+    v.muted = true;
+    v.setAttribute('muted', '');
+    v.playsInline = true;
+    v.setAttribute('playsinline', '');
+    const tryPlay = () => { const p = v.play(); if (p && p.catch) p.catch(() => {}); };
+    tryPlay();
+    ['loadedmetadata', 'loadeddata', 'canplay'].forEach(ev => v.addEventListener(ev, tryPlay));
+    // Reintento cuando la pestaña vuelve a estar visible o al primer toque/scroll
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) tryPlay(); });
+    window.addEventListener('scroll', tryPlay, { once: true, passive: true });
+    document.addEventListener('touchstart', tryPlay, { once: true, passive: true });
+  });
 });
 
 // Personalizar el FAB con el nombre del paquete (llamar desde paquete.js)

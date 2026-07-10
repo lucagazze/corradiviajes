@@ -75,7 +75,7 @@
   <section class="w-[90%] max-w-[1800px] mx-auto pt-0 pb-12 flex flex-col items-center">
     <div class="video-hero relative w-full h-[60vh] md:h-[70vh] min-h-[440px] md:min-h-[500px] max-h-[760px] flex flex-col justify-center items-center text-center rounded-[32px] overflow-hidden">
       <div class="absolute inset-0 rounded-[32px] overflow-hidden">
-        <video autoplay muted loop playsinline preload="none" poster="img/hero_travel_new.png"
+        <video autoplay muted loop playsinline preload="auto" poster="img/hero_travel_new.png"
           style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.05);min-width:100%;min-height:100%;width:auto;height:auto;object-fit:cover;">
           <source type="video/mp4" src="https://czocbnyoenjbpxmcqobn.supabase.co/storage/v1/object/public/corradi-media/Video%20Project%201.mp4">
         </video>
@@ -314,9 +314,14 @@ document.addEventListener('DOMContentLoaded', () => {
       list.innerHTML = items.map(p => {
         const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80';
         const price = Number(p.price_usd) || 0;
+        const orig = Number(p.price_original_usd) || 0;
+        const hasOffer = orig > price && price > 0;
         const priceLabel = price > 0
-          ? `<div><span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Desde</span>
-             <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${price.toLocaleString('es-AR')}</span></div>`
+          ? `<div><span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">${hasOffer ? 'Oferta' : 'Desde'}</span>
+             <div class="flex items-baseline gap-1.5">
+               ${hasOffer ? `<span class="text-slate-400 text-[13px] line-through">USD ${orig.toLocaleString('es-AR')}</span>` : ''}
+               <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${price.toLocaleString('es-AR')}</span>
+             </div></div>`
           : `<div><span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Precio</span>
              <span class="font-['Geomanist'] font-medium text-[15px] text-slate-500 italic">A consultar</span></div>`;
         const badge = p.badge ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>` : '';
@@ -340,7 +345,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           <div class="p-5 flex flex-col flex-1">
             <h3 class="font-['Geomanist'] font-semibold text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
-            <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${p.description || ''}</p>
+            <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${(p.description || '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()}</p>
             ${highlights.length ? `<div class="flex flex-wrap gap-1.5 mb-4">
               ${highlights.map(h => `<span class="text-[10.5px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full font-medium">${h}</span>`).join('')}
             </div>` : ''}

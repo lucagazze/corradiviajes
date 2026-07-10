@@ -316,10 +316,10 @@ html[data-theme="light"] a[href="ofertas.html"] {
 }
 
 /* Polishes for promo/offer cards in light mode */
-html[data-theme="light"] #promoGrid .group span.inline-flex:not(.offer-label-badge):not(.group-label-badge):not(.bg-black\/55) {
+html[data-theme="light"] #promoGrid .group span.inline-flex:not(.offer-label-badge):not(.group-label-badge):not(.featured-badge):not(.bg-black\/55) {
   color: #3778b8 !important;
 }
-html[data-theme="light"] #promoGrid .group:hover span.inline-flex:not(.offer-label-badge):not(.group-label-badge):not(.bg-black\/55) {
+html[data-theme="light"] #promoGrid .group:hover span.inline-flex:not(.offer-label-badge):not(.group-label-badge):not(.featured-badge):not(.bg-black\/55) {
   color: #2563eb !important;
 }
 html[data-theme="light"] #promoGrid .group span.block,
