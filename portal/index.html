@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portal de Pasajeros — Corradi Viajes</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/webp" href="/img/logocorradi.webp">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b1525;--panel:#0f1e34;--panel2:#132540;--line:rgba(255,255,255,.09);--txt:#eaf1fb;--mut:rgba(234,241,251,.55);--mut2:rgba(234,241,251,.35);--blue:#3778b8;--blue2:#4f93d6;--gold:#f2b352;--green:#22c55e;--red:#ef4444}
+html,body{height:100%}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font-family:inherit;font-size:inherit}
+a{color:inherit;text-decoration:none;cursor:pointer}
+.ms{font-family:'Material Symbols Outlined';font-weight:normal;font-style:normal;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr}
+::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-thumb{background:rgba(255,255,255,.14);border-radius:4px}
+input,select,textarea{width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--line);border-radius:11px;padding:11px 14px;color:var(--txt);outline:none;transition:border-color .15s,background .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);background:rgba(255,255,255,.08)}
+input::placeholder,textarea::placeholder{color:var(--mut2)}
+label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:11px;padding:11px 18px;font-weight:700;cursor:pointer;transition:transform .1s,opacity .15s,background .15s;white-space:nowrap}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,#2563eb,var(--blue));color:#fff;box-shadow:0 6px 18px rgba(37,99,235,.3)}
+.btn-primary:hover{opacity:.92}
+.btn-ghost{background:rgba(255,255,255,.06);color:var(--txt);border:1px solid var(--line)}
+.btn-ghost:hover{background:rgba(255,255,255,.11)}
+.btn-danger{background:rgba(239,68,68,.14);color:#fca5a5;border:1px solid rgba(239,68,68,.25)}
+.btn-danger:hover{background:rgba(239,68,68,.24)}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:9px}
+.btn-icon{padding:9px;width:38px;height:38px}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:.03em}
+.chip-blue{background:rgba(55,120,184,.16);color:#7ab3e0;border:1px solid rgba(55,120,184,.3)}
+.chip-gold{background:rgba(242,179,82,.15);color:var(--gold);border:1px solid rgba(242,179,82,.3)}
+.chip-green{background:rgba(34,197,94,.14);color:#5ee08a;border:1px solid rgba(34,197,94,.3)}
+.chip-red{background:rgba(239,68,68,.14);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.chip-mut{background:rgba(255,255,255,.06);color:var(--mut);border:1px solid var(--line)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px}
+.hidden{display:none!important}
+
+/* ── LOGIN ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% -10%,#1a3a6b 0%,#0b1525 60%)}
+.login-card{width:100%;max-width:400px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:24px;padding:40px 34px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.login-logo{height:46px;margin:0 auto 22px;object-fit:contain}
+.login-card h1{font-size:21px;font-weight:800;margin-bottom:4px}
+.login-card .sub{color:var(--mut);font-size:14px;margin-bottom:26px}
+.login-card input{margin-bottom:12px;text-align:center;font-size:16px}
+.login-card .btn{width:100%;padding:14px;font-size:16px;margin-top:2px}
+.login-alt{margin-top:18px;font-size:13px;color:var(--mut)}
+.login-alt a{color:var(--blue2);font-weight:700}
+.login-err{color:#fca5a5;font-size:13.5px;margin-top:12px;min-height:18px;font-weight:600}
+
+/* ── APP SHELL ── */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(11,21,37,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 20px}
+.topbar .logo{height:30px}
+.topbar .who{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:14px;color:var(--mut)}
+.wrap{max-width:1200px;margin:0 auto;padding:22px 20px 80px}
+.page-h{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
+.page-h h2{font-size:23px;font-weight:800}
+.page-h .spacer{flex:1}
+.sub-mut{color:var(--mut);font-size:14px}
+
+/* Admin nav */
+.anav{display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:6px;margin-bottom:22px;flex-wrap:wrap}
+.anav button{flex:1;min-width:120px;background:none;border:none;color:var(--mut);font-weight:700;padding:10px 14px;border-radius:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .15s}
+.anav button.active{background:var(--blue);color:#fff}
+.anav button:hover:not(.active){background:rgba(255,255,255,.06);color:var(--txt)}
+.view{display:none}.view.active{display:block}
+
+/* Stat cards */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+.stat .n{font-size:28px;font-weight:800;line-height:1}
+.stat .l{font-size:12.5px;color:var(--mut);font-weight:600;margin-top:5px;text-transform:uppercase;letter-spacing:.03em}
+
+/* List rows */
+.rowlist{display:flex;flex-direction:column;gap:9px}
+.rowitem{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:14px;transition:border-color .15s,background .15s}
+.rowitem.click{cursor:pointer}
+.rowitem.click:hover{border-color:rgba(55,120,184,.45);background:var(--panel2)}
+.avatar{width:44px;height:44px;border-radius:12px;background:rgba(55,120,184,.16);color:#7ab3e0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;flex-shrink:0}
+.rowitem .info{flex:1;min-width:0}
+.rowitem .info .t{font-weight:700;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rowitem .info .s{color:var(--mut);font-size:13px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rowitem .end{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+/* search */
+.searchbox{display:flex;align-items:center;gap:9px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 14px;max-width:320px;flex:1}
+.searchbox input{background:none;border:none;padding:0}
+.searchbox input:focus{background:none}
+.searchbox .ms{color:var(--mut2);font-size:20px}
+
+/* Alerts */
+.alert{border-radius:14px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:10px}
+.alert .ms{font-size:22px;flex-shrink:0;margin-top:1px}
+.alert-warn{background:rgba(242,179,82,.1);border:1px solid rgba(242,179,82,.28)}
+.alert-warn .ms{color:var(--gold)}
+.alert-red{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.28)}
+.alert-red .ms{color:#fca5a5}
+.alert .at{font-weight:700;font-size:14.5px}
+.alert .as{color:var(--mut);font-size:13px;margin-top:2px}
+
+/* Doc item */
+.doc{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:12px;padding:11px 14px}
+.doc .di{width:40px;height:40px;border-radius:10px;background:rgba(239,68,68,.12);color:#fca5a5;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.doc .di.lib{background:rgba(242,179,82,.14);color:var(--gold)}
+.doc .info{flex:1;min-width:0}
+.doc .info .t{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.doc .info .s{color:var(--mut);font-size:12px;margin-top:1px}
+.section-t{font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--mut);margin:22px 0 11px}
+.empty{text-align:center;color:var(--mut2);padding:34px 10px;font-size:14px}
+.empty .ms{font-size:38px;display:block;margin-bottom:8px;opacity:.6}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(3,8,18,.72);backdrop-filter:blur(3px);display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto}
+.modal{width:100%;max-width:560px;background:var(--panel);border:1px solid var(--line);border-radius:20px;box-shadow:0 40px 90px rgba(0,0,0,.5);margin:auto}
+.modal.wide{max-width:760px}
+.modal-h{display:flex;align-items:center;gap:12px;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);border-radius:20px 20px 0 0}
+.modal-h h3{font-size:18px;font-weight:800;flex:1}
+.modal-b{padding:20px 22px}
+.modal-f{padding:16px 22px;border-top:1px solid var(--line);display:flex;gap:10px;justify-content:flex-end}
+.fg{margin-bottom:14px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* Toast */
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);z-index:400;background:#0f2036;border:1px solid var(--line);border-radius:12px;padding:13px 20px;font-weight:600;box-shadow:0 16px 44px rgba(0,0,0,.5);transition:transform .28s;max-width:90vw}
+#toast.show{transform:translateX(-50%) translateY(0)}
+#toast.ok{border-color:rgba(34,197,94,.4)}#toast.err{border-color:rgba(239,68,68,.4)}
+
+/* multi-select passengers */
+.msel{max-height:230px;overflow-y:auto;border:1px solid var(--line);border-radius:12px;padding:6px}
+.msel-row{display:flex;align-items:center;gap:11px;padding:9px 11px;border-radius:9px;cursor:pointer}
+.msel-row:hover{background:rgba(255,255,255,.05)}
+.msel-row.sel{background:rgba(55,120,184,.16)}
+.msel-row .cb{width:20px;height:20px;border-radius:6px;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.msel-row.sel .cb{background:var(--blue);border-color:var(--blue)}
+.msel-row.sel .cb .ms{color:#fff;font-size:15px}
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}.wrap{padding:16px 14px 70px}.topbar .who .name{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ════════ LOGIN ════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <img src="/img/logo%20corradiestirado.webp" alt="Corradi Viajes" class="login-logo" onerror="this.style.display='none'">
+    <h1>Portal de Pasajeros</h1>
+    <p class="sub" id="loginSub">Ingresá con tu DNI para ver tu viaje</p>
+
+    <div id="paxLogin">
+      <input id="dniInput" inputmode="numeric" placeholder="Tu DNI" onkeydown="if(event.key==='Enter')loginPassenger()">
+      <button class="btn btn-primary" onclick="loginPassenger()">Ingresar</button>
+      <p class="login-alt">¿Sos de Corradi? <a onclick="showAdminLogin()">Acceso administradores</a></p>
+    </div>
+
+    <div id="adminLogin" class="hidden">
+      <input id="admEmail" type="email" placeholder="Email" autocomplete="username">
+      <input id="admPass" type="password" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')loginAdmin()">
+      <button class="btn btn-primary" onclick="loginAdmin()">Ingresar</button>
+      <p class="login-alt"><a onclick="showPaxLogin()">← Soy pasajero</a></p>
+    </div>
+
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- ════════ PASAJERO ════════ -->
+<div id="appPassenger" class="hidden">
+  <div class="topbar">
+    <img src="/img/logonavblanco.webp" class="logo" alt="Corradi" onerror="this.style.display='none'">
+    <div class="who"><span class="name" id="paxName"></span><button class="btn btn-ghost btn-sm" onclick="logout()"><span class="ms">logout</span>Salir</button></div>
+  </div>
+  <div class="wrap">
+    <div class="page-h"><h2>Mis viajes</h2></div>
+    <div id="paxAlerts"></div>
+    <div id="paxContent"></div>
+  </div>
+</div>
+
+<!-- ════════ ADMIN ════════ -->
+<div id="appAdmin" class="hidden">
+  <div class="topbar">
+    <img src="/img/logonavblanco.webp" class="logo" alt="Corradi" onerror="this.style.display='none'">
+    <strong style="font-size:15px">Portal · Administración</strong>
+    <div class="who"><a href="/admin" target="_blank" class="btn btn-ghost btn-sm"><span class="ms">apartment</span>Admin web</a><button class="btn btn-ghost btn-sm" onclick="logout()"><span class="ms">logout</span>Salir</button></div>
+  </div>
+  <div class="wrap">
+    <div class="anav">
+      <button data-v="dashboard" class="active" onclick="adminView('dashboard')"><span class="ms">dashboard</span>Inicio</button>
+      <button data-v="pax" onclick="adminView('pax')"><span class="ms">groups</span>Pasajeros</button>
+      <button data-v="trips" onclick="adminView('trips')"><span class="ms">luggage</span>Viajes</button>
+      <button data-v="lib" onclick="adminView('lib')"><span class="ms">folder_shared</span>Biblioteca</button>
+    </div>
+
+    <div id="viewDashboard" class="view active"></div>
+
+    <div id="viewPax" class="view">
+      <div class="page-h">
+        <h2>Pasajeros</h2><div class="spacer"></div>
+        <div class="searchbox"><span class="ms">search</span><input id="paxSearch" placeholder="Buscar por nombre o DNI…" oninput="renderPaxList()"></div>
+        <button class="btn btn-primary" onclick="openNewPassenger()"><span class="ms">person_add</span>Nuevo pasajero</button>
+      </div>
+      <div id="paxListWrap" class="rowlist"></div>
+    </div>
+
+    <div id="viewTrips" class="view">
+      <div class="page-h">
+        <h2>Viajes</h2><div class="spacer"></div>
+        <div class="searchbox"><span class="ms">search</span><input id="tripSearch" placeholder="Buscar viaje…" oninput="renderTripList()"></div>
+        <button class="btn btn-primary" onclick="openNewTrip()"><span class="ms">add</span>Nuevo viaje</button>
+      </div>
+      <div id="tripListWrap" class="rowlist"></div>
+    </div>
+
+    <div id="viewLib" class="view">
+      <div class="page-h">
+        <h2>Biblioteca de documentos</h2><div class="spacer"></div>
+        <label class="btn btn-primary" style="cursor:pointer"><span class="ms">upload</span>Subir documento
+          <input type="file" id="libFile" class="hidden" onchange="uploadLibrary(event)" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+        </label>
+      </div>
+      <p class="sub-mut" style="margin:-8px 0 16px">Documentos reutilizables (ej: "Qué hacer en Madrid"). Los adjuntás a un pasajero con un click, sin volver a subirlos.</p>
+      <div id="libListWrap" class="rowlist"></div>
+    </div>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toast"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/portal/app.js"></script>
+</body>
+</html>
