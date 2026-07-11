@@ -876,7 +876,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
         <span class="ms material-symbols-outlined ms-arrow">expand_more</span>
       </div>
       <div class="sb-sub" id="sbPkgSub">
-        <div class="sb-sub-item active" id="sbFilterAll" onclick="switchPkgFilter('all','all')">
+        <div class="sb-sub-item" id="sbFilterAll" onclick="switchPkgFilter('all','all')">
           <span class="ms material-symbols-outlined">apps</span>Todos
           <span class="sb-sub-count" id="sbCountAll">—</span>
         </div>
@@ -906,10 +906,6 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
     <div class="sb-divider"></div>
     <div class="sb-bottom">
       <span id="aiKeyStatus" style="display:none"></span>
-      <div class="sb-item" onclick="toggleTheme()" id="themeToggleBtn">
-        <span class="ms material-symbols-outlined" id="themeIcon">light_mode</span>
-        <span id="themeLabel">Modo claro</span>
-      </div>
       <a class="sb-item" href="/portal">
         <span class="ms material-symbols-outlined">badge</span>Portal de Pasajeros
       </a>
@@ -1027,16 +1023,6 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <option value="sec_grupal">👥 Grupales</option>
           <option value="sec_inspirador">✨ Viajes Ind Sin Oferta</option>
           <option value="sec_oferta">🔥 Viajes Ind en Oferta</option>
-        </select>
-        <select class="select-filter" id="filterContinent" onchange="renderPkgView()">
-          <option value="all">Todos los continentes</option>
-          <option value="europa">🏰 Europa</option>
-          <option value="caribe">🏝️ Caribe & México</option>
-          <option value="america_del_sur">🌎 Sudamérica</option>
-          <option value="asia">⛩️ Asia & Pacífico</option>
-          <option value="africa">🦁 África</option>
-          <option value="oceania">🦘 Oceanía</option>
-          <option value="general">General</option>
         </select>
         <div class="search-box" style="min-width:160px">
           <span class="material-symbols-outlined" style="color:rgba(255,255,255,0.35);font-size:18px">flag</span>
@@ -1183,21 +1169,10 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
               </div>
             </div>
           </div>
-          <div class="grid2">
+          <div class="grid1">
             <div class="fg"><label class="fl">Días *</label><input type="number" id="fDays" class="fi" placeholder="10" min="1"></div>
-            <div class="fg">
-              <label class="fl">Continente / Categoría</label>
-              <select id="fCat" class="fs">
-                <option value="general">General</option>
-                <option value="europa">🏰 Europa</option>
-                <option value="caribe">🏝️ Caribe & México</option>
-                <option value="america_del_sur">🌎 Sudamérica</option>
-                <option value="asia">⛩️ Asia & Pacífico</option>
-                <option value="africa">🦁 África</option>
-                <option value="oceania">🦘 Oceanía</option>
-              </select>
-            </div>
           </div>
+          <input type="hidden" id="fCat" value="general">
           <input type="hidden" id="fDiff" value="fácil">
         </div>
 
@@ -1480,19 +1455,11 @@ let isSavingOrder = false;
 // ═══════════════ AUTH (Supabase Auth real) ═════════════════
 
 // ── Theme ──
-function applyTheme(light) {
-  document.body.classList.toggle('light', light);
-  const icon  = document.getElementById('themeIcon');
-  const label = document.getElementById('themeLabel');
-  if (icon)  icon.textContent  = light ? 'dark_mode' : 'light_mode';
-  if (label) label.textContent = light ? 'Modo oscuro' : 'Modo claro';
-}
-function toggleTheme() {
-  const isLight = !document.body.classList.contains('light');
-  localStorage.setItem('corradi_theme', isLight ? 'light' : 'dark');
-  applyTheme(isLight);
-}
-applyTheme(localStorage.getItem('corradi_theme') === 'light');
+// Admin solo en modo oscuro
+function applyTheme() { document.body.classList.remove('light'); }
+function toggleTheme() {}
+try { localStorage.removeItem('corradi_theme'); } catch(e) {}
+applyTheme();
 
 // Verifica que el usuario logueado sea admin (rol en pv_profiles)
 async function isAdminUser(userId) {

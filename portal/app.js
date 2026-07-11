@@ -4,7 +4,12 @@
 const SUPABASE_URL = 'https://czocbnyoenjbpxmcqobn.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6b2NibnlvZW5qYnB4bWNxb2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NDI5MTMsImV4cCI6MjA2ODQxODkxM30.pNgJnwAY8uxb6yCQilJfD92VNwsCkntr4Ie_os2lI44';
 const BUCKET = 'pv-docs';
-const CATS = ['Voucher', 'Pasaporte / DNI', 'Seguro', 'Vuelos', 'Info del destino', 'Otro'];
+// Categorías de documentos (para subir cualquier archivo)
+const CATS = ['Pasaporte', 'DNI', 'Foto carnet', 'Visa', 'Seguro', 'Voucher', 'Vuelos', 'Info del destino', 'Otro'];
+// Documentación que DEBE aportar el pasajero (lo demás -vouchers, vuelos, etc.- lo carga la agencia)
+const REQ_CATS = ['Pasaporte', 'DNI', 'Foto carnet', 'Visa', 'Seguro'];
+// Países frecuentes para autocompletar
+const COUNTRIES = ['Argentina', 'Brasil', 'Chile', 'Uruguay', 'Paraguay', 'Perú', 'Bolivia', 'Colombia', 'Ecuador', 'Venezuela', 'México', 'Estados Unidos', 'Canadá', 'España', 'Italia', 'Francia', 'Portugal', 'Alemania', 'Reino Unido', 'Países Bajos', 'Suiza', 'Grecia', 'Croacia', 'Turquía', 'Egipto', 'Marruecos', 'Sudáfrica', 'Emiratos Árabes Unidos', 'Tailandia', 'Japón', 'China', 'India', 'Indonesia', 'Vietnam', 'Australia', 'Nueva Zelanda', 'Cuba', 'República Dominicana', 'Panamá', 'Costa Rica', 'Aruba'];
 
 const { createClient } = supabase;
 // Sesión compartida con el admin de paquetes (/admin) → un solo login para todo (SSO)
@@ -374,13 +379,15 @@ function openNewTrip(edit) {
   openModal(`<div class="modal-h"><h3>${t ? 'Editar viaje' : 'Nuevo viaje'}</h3><button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
   <div class="modal-b">
     <div class="fg"><label class="fl">Título del viaje *</label><input id="ntTitle" value="${esc(t?.title || '')}" placeholder="Ej: Madrid — Marzo 2027"></div>
-    <div class="grid2"><div class="fg"><label class="fl">Destino</label><input id="ntDest" value="${esc(t?.destination || '')}" placeholder="Ciudad"></div>
-    <div class="fg"><label class="fl">País</label><input id="ntCountry" value="${esc(t?.country || '')}" placeholder="País"></div></div>
+    <div class="grid2"><div class="fg"><label class="fl">Destino (ciudad)</label><input id="ntDest" value="${esc(t?.destination || '')}" placeholder="Ej: Madrid" autocomplete="off"></div>
+    <div class="fg"><label class="fl">País</label><input id="ntCountry" list="pvCountries" value="${esc(t?.country || '')}" placeholder="Elegí o escribí" autocomplete="off">
+      <datalist id="pvCountries">${COUNTRIES.map(c => `<option value="${esc(c)}">`).join('')}</datalist></div></div>
     <div class="grid2"><div class="fg"><label class="fl">Fecha de salida</label><input id="ntDep" type="date" value="${t?.depart_date || ''}"></div>
     <div class="fg"><label class="fl">Fecha de regreso</label><input id="ntRet" type="date" value="${t?.return_date || ''}"></div></div>
     <div class="fg"><label class="fl">Notas (opcional)</label><textarea id="ntNotes" rows="3" placeholder="Info del viaje…">${esc(t?.notes || '')}</textarea></div>
-    <div class="fg"><label class="fl">Documentación requerida a los pasajeros</label>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">${CATS.map(c => `<label class="chip chip-mut" style="cursor:pointer;user-select:none"><input type="checkbox" class="ntReq" value="${c}" style="width:auto;margin-right:6px;vertical-align:-2px" ${t && A.reqs.some(r => r.trip_id === t.id && r.category === c) ? 'checked' : ''}>${c}</label>`).join('')}</div>
+    <div class="fg"><label class="fl">Documentación que debe presentar el pasajero</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">${REQ_CATS.map(c => `<button type="button" class="chip chip-mut reqchip ${t && A.reqs.some(r => r.trip_id === t.id && r.category === c) ? 'sel' : ''}" data-c="${esc(c)}" onclick="this.classList.toggle('sel')">${esc(c)}</button>`).join('')}</div>
+      <p class="sub-mut" style="font-size:12px;margin-top:8px">Los vouchers, vuelos y demás los carga la agencia; esto es lo que el pasajero tiene que subir.</p>
     </div>
   </div>
   <div class="modal-f"><button class="btn btn-ghost" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" id="ntBtn" onclick="doSaveTrip(${t ? t.id : 'null'})">${t ? 'Guardar' : 'Crear viaje'}</button></div>`);
@@ -391,7 +398,7 @@ async function doSaveTrip(id) {
     depart_date: $('ntDep').value || null, return_date: $('ntRet').value || null, notes: $('ntNotes').value.trim() || null,
   };
   if (!payload.title) { toast('Poné un título', 'err'); return; }
-  const reqCats = [...document.querySelectorAll('.ntReq:checked')].map(c => c.value);
+  const reqCats = [...document.querySelectorAll('.reqchip.sel')].map(c => c.dataset.c);
   const btn = $('ntBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
   try {
     let tripId = id;
