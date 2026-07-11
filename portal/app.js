@@ -48,6 +48,7 @@ async function init() {
   if (session) await afterLogin(); else showLogin();
 }
 async function afterLogin() {
+  closeModal();
   const { data: { user } } = await db.auth.getUser();
   if (!user) { showLogin(); return; }
   const { data: prof } = await db.from('pv_profiles').select('*').eq('id', user.id).maybeSingle();
@@ -72,7 +73,7 @@ async function loginAdmin() {
   if (error) { loginErr('Email o contraseña incorrectos.'); return; }
   loginErr(''); await afterLogin();
 }
-async function logout() { await db.auth.signOut(); me = null; A = {}; showLogin(); showPaxLogin(); $('dniInput').value = ''; $('admPass').value = ''; }
+async function logout() { closeModal(); await db.auth.signOut(); me = null; A = {}; showLogin(); showPaxLogin(); $('dniInput').value = ''; $('admPass').value = ''; }
 
 // ── Documentos: subir / abrir / borrar ───────────
 async function openDoc(file_path) {
@@ -202,6 +203,7 @@ async function loadAll() {
   A = { pax: pax.data || [], trips: trips.data || [], tp: tp.data || [], docs: docs.data || [], lib: lib.data || [], reqs: reqs.data || [] };
 }
 function adminView(v) {
+  closeModal();
   document.querySelectorAll('.anav button').forEach(b => b.classList.toggle('active', b.dataset.v === v));
   ['dashboard', 'pax', 'trips', 'lib'].forEach(x => $('view' + x[0].toUpperCase() + x.slice(1)).classList.toggle('active', x === v));
   if (v === 'dashboard') renderDashboard();
