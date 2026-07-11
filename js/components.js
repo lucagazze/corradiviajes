@@ -72,16 +72,6 @@ class AppNavbar extends HTMLElement {
             Armá tu viaje
           </a>
 
-          <!-- Instagram -->
-          <a href="https://www.instagram.com/movebycorradi/" target="_blank" rel="noopener" aria-label="Instagram de Corradi Viajes" title="Seguinos en Instagram"
-            class="flex items-center justify-center w-10 h-10 rounded-full transition-all hover:scale-110 active:scale-95" style="background:rgba(255,255,255,0.1)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-              <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-            </svg>
-          </a>
-
           <!-- Theme toggle button -->
           <button id="themeToggleBtn" onclick="event.stopPropagation();toggleTheme()" title="Cambiar tema">
             <span class="material-symbols-outlined" style="font-size:20px">light_mode</span>
@@ -219,10 +209,25 @@ class AppFooter extends HTMLElement {
           <img src="img/logonavblanco.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300 dark-logo block mx-auto">
           <img src="img/logonavbnegro.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300 light-logo hidden mx-auto">
         </div>
-        <div class="flex gap-6 mb-4">
+        <div class="flex gap-6 mb-5">
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros">Nosotros</a>
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="salidas-grupales">Salidas Grupales</a>
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto">Contacto</a>
+        </div>
+        <div class="flex flex-col items-center gap-3 mb-5">
+          <span class="font-['Geomanist'] text-[11px] uppercase tracking-[0.18em] text-white/35">Seguinos en Instagram</span>
+          <div class="flex items-center gap-3 flex-wrap justify-center">
+            <a href="https://www.instagram.com/corradiviajes/" target="_blank" rel="noopener" aria-label="Instagram Corradi Viajes"
+              class="inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full border border-white/12 hover:border-[#3778b8] hover:bg-white/5 transition-all text-sm font-medium text-white/70 hover:text-white">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              @corradiviajes
+            </a>
+            <a href="https://www.instagram.com/movebycorradi/" target="_blank" rel="noopener" aria-label="Instagram Move by Corradi"
+              class="inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full border border-white/12 hover:border-[#f2b352] hover:bg-white/5 transition-all text-sm font-medium text-white/70 hover:text-white">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+              @movebycorradi
+            </a>
+          </div>
         </div>
         <p class="font-['Geomanist'] text-sm text-white/30">© 2026 Corradi Viajes. De Rosario al Mundo.</p>
       </footer>
