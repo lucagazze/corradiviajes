@@ -909,7 +909,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
         <span class="ms material-symbols-outlined" id="themeIcon">light_mode</span>
         <span id="themeLabel">Modo claro</span>
       </div>
-      <a class="sb-item" href="../index.html" target="_blank">
+      <a class="sb-item" href="/" target="_blank">
         <span class="ms material-symbols-outlined">open_in_new</span>Ver sitio
       </a>
       <div class="sb-item" onclick="doLogout()">
@@ -975,7 +975,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <button class="btn btn-primary" onclick="switchView('packages');openEditor(null)">
             <span class="ms material-symbols-outlined">add_circle</span>Crear paquete
           </button>
-          <a href="../index.html" target="_blank" class="btn btn-ghost">
+          <a href="/" target="_blank" class="btn btn-ghost">
             <span class="ms material-symbols-outlined">open_in_new</span>Ver sitio web
           </a>
         </div>
@@ -2255,7 +2255,7 @@ function closeEditor() {
 // Abrir el paquete en el sitio público (nueva pestaña)
 function viewPackageOnSite(id) {
   if (!id) return;
-  window.open(`../paquete.html?id=${id}`, '_blank', 'noopener');
+  window.open(`/paquete?id=${id}`, '_blank', 'noopener');
 }
 
 function toggleItinerarySection(enabled) {

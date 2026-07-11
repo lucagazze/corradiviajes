@@ -7,24 +7,24 @@ class AppNavbar extends HTMLElement {
     const currentPath = window.location.pathname;
 
     const links = [
-      { id: 'nav-inicio',    href: 'index.html',           label: 'Inicio',          isIndex: true },
-      { id: 'nav-grupales',  href: 'salidas-grupales.html', label: 'Salidas Grupales', match: 'salidas-grupales' },
-      { id: 'nav-destinos',  href: 'busqueda.html',        label: 'Destinos',        match: 'busqueda' },
-      { id: 'nav-ofertas',   href: 'ofertas.html',         label: 'Ofertas',         match: 'ofertas' },
-      { id: 'nav-nosotros',  href: 'nosotros.html',        label: 'Nosotros',        match: 'nosotros' },
-      { id: 'nav-contacto',  href: 'contacto.html',        label: 'Contacto',        match: 'contacto' },
+      { id: 'nav-inicio',    href: '/',           label: 'Inicio',          isIndex: true },
+      { id: 'nav-grupales',  href: 'salidas-grupales', label: 'Salidas Grupales', match: 'salidas-grupales' },
+      { id: 'nav-destinos',  href: 'busqueda',        label: 'Destinos',        match: 'busqueda' },
+      { id: 'nav-ofertas',   href: 'ofertas',         label: 'Ofertas',         match: 'ofertas' },
+      { id: 'nav-nosotros',  href: 'nosotros',        label: 'Nosotros',        match: 'nosotros' },
+      { id: 'nav-contacto',  href: 'contacto',        label: 'Contacto',        match: 'contacto' },
     ];
 
     const mobileNavItems = [
-      { href: 'index.html',            label: 'Inicio',           icon: 'home',           isIndex: true },
-      { href: 'salidas-grupales.html', label: 'Salidas Grupales', icon: 'groups',          match: 'salidas-grupales' },
-      { href: 'busqueda.html',         label: 'Destinos',         icon: 'travel_explore', match: 'busqueda' },
-      { href: 'ofertas.html',          label: 'Ofertas',          icon: 'local_offer',    match: 'ofertas' },
-      { href: 'nosotros.html',         label: 'Nosotros',         icon: 'flag',           match: 'nosotros' },
-      { href: 'contacto.html',         label: 'Contacto',         icon: 'mail',           match: 'contacto' },
+      { href: '/',            label: 'Inicio',           icon: 'home',           isIndex: true },
+      { href: 'salidas-grupales', label: 'Salidas Grupales', icon: 'groups',          match: 'salidas-grupales' },
+      { href: 'busqueda',         label: 'Destinos',         icon: 'travel_explore', match: 'busqueda' },
+      { href: 'ofertas',          label: 'Ofertas',          icon: 'local_offer',    match: 'ofertas' },
+      { href: 'nosotros',         label: 'Nosotros',         icon: 'flag',           match: 'nosotros' },
+      { href: 'contacto',         label: 'Contacto',         icon: 'mail',           match: 'contacto' },
     ];
 
-    const isHomePage = currentPath.endsWith('/') || currentPath.endsWith('index.html') || currentPath === '';
+    const isHomePage = currentPath.endsWith('/') || currentPath.endsWith('/') || currentPath === '';
 
     const desktopLinks = links.map(l => {
       const isActive = l.isIndex ? isHomePage : currentPath.includes(l.match);
@@ -56,7 +56,7 @@ class AppNavbar extends HTMLElement {
         <div class="flex md:grid md:grid-cols-3 justify-between items-center w-[90%] max-w-[1800px] mx-auto py-5 md:py-4">
 
         <!-- Left: Logo -->
-        <div class="flex items-center justify-start hover:opacity-80 transition-opacity cursor-pointer order-1" onclick="window.location.href='index.html'">
+        <div class="flex items-center justify-start hover:opacity-80 transition-opacity cursor-pointer order-1" onclick="window.location.href='/'">
           <img src="img/logonavblanco.webp" alt="Corradi Viajes Logo" class="h-11 md:h-14 w-auto object-contain dark-logo block">
           <img src="img/logonavbnegro.webp" alt="Corradi Viajes Logo" class="h-11 md:h-14 w-auto object-contain light-logo hidden">
         </div>
@@ -67,7 +67,7 @@ class AppNavbar extends HTMLElement {
         <!-- Right: CTA Button & Mobile Menu -->
         <div class="relative flex items-center justify-end gap-3 order-3">
           <!-- Armá tu viaje button (desktop) -->
-          <a href="contacto.html"
+          <a href="contacto"
             class="hidden md:flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-medium font-['Geomanist'] text-sm px-5 py-2 rounded-full transition-all shadow-[0_4px_14px_rgba(37,99,235,0.25)] hover:shadow-[0_6px_20px_rgba(37,99,235,0.4)] active:scale-95 border border-blue-400/30">
             Armá tu viaje
           </a>
@@ -189,7 +189,7 @@ class AppNavbar extends HTMLElement {
           return p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd);
         });
         if (!hasOffers) {
-          document.querySelectorAll('a[href="ofertas.html"]').forEach(a => { a.style.display = 'none'; });
+          document.querySelectorAll('a[href="ofertas"]').forEach(a => { a.style.display = 'none'; });
         }
       } catch (e) {}
     })();
@@ -201,10 +201,10 @@ class AppBottomNav extends HTMLElement {
     const currentPath = window.location.pathname;
 
     const items = [
-      { href: 'busqueda.html', label: 'Destinos', icon: 'travel_explore', match: 'busqueda' },
-      { href: 'ofertas.html', label: 'Ofertas', icon: 'local_offer', match: 'ofertas' },
-      { href: 'nosotros.html', label: 'Nosotros', icon: 'groups', match: 'nosotros' },
-      { href: 'contacto.html', label: 'Contacto', icon: 'mail', match: 'contacto' },
+      { href: 'busqueda', label: 'Destinos', icon: 'travel_explore', match: 'busqueda' },
+      { href: 'ofertas', label: 'Ofertas', icon: 'local_offer', match: 'ofertas' },
+      { href: 'nosotros', label: 'Nosotros', icon: 'groups', match: 'nosotros' },
+      { href: 'contacto', label: 'Contacto', icon: 'mail', match: 'contacto' },
     ];
 
     this.innerHTML = ``;
@@ -220,9 +220,9 @@ class AppFooter extends HTMLElement {
           <img src="img/logonavbnegro.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300 light-logo hidden mx-auto">
         </div>
         <div class="flex gap-6 mb-4">
-          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros.html">Nosotros</a>
-          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="salidas-grupales.html">Salidas Grupales</a>
-          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto.html">Contacto</a>
+          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros">Nosotros</a>
+          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="salidas-grupales">Salidas Grupales</a>
+          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto">Contacto</a>
         </div>
         <p class="font-['Geomanist'] text-sm text-white/30">© 2026 Corradi Viajes. De Rosario al Mundo.</p>
       </footer>
@@ -242,7 +242,7 @@ window.getPkgClickAction = function(p) {
     const wa = `https://wa.me/5493416057588?text=${encodeURIComponent(msg)}`;
     return `window.open('${wa}', '_blank')`;
   }
-  return `window.location.href='paquete.html?id=${p.id}'`;
+  return `window.location.href='paquete?id=${p.id}'`;
 };
 
 window.handlePkgCardClick = function(el) {
@@ -256,6 +256,6 @@ window.handlePkgCardClick = function(el) {
     const wa = `https://wa.me/5493416057588?text=${encodeURIComponent(msg)}`;
     window.open(wa, '_blank');
   } else {
-    window.location.href = `paquete.html?id=${id}${extra}`;
+    window.location.href = `paquete?id=${id}${extra}`;
   }
 };

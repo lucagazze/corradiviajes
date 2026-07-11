@@ -576,7 +576,7 @@ function triggerSearch() {
   if (q) params.append('country', q);
   if (price) params.append('price', price);
 
-  window.location.href = 'busqueda.html' + (params.toString() ? '?' + params.toString() : '');
+  window.location.href = 'busqueda' + (params.toString() ? '?' + params.toString() : '');
 }
 
 // ── Autocomplete ────────────────────────────────
