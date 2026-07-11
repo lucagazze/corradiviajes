@@ -7,7 +7,8 @@ const BUCKET = 'pv-docs';
 const CATS = ['Voucher', 'Pasaporte / DNI', 'Seguro', 'Vuelos', 'Info del destino', 'Otro'];
 
 const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { storageKey: 'pv_portal_auth', persistSession: true, autoRefreshToken: true } });
+// Sesión compartida con el admin de paquetes (/admin) → un solo login para todo (SSO)
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: true, autoRefreshToken: true } });
 
 let me = null;                 // perfil logueado
 let A = {};                    // cache de datos admin

@@ -845,8 +845,9 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
   <div class="login-card">
     <img src="../img/logo%20corradiestirado.webp" alt="Corradi Viajes" class="login-logo">
     <h1>Panel de Administración</h1>
-    <p>Ingresá tu contraseña para continuar</p>
-    <input type="password" id="passInput" class="login-input" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()">
+    <p>Ingresá con tu email y contraseña</p>
+    <input type="email" id="emailInput" class="login-input" placeholder="Email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('passInput').focus()">
+    <input type="password" id="passInput" class="login-input" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Ingresar</button>
     <div class="login-err" id="loginErr"></div>
   </div>
@@ -909,6 +910,9 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
         <span class="ms material-symbols-outlined" id="themeIcon">light_mode</span>
         <span id="themeLabel">Modo claro</span>
       </div>
+      <a class="sb-item" href="/portal">
+        <span class="ms material-symbols-outlined">badge</span>Portal de Pasajeros
+      </a>
       <a class="sb-item" href="/" target="_blank">
         <span class="ms material-symbols-outlined">open_in_new</span>Ver sitio
       </a>
@@ -1490,22 +1494,39 @@ function toggleTheme() {
 }
 applyTheme(localStorage.getItem('corradi_theme') === 'light');
 
+// Verifica que el usuario logueado sea admin (rol en pv_profiles)
+async function isAdminUser(userId) {
+  try {
+    const { data } = await db.from('pv_profiles').select('role').eq('id', userId).maybeSingle();
+    return data && data.role === 'admin';
+  } catch (e) { return false; }
+}
+function enterApp() {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('app').classList.add('on');
+  initApp();
+}
 async function doLogin() {
+  const email = (document.getElementById('emailInput').value || '').trim();
   const v = document.getElementById('passInput').value;
   const errEl = document.getElementById('loginErr');
   const btn = document.querySelector('.login-btn');
   errEl.textContent = '';
+  if (!email || !v) { errEl.textContent = 'Completá email y contraseña'; return; }
   if (btn) { btn.disabled = true; btn.textContent = 'Ingresando…'; }
   try {
-    const { data, error } = await db.auth.signInWithPassword({ email: ADMIN_EMAIL, password: v });
+    const { data, error } = await db.auth.signInWithPassword({ email, password: v });
     if (error || !data?.session) {
-      errEl.textContent = 'Contraseña incorrecta';
+      errEl.textContent = 'Email o contraseña incorrectos';
       document.getElementById('passInput').select();
       return;
     }
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').classList.add('on');
-    initApp();
+    if (!(await isAdminUser(data.session.user.id))) {
+      errEl.textContent = 'Esta cuenta no es de administrador.';
+      await db.auth.signOut();
+      return;
+    }
+    enterApp();
   } catch (e) {
     errEl.textContent = 'No se pudo conectar. Revisá tu internet e intentá de nuevo.';
   } finally {
@@ -1520,11 +1541,10 @@ async function doLogout() {
 // ═══════════════ INIT ═════════════════
 async function init() {
   const { data } = await db.auth.getSession();
-  if (data?.session) {
-    document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('app').classList.add('on');
-    initApp();
-  }
+  if (!data?.session) return;
+  // Sesión compartida con el Portal: si es admin entra; si es pasajero, al portal
+  if (await isAdminUser(data.session.user.id)) enterApp();
+  else window.location.href = '/portal';
 }
 async function initApp() {
   await loadPackages();
