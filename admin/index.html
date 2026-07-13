@@ -905,7 +905,6 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
     </nav>
     <div class="sb-divider"></div>
     <div class="sb-bottom">
-      <span id="aiKeyStatus" style="display:none"></span>
       <a class="sb-item" href="/portal">
         <span class="ms material-symbols-outlined">badge</span>Portal de Pasajeros
       </a>
@@ -1515,16 +1514,8 @@ async function init() {
 }
 async function initApp() {
   await loadPackages();
-  updateAIKeyStatus();
-}
-
-function updateAIKeyStatus() {
-  const el = document.getElementById('aiKeyStatus');
-  if (!el) return;
-  const hasKey = !!localStorage.getItem('corradi_ai_key');
-  el.textContent = hasKey ? '✓' : '—';
-  el.style.background = hasKey ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.06)';
-  el.style.color = hasKey ? '#4ade80' : 'rgba(255,255,255,0.3)';
+  // La IA ya no usa claves en el navegador: si quedó una guardada, la borramos.
+  try { localStorage.removeItem('corradi_ai_key'); } catch (e) {}
 }
 
 // ═══════════════ SIDEBAR ══════════════
@@ -3649,13 +3640,6 @@ async function runAIFromModal() {
     notes   ? `Información adicional: ${notes}` : '',
   ].filter(Boolean).join('\n');
 
-  const apiKey = localStorage.getItem('corradi_ai_key');
-  if (!apiKey) {
-    showToast('Primero agregá tu API Key de IA (botón de la llave).', 'error');
-    showAIKeyModal();
-    return;
-  }
-
   const prompt = `Sos el asistente de Corradi Viajes, agencia de viajes de Rosario, Argentina. Con la siguiente información generá los datos completos del paquete turístico:
 
 ${context}
@@ -3679,22 +3663,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 El itinerario debe tener exactamente tantos ítems como el campo "days". Sé específico y usa lugares reales.`;
 
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'authorization': `Bearer ${apiKey}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ model: 'gpt-4o-mini', temperature: 0.7, max_tokens: 2500, messages: [{ role: 'user', content: prompt }] }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.error?.message || `Error ${res.status}`);
-    }
-
-    const data = await res.json();
-    const rawText = data.choices?.[0]?.message?.content || '';
-    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Respuesta inesperada de la IA');
-    const pkg = JSON.parse(jsonMatch[0]);
+    const pkg = await askAI(prompt, 2500);
 
     document.getElementById('aiModal')?.remove();
 
@@ -3723,49 +3692,19 @@ El itinerario debe tener exactamente tantos ítems como el campo "days". Sé esp
   }
 }
 
-function showAIKeyModal() {
-  const existing = document.getElementById('aiKeyModal');
-  if (existing) existing.remove();
-  const modal = document.createElement('div');
-  modal.id = 'aiKeyModal';
-  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px)';
-  modal.innerHTML = `
-    <div style="background:#111c2d;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:28px;max-width:440px;width:90%;box-shadow:0 30px 60px rgba(0,0,0,0.5)">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <span class="material-symbols-outlined" style="color:#10a37f;font-size:22px">psychology</span>
-        <h3 style="font-size:18px;font-weight:700">Configurar IA (ChatGPT)</h3>
-      </div>
-      <p style="color:rgba(255,255,255,0.45);font-size:13px;margin-bottom:20px;line-height:1.65">
-        Ingresá tu API Key de OpenAI para activar la generación automática con IA. Se guarda solo en este navegador.
-      </p>
-      <div style="margin-bottom:8px">
-        <label style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:rgba(255,255,255,0.38);display:block;margin-bottom:6px">API Key de OpenAI</label>
-        <input type="password" id="aiKeyInput" class="fi" placeholder="sk-proj-…" style="width:100%;font-family:monospace;font-size:12px;letter-spacing:.03em">
-      </div>
-      <p style="font-size:11px;color:rgba(255,255,255,0.28);margin-bottom:22px">
-        Obtené tu clave en <strong style="color:#10a37f">platform.openai.com/api-keys</strong>
-      </p>
-      <div style="display:flex;gap:10px;justify-content:flex-end">
-        <button class="btn btn-ghost" onclick="document.getElementById('aiKeyModal').remove()">Cancelar</button>
-        <button class="btn btn-primary" onclick="saveAIKey()">
-          <span class="ms material-symbols-outlined">save</span>Guardar y Generar
-        </button>
-      </div>
-    </div>`;
-  document.body.appendChild(modal);
-  setTimeout(() => document.getElementById('aiKeyInput')?.focus(), 80);
-}
-
-function saveAIKey() {
-  const key = document.getElementById('aiKeyInput')?.value.trim();
-  if (!key) {
-    showToast('Ingresá tu API Key de Gemini', 'error');
-    return;
+// La IA corre en el servidor (Supabase Edge Function "ai-gen"): la clave de OpenAI
+// nunca viaja al navegador y solo un admin logueado puede invocarla.
+async function askAI(prompt, maxTokens) {
+  const { data, error } = await db.functions.invoke('ai-gen', { body: { prompt, max_tokens: maxTokens || 2500 } });
+  if (error) {
+    let msg = 'No se pudo conectar con la IA';
+    try { const b = await error.context.json(); if (b && b.error) msg = b.error; } catch (e) {}
+    throw new Error(msg);
   }
-  localStorage.setItem('corradi_ai_key', key);
-  updateAIKeyStatus();
-  document.getElementById('aiKeyModal')?.remove();
-  generateWithAI();
+  if (!data || !data.text) throw new Error((data && data.error) || 'La IA no devolvió respuesta');
+  const m = data.text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error('Respuesta inesperada de la IA');
+  return JSON.parse(m[0]);
 }
 
 async function generateWithAI() {
@@ -3777,13 +3716,6 @@ async function generateWithAI() {
 
   if (!name) {
     showToast('Escribí el nombre del paquete primero', 'error');
-    return;
-  }
-
-  const apiKey = localStorage.getItem('corradi_ai_key');
-  if (!apiKey) {
-    showToast('Primero agregá tu API Key de IA (botón de la llave).', 'error');
-    showAIKeyModal();
     return;
   }
 
@@ -3823,36 +3755,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 El itinerario debe tener exactamente tantos ítems como el campo "days". Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
 
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'authorization': `Bearer ${apiKey}`,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        temperature: 0.7,
-        max_tokens: 2048,
-        messages: [{ role: 'user', content: prompt }],
-      }),
-    });
-
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      if (res.status === 401) {
-        localStorage.removeItem('corradi_ai_key');
-        showToast('API Key inválida. Configurá una nueva.', 'error');
-        showAIKeyModal();
-        return;
-      }
-      throw new Error(err.error?.message || `Error ${res.status}`);
-    }
-
-    const data = await res.json();
-    const rawText = data.choices?.[0]?.message?.content || '';
-    const jsonMatch = rawText.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Respuesta inesperada de la IA');
-    const pkg = JSON.parse(jsonMatch[0]);
+    const pkg = await askAI(prompt, 2048);
 
     if (pkg.destination && !dest)   document.getElementById('fDest').value = pkg.destination;
     if (pkg.country    && !country) cpSetValue(pkg.country);
@@ -3862,9 +3765,6 @@ El itinerario debe tener exactamente tantos ítems como el campo "days". Mencion
 
     if (pkg.description)
       document.getElementById('fDesc').value = pkg.description;
-
-    if (pkg.highlights?.length)
-      document.getElementById('fHighlights').value = pkg.highlights.map(h => `• ${h}`).join('\n');
 
     if (pkg.includes?.length) {
       includesItems = pkg.includes;
