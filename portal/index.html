@@ -61,6 +61,12 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 .topbar .logo{height:30px}
 .topbar .who{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:14px;color:var(--mut)}
 .wrap{max-width:1200px;margin:0 auto;padding:22px 20px 80px}
+.thumb{width:48px;height:48px;border-radius:11px;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;background:rgba(255,255,255,.05);border:1px solid var(--line);position:relative}
+.thumb .ms{font-size:22px;color:var(--mut2)}
+.thumb.pdf .ms{color:#fca5a5}
+.thumb.img .ms{color:var(--blue)}
+.thumb img,.thumb canvas{width:100%;height:100%;object-fit:cover;display:block}
+.thumb.ok{background:#fff;border-color:transparent}
 .crumb{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px;color:var(--mut)}
 .crumb a{cursor:pointer;padding:5px 9px;border-radius:9px;color:var(--mut);display:flex;align-items:center;gap:5px}
 .crumb a:hover{background:rgba(255,255,255,.07);color:var(--txt)}
@@ -257,9 +263,12 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 </div>
 
 <div id="modalRoot"></div>
+<div id="previewRoot"></div>
 <div id="toast"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
 <script src="/portal/app.js"></script>
 </body>
 </html>

@@ -45,8 +45,62 @@ function toast(msg, type) {
 }
 function openModal(html, wide) {
   $('modalRoot').innerHTML = `<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal ${wide ? 'wide' : ''}">${html}</div></div>`;
+  hydrateThumbs();
 }
 function closeModal() { $('modalRoot').innerHTML = ''; }
+
+// ── Miniaturas y previsualización de documentos ──
+const IMG_EXT = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
+const extOf = n => ((n || '').split('.').pop() || '').toLowerCase();
+const kindOf = n => { const e = extOf(n); return IMG_EXT.includes(e) ? 'img' : e === 'pdf' ? 'pdf' : 'file'; };
+function thumbBox(path, name) {
+  const k = kindOf(name || path);
+  const ic = k === 'pdf' ? 'picture_as_pdf' : k === 'img' ? 'image' : 'description';
+  return `<div class="thumb ${k}" data-thumb="${esc(path)}" data-kind="${k}"><span class="ms">${ic}</span></div>`;
+}
+// Firma las URLs de los archivos visibles y pinta la miniatura (imagen o primera página del PDF)
+async function hydrateThumbs() {
+  const els = [...document.querySelectorAll('[data-thumb]:not([data-done])')].filter(e => e.dataset.kind !== 'file');
+  if (!els.length) return;
+  els.forEach(e => e.dataset.done = '1');
+  const paths = [...new Set(els.map(e => e.dataset.thumb))];
+  const { data } = await db.storage.from(BUCKET).createSignedUrls(paths, 3600);
+  const map = {}; (data || []).forEach(d => { if (d.signedUrl) map[d.path] = d.signedUrl; });
+  els.forEach(el => {
+    const url = map[el.dataset.thumb]; if (!url) return;
+    if (el.dataset.kind === 'img') { el.innerHTML = `<img src="${url}" alt="" onerror="this.remove()">`; el.classList.add('ok'); }
+    else if (el.dataset.kind === 'pdf') pdfThumb(url, el);
+  });
+}
+async function pdfThumb(url, el) {
+  if (!window.pdfjsLib) return;
+  try {
+    const pdf = await pdfjsLib.getDocument({ url }).promise;
+    const page = await pdf.getPage(1);
+    const v1 = page.getViewport({ scale: 1 });
+    const vp = page.getViewport({ scale: 160 / v1.width });
+    const c = document.createElement('canvas');
+    c.width = vp.width; c.height = vp.height;
+    await page.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+    el.innerHTML = ''; el.appendChild(c); el.classList.add('ok');
+  } catch (e) { /* si falla, queda el ícono */ }
+}
+async function openPreview(path, title) {
+  const { data, error } = await db.storage.from(BUCKET).createSignedUrl(path, 3600);
+  if (error || !data) { toast('No se pudo abrir el documento', 'err'); return; }
+  const url = data.signedUrl, k = kindOf(path);
+  const body = k === 'img' ? `<img src="${url}" alt="" style="max-width:100%;border-radius:12px;display:block;margin:0 auto">`
+    : k === 'pdf' ? `<iframe src="${url}" style="width:100%;height:66vh;border:0;border-radius:12px;background:#fff"></iframe>`
+      : `<div class="empty"><span class="ms">description</span>Este tipo de archivo no se previsualiza.<br>Abrilo para descargarlo.</div>`;
+  $('previewRoot').innerHTML = `<div class="modal-bg" style="z-index:300" onclick="if(event.target===this)closePreview()">
+    <div class="modal wide">
+      <div class="modal-h"><h3 style="flex:1">${esc(title || 'Documento')}</h3>
+        <a class="btn btn-ghost btn-sm" href="${url}" target="_blank" rel="noopener"><span class="ms">open_in_new</span>Abrir</a>
+        <button class="btn btn-icon btn-ghost" onclick="closePreview()"><span class="ms">close</span></button></div>
+      <div class="modal-b">${body}</div>
+    </div></div>`;
+}
+function closePreview() { $('previewRoot').innerHTML = ''; }
 
 function loginErr(m) { $('loginErr').textContent = m || ''; }
 function showAdminLogin() { $('paxLogin').classList.add('hidden'); $('adminLogin').classList.remove('hidden'); $('loginSub').textContent = 'Acceso para administradores de Corradi'; loginErr(''); }
@@ -172,6 +226,7 @@ async function renderPassenger() {
     html += `<div class="section-t">Otros documentos</div><div class="rowlist">${general.map(docRow).join('')}</div>`;
   }
   $('paxContent').innerHTML = html;
+  hydrateThumbs();
 }
 // Vista completa del viaje para el pasajero: documentación + guía del destino
 function openPaxTrip(tid) {
@@ -190,11 +245,11 @@ function openPaxTrip(tid) {
   </div>`, true);
 }
 function docRow(d) {
-  const lib = d.source === 'library';
-  return `<div class="doc"><div class="di ${lib ? 'lib' : ''}"><span class="ms">${lib ? 'menu_book' : 'description'}</span></div>
+  return `<div class="doc click" style="cursor:pointer" onclick='openPreview(${JSON.stringify(d.file_path)}, ${JSON.stringify(d.title || '')})'>
+    ${thumbBox(d.file_path, d.file_name || d.file_path)}
     <div class="info"><div class="t">${esc(d.title)}</div><div class="s">${esc(d.category || 'Documento')}</div></div>
-    <button class="btn btn-ghost btn-sm" onclick="openDoc('${esc(d.file_path)}')"><span class="ms">visibility</span>Ver</button>
-    ${me.role === 'admin' ? `<button class="btn btn-icon btn-danger" title="Borrar" onclick='deleteDocById(${d.id}, ${JSON.stringify(d.file_path)}, "${d.source}")'><span class="ms">delete</span></button>` : ''}</div>`;
+    <button class="btn btn-ghost btn-sm"><span class="ms">visibility</span>Ver</button>
+    ${me.role === 'admin' ? `<button class="btn btn-icon btn-danger" title="Borrar" onclick='event.stopPropagation();deleteDocById(${d.id}, ${JSON.stringify(d.file_path)}, "${d.source}")'><span class="ms">delete</span></button>` : ''}</div>`;
 }
 async function deleteDocById(id, file_path, source) {
   if (!confirm('¿Borrar este documento?')) return;
@@ -239,60 +294,24 @@ function destInfoHtml(dest, trip) {
   <p class="sub-mut" style="font-size:11.5px;margin-top:18px">Información general de referencia. Ante cualquier duda, consultanos.</p>`;
 }
 
-// ── Generación con IA (usa la misma clave de OpenAI que el admin de la web) ──
-const aiKey = () => { try { return localStorage.getItem('corradi_ai_key') || ''; } catch (e) { return ''; } };
-function openAiKey(then) {
-  window._aiThen = then || '';
-  openModal(`<div class="modal-h"><h3>Conectar la IA</h3><button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
-  <div class="modal-b">
-    <p class="sub-mut" style="margin-bottom:14px">Para generar la guía del destino automáticamente hace falta una clave de OpenAI. Es la misma que usa el admin de la web. Se guarda solo en esta computadora.</p>
-    <div class="fg"><label class="fl">Clave de OpenAI</label><input id="aiK" type="password" placeholder="sk-..." value="${esc(aiKey())}"></div>
-    <p class="sub-mut" style="font-size:12px">La obtenés en platform.openai.com/api-keys</p>
-  </div>
-  <div class="modal-f"><button class="btn btn-ghost" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" onclick="saveAiKey()">Guardar</button></div>`);
-}
-function saveAiKey() {
-  const k = $('aiK').value.trim();
-  if (!k.startsWith('sk-')) { toast('La clave tiene que empezar con sk-', 'err'); return; }
-  try { localStorage.setItem('corradi_ai_key', k); } catch (e) {}
-  toast('Clave guardada ✓', 'ok');
-  const then = window._aiThen; closeModal();
-  if (then) genDest(then);
-}
+// ── Generación con IA ──
+// La clave de OpenAI vive en el servidor (Supabase Edge Function "dest-ia"),
+// nunca en el navegador. Solo un admin logueado puede invocarla.
 async function genDest(tid) {
   const t = A.trips.find(x => x.id === tid); if (!t) return;
   if (!t.country && !t.destination) { toast('Primero cargale el país o la ciudad al viaje', 'err'); return; }
-  const key = aiKey();
-  if (!key) { openAiKey(tid); return; }
   const place = [t.destination, t.country].filter(Boolean).join(', ');
   const btn = $('genBtn'); if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Generando…'; }
-  const prompt = `Sos un asesor de viajes de una agencia argentina. Escribí una guía general del destino "${place}" para pasajeros argentinos que están por viajar.
-Respondé SOLO un JSON con exactamente esta forma:
-{
- "resumen": "2 o 3 oraciones sobre el destino, qué lo hace especial",
- "moneda": "moneda local",
- "idioma": "idioma/s",
- "huso": "diferencia horaria con Argentina",
- "enchufe": "tipo de enchufe y voltaje",
- "mejor_epoca": "mejor época para visitarlo",
- "clima": "cómo es el clima en general",
- "lugares": [{"nombre":"", "desc":"1 oración"}],
- "gastronomia": [{"nombre":"", "desc":"1 oración"}],
- "cultura": [{"nombre":"", "desc":"1 oración sobre esa costumbre o rasgo cultural"}],
- "tips": [{"nombre":"", "desc":"consejo práctico (propinas, transporte, seguridad, apps útiles)"}]
-}
-Reglas: 6 lugares, 5 comidas típicas, 4 rasgos culturales, 5 tips. Español rioplatense, claro y cálido, sin exagerar. Nada de precios ni datos que cambien seguido.`;
+  toast('Generando la guía de ' + place + '…');
   try {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'authorization': `Bearer ${key}`, 'content-type': 'application/json' },
-      body: JSON.stringify({ model: 'gpt-4o-mini', temperature: 0.6, response_format: { type: 'json_object' }, messages: [{ role: 'user', content: prompt }] }),
-    });
-    if (res.status === 401) { try { localStorage.removeItem('corradi_ai_key'); } catch (e) {} throw new Error('La clave de OpenAI no es válida'); }
-    if (!res.ok) throw new Error('OpenAI respondió ' + res.status);
-    const j = await res.json();
-    const content = JSON.parse(j.choices[0].message.content);
-    await saveDestContent(t, content);
+    const { data, error } = await db.functions.invoke('dest-ia', { body: { place } });
+    if (error) {
+      let msg = 'No se pudo generar la guía';
+      try { const b = await error.context.json(); if (b && b.error) msg = b.error; } catch (e) {}
+      throw new Error(msg);
+    }
+    if (!data || !data.content) throw new Error((data && data.error) || 'La IA no devolvió información');
+    await saveDestContent(t, data.content);
     toast('Guía del destino generada ✓', 'ok');
     await loadAll(); openTripDetail(tid);
   } catch (e) {
@@ -667,7 +686,12 @@ async function doSaveTrip(id) {
     await db.from('pv_required_docs').delete().eq('trip_id', tripId);
     if (reqCats.length) await db.from('pv_required_docs').insert(reqCats.map(c => ({ trip_id: tripId, category: c })));
     closeModal(); toast('Viaje guardado ✓', 'ok'); await loadAll(); renderTripList();
-    if (id) openTripDetail(tripId);
+    const t = A.trips.find(x => x.id === tripId);
+    if (t) {
+      openTripDetail(tripId);
+      // Viaje nuevo a un destino sin guía → la generamos sola con IA
+      if (!id && !destOfTrip(t) && (t.country || t.destination)) genDest(tripId);
+    }
   } catch (e) { toast('Error: ' + (e.message || e), 'err'); btn.disabled = false; btn.textContent = 'Guardar'; }
 }
 function openTripDetail(tid) {
@@ -812,15 +836,16 @@ function renderLib() {
         <button class="btn btn-icon btn-danger" title="Eliminar carpeta" onclick="deleteFolder(${f.id})"><span class="ms">delete</span></button>
         <span class="ms" style="color:var(--mut2)">chevron_right</span>
       </div></div>`;
-  }).join('') + files.map(l => `<div class="rowitem" draggable="true" ondragstart="fileDragStart(event,${l.id})" ondragend="fileDragEnd(event)">
-      <div style="${fic};background:rgba(58,124,214,.14);color:var(--blue)"><span class="ms">description</span></div>
+  }).join('') + files.map(l => `<div class="rowitem click" draggable="true" ondragstart="fileDragStart(event,${l.id})" ondragend="fileDragEnd(event)" onclick='openPreview(${JSON.stringify(l.file_path)}, ${JSON.stringify(l.title || '')})'>
+      ${thumbBox(l.file_path, l.file_name || l.file_path)}
       <div class="info"><div class="t">${esc(l.title)}</div><div class="s">${esc(l.category || 'Documento')} · ${esc(fmtDate(l.created_at ? l.created_at.slice(0, 10) : ''))}</div></div>
-      <div class="end">
+      <div class="end" onclick="event.stopPropagation()">
         <span class="ms" style="color:var(--mut2);cursor:grab" title="Arrastralo a una carpeta">drag_indicator</span>
-        <button class="btn btn-ghost btn-sm" onclick="openDoc('${esc(l.file_path)}')"><span class="ms">visibility</span>Ver</button>
+        <button class="btn btn-ghost btn-sm" onclick='openPreview(${JSON.stringify(l.file_path)}, ${JSON.stringify(l.title || '')})'><span class="ms">visibility</span>Ver</button>
         <button class="btn btn-icon btn-ghost" title="Renombrar" onclick="editLib(${l.id})"><span class="ms">edit</span></button>
         <button class="btn btn-icon btn-danger" title="Borrar" onclick='deleteLib(${l.id}, ${JSON.stringify(l.file_path)})'><span class="ms">delete</span></button>
       </div></div>`).join('');
+  hydrateThumbs();
 }
 
 // ── Carpetas ──
