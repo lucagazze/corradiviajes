@@ -4,10 +4,21 @@
 const SUPABASE_URL = 'https://czocbnyoenjbpxmcqobn.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6b2NibnlvZW5qYnB4bWNxb2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NDI5MTMsImV4cCI6MjA2ODQxODkxM30.pNgJnwAY8uxb6yCQilJfD92VNwsCkntr4Ie_os2lI44';
 const BUCKET = 'pv-docs';
-// Categorías de documentos (para subir cualquier archivo)
-const CATS = ['Pasaporte', 'DNI', 'Foto carnet', 'Visa', 'Seguro', 'Voucher', 'Vuelos', 'Info del destino', 'Otro'];
-// Documentación que DEBE aportar el pasajero (lo demás -vouchers, vuelos, etc.- lo carga la agencia)
-const REQ_CATS = ['Pasaporte', 'DNI', 'Foto carnet', 'Visa', 'Seguro'];
+// Categorías de documentos. El admin carga todo lo del viaje (voucher, vuelos, etc.)
+const CATS = ['Voucher', 'Vuelos', 'Hotel', 'Seguro', 'Itinerario', 'Info del destino', 'Pasaporte', 'DNI', 'Visa', 'Otro'];
+// Checklist del viaje: qué documentación tiene que tener cargada el pasajero
+const REQ_CATS = CATS.filter(c => c !== 'Otro');
+const IMG_BUCKET = 'corradi-images';   // bucket público (imágenes de viaje)
+// País → código ISO para la bandera
+const COUNTRY_ISO = { 'argentina': 'ar', 'brasil': 'br', 'brazil': 'br', 'chile': 'cl', 'uruguay': 'uy', 'paraguay': 'py', 'perú': 'pe', 'peru': 'pe', 'bolivia': 'bo', 'colombia': 'co', 'ecuador': 'ec', 'venezuela': 've', 'méxico': 'mx', 'mexico': 'mx', 'estados unidos': 'us', 'usa': 'us', 'canadá': 'ca', 'canada': 'ca', 'españa': 'es', 'espana': 'es', 'italia': 'it', 'francia': 'fr', 'portugal': 'pt', 'alemania': 'de', 'reino unido': 'gb', 'inglaterra': 'gb', 'países bajos': 'nl', 'paises bajos': 'nl', 'holanda': 'nl', 'suiza': 'ch', 'grecia': 'gr', 'croacia': 'hr', 'turquía': 'tr', 'turquia': 'tr', 'egipto': 'eg', 'marruecos': 'ma', 'sudáfrica': 'za', 'sudafrica': 'za', 'emiratos árabes unidos': 'ae', 'emiratos arabes unidos': 'ae', 'tailandia': 'th', 'japón': 'jp', 'japon': 'jp', 'china': 'cn', 'india': 'in', 'indonesia': 'id', 'vietnam': 'vn', 'australia': 'au', 'nueva zelanda': 'nz', 'cuba': 'cu', 'república dominicana': 'do', 'republica dominicana': 'do', 'panamá': 'pa', 'panama': 'pa', 'costa rica': 'cr', 'aruba': 'aw' };
+function flagUrl(country) { const iso = COUNTRY_ISO[(country || '').trim().toLowerCase()]; return iso ? `https://flagcdn.com/w640/${iso}.png` : null; }
+// Imagen del viaje: la cargada, o la bandera del país, o null
+function tripImg(t) { return t.image_url || flagUrl(t.country) || null; }
+function tripThumb(t, size) {
+  const u = tripImg(t), s = size || 44;
+  if (u) return `<img src="${esc(u)}" alt="" style="width:${s}px;height:${s}px;border-radius:12px;object-fit:cover;flex-shrink:0" onerror="this.outerHTML='<div class=\\'avatar\\' style=\\'background:rgba(242,179,82,.15);color:var(--gold)\\'><span class=\\'ms\\'>luggage</span></div>'">`;
+  return `<div class="avatar" style="background:rgba(242,179,82,.15);color:var(--gold)"><span class="ms">luggage</span></div>`;
+}
 // Países frecuentes para autocompletar
 const COUNTRIES = ['Argentina', 'Brasil', 'Chile', 'Uruguay', 'Paraguay', 'Perú', 'Bolivia', 'Colombia', 'Ecuador', 'Venezuela', 'México', 'Estados Unidos', 'Canadá', 'España', 'Italia', 'Francia', 'Portugal', 'Alemania', 'Reino Unido', 'Países Bajos', 'Suiza', 'Grecia', 'Croacia', 'Turquía', 'Egipto', 'Marruecos', 'Sudáfrica', 'Emiratos Árabes Unidos', 'Tailandia', 'Japón', 'China', 'India', 'Indonesia', 'Vietnam', 'Australia', 'Nueva Zelanda', 'Cuba', 'República Dominicana', 'Panamá', 'Costa Rica', 'Aruba'];
 
@@ -116,7 +127,7 @@ async function renderPassenger() {
   const reqCats = [...new Set(R.map(r => r.category))];
   const missing = reqCats.filter(c => !myCats.has(c));
   if (missing.length) {
-    alerts += `<div class="alert alert-red"><span class="ms">description</span><div><div class="at">Te falta subir documentación</div><div class="as">Pendiente: ${missing.map(esc).join(' · ')}. Podés subirla abajo.</div></div></div>`;
+    alerts += `<div class="alert alert-red"><span class="ms">description</span><div><div class="at">Documentación pendiente</div><div class="as">Todavía falta: ${missing.map(esc).join(' · ')}. Corradi la va a cargar acá. Si es documentación tuya (pasaporte, DNI), podés subirla vos abajo.</div></div></div>`;
   }
   $('paxAlerts').innerHTML = alerts;
 
@@ -129,16 +140,19 @@ async function renderPassenger() {
     const du = daysUntil(t.depart_date);
     const badge = (du !== null && du >= 0 && du <= 10) ? `<span class="chip chip-gold">${du === 0 ? 'Sale hoy' : du === 1 ? 'Mañana' : 'En ' + du + ' días'}</span>` : '';
     const tdocs = D.filter(d => d.trip_id === t.id);
-    html += `<div class="card" style="padding:18px 20px;margin-bottom:16px">
-      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-        <div class="avatar" style="background:rgba(242,179,82,.15);color:var(--gold)"><span class="ms">luggage</span></div>
-        <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:17px">${esc(t.title)}</div>
-          <div class="sub-mut">${esc(t.destination || '')}${t.country ? ' · ' + esc(t.country) : ''}${t.depart_date ? ' · ' + fmtDate(t.depart_date) + (t.return_date ? ' → ' + fmtDate(t.return_date) : '') : ''}</div></div>
-        ${badge}
+    const bimg = tripImg(t);
+    html += `<div class="card" style="overflow:hidden;margin-bottom:16px">
+      ${bimg ? `<div style="height:160px;background:#0a1525"><img src="${esc(bimg)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.remove()"></div>` : ''}
+      <div style="padding:18px 20px">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:17px">${esc(t.title)}</div>
+            <div class="sub-mut">${esc(t.destination || '')}${t.country ? ' · ' + esc(t.country) : ''}${t.depart_date ? ' · ' + fmtDate(t.depart_date) + (t.return_date ? ' → ' + fmtDate(t.return_date) : '') : ''}</div></div>
+          ${badge}
+        </div>
+        ${t.notes ? `<p class="sub-mut" style="margin-top:12px;white-space:pre-wrap">${esc(t.notes)}</p>` : ''}
+        <div class="section-t" style="margin:16px 0 10px">Documentación de este viaje</div>
+        ${tdocs.length ? `<div class="rowlist">${tdocs.map(docRow).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Todavía no hay documentos cargados. Corradi los va a subir acá.</p>`}
       </div>
-      ${t.notes ? `<p class="sub-mut" style="margin-top:12px;white-space:pre-wrap">${esc(t.notes)}</p>` : ''}
-      <div class="section-t" style="margin:16px 0 10px">Documentación de este viaje</div>
-      ${tdocs.length ? `<div class="rowlist">${tdocs.map(docRow).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Sin documentos de este viaje todavía.</p>`}
     </div>`;
   });
 
@@ -236,9 +250,9 @@ function renderDashboard() {
     });
   }
   if (missingPax.length) {
-    al += `<div class="section-t">Pasajeros con documentación faltante</div>`;
+    al += `<div class="section-t">Pasajeros a los que falta cargarles documentación</div>`;
     missingPax.forEach(p => {
-      al += `<div class="alert alert-red"><span class="ms">person</span><div style="flex:1"><div class="at">${esc(p.full_name)} <span class="sub-mut">(DNI ${esc(p.dni)})</span></div><div class="as">Falta: ${missingForPax(p.id).map(esc).join(' · ')}</div></div><button class="btn btn-ghost btn-sm" onclick="openPassengerDetail('${p.id}')">Ver</button></div>`;
+      al += `<div class="alert alert-red"><span class="ms">person</span><div style="flex:1"><div class="at">${esc(p.full_name)} <span class="sub-mut">(DNI ${esc(p.dni)})</span></div><div class="as">Falta cargar: ${missingForPax(p.id).map(esc).join(' · ')}</div></div><button class="btn btn-ghost btn-sm" onclick="openPassengerDetail('${p.id}')">Cargar</button></div>`;
     });
   }
   if (!al) al = `<div class="empty"><span class="ms">check_circle</span>Todo en orden. No hay alertas.</div>`;
@@ -371,8 +385,8 @@ function renderTripList() {
     const px = paxOfTrip(t.id), du = daysUntil(t.depart_date);
     const badge = (du !== null && du >= 0 && du <= 10) ? `<span class="chip chip-gold">En ${du} día${du === 1 ? '' : 's'}</span>` : (du !== null && du < 0 ? `<span class="chip chip-mut">Pasado</span>` : '');
     return `<div class="rowitem click" onclick="openTripDetail(${t.id})">
-      <div class="avatar" style="background:rgba(242,179,82,.15);color:var(--gold)"><span class="ms">luggage</span></div>
-      <div class="info"><div class="t">${esc(t.title)}</div><div class="s">${esc(t.destination || '')}${t.depart_date ? ' · ' + fmtDate(t.depart_date) : ''}</div></div>
+      ${tripThumb(t)}
+      <div class="info"><div class="t">${esc(t.title)}</div><div class="s">${esc(t.destination || '')}${t.country ? ' · ' + esc(t.country) : ''}${t.depart_date ? ' · ' + fmtDate(t.depart_date) : ''}</div></div>
       <div class="end">${badge}<span class="chip chip-mut">${px.length} pax</span><span class="ms" style="color:var(--mut2)">chevron_right</span></div></div>`;
   }).join('');
 }
@@ -387,12 +401,26 @@ function openNewTrip(edit) {
     <div class="grid2"><div class="fg"><label class="fl">Fecha de salida</label><input id="ntDep" type="date" value="${t?.depart_date || ''}"></div>
     <div class="fg"><label class="fl">Fecha de regreso</label><input id="ntRet" type="date" value="${t?.return_date || ''}"></div></div>
     <div class="fg"><label class="fl">Notas (opcional)</label><textarea id="ntNotes" rows="3" placeholder="Info del viaje…">${esc(t?.notes || '')}</textarea></div>
-    <div class="fg"><label class="fl">Documentación que debe presentar el pasajero</label>
+    <div class="fg"><label class="fl">Imagen del viaje (opcional)</label>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div id="ntImgPrev" style="width:84px;height:56px;border-radius:10px;overflow:hidden;border:1px solid var(--line);flex-shrink:0;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center">
+          ${t && tripImg(t) ? `<img src="${esc(tripImg(t))}" style="width:100%;height:100%;object-fit:cover">` : `<span class="ms" style="color:var(--mut2)">image</span>`}
+        </div>
+        <input type="file" id="ntImg" accept="image/*" onchange="previewTripImg(event)" style="flex:1">
+      </div>
+      <p class="sub-mut" style="font-size:12px;margin-top:6px">Si no cargás imagen, se usa la <b>bandera del país</b> automáticamente.</p>
+    </div>
+    <div class="fg"><label class="fl">Checklist de documentación del viaje</label>
       <div style="display:flex;flex-wrap:wrap;gap:8px">${REQ_CATS.map(c => `<button type="button" class="chip chip-mut reqchip ${t && A.reqs.some(r => r.trip_id === t.id && r.category === c) ? 'sel' : ''}" data-c="${esc(c)}" onclick="this.classList.toggle('sel')">${esc(c)}</button>`).join('')}</div>
-      <p class="sub-mut" style="font-size:12px;margin-top:8px">Los vouchers, vuelos y demás los carga la agencia; esto es lo que el pasajero tiene que subir.</p>
+      <p class="sub-mut" style="font-size:12px;margin-top:8px">Marcá lo que cada pasajero tiene que tener cargado. Si falta algo, te avisamos en Inicio para que lo subas.</p>
     </div>
   </div>
   <div class="modal-f"><button class="btn btn-ghost" onclick="closeModal()">Cancelar</button><button class="btn btn-primary" id="ntBtn" onclick="doSaveTrip(${t ? t.id : 'null'})">${t ? 'Guardar' : 'Crear viaje'}</button></div>`);
+}
+function previewTripImg(ev) {
+  const f = ev.target.files[0]; if (!f) return;
+  const url = URL.createObjectURL(f);
+  $('ntImgPrev').innerHTML = `<img src="${url}" style="width:100%;height:100%;object-fit:cover">`;
 }
 async function doSaveTrip(id) {
   const payload = {
@@ -403,6 +431,14 @@ async function doSaveTrip(id) {
   const reqCats = [...document.querySelectorAll('.reqchip.sel')].map(c => c.dataset.c);
   const btn = $('ntBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
   try {
+    // Imagen del viaje (bucket público) — si no hay, se usa la bandera del país
+    const imgFile = $('ntImg') && $('ntImg').files[0];
+    if (imgFile) {
+      const ipath = `portal-trips/${rid()}_${safeName(imgFile.name)}`;
+      const { error: iErr } = await db.storage.from(IMG_BUCKET).upload(ipath, imgFile, { upsert: false, contentType: imgFile.type || undefined });
+      if (iErr) throw new Error('No se pudo subir la imagen: ' + iErr.message);
+      payload.image_url = `${SUPABASE_URL}/storage/v1/object/public/${IMG_BUCKET}/${ipath}`;
+    }
     let tripId = id;
     if (id) { const { error } = await db.from('pv_trips').update(payload).eq('id', id); if (error) throw error; }
     else { const { data, error } = await db.from('pv_trips').insert(payload).select().single(); if (error) throw error; tripId = data.id; }
@@ -417,7 +453,7 @@ function openTripDetail(tid) {
   const t = A.trips.find(x => x.id === tid); if (!t) return;
   const px = paxOfTrip(tid), req = A.reqs.filter(r => r.trip_id === tid).map(r => r.category);
   const du = daysUntil(t.depart_date);
-  const html = `<div class="modal-h"><div class="avatar" style="background:rgba(242,179,82,.15);color:var(--gold)"><span class="ms">luggage</span></div><h3 style="flex:1">${esc(t.title)}</h3>
+  const html = `<div class="modal-h">${tripThumb(t)}<h3 style="flex:1">${esc(t.title)}</h3>
     <button class="btn btn-icon btn-ghost" title="Editar" onclick="openNewTrip(${tid})"><span class="ms">edit</span></button>
     <button class="btn btn-icon btn-danger" title="Eliminar" onclick="deleteTrip(${tid})"><span class="ms">delete</span></button>
     <button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
@@ -430,10 +466,38 @@ function openTripDetail(tid) {
     ${px.length ? `<div class="rowlist">${px.map(p => { const m = missingForPax(p.id).length; return `<div class="rowitem"><div class="avatar">${esc(initials(p.full_name))}</div><div class="info click" onclick="openPassengerDetail('${p.id}')"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${m ? ' · ⚠ ' + m + ' doc. pendiente(s)' : ''}</div></div><button class="btn btn-icon btn-danger" title="Quitar del viaje" onclick="removePaxFromTrip(${tid},'${p.id}')"><span class="ms">person_remove</span></button></div>`; }).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Sin pasajeros asignados.</p>`}
   </div>
   <div class="modal-f" style="flex-wrap:wrap">
-    ${A.lib.length ? `<button class="btn btn-ghost" onclick="openAttachTripLib(${tid})"><span class="ms">library_add</span>Enviar doc de biblioteca a todos</button>` : ''}
+    ${A.lib.length ? `<button class="btn btn-ghost" onclick="openAttachTripLib(${tid})"><span class="ms">library_add</span>De biblioteca a todos</button>` : ''}
+    <button class="btn btn-ghost" onclick="openUploadTripDoc(${tid})"><span class="ms">upload_file</span>Subir doc a todos</button>
     <button class="btn btn-primary" onclick="openAssignPax(${tid})"><span class="ms">group_add</span>Asignar pasajeros</button>
   </div>`;
   openModal(html, true);
+}
+// Subir un documento y dárselo a TODOS los pasajeros del viaje (ej: itinerario, guía)
+function openUploadTripDoc(tid) {
+  const px = paxOfTrip(tid);
+  if (!px.length) { toast('Primero asigná pasajeros al viaje', 'err'); return; }
+  openModal(`<div class="modal-h"><h3>Subir documento a los ${px.length} pasajeros</h3><button class="btn btn-icon btn-ghost" onclick="openTripDetail(${tid})"><span class="ms">close</span></button></div>
+  <div class="modal-b">
+    <p class="sub-mut" style="margin-bottom:14px">El mismo archivo queda cargado en la documentación de todos los pasajeros de este viaje.</p>
+    <div class="fg"><label class="fl">Título *</label><input id="tdTitle" placeholder="Ej: Itinerario del viaje"></div>
+    <div class="fg"><label class="fl">Tipo</label><select id="tdCat">${CATS.map(c => `<option ${c === 'Itinerario' ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+    <div class="fg"><label class="fl">Archivo *</label><input type="file" id="tdFile" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"></div>
+  </div>
+  <div class="modal-f"><button class="btn btn-ghost" onclick="openTripDetail(${tid})">Volver</button><button class="btn btn-primary" id="tdBtn" onclick="doUploadTripDoc(${tid})">Subir a todos</button></div>`);
+}
+async function doUploadTripDoc(tid) {
+  const px = paxOfTrip(tid);
+  const file = $('tdFile').files[0], title = $('tdTitle').value.trim(), cat = $('tdCat').value;
+  if (!title) { toast('Poné un título', 'err'); return; }
+  if (!file) { toast('Elegí un archivo', 'err'); return; }
+  const btn = $('tdBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    const path = await uploadFileTo(`trips/${tid}`, file);   // carpeta compartida del viaje
+    const rows = px.map(p => ({ passenger_id: p.id, trip_id: tid, title, category: cat, file_path: path, file_name: file.name, source: 'admin', uploaded_by: me.id }));
+    const { error } = await db.from('pv_documents').insert(rows);
+    if (error) throw error;
+    toast(`Cargado a ${px.length} pasajero(s) ✓`, 'ok'); await loadAll(); openTripDetail(tid);
+  } catch (e) { toast('Error: ' + (e.message || e), 'err'); btn.disabled = false; btn.textContent = 'Subir a todos'; }
 }
 async function deleteTrip(tid) {
   if (!confirm('¿Eliminar este viaje? Se quitará a los pasajeros (sus documentos no se borran).')) return;
