@@ -61,6 +61,25 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 .topbar .logo{height:30px}
 .topbar .who{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:14px;color:var(--mut)}
 .wrap{max-width:1200px;margin:0 auto;padding:22px 20px 80px}
+.crumb{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:12px;font-size:13.5px;color:var(--mut)}
+.crumb a{cursor:pointer;padding:5px 9px;border-radius:9px;color:var(--mut);display:flex;align-items:center;gap:5px}
+.crumb a:hover{background:rgba(255,255,255,.07);color:var(--txt)}
+.crumb a.dropok{outline:2px solid var(--blue);color:var(--txt)}
+.crumb .cur{color:var(--txt);font-weight:700;padding:5px 4px}
+.dropzone{border:2px dashed transparent;border-radius:16px;transition:border-color .14s,background .14s;padding:5px;min-height:140px}
+.dropzone.over{border-color:var(--blue);background:rgba(58,124,214,.08)}
+.rowitem.dragging{opacity:.4}
+.rowitem.dropok{outline:2px solid var(--blue);outline-offset:-2px;background:rgba(58,124,214,.1)}
+.dinfo h4{font-size:14px;font-weight:800;margin:18px 0 8px;display:flex;align-items:center;gap:7px;color:var(--gold)}
+.dinfo p{font-size:14px;line-height:1.65;color:var(--mut)}
+.dinfo ul{list-style:none;display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.dinfo li{font-size:14px;line-height:1.6;color:var(--mut);padding-left:16px;position:relative}
+.dinfo li:before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.dinfo li b{color:var(--txt);font-weight:700}
+.dfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:6px}
+.dfact{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.dfact .k{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--mut2);font-weight:700}
+.dfact .v{font-size:13.5px;font-weight:600;margin-top:3px}
 .page-h{display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap}
 .page-h h2{font-size:23px;font-weight:800}
 .page-h .spacer{flex:1}
@@ -222,13 +241,17 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 
     <div id="viewLib" class="view">
       <div class="page-h">
-        <h2>Biblioteca de documentos</h2><div class="spacer"></div>
+        <h2>Biblioteca</h2><div class="spacer"></div>
+        <button class="btn btn-ghost" onclick="newFolder()"><span class="ms">create_new_folder</span>Nueva carpeta</button>
         <label class="btn btn-primary" style="cursor:pointer"><span class="ms">upload</span>Subir documento
-          <input type="file" id="libFile" class="hidden" onchange="uploadLibrary(event)" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
+          <input type="file" id="libFile" class="hidden" multiple onchange="uploadLibrary(event)" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx">
         </label>
       </div>
-      <p class="sub-mut" style="margin:-8px 0 16px">Documentos reutilizables (ej: "Qué hacer en Madrid"). Los adjuntás a un pasajero con un click, sin volver a subirlos.</p>
-      <div id="libListWrap" class="rowlist"></div>
+      <p class="sub-mut" style="margin:-8px 0 14px">Solo los documentos importantes que reutilizás (guías, formularios, info general). Arrastrá archivos desde tu computadora para subirlos, o arrastrá un documento sobre una carpeta para moverlo.</p>
+      <div id="libCrumb" class="crumb"></div>
+      <div id="libDrop" class="dropzone" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
+        <div id="libListWrap" class="rowlist"></div>
+      </div>
     </div>
   </div>
 </div>
