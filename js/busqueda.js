@@ -108,7 +108,7 @@ function renderResults() {
   }
 
   if (activeCategory !== 'all') {
-    filtered = filtered.filter(p => (p.country || '').trim() === activeCategory);
+    filtered = filtered.filter(p => (p.country || '').trim().toLowerCase() === activeCategory.toLowerCase());
   }
 
   if (activeFeature !== 'all') {

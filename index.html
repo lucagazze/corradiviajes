@@ -358,7 +358,7 @@
         <h2 class="font-h2 text-h2 text-white mb-xs">Viajes Inspiradores</h2>
         <p class="font-body-md text-body-md text-white/60">Destinos curados para soñar tu próxima aventura.</p>
       </div>
-      <a href="busqueda" class="hidden md:flex items-center gap-1 font-label-md text-label-md transition-colors" style="color: #75a7ec">
+      <a href="busqueda.html" class="hidden md:flex items-center gap-1 font-label-md text-label-md transition-colors" style="color: #75a7ec">
         Ver Todos <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
       </a>
     </div>
@@ -370,7 +370,7 @@
     
     <!-- Ver Todos row -->
     <div class="mt-8 flex justify-center" id="pkgActions">
-      <a href="busqueda" class="flex items-center justify-center gap-2 font-medium text-sm text-[#3778b8] border border-[#3778b8] hover:bg-[#3778b8]/10 rounded-full px-8 py-3 transition-all">
+      <a href="busqueda.html" class="flex items-center justify-center gap-2 font-medium text-sm text-[#3778b8] border border-[#3778b8] hover:bg-[#3778b8]/10 rounded-full px-8 py-3 transition-all">
         Ver todos los destinos <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
       </a>
     </div>
@@ -389,7 +389,7 @@
           <h2 class="font-h2 text-h2 text-white mb-xs">Paquetes en Oferta</h2>
           <p class="font-body-md text-body-md text-white/60">Promociones de último momento. Las que no querés perderte.</p>
         </div>
-        <a href="ofertas" class="hidden md:flex items-center gap-1 font-label-md text-label-md transition-colors" style="color: #75a7ec">
+        <a href="ofertas.html" class="hidden md:flex items-center gap-1 font-label-md text-label-md transition-colors" style="color: #75a7ec">
           Ver Todas <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
         </a>
       </div>
@@ -401,7 +401,7 @@
       </div>
 
       <div class="mt-8 flex justify-center" id="promoActions" style="display:none">
-        <a href="ofertas" class="flex items-center justify-center gap-2 font-medium text-sm text-[#3778b8] border border-[#3778b8] hover:bg-[#3778b8]/10 rounded-full px-8 py-3 transition-all">
+        <a href="ofertas.html" class="flex items-center justify-center gap-2 font-medium text-sm text-[#3778b8] border border-[#3778b8] hover:bg-[#3778b8]/10 rounded-full px-8 py-3 transition-all">
           Ver todas las ofertas <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
         </a>
       </div>
@@ -699,9 +699,9 @@
     <img src="img/logonavbnegro.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300 light-logo hidden mx-auto" loading="lazy" decoding="async">
   </div>
   <div class="flex gap-6 mb-4">
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros">Nosotros</a>
+    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros.html">Nosotros</a>
     <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="#">Términos</a>
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto">Contacto</a>
+    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto.html">Contacto</a>
   </div>
   <p class="font-['Geomanist'] text-sm text-white/30">© 2026 Corradi Viajes. Agencia en Rosario.</p>
 </footer>
@@ -804,8 +804,11 @@
         listContainer.querySelectorAll('.dest-option').forEach(opt => {
           opt.onclick = (e) => {
             e.stopPropagation();
-            destDisplay.value = opt.getAttribute('data-label');
-            destInput.value = opt.getAttribute('data-val');
+            const lbl = opt.getAttribute('data-label');
+            const val = opt.getAttribute('data-val');
+            destDisplay.value = lbl;
+            destDisplay.setAttribute('value', lbl);
+            destInput.value = val;
             destPopover.classList.add('hidden');
           };
         });
@@ -898,11 +901,15 @@
         else { pricePopover.classList.add('hidden'); }
       });
       pricePopover.querySelectorAll('.price-option').forEach(opt => {
-        opt.addEventListener('click', () => {
-          priceDisplay.value = opt.getAttribute('data-label');
-          priceInput.value = opt.getAttribute('data-val');
+        opt.onclick = (e) => {
+          e.stopPropagation();
+          const lbl = opt.getAttribute('data-label');
+          const val = opt.getAttribute('data-val');
+          priceDisplay.value = lbl;
+          priceDisplay.setAttribute('value', lbl);
+          priceInput.value = val;
           pricePopover.classList.add('hidden');
-        });
+        };
       });
       document.addEventListener('click', (e) => { if (!priceContainer.contains(e.target) && !pricePopover.contains(e.target)) pricePopover.classList.add('hidden'); });
     }
