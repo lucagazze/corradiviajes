@@ -165,6 +165,39 @@ async function startPassenger() {
   $('appPassenger').classList.remove('hidden'); $('appAdmin').classList.add('hidden');
   $('paxName').textContent = me.full_name || 'Mi cuenta';
   await renderPassenger();
+  if (typeof switchPaxTab === 'function') switchPaxTab('next');
+}
+
+function openPastTripModal(title, date, duration, hotel, img) {
+  openModal(`
+    <div class="modal-h">
+      <h3 style="flex:1;color:#0f172a;font-weight:800">${esc(title)}</h3>
+      <button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button>
+    </div>
+    <div class="modal-b" style="padding-top:0">
+      ${img ? `<div style="height:200px;margin:0 -22px 18px;overflow:hidden"><img src="${esc(img)}" style="width:100%;height:100%;object-fit:cover"></div>` : ''}
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span class="chip chip-green">Viaje Realizado</span>
+        <span style="font-size:13.5px;color:#475569;font-weight:600">${esc(date)} (${esc(duration)})</span>
+      </div>
+      
+      <div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:14px;padding:16px;margin-bottom:16px">
+        <div style="font-weight:800;font-size:14px;color:#0f172a;margin-bottom:6px">🏨 Alojamiento de la Estadía</div>
+        <div style="font-size:13.5px;color:#334155;font-weight:600">${esc(hotel)}</div>
+      </div>
+
+      <div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:16px;margin-bottom:20px">
+        <div style="font-weight:800;font-size:14px;color:#0052cc;margin-bottom:4px">🌟 Recuerdos & Resumen</div>
+        <div style="font-size:13.5px;color:#1e40af;line-height:1.5">Un viaje inolvidable coordinado y gestionado por Corradi Viajes. Incluyó vuelos, traslados privados, vouchers y asistencia médica las 24 hs.</div>
+      </div>
+
+      <div style="display:flex;gap:10px;justify-content:flex-end">
+        <a href="https://wa.me/5493416057588?text=${encodeURIComponent('Hola Corradi! Quería volver a cotizar un viaje similar a: ' + title)}" target="_blank" class="btn btn-primary" style="border-radius:50px">
+          <i class="ri-whatsapp-line"></i> Volver a Cotizar por WhatsApp
+        </a>
+      </div>
+    </div>
+  `, true);
 }
 let P = { trips: [], docs: [], reqs: [], dests: [] };   // cache del pasajero
 async function renderPassenger() {
