@@ -72,17 +72,24 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px}
 .hidden{display:none!important}
 
-/* ── LOGIN ── */
-#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:radial-gradient(ellipse at 50% -10%,#1a3a6b 0%,#0b1525 60%)}
-.login-card{width:100%;max-width:400px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:24px;padding:40px 34px;text-align:center;box-shadow:0 30px 80px rgba(0,0,0,.45)}
-.login-logo{height:46px;margin:0 auto 22px;object-fit:contain}
-.login-card h1{font-size:21px;font-weight:800;margin-bottom:4px}
-.login-card .sub{color:var(--mut);font-size:14px;margin-bottom:26px}
-.login-card input{margin-bottom:12px;text-align:center;font-size:16px}
-.login-card .btn{width:100%;padding:14px;font-size:16px;margin-top:2px}
-.login-alt{margin-top:18px;font-size:13px;color:var(--mut)}
-.login-alt a{color:var(--blue2);font-weight:700}
-.login-err{color:#fca5a5;font-size:13.5px;margin-top:12px;min-height:18px;font-weight:600}
+/* ── LOGIN (WHITE THEME) ── */
+#loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#f8fafc!important}
+.login-card{width:100%;max-width:400px;background:#ffffff!important;border:1.5px solid #cbd5e1!important;border-radius:24px;padding:44px 36px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.06)!important;color:#0f172a!important}
+.login-logo{height:48px;margin:0 auto 24px;object-fit:contain}
+.login-card h1{font-size:22px;font-weight:800!important;margin-bottom:6px;color:#0f172a!important}
+.login-card .sub{color:#475569!important;font-size:14px;margin-bottom:26px;font-weight:500!important}
+.login-card input{margin-bottom:14px;text-align:center;font-size:16px;background:#f8fafc!important;border:1.5px solid #cbd5e1!important;color:#0f172a!important;border-radius:12px}
+.login-card input:focus{border-color:#0052cc!important;background:#ffffff!important;box-shadow:0 0 0 3px rgba(0,82,204,0.12)!important}
+.login-card .btn{width:100%;padding:14px;font-size:15px;margin-top:2px;font-weight:700!important;background:linear-gradient(135deg,#0052cc,#003d9b)!important;color:#ffffff!important;border-radius:50px;box-shadow:0 4px 14px rgba(0,82,204,0.25)!important}
+.login-alt{margin-top:18px;font-size:13.5px;color:#475569!important}
+.login-alt a{color:#0052cc!important;font-weight:700!important}
+.login-err{color:#dc2626!important;font-size:13.5px;margin-top:12px;min-height:18px;font-weight:600!important}
+
+select{background-color:#ffffff!important;border:1.5px solid #cbd5e1!important;border-radius:10px!important;padding:9px 36px 9px 12px!important;color:#0f172a!important;font-size:13.5px!important;font-weight:600!important;outline:none!important;cursor:pointer!important;appearance:none!important;-webkit-appearance:none!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230052cc'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:right 10px center!important;background-size:20px!important}
+select option{background-color:#ffffff!important;color:#0f172a!important;font-size:13.5px!important;font-weight:600!important;padding:10px 14px!important}
+
+#toast{position:fixed!important;bottom:22px!important;left:50%!important;transform:translateX(-50%) translateY(180%)!important;opacity:0!important;pointer-events:none!important;z-index:99999!important;background:#0f172a!important;color:#ffffff!important;border:1.5px solid #334155!important;border-radius:12px!important;padding:12px 20px!important;font-weight:600!important;font-size:14px!important;box-shadow:0 16px 40px rgba(0,0,0,0.25)!important;transition:transform .28s ease,opacity .28s ease!important}
+#toast.show{transform:translateX(-50%) translateY(0)!important;opacity:1!important;pointer-events:auto!important}
 
 /* ── APP SHELL ── */
 .topbar{position:sticky;top:0;z-index:40;background:rgba(11,21,37,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:12px 20px}

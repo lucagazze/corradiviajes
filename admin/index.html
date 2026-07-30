@@ -967,44 +967,84 @@ body.light .pkg-list-actions .pkg-qbtn .ms {
   color: rgba(30, 41, 59, 0.7) !important;
 }
 /* Quick price input styling */
-.quick-price-input {
-  transition: border-color 0.15s, background-color 0.15s;
+.quick-price-input, .pli-orig, .pli-desc {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0052cc !important;
+  font-weight: 700 !important;
+  font-size: 13px !important;
+  outline: none !important;
+  border-radius: 8px !important;
+  padding: 5px 8px !important;
+  text-align: right !important;
+  font-family: 'Geomanist', 'Plus Jakarta Sans', system-ui, sans-serif !important;
 }
-.quick-price-input:focus {
-  background: rgba(255, 255, 255, 0.15) !important;
-  border-color: #3778b8 !important;
-  outline: none;
+.quick-price-input:focus, .pli-orig:focus, .pli-desc:focus {
+  background: #ffffff !important;
+  border-color: #0052cc !important;
+  box-shadow: 0 0 0 3px rgba(0,82,204,0.12) !important;
 }
-body.light .quick-price-input {
-  background: rgba(0,0,0,0.06) !important;
-  border-color: rgba(0,0,0,0.18) !important;
-  color: #1d4ed8 !important;
+.quick-price-input::placeholder, .pli-orig::placeholder, .pli-desc::placeholder {
+  color: #94a3b8 !important;
+  font-weight: 500 !important;
 }
-body.light .quick-price-input:focus {
-  background: #fff !important;
-  border-color: #3778b8 !important;
+.quick-price-input.pli-struck {
+  text-decoration: line-through !important;
+  color: #94a3b8 !important;
 }
-body.light .quick-price-input::placeholder { color: rgba(0,0,0,0.38) !important; }
-body.light .pkg-list-price { color: rgba(0,0,0,0.45); }
-body.light .pkg-list-price .qprice-label { color: rgba(0,0,0,0.5); }
-body.light .quick-badge-input {
-  background: rgba(0,0,0,0.06) !important;
-  border-color: rgba(0,0,0,0.18) !important;
-  color: #1e293b !important;
-}
-body.light .quick-badge-input::placeholder { color: rgba(0,0,0,0.35) !important; }
-body.light .quick-badge-input:focus {
-  background: #fff !important;
-  border-color: #3778b8 !important;
-}
+
+/* Quick badge input styling */
 .quick-badge-input {
-  transition: border-color 0.15s, background-color 0.15s;
+  background: #fffbe6 !important;
+  border: 1.5px solid #fde68a !important;
+  color: #ca8a04 !important;
+  font-weight: 700 !important;
+  font-size: 11.5px !important;
+  outline: none !important;
+  border-radius: 8px !important;
+  padding: 5px 8px !important;
+  text-align: center !important;
+  font-family: 'Geomanist', 'Plus Jakarta Sans', system-ui, sans-serif !important;
 }
 .quick-badge-input:focus {
-  background: rgba(255,255,255,0.15) !important;
-  border-color: #3778b8 !important;
-  outline: none;
+  background: #ffffff !important;
+  border-color: #d97706 !important;
+  color: #92400e !important;
+  box-shadow: 0 0 0 3px rgba(217,119,6,0.12) !important;
 }
+.quick-badge-input::placeholder {
+  color: #d97706 !important;
+  opacity: 0.6 !important;
+}
+
+/* Select dropdowns high contrast light theme with icon */
+select, .select-filter {
+  background-color: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  border-radius: 10px !important;
+  padding: 9px 36px 9px 12px !important;
+  color: #0f172a !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  outline: none !important;
+  cursor: pointer !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  font-family: 'Geomanist', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230052cc'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 20px !important;
+}
+select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  font-size: 13.5px !important;
+  font-weight: 600 !important;
+  padding: 10px 14px !important;
+  font-family: 'Geomanist', 'Plus Jakarta Sans', system-ui, sans-serif !important;
+}
+
 .pkg-qbtn .ms{font-size:16px}
 
 /* ── CONTEXT MENU ── */
