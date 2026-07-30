@@ -3896,34 +3896,50 @@ function showAIModal() {
   const currentCountry = document.getElementById('fCountry').value.trim();
   const currentDays = document.getElementById('fDays').value.trim();
 
+  const countryOptions = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : [])
+    .map(c => `<option value="${escHtml(c.name)}">${c.flag} ${escHtml(c.name)}</option>`).join('');
+
   const modal = document.createElement('div');
   modal.id = 'aiModal';
   modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.6);backdrop-filter:blur(6px)';
   modal.innerHTML = `
-    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:32px;max-width:540px;width:95%;box-shadow:0 30px 80px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto;color:#0f172a">
+    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:32px;max-width:560px;width:95%;box-shadow:0 30px 80px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto;color:#0f172a">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
         <span class="material-symbols-outlined" style="color:#0052cc;font-size:26px;font-variation-settings:'FILL' 1">auto_fix_high</span>
-        <h3 style="font-size:20px;font-weight:800;color:#0f172a">Importar o Generar Paquete con IA</h3>
+        <h3 style="font-size:20px;font-weight:800;color:#0f172a">Generar o Importar Paquete con IA</h3>
       </div>
-      <p style="color:#475569;font-size:13.5px;margin-bottom:22px;line-height:1.5;font-weight:500">
-        Pegá la URL de una web de viajes o el texto completo del folleto para copiar el paquete automáticamente, o completá los datos básicos para que la IA arme todo.
+      <p style="color:#475569;font-size:13.5px;margin-bottom:20px;line-height:1.5;font-weight:500">
+        Elegí un país y destino para que la IA investigue el lugar y arme el plan completo, o pegá la URL/texto de un paquete para copiarlo al instante.
       </p>
 
       <div style="display:flex;flex-direction:column;gap:14px">
-        <div class="fg">
-          <label class="fl">Nombre del paquete *</label>
-          <input type="text" id="aiName" class="fi" placeholder="Ej: Europa Clásica 12 días" value="${escHtml(currentName)}">
+        <!-- Campo URL -->
+        <div class="fg" style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:14px;padding:12px 14px">
+          <label class="fl" style="color:#0284c7;display:flex;align-items:center;gap:6px;margin-bottom:4px">
+            <span class="material-symbols-outlined" style="font-size:16px">link</span> 🔗 URL del Viaje o Web a Copiar (Opcional)
+          </label>
+          <input type="url" id="aiUrl" class="fi" style="background:#ffffff" placeholder="https://agencia.com/paquete-europa-clasica">
         </div>
+
+        <div class="fg">
+          <label class="fl">Nombre del paquete</label>
+          <input type="text" id="aiName" class="fi" placeholder="Ej: Italia Soñada 10 días" value="${escHtml(currentName)}">
+        </div>
+
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div class="fg">
             <label class="fl">Destino / Ciudad</label>
-            <input type="text" id="aiDest" class="fi" placeholder="Ej: París, Roma, Cancún" value="${escHtml(currentDest)}">
+            <input type="text" id="aiDest" class="fi" placeholder="Ej: Roma, Florencia, Venecia" value="${escHtml(currentDest)}">
           </div>
           <div class="fg">
-            <label class="fl">País</label>
-            <input type="text" id="aiCountry" class="fi" placeholder="Ej: Francia, Italia" value="${escHtml(currentCountry)}">
+            <label class="fl">País (Buscá o Seleccioná)</label>
+            <input type="text" id="aiCountry" class="fi" list="aiCountryDatalist" placeholder="Escribí para buscar país..." value="${escHtml(currentCountry)}">
+            <datalist id="aiCountryDatalist">
+              ${countryOptions}
+            </datalist>
           </div>
         </div>
+
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div class="fg">
             <label class="fl">Cantidad de días</label>
@@ -3934,28 +3950,29 @@ function showAIModal() {
             <input type="number" id="aiPrice" class="fi" placeholder="2500" min="0">
           </div>
         </div>
+
         <div class="fg">
-          <label class="fl">Descripción libre <span style="color:rgba(255,255,255,0.3);font-weight:400;text-transform:none;letter-spacing:0"> — contale todo lo que sepas</span></label>
-          <textarea id="aiNotes" class="ft" style="min-height:110px" placeholder="Ej: Viaje de luna de miel a Grecia visitando Santorini y Mykonos. Hoteles boutique con vista al mar. 10 noches. Vuelo directo desde Buenos Aires. Incluye cenas románticas y excursión en barco..."></textarea>
+          <label class="fl">Descripción libre o Texto del folleto</label>
+          <textarea id="aiNotes" class="ft" style="min-height:90px" placeholder="Pegá el texto completo del folleto o indicá preferencias: hoteles 4 estrellas, régimen all inclusive, excursiones en barco..."></textarea>
         </div>
       </div>
 
-      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:22px">
+      <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:24px">
         <button class="btn btn-ghost" onclick="document.getElementById('aiModal').remove()">Cancelar</button>
-        <button class="btn btn-primary" id="aiModalGenBtn" onclick="runAIFromModal()" style="background:linear-gradient(135deg,#10a37f,#1a7a60)">
-          <span class="ms material-symbols-outlined">auto_fix_high</span>Generar todo
+        <button class="btn btn-primary" id="aiModalGenBtn" onclick="runAIFromModal()">
+          <span class="ms material-symbols-outlined">auto_fix_high</span>Generar plan completo
         </button>
       </div>
     </div>`;
   document.body.appendChild(modal);
   setTimeout(() => {
-    const nameInput = document.getElementById('aiName');
-    if (nameInput) { nameInput.focus(); if (!nameInput.value) return; nameInput.select(); }
+    const destInput = document.getElementById('aiDest');
+    if (destInput && !destInput.value) destInput.focus();
   }, 80);
 }
 
 async function runAIFromModal() {
-  const urlText = document.getElementById('aiUrlText')?.value.trim();
+  const url     = document.getElementById('aiUrl')?.value.trim();
   const name    = document.getElementById('aiName')?.value.trim();
   const dest    = document.getElementById('aiDest')?.value.trim();
   const country = document.getElementById('aiCountry')?.value.trim();
@@ -3963,46 +3980,52 @@ async function runAIFromModal() {
   const price   = document.getElementById('aiPrice')?.value.trim();
   const notes   = document.getElementById('aiNotes')?.value.trim();
 
-  if (!name && !urlText && !notes && !dest) {
-    document.getElementById('aiUrlText')?.focus();
-    showToast('Pegá la URL del paquete, el texto del folleto o escribí el nombre', 'error');
+  if (!url && !name && !dest && !country && !notes) {
+    document.getElementById('aiDest')?.focus();
+    showToast('Ingresá al menos una URL, destino, país o nombre para generar', 'error');
     return;
   }
 
   const btn = document.getElementById('aiModalGenBtn');
-  if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Importando paquete…`; btn.disabled = true; }
+  if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando e investigando destino…`; btn.disabled = true; }
 
   const context = [
-    urlText ? `URL o TEXTO COMPLETO DEL VIAJE A COPIAR/IMPORTAR:\n"""\n${urlText}\n"""` : '',
-    name    ? `Nombre del paquete: "${name}"` : '',
-    dest    ? `Destino: ${dest}` : '',
+    url     ? `URL O TEXTO DEL PAQUETE A IMPORTAR: "${url}"` : '',
+    name    ? `Nombre sugerido: "${name}"` : '',
+    dest    ? `Destino / Ciudad: ${dest}` : '',
     country ? `País: ${country}` : '',
-    days    ? `Días: ${days}` : '',
-    price   ? `Precio aprox USD: ${price}` : '',
-    notes   ? `Información adicional: ${notes}` : '',
+    days    ? `Cantidad de Días: ${days}` : '',
+    price   ? `Precio estimado USD: ${price}` : '',
+    notes   ? `Notas / Descripción libre: ${notes}` : '',
   ].filter(Boolean).join('\n\n');
 
-  const prompt = `Sos el asistente de Corradi Viajes, agencia de viajes de Rosario, Argentina. Con la siguiente información generá los datos completos del paquete turístico:
+  const prompt = `Sos un experto gestor de viajes y guía turístico profesional de Corradi Viajes, agencia de viajes de Rosario, Argentina.
+Con la siguiente información del paquete (URL, destino, país, días y notas), analizá en detalle el lugar y redactá un plan de viaje completo, realista y súper atractivo:
 
 ${context}
 
+INSTRUCCIONES DE INVESTIGACIÓN Y GENERACIÓN:
+1. Analizá en profundidad el destino (${dest || 'destino especificado'}) y el país (${country || 'país especificado'}). Investigá sus monumentos emblemáticos, paseos icónicos, paseos en barco/excursiones típicas, gastronomía local y experiencias imperdibles.
+2. Construí un itinerario día por día ("Día 1", "Día 2", etc.) ultra específico y estructurado con actividades reales para exactamente esa cantidad de días (${days || 'según contexto'}).
+3. Redactá una descripción cautivadora, elegante y profesional del paquete.
+4. Generá una lista detallada de servicios incluidos ("includes") y no incluidos ("excludes").
+
 Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
 {
-  "name": "nombre del paquete (pulido y atractivo)",
-  "destination": "ciudad o zona principal",
-  "country": "país en español (Francia, Italia, México, España, etc.)",
-  "days": número entero,
-  "price_usd": número en USD,
-  "description": "2-3 oraciones atractivas y específicas del destino. Sin frases genéricas.",
-  "highlights": ["punto 1 concreto", "punto 2", "punto 3", "punto 4", "punto 5"],
-  "includes": ["item 1", "item 2", "item 3", "item 4", "item 5"],
-  "excludes": ["item 1", "item 2", "item 3"],
+  "name": "nombre pulido y atractivo del paquete",
+  "destination": "ciudad o región principal",
+  "country": "país en español",
+  "days": número entero de días,
+  "price_usd": número estimado en USD,
+  "description": "descripción cautivadora y profesional del paquete",
+  "highlights": ["punto destacado 1", "punto destacado 2", "punto destacado 3", "punto destacado 4"],
+  "includes": ["servicio incluido 1", "servicio incluido 2", "servicio incluido 3", "servicio incluido 4", "servicio incluido 5"],
+  "excludes": ["servicio no incluido 1", "servicio no incluido 2"],
   "itinerary": [
-    {"day": "Día 1", "desc": "descripción específica con lugares y actividades reales"},
-    {"day": "Día 2", "desc": "descripción del día"}
+    {"day": "Día 1", "desc": "Llegada, recepción en aeropuerto y primer recorrido por..."},
+    {"day": "Día 2", "desc": "Visita guiada por los puntos históricos..."}
   ]
-}
-El itinerario debe tener exactamente tantos ítems como el campo "days". Sé específico y usa lugares reales.`;
+}`;
 
   try {
     const pkg = await askAI(prompt, 2500);
@@ -4026,10 +4049,10 @@ El itinerario debe tener exactamente tantos ítems como el campo "days". Sé esp
       renderItineraryRows();
     }
 
-    showToast('¡Paquete generado! Revisá y ajustá los detalles antes de guardar.', 'success');
+    showToast('¡Paquete e itinerario generados! Revisá los detalles antes de guardar.', 'success');
   } catch (err) {
     console.error('[AI]', err);
-    if (btn) { btn.innerHTML = `<span class="ms material-symbols-outlined">auto_fix_high</span>Generar todo`; btn.disabled = false; }
+    if (btn) { btn.innerHTML = `<span class="ms material-symbols-outlined">auto_fix_high</span>Generar plan completo`; btn.disabled = false; }
     showToast('Error: ' + err.message, 'error');
   }
 }
