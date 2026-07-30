@@ -4013,15 +4013,16 @@ async function runAIFromModal() {
   ].filter(Boolean).join('\n\n');
 
   const prompt = `Sos un experto gestor de viajes y guía turístico profesional de Corradi Viajes, agencia de viajes de Rosario, Argentina.
-Con la siguiente información del paquete (URL, destino, país, días y notas), analizá en detalle el lugar y redactá un plan de viaje completo, realista y súper atractivo:
+Con la siguiente información del paquete (URL, destino, país, días y notas), analizá en detalle el lugar y redactá un plan de viaje completo, realista, profesional y de máxima calidad:
 
 ${context}
 
-INSTRUCCIONES DE INVESTIGACIÓN Y GENERACIÓN:
-1. Analizá en profundidad el destino (${dest || 'destino especificado'}) y el país (${country || 'país especificado'}). Investigá sus monumentos emblemáticos, paseos icónicos, paseos en barco/excursiones típicas, gastronomía local y experiencias imperdibles.
-2. Construí un itinerario día por día ("Día 1", "Día 2", etc.) ultra específico y estructurado con actividades reales para exactamente esa cantidad de días (${days || 'según contexto'}).
-3. Redactá una descripción cautivadora, elegante y profesional del paquete.
-4. Generá una lista detallada de servicios incluidos ("includes") y no incluidos ("excludes").
+REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
+1. NO INVENTES NADA. Usá exclusivamente monumentos, atracciones turísticas, ciudades, plazas, museos y actividades REALES y verificadas del destino (${dest || 'destino especificado'}) y país (${country || 'país especificado'}).
+2. Si se proporcionó una URL o texto de folleto, copiá e integrá fielmente los datos reales del viaje (vuelos, hoteles, excursiones incluidas, itinerario).
+3. Construí un itinerario día por día ("Día 1", "Día 2", etc.) ultra específico con recorridos lógicos y reales para exactamente esa cantidad de días (${days || 'según contexto'}).
+4. Redactá una descripción cautivadora, comercial y 100% profesional para la web de la agencia.
+5. Generá listas detalladas de servicios incluidos ("includes") y no incluidos ("excludes") adaptadas a paquetes turísticos reales desde Argentina.
 
 Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
 {
