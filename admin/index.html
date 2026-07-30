@@ -134,6 +134,37 @@ body, body.light {
   .dash-grid { grid-template-columns: repeat(2, 1fr) !important; }
 }
 
+.pkg-card {
+  position: relative !important;
+}
+
+.pkg-order-num {
+  position: absolute !important;
+  top: 10px !important;
+  left: 10px !important;
+  z-index: 15 !important;
+  background: rgba(15, 23, 42, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  color: #ffffff !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 3px 8px !important;
+  border-radius: 20px !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
+  line-height: 1 !important;
+}
+
+.pkg-list-order-num {
+  background: #e0f2fe !important;
+  color: #0369a1 !important;
+  border: 1px solid #bae6fd !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  padding: 2px 7px !important;
+  border-radius: 12px !important;
+}
+
 /* Sidebar Sub-item Icon Colors */
 #sbFilterAll .ms, #sbFilterAll .ri { color: #0284c7 !important; }
 #sbFilterGrupal .ms, #sbFilterGrupal .ri { color: #2563eb !important; }

@@ -259,7 +259,98 @@ async function renderPassenger() {
     html += `<div class="section-t">Otros documentos</div><div class="rowlist">${general.map(docRow).join('')}</div>`;
   }
   $('paxContent').innerHTML = html;
+
+  // Render Bóveda de Documentación
+  const docsContainer = $('paxDocsList');
+  if (docsContainer) {
+    if (D.length) {
+      docsContainer.innerHTML = D.map(docRow).join('');
+    } else {
+      docsContainer.innerHTML = `
+        <div class="empty" style="padding:24px;text-align:center">
+          <span class="ms" style="font-size:36px;color:#0052cc;display:block;margin-bottom:8px">cloud_upload</span>
+          <div style="font-weight:700;font-size:15px;color:#0f172a">Todavía no tenés documentos cargados</div>
+          <div class="sub-mut" style="margin-top:4px;margin-bottom:16px;color:#475569">Tocá en 'Subir Mi Documento' para enviar tu Pasaporte, DNI o comprobante.</div>
+          <button class="btn btn-primary btn-sm" onclick="openPassengerUploadModal()" style="border-radius:10px">
+            <i class="ri-upload-cloud-2-line"></i> Cargar mi primer documento
+          </button>
+        </div>`;
+    }
+  }
   hydrateThumbs();
+}
+
+function openPassengerUploadModal() {
+  openModal(`
+    <div class="modal-h">
+      <h3 style="color:#0f172a;font-weight:800">📤 Subir Documentación de Viaje</h3>
+      <button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button>
+    </div>
+    <div class="modal-b">
+      <p class="sub-mut" style="margin-bottom:16px;color:#475569">Cargá fotos o archivos PDF de tus documentos para que el equipo de Corradi los revise y confirme.</p>
+
+      <div class="fg">
+        <label class="fl">Tipo de Documento *</label>
+        <select id="paxDocCat" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a;font-weight:600">
+          <option value="Pasaporte">🛂 Foto / Copia de Pasaporte</option>
+          <option value="DNI">🪪 DNI (Frente / Dorso)</option>
+          <option value="Voucher">🎟️ Voucher / Pasaje de Vuelo</option>
+          <option value="Seguro">🛡️ Seguro de Viaje / Asistencia Médica</option>
+          <option value="Visa">📄 Visa / Permiso de Ingreso</option>
+          <option value="Otro">📁 Otro documento</option>
+        </select>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Título o Nombre del Archivo *</label>
+        <input id="paxDocTitle" placeholder="Ej: Mi Pasaporte Vigente" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a;font-weight:600">
+      </div>
+
+      <div class="fg">
+        <label class="fl">Seleccionar Archivo (PDF, JPG, PNG) *</label>
+        <input type="file" id="paxDocFile" accept=".pdf,.jpg,.jpeg,.png,.webp" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a">
+      </div>
+    </div>
+    <div class="modal-f">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+      <button class="btn btn-primary" id="paxUpBtn" onclick="doPassengerUploadDoc()">Cargar Documento</button>
+    </div>
+  `, true);
+}
+
+async function doPassengerUploadDoc() {
+  const title = $('paxDocTitle').value.trim(), cat = $('paxDocCat').value;
+  const file = $('paxDocFile').files[0];
+
+  if (!title) { toast('Ingresá un título para el documento', 'err'); return; }
+  if (!file) { toast('Seleccioná un archivo para subir', 'err'); return; }
+
+  const btn = $('paxUpBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    const path = await uploadFileTo(`passengers/${me.id}`, file);
+    const firstTrip = P.trips[0] ? P.trips[0].id : null;
+
+    const { error } = await db.from('pv_documents').insert({
+      passenger_id: me.id,
+      trip_id: firstTrip,
+      title: title,
+      category: cat,
+      file_path: path,
+      file_name: file.name,
+      source: 'passenger',
+      uploaded_by: me.id
+    });
+    if (error) throw error;
+
+    closeModal();
+    toast('¡Documento cargado correctamente! ✓', 'ok');
+    await renderPassenger();
+    if (typeof switchPaxTab === 'function') switchPaxTab('docs');
+  } catch (e) {
+    toast('Error al subir: ' + (e.message || e), 'err');
+    btn.disabled = false;
+    btn.textContent = 'Cargar Documento';
+  }
 }
 // Vista completa del viaje para el pasajero: documentación + guía del destino
 function openPaxTrip(tid) {

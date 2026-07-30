@@ -248,28 +248,18 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
     <!-- Tab 2: Documents & Vouchers -->
     <div id="paxTabDocs" class="pax-tab-panel hidden">
       <div class="card" style="padding:22px;margin-bottom:16px">
-        <h3 style="font-weight:800;font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px;color:var(--txt)">
-          <i class="ri-folder-shield-2-line" style="color:var(--blue);font-size:20px"></i> Bóveda de Documentación
-        </h3>
-        <p class="sub-mut" style="margin-bottom:16px">Descargá tus billetes de avión, comprobante de seguro médico y vouchers de reserva hotelera.</p>
-        <div id="paxDocsList" class="rowlist">
-          <div class="doc">
-            <div class="di" style="background:#eff6ff;color:#0052cc"><i class="ri-ticket-2-line" style="font-size:20px"></i></div>
-            <div class="info">
-              <div class="t">Voucher de Vuelo y Ticket Electrónico.pdf</div>
-              <div class="s">Confirmado · Código PNR #CRD-88492</div>
-            </div>
-            <a href="#" class="btn btn-ghost btn-sm" onclick="alert('Descargando archivo seguro...');return false;"><i class="ri-download-2-line"></i> Descargar PDF</a>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+          <div style="flex:1;min-width:0">
+            <h3 style="font-weight:800;font-size:17px;margin-bottom:4px;display:flex;align-items:center;gap:8px;color:#0f172a">
+              <i class="ri-folder-shield-2-line" style="color:#0052cc;font-size:22px"></i> Bóveda de Documentación
+            </h3>
+            <p class="sub-mut" style="margin-bottom:0;color:#475569">Descargá tus vouchers o subí tus documentos requeridos (Pasaporte, DNI, Seguro) para tu viaje.</p>
           </div>
-          <div class="doc">
-            <div class="di" style="background:#f0fdf4;color:#16a34a"><i class="ri-shield-cross-line" style="font-size:20px"></i></div>
-            <div class="info">
-              <div class="t">Asistencia Médica en Viaje - Assist Card.pdf</div>
-              <div class="s">Cobertura Internacional USD 60.000</div>
-            </div>
-            <a href="#" class="btn btn-ghost btn-sm" onclick="alert('Descargando voucher médico...');return false;"><i class="ri-download-2-line"></i> Descargar PDF</a>
-          </div>
+          <button class="btn btn-primary" onclick="openPassengerUploadModal()" style="border-radius:12px">
+            <i class="ri-upload-cloud-2-line"></i> 📤 Subir Mi Documento
+          </button>
         </div>
+        <div id="paxDocsList" class="rowlist"></div>
       </div>
     </div>
 
