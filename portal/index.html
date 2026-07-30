@@ -213,13 +213,107 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 <!-- ════════ PASAJERO ════════ -->
 <div id="appPassenger" class="hidden">
   <div class="topbar">
-    <img src="/img/logonavblanco.webp" class="logo" alt="Corradi" onerror="this.style.display='none'">
-    <div class="who"><span class="name" id="paxName"></span><button class="btn btn-ghost btn-sm" onclick="logout()"><span class="ms">logout</span>Salir</button></div>
+    <img src="../img/logonegroestirado2.png" class="logo" alt="Corradi Viajes" style="height:32px;object-fit:contain" onerror="this.src='img/logonavblanco.webp'">
+    <div class="who"><span class="name" id="paxName"></span><button class="btn btn-ghost btn-sm" onclick="logout()"><i class="ri-logout-box-r-line"></i> Salir</button></div>
   </div>
   <div class="wrap">
-    <div class="page-h"><h2>Mis viajes</h2></div>
+    <div class="page-h">
+      <h2>Mi Espacio de Viajero</h2>
+      <div class="spacer"></div>
+    </div>
+    
+    <!-- Passenger Navigation Tabs -->
+    <div class="anav" id="paxTabsNav" style="margin-bottom:20px">
+      <button id="paxTabBtnNext" class="active" onclick="switchPaxTab('next')"><i class="ri-flight-takeoff-line"></i> Próximo Viaje</button>
+      <button id="paxTabBtnDocs" onclick="switchPaxTab('docs')"><i class="ri-file-shield-line"></i> Mis Documentos & Vouchers</button>
+      <button id="paxTabBtnHistory" onclick="switchPaxTab('history')"><i class="ri-history-line"></i> Historial de Viajes</button>
+      <button id="paxTabBtnProfile" onclick="switchPaxTab('profile')"><i class="ri-user-settings-line"></i> Mi Perfil</button>
+    </div>
+
     <div id="paxAlerts"></div>
-    <div id="paxContent"></div>
+    
+    <!-- Tab 1: Next / Current Trip -->
+    <div id="paxTabNext" class="pax-tab-panel">
+      <div id="paxContent"></div>
+    </div>
+
+    <!-- Tab 2: Documents & Vouchers -->
+    <div id="paxTabDocs" class="pax-tab-panel hidden">
+      <div class="card" style="padding:22px;margin-bottom:16px">
+        <h3 style="font-weight:800;font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px;color:var(--txt)">
+          <i class="ri-folder-shield-2-line" style="color:var(--blue);font-size:20px"></i> Bóveda de Documentación
+        </h3>
+        <p class="sub-mut" style="margin-bottom:16px">Descargá tus billetes de avión, comprobante de seguro médico y vouchers de reserva hotelera.</p>
+        <div id="paxDocsList" class="rowlist">
+          <div class="doc">
+            <div class="di" style="background:#eff6ff;color:#0052cc"><i class="ri-ticket-2-line" style="font-size:20px"></i></div>
+            <div class="info">
+              <div class="t">Voucher de Vuelo y Ticket Electrónico.pdf</div>
+              <div class="s">Confirmado · Código PNR #CRD-88492</div>
+            </div>
+            <a href="#" class="btn btn-ghost btn-sm" onclick="alert('Descargando archivo seguro...');return false;"><i class="ri-download-2-line"></i> Descargar PDF</a>
+          </div>
+          <div class="doc">
+            <div class="di" style="background:#f0fdf4;color:#16a34a"><i class="ri-shield-cross-line" style="font-size:20px"></i></div>
+            <div class="info">
+              <div class="t">Asistencia Médica en Viaje - Assist Card.pdf</div>
+              <div class="s">Cobertura Internacional USD 60.000</div>
+            </div>
+            <a href="#" class="btn btn-ghost btn-sm" onclick="alert('Descargando voucher médico...');return false;"><i class="ri-download-2-line"></i> Descargar PDF</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Trip History -->
+    <div id="paxTabHistory" class="pax-tab-panel hidden">
+      <div class="card" style="padding:22px">
+        <h3 style="font-weight:800;font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px;color:var(--txt)">
+          <i class="ri-time-line" style="color:var(--blue);font-size:20px"></i> Historial de Experiencias
+        </h3>
+        <p class="sub-mut" style="margin-bottom:16px">Tus viajes realizados con Corradi Viajes.</p>
+        <div class="rowlist">
+          <div class="rowitem">
+            <div class="avatar" style="background:#eff6ff;color:#0052cc"><i class="ri-earth-line"></i></div>
+            <div class="info">
+              <div class="t">Cancún & Rivera Maya All Inclusive</div>
+              <div class="s">Febrero 2024 · 7 Noches</div>
+            </div>
+            <div class="end">
+              <span class="chip chip-green">Completado</span>
+              <a href="https://wa.me/5493416057588?text=Hola%20Corradi%20querr%C3%ADa%20volver%20a%20viajar" target="_blank" class="btn btn-ghost btn-sm"><i class="ri-repeat-line"></i> Volver a reservar</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Profile & Info -->
+    <div id="paxTabProfile" class="pax-tab-panel hidden">
+      <div class="card" style="padding:24px">
+        <h3 style="font-weight:800;font-size:16px;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--txt)">
+          <i class="ri-user-smile-line" style="color:var(--blue);font-size:20px"></i> Mi Información de Viajero
+        </h3>
+        <div class="grid2">
+          <div class="fg">
+            <label class="fl">Pasaporte N°</label>
+            <input type="text" value="A-9482019" readonly style="background:#f8fafc;border-color:#cbd5e1">
+          </div>
+          <div class="fg">
+            <label class="fl">Vencimiento Pasaporte</label>
+            <input type="text" value="18/11/2031" readonly style="background:#f8fafc;border-color:#cbd5e1">
+          </div>
+          <div class="fg">
+            <label class="fl">Contacto de Emergencia</label>
+            <input type="text" value="María Rosa (Tel: +54 9 341 555-1234)" readonly style="background:#f8fafc;border-color:#cbd5e1">
+          </div>
+          <div class="fg">
+            <label class="fl">Preferencia de Asiento / Alimento</label>
+            <input type="text" value="Pasillo / Menú Vegetariano" readonly style="background:#f8fafc;border-color:#cbd5e1">
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -282,6 +376,24 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
 <script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
+<script>
+function switchPaxTab(tab) {
+  const tabs = ['next', 'docs', 'history', 'profile'];
+  tabs.forEach(t => {
+    const btn = document.getElementById('paxTabBtn' + t.charAt(0).toUpperCase() + t.slice(1));
+    const panel = document.getElementById('paxTab' + t.charAt(0).toUpperCase() + t.slice(1));
+    if (btn && panel) {
+      if (t === tab) {
+        btn.classList.add('active');
+        panel.classList.remove('hidden');
+      } else {
+        btn.classList.remove('active');
+        panel.classList.add('hidden');
+      }
+    }
+  });
+}
+</script>
 <script src="/portal/app.js"></script>
 </body>
 </html>

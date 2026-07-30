@@ -7,8 +7,9 @@
 <meta name="description" content="Panel de administración de Corradi Viajes para la gestión de paquetes turísticos, salidas grupales y promociones.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/webp" href="../img/logocorradi.webp">
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
 <style>
 @font-face {
   font-family: "Twemoji Country Flags";
@@ -21,100 +22,66 @@
 @font-face{font-family:'Geomanist';src:url('../geomanist-medium.woff') format('woff');font-weight:700}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%}
-body{font-family:'Twemoji Country Flags','Geomanist','Plus Jakarta Sans',sans-serif;background:#0b1525;color:#fff;min-height:100vh;overflow-x:hidden;transition:background .25s,color .25s}
+body{font-family:'Twemoji Country Flags','Geomanist','Plus Jakarta Sans',sans-serif;background:#f8fafc;color:#0f172a;min-height:100vh;overflow-x:hidden}
 img{display:block;max-width:100%}
 button,input,select,textarea{font-family:inherit}
 textarea{resize:vertical}
 a{color:inherit;text-decoration:none}
-::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar{width:6px;height:6px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.12);border-radius:3px}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:4px}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 
-/* ── LIGHT MODE (DEFAULT UNIFIED WHITE THEME) ── */
-body, body.light{background:#f8fafc;color:#0f172a}
-body.light .sidebar, .sidebar{background:#ffffff;border-right-color:#e2e8f0}
-body.light .sb-brand, .sb-brand{border-bottom-color:#e2e8f0}
-body.light .sb-section, .sb-section{color:#94a3b8}
-body.light .sb-item, .sb-item{color:#334155}
-body.light .sb-item:hover,body.light .sb-item.active, .sb-item:hover, .sb-item.active{background:#eff6ff;color:#0052cc}
-body.light .sb-sub-item, .sb-sub-item{color:#475569}
-body.light .sb-sub-item:hover,body.light .sb-sub-item.active, .sb-sub-item:hover, .sb-sub-item.active{background:#eff6ff;color:#0052cc}
-body.light .sb-version, .sb-version{color:#94a3b8}
-body.light .sb-divider, .sb-divider{background:#e2e8f0}
-body.light .view-header h1, .view-header h1{color:#0f172a}
-body.light .form-section, .form-section{background:#ffffff;border-color:#e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.03)}
-body.light .form-section-title, .form-section-title{color:#64748b;border-bottom-color:#e2e8f0}
-body.light .fl, .fl{color:#64748b}
-body.light .fi,body.light .ft,body.light .fs, .fi,.ft,.fs{background:#f8fafc;border-color:#cbd5e1;color:#0f172a}
-body.light .fi:focus,body.light .ft:focus,body.light .fs:focus, .fi:focus,.ft:focus,.fs:focus{border-color:#0052cc;background:#ffffff}
-body.light .fi::placeholder,body.light .ft::placeholder, .fi::placeholder,.ft::placeholder{color:#94a3b8}
-body.light .dash-card, .dash-card{background:#ffffff;border-color:#e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
-body.light .dash-card[onclick]:hover, .dash-card[onclick]:hover{background:#f8fafc;border-color:#0052cc}
-body.light .stat-card, .stat-card{background:#ffffff;border-color:#e2e8f0}
-body.light .pkg-card, .pkg-card{background:#ffffff;border-color:#e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
-body.light .pkg-card:hover, .pkg-card:hover{border-color:#0052cc;box-shadow:0 8px 24px rgba(0,0,0,0.06)}
-body.light .pkg-list-item, .pkg-list-item{background:#ffffff;border-color:#e2e8f0}
-body.light .pkg-list-item:hover, .pkg-list-item:hover{background:#f8fafc;border-color:#0052cc}
-body.light .pkg-name,body.light .pkg-list-name, .pkg-name,.pkg-list-name{color:#0f172a}
-body.light .pkg-sub,body.light .pkg-list-sub, .pkg-sub,.pkg-list-sub{color:#64748b}
-body.light .filter-bar, .filter-bar{background:#f1f5f9;border-color:#e2e8f0}
-body.light .search-box, .search-box{background:#ffffff;border-color:#cbd5e1}
-body.light .search-box input, .search-box input{color:#0f172a}
-body.light .search-box input::placeholder, .search-box input::placeholder{color:#94a3b8}
-body.light .select-filter, .select-filter{background:#ffffff;border-color:#cbd5e1;color:#0f172a}
-body.light #editorPanel, #editorPanel{background:#f8fafc;border-left-color:#e2e8f0}
-body.light .ed-header, .ed-header{background:#ffffff;border-bottom-color:#e2e8f0}
-body.light .ed-title, .ed-title{color:#0f172a}
-body.light .ed-tabs, .ed-tabs{background:#ffffff;border-bottom-color:#e2e8f0}
-body.light .ed-tab, .ed-tab{color:#64748b}
-body.light .ed-tab.active, .ed-tab.active{color:#0052cc;border-bottom-color:#0052cc}
-body.light .ed-tab:hover, .ed-tab:hover{color:#0f172a;background:#f1f5f9}
-body.light .tgl-row, .tgl-row{border-bottom-color:#e2e8f0}
-body.light .tgl-name, .tgl-name{color:#0f172a}
-body.light .tgl-desc, .tgl-desc{color:#64748b}
-body.light .bullet-item, .bullet-item{background:#f8fafc;border-color:#cbd5e1}
-body.light .bullet-item input, .bullet-item input{color:#0f172a;background:transparent}
-body.light .itin-row, .itin-row{background:#f8fafc;border-color:#cbd5e1}
-body.light .add-gal, .add-gal{background:#f1f5f9;border-color:#cbd5e1;color:#475569}
-body.light .add-gal:hover, .add-gal:hover{background:#e2e8f0}
-body.light .btn-ghost, .btn-ghost{color:#475569;border-color:#cbd5e1}
-body.light .btn-ghost:hover, .btn-ghost:hover{background:#f1f5f9}
-body.light .drop-zone,body.light #stripUploadZone, .drop-zone,#stripUploadZone{border-color:#cbd5e1;color:#64748b}
-body.light .pis-thumb img, .pis-thumb img{border-color:#cbd5e1}
-body.light .media-card, .media-card{background:#ffffff;border-color:#e2e8f0}
-body.light .media-card:hover, .media-card:hover{border-color:#0052cc}
-body.light .media-card-name, .media-card-name{color:#334155}
-body.light .media-card-date, .media-card-date{color:#94a3b8}
-body.light .media-btn-copy, .media-btn-copy{background:#eff6ff;color:#0052cc}
-body.light .media-btn-del, .media-btn-del{background:#fef2f2;color:#dc2626}
-body.light .sb-logo, .sb-logo{content:url('../img/logonegroestirado2.png')}
-body.light .sb-item-parent, .sb-item-parent{color:#334155}
-body.light .sb-item-parent:hover,body.light .sb-item-parent.active, .sb-item-parent:hover,.sb-item-parent.active{background:#eff6ff;color:#0052cc}
-body.light .sb-item-parent .ms-arrow, .sb-item-parent .ms-arrow{color:#94a3b8}
-body.light .pkg-card-date, .pkg-card-date{color:#94a3b8}
-body.light .dash-num, .dash-num{color:#0f172a}
-body.light .dash-label, .dash-label{color:#64748b}
-body.light .stat-num, .stat-num{color:#0f172a}
-body.light .stat-label, .stat-label{color:#64748b}
-body.light .pkg-sub, .pkg-sub{color:#64748b}
-body.light .pkg-price, .pkg-price{color:#0052cc}
-body.light .itin-row textarea, .itin-row textarea{color:#0f172a;background:transparent}
-body.light .itin-day, .itin-day{color:#0f172a}
-body.light .pis-num, .pis-num{background:rgba(0,0,0,0.55);color:#fff}
-body.light .empty, .empty{color:#94a3b8}
-body.light ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb{background:#cbd5e1}
-body.light .ctx-item, .ctx-item{color:#334155}
-body.light #ctxMenu, #ctxMenu{background:#ffffff;border-color:#e2e8f0;box-shadow:0 8px 30px rgba(0,0,0,0.08)}
-body.light .ctx-item:hover, .ctx-item:hover{background:#f1f5f9}
-body.light .pkg-view-hint, .pkg-view-hint{color:#94a3b8}
-body.light .manual-hint, .manual-hint{color:#334155;background:#eff6ff;border-color:#bfdbfe}
-body.light .afb-label, .afb-label{color:#64748b}
-body.light .afb-chip, .afb-chip{color:#0052cc;background:#eff6ff;border-color:#bfdbfe}
-body.light .afb-chip-rm, .afb-chip-rm{color:#0052cc}
-body.light .afb-clear, .afb-clear{color:#64748b;background:#f1f5f9;border-color:#cbd5e1}
-body.light .pill-inactive, .pill-inactive{background:#fef2f2;color:#dc2626;border-color:#fecaca}
-body.light .sb-sub-count, .sb-sub-count{color:#64748b;background:#f1f5f9}
+/* ── UNIFIED HIGH-CONTRAST LIGHT DESIGN SYSTEM ── */
+.sidebar{background:#ffffff !important;border-right:1px solid #e2e8f0 !important}
+.sb-brand{border-bottom:1px solid #e2e8f0 !important}
+.sb-section{color:#64748b !important;font-weight:700 !important}
+.sb-item, .sb-item-parent{color:#334155 !important;font-weight:600 !important}
+.sb-item:hover, .sb-item.active, .sb-item-parent:hover, .sb-item-parent.active{background:#eff6ff !important;color:#0052cc !important}
+.sb-sub-item{color:#475569 !important}
+.sb-sub-item:hover, .sb-sub-item.active{background:#eff6ff !important;color:#0052cc !important}
+.sb-version{color:#94a3b8 !important}
+.sb-divider{background:#e2e8f0 !important}
+.view-header h1{color:#0f172a !important;font-weight:800 !important}
+.view-header p{color:#475569 !important}
+.form-section{background:#ffffff !important;border:1px solid #e2e8f0 !important;box-shadow:0 1px 3px rgba(0,0,0,0.04) !important}
+.form-section-title{color:#475569 !important;font-weight:700 !important;border-bottom:1px solid #f1f5f9 !important}
+.fl{color:#475569 !important;font-weight:700 !important}
+.fi,.ft,.fs{background:#ffffff !important;border:1.5px solid #cbd5e1 !important;color:#0f172a !important}
+.fi:focus,.ft:focus,.fs:focus{border-color:#0052cc !important;background:#ffffff !important;box-shadow:0 0 0 3px rgba(0,82,204,0.12) !important}
+.fi::placeholder,.ft::placeholder{color:#94a3b8 !important}
+.dash-card, .stat-card{background:#ffffff !important;border:1px solid #e2e8f0 !important;box-shadow:0 1px 3px rgba(0,0,0,0.04) !important}
+.dash-card[onclick]:hover{background:#f8fafc !important;border-color:#0052cc !important}
+.pkg-card{background:#ffffff !important;border:1px solid #e2e8f0 !important;box-shadow:0 1px 3px rgba(0,0,0,0.04) !important}
+.pkg-card:hover{border-color:#0052cc !important;box-shadow:0 8px 24px rgba(0,0,0,0.08) !important}
+.pkg-list-item{background:#ffffff !important;border:1px solid #e2e8f0 !important}
+.pkg-list-item:hover{background:#f8fafc !important;border-color:#0052cc !important}
+.pkg-name, .pkg-list-name{color:#0f172a !important;font-weight:700 !important}
+.pkg-sub, .pkg-list-sub{color:#475569 !important}
+.filter-bar{background:#f1f5f9 !important;border:1px solid #e2e8f0 !important}
+.search-box{background:#ffffff !important;border:1.5px solid #cbd5e1 !important}
+.search-box input{color:#0f172a !important;font-weight:600 !important}
+.search-box input::placeholder{color:#64748b !important}
+.search-box .material-symbols-outlined, .search-box .ri{color:#64748b !important}
+.select-filter{background:#ffffff !important;border:1.5px solid #cbd5e1 !important;color:#0f172a !important;font-weight:600 !important}
+.plh{color:#475569 !important;font-weight:800 !important;font-size:11px !important}
+.pli-mini{color:#64748b !important;font-weight:700 !important}
+.pli-price-line input, .quick-price-input{background:#ffffff !important;border:1px solid #cbd5e1 !important;color:#0052cc !important;font-weight:700 !important}
+.quick-badge-input{background:#fffbe6 !important;border:1px solid #fde68a !important;color:#b45309 !important;font-weight:700 !important}
+.pkg-view-hint{color:#475569 !important;font-weight:500 !important}
+.manual-hint{color:#1e40af !important;background:#eff6ff !important;border:1px solid #bfdbfe !important;font-weight:600 !important}
+#editorPanel{background:#f8fafc !important;border-left:1px solid #e2e8f0 !important}
+.ed-header, .ed-tabs{background:#ffffff !important;border-bottom:1px solid #e2e8f0 !important}
+.ed-title{color:#0f172a !important}
+.ed-tab{color:#64748b !important;font-weight:600 !important}
+.ed-tab.active{color:#0052cc !important;border-bottom-color:#0052cc !important}
+.bullet-item, .itin-row{background:#ffffff !important;border:1px solid #cbd5e1 !important}
+.bullet-item input, .itin-row textarea{color:#0f172a !important}
+.media-card{background:#ffffff !important;border:1px solid #e2e8f0 !important}
+#imgMgrBox, #sorterBox{background:#ffffff !important;border:1px solid #e2e8f0 !important;color:#0f172a !important}
+#ctxMenu{background:#ffffff !important;border:1px solid #e2e8f0 !important;box-shadow:0 12px 36px rgba(0,0,0,0.12) !important}
+.ctx-item{color:#334155 !important}
+.ctx-item:hover{background:#f1f5f9 !important}
 
 body.light .cp-display { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.12); color: #1e293b; }
 body.light .cp-display.empty { color: rgba(0,0,0,0.38); }
