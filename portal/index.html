@@ -9,9 +9,21 @@
 <link rel="icon" type="image/webp" href="/img/logocorradi.webp">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script>!function(){var t=localStorage.getItem('corradiTheme')||'light';document.documentElement.setAttribute('data-theme',t)}()</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0b1525;--panel:#0f1e34;--panel2:#132540;--line:rgba(255,255,255,.09);--txt:#eaf1fb;--mut:rgba(234,241,251,.55);--mut2:rgba(234,241,251,.35);--blue:#3778b8;--blue2:#4f93d6;--gold:#f2b352;--green:#22c55e;--red:#ef4444}
+html[data-theme="light"], body.light {
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel2: #f1f5f9;
+  --line: #e2e8f0;
+  --txt: #0f172a;
+  --mut: #475569;
+  --mut2: #94a3b8;
+  --blue: #0052cc;
+  --blue2: #1d4ed8;
+}
 html,body{height:100%}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;-webkit-font-smoothing:antialiased}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
