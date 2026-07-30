@@ -3832,61 +3832,70 @@ function cpSetValue(name) {
   }
 }
 
-function cpFilter(q) { cpRender(q); cpHighlightIdx = -1; }
+function renderBullets(type) {
+  const items = type === 'includes' ? includesItems : excludesItems;
+  const containerId = type === 'includes' ? 'includesList' : 'excludesList';
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  const dot   = type === 'includes' ? '✓' : '✗';
+  const color = type === 'includes' ? '#15803d' : '#b91c1c';
+  container.innerHTML = items.map((item, i) => `
+  <div class="bullet-item" style="align-items:flex-start">
+    <span class="bullet-dot" style="color:${color};margin-top:7px">${dot}</span>
+    <textarea class="bullet-inp" rows="1"
+      placeholder="Escribí el ítem…"
+      oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px';updateBullet('${type}',${i},this.value)"
+      onkeydown="bulletKeydown(event,'${type}',${i})">${escHtml(item)}</textarea>
+    <button type="button" class="bullet-rm" style="margin-top:6px" onclick="removeBullet('${type}',${i})" title="Eliminar">
+      <span class="ms material-symbols-outlined">close</span>
+    </button>
+  </div>`).join('');
 
-function cpSearchKey(e) {
-  const items = document.querySelectorAll('#cpList .cp-option');
-  if (!items.length) return;
-  if (e.key === 'ArrowDown') { e.preventDefault(); cpHighlightIdx = Math.min(cpHighlightIdx + 1, items.length - 1); cpUpdateHighlight(items); }
-  else if (e.key === 'ArrowUp') { e.preventDefault(); cpHighlightIdx = Math.max(cpHighlightIdx - 1, 0); cpUpdateHighlight(items); }
-  else if (e.key === 'Enter') { e.preventDefault(); if (cpHighlightIdx >= 0 && items[cpHighlightIdx]) { const el = items[cpHighlightIdx]; cpSelect(el.dataset.name, el.dataset.flag, true); } else if (cpFilteredItems.length === 1) { const c = cpFilteredItems[0]; cpSelect(c.name, c.flag, true); } }
-  else if (e.key === 'Escape') { cpClose(); }
+  setTimeout(() => {
+    container.querySelectorAll('.bullet-inp').forEach(ta => {
+      ta.style.height = 'auto';
+      ta.style.height = Math.max(38, ta.scrollHeight) + 'px';
+    });
+  }, 30);
 }
 
-function cpUpdateHighlight(items) {
-  items.forEach((el, i) => { el.style.background = i === cpHighlightIdx ? 'rgba(55,120,184,0.3)' : ''; el.style.color = i === cpHighlightIdx ? '#fff' : ''; });
-  if (cpHighlightIdx >= 0) items[cpHighlightIdx].scrollIntoView({block:'nearest'});
+function addBullet(type) {
+  const items = type === 'includes' ? includesItems : excludesItems;
+  items.push('');
+  renderBullets(type);
+  const containerId = type === 'includes' ? 'includesList' : 'excludesList';
+  const inputs = document.getElementById(containerId)?.querySelectorAll('.bullet-inp');
+  inputs?.[inputs.length - 1]?.focus();
 }
 
-// ═══════════════ DEST PICKER ═══════════════
-function dpRender(q) {
-  const dd = document.getElementById('dpDropdown');
-  const inp = document.getElementById('fDest');
-  if (!dd || !inp) return;
-  if (!q.trim()) { dd.style.display = 'none'; return; }
-
-  const filtered = CP_COUNTRIES.filter(c => c.name.toLowerCase().includes(q.toLowerCase())).slice(0, 8);
-  if (!filtered.length) { dd.style.display = 'none'; return; }
-
-  document.body.appendChild(dd);
-  const rect = inp.getBoundingClientRect();
-  dd.style.display = 'block';
-  dd.style.top = (rect.bottom + 2) + 'px';
-  dd.style.left = rect.left + 'px';
-  dd.style.width = rect.width + 'px';
-
-  let html = '';
-  filtered.forEach(c => {
-    html += `<div class="dp-option" onmousedown="dpSelect('${c.name.replace(/'/g,"\\'")}','${c.flag}')">
-      <span style="font-size:14px">${c.flag}</span>
-      <span>${c.name}</span>
-    </div>`;
-  });
-  dd.innerHTML = html;
+function removeBullet(type, i) {
+  const items = type === 'includes' ? includesItems : excludesItems;
+  items.splice(i, 1);
+  renderBullets(type);
 }
 
-function dpSelect(name, flag) {
-  document.getElementById('fDest').value = name;
-  cpSetValue(name); // Also update Country picker
-  closeDp();
+function updateBullet(type, i, val) {
+  (type === 'includes' ? includesItems : excludesItems)[i] = val;
 }
 
-function closeDp() {
-  const dd = document.getElementById('dpDropdown');
-  if (dd) dd.style.display = 'none';
+function bulletKeydown(e, type, i) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); addBullet(type); }
+  if (e.key === 'Backspace') {
+    const items = type === 'includes' ? includesItems : excludesItems;
+    if (!items[i]) { e.preventDefault(); removeBullet(type, i); }
+  }
 }
 
-// ═══════════════ AI ASSISTANT ══════════════
+function getBulletsText(type) {
+  return (type === 'includes' ? includesItems : excludesItems)
+    .filter(i => i.trim()).join('\n');
+}
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════ AI ASSISTANT & WEB PACKAGE IMPORTER ══════════════
 function showAIModal() {
   const existing = document.getElementById('aiModal');
   if (existing) existing.remove();
@@ -3898,15 +3907,15 @@ function showAIModal() {
 
   const modal = document.createElement('div');
   modal.id = 'aiModal';
-  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px)';
+  modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.6);backdrop-filter:blur(6px)';
   modal.innerHTML = `
-    <div style="background:#111c2d;border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:30px;max-width:500px;width:95%;box-shadow:0 40px 80px rgba(0,0,0,0.6);max-height:90vh;overflow-y:auto">
+    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;padding:32px;max-width:540px;width:95%;box-shadow:0 30px 80px rgba(0,0,0,0.18);max-height:90vh;overflow-y:auto;color:#0f172a">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <span class="material-symbols-outlined" style="color:#10a37f;font-size:24px;font-variation-settings:'FILL' 1">auto_fix_high</span>
-        <h3 style="font-size:19px;font-weight:700">Generar paquete con IA</h3>
+        <span class="material-symbols-outlined" style="color:#0052cc;font-size:26px;font-variation-settings:'FILL' 1">auto_fix_high</span>
+        <h3 style="font-size:20px;font-weight:800;color:#0f172a">Importar o Generar Paquete con IA</h3>
       </div>
-      <p style="color:#475569;font-size:13px;margin-bottom:22px;line-height:1.6">
-        Contale a la IA lo que sabés del paquete. Cuanto más detalle des, mejor resultado.
+      <p style="color:#475569;font-size:13.5px;margin-bottom:22px;line-height:1.5;font-weight:500">
+        Pegá la URL de una web de viajes o el texto completo del folleto para copiar el paquete automáticamente, o completá los datos básicos para que la IA arme todo.
       </p>
 
       <div style="display:flex;flex-direction:column;gap:14px">
@@ -3955,6 +3964,7 @@ function showAIModal() {
 }
 
 async function runAIFromModal() {
+  const urlText = document.getElementById('aiUrlText')?.value.trim();
   const name    = document.getElementById('aiName')?.value.trim();
   const dest    = document.getElementById('aiDest')?.value.trim();
   const country = document.getElementById('aiCountry')?.value.trim();
@@ -3962,23 +3972,24 @@ async function runAIFromModal() {
   const price   = document.getElementById('aiPrice')?.value.trim();
   const notes   = document.getElementById('aiNotes')?.value.trim();
 
-  if (!name) {
-    document.getElementById('aiName')?.focus();
-    showToast('Ingresá al menos el nombre del paquete', 'error');
+  if (!name && !urlText && !notes && !dest) {
+    document.getElementById('aiUrlText')?.focus();
+    showToast('Pegá la URL del paquete, el texto del folleto o escribí el nombre', 'error');
     return;
   }
 
   const btn = document.getElementById('aiModalGenBtn');
-  if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Generando…`; btn.disabled = true; }
+  if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Importando paquete…`; btn.disabled = true; }
 
   const context = [
-    `Nombre: "${name}"`,
+    urlText ? `URL o TEXTO COMPLETO DEL VIAJE A COPIAR/IMPORTAR:\n"""\n${urlText}\n"""` : '',
+    name    ? `Nombre del paquete: "${name}"` : '',
     dest    ? `Destino: ${dest}` : '',
     country ? `País: ${country}` : '',
     days    ? `Días: ${days}` : '',
     price   ? `Precio aprox USD: ${price}` : '',
     notes   ? `Información adicional: ${notes}` : '',
-  ].filter(Boolean).join('\n');
+  ].filter(Boolean).join('\n\n');
 
   const prompt = `Sos el asistente de Corradi Viajes, agencia de viajes de Rosario, Argentina. Con la siguiente información generá los datos completos del paquete turístico:
 
