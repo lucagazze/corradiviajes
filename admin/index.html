@@ -170,24 +170,70 @@ body, body.light {
   color: #475569 !important;
   font-size: 14px;
 }
-.dash-card, .stat-card {
-  background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
-  border-radius: 14px;
-  padding: 16px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04) !important;
+.dash-card {
+  border-radius: 16px !important;
+  padding: 20px 18px !important;
+  transition: transform .18s, box-shadow .18s, border-color .18s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
 }
-.dash-num, .stat-num {
-  font-size: 26px;
-  font-weight: 800 !important;
-  color: #0f172a !important;
+.dash-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
 }
-.dash-label, .stat-label {
-  font-size: 11.5px;
-  font-weight: 700 !important;
-  color: #475569 !important;
-  text-transform: uppercase;
-  letter-spacing: .05em;
+
+/* Container colors per card */
+.dash-card-total {
+  background: #f0f9ff !important;
+  border: 1.5px solid #bae6fd !important;
+}
+.dash-card-total .dash-num { color: #0284c7 !important; }
+.dash-card-total .dash-label { color: #0369a1 !important; }
+.dash-card-total .dash-icon { background: #e0f2fe !important; }
+
+.dash-card-active {
+  background: #f0fdf4 !important;
+  border: 1.5px solid #bbf7d0 !important;
+}
+.dash-card-active .dash-num { color: #16a34a !important; }
+.dash-card-active .dash-label { color: #15803d !important; }
+.dash-card-active .dash-icon { background: #dcfce7 !important; }
+
+.dash-card-featured {
+  background: #fefce8 !important;
+  border: 1.5px solid #fef08a !important;
+}
+.dash-card-featured .dash-num { color: #ca8a04 !important; }
+.dash-card-featured .dash-label { color: #a16207 !important; }
+.dash-card-featured .dash-icon { background: #fef9c3 !important; }
+
+.dash-card-offer {
+  background: #fff1f2 !important;
+  border: 1.5px solid #fecdd3 !important;
+}
+.dash-card-offer .dash-num { color: #e11d48 !important; }
+.dash-card-offer .dash-label { color: #be123c !important; }
+.dash-card-offer .dash-icon { background: #ffe4e6 !important; }
+
+.dash-card-inactive {
+  background: #fef2f2 !important;
+  border: 1.5px solid #fecaca !important;
+}
+.dash-card-inactive .dash-num { color: #dc2626 !important; }
+.dash-card-inactive .dash-label { color: #b91c1c !important; }
+.dash-card-inactive .dash-icon { background: #fee2e2 !important; }
+
+.dash-icon {
+  width: 42px !important;
+  height: 42px !important;
+  border-radius: 12px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-bottom: 12px !important;
+  flex-shrink: 0 !important;
+}
+.dash-icon .material-symbols-outlined, .dash-icon .ms, .dash-icon .ri {
+  font-size: 22px !important;
 }
 
 /* Forms & Cards */
@@ -1234,29 +1280,29 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
       </div>
 
       <div class="dash-grid" id="dashGrid">
-        <div class="dash-card" onclick="switchPkgFilter('all','all')" style="cursor:pointer" title="Ver todos">
-          <div class="dash-icon" style="background:#e0f2fe"><span class="material-symbols-outlined" style="color:#0369a1;font-size:22px">travel_explore</span></div>
-          <div class="dash-num" id="dTotal" style="color:#0369a1">—</div>
+        <div class="dash-card dash-card-total" onclick="switchPkgFilter('all','all')" style="cursor:pointer" title="Ver todos">
+          <div class="dash-icon"><span class="material-symbols-outlined" style="color:#0284c7">travel_explore</span></div>
+          <div class="dash-num" id="dTotal">—</div>
           <div class="dash-label">Paquetes totales</div>
         </div>
-        <div class="dash-card" onclick="switchPkgFilter('active','all')" style="cursor:pointer" title="Ver activos">
-          <div class="dash-icon" style="background:#dcfce7"><span class="material-symbols-outlined" style="color:#15803d;font-size:22px">check_circle</span></div>
-          <div class="dash-num" id="dActive" style="color:#16a34a;font-weight:800">—</div>
+        <div class="dash-card dash-card-active" onclick="switchPkgFilter('active','all')" style="cursor:pointer" title="Ver activos">
+          <div class="dash-icon"><span class="material-symbols-outlined" style="color:#16a34a">check_circle</span></div>
+          <div class="dash-num" id="dActive">—</div>
           <div class="dash-label">Activos</div>
         </div>
-        <div class="dash-card" onclick="switchPkgFilter('featured','all')" style="cursor:pointer" title="Ver destacados">
-          <div class="dash-icon" style="background:#fef9c3"><span class="material-symbols-outlined" style="color:#ca8a04;font-size:22px">star</span></div>
-          <div class="dash-num" id="dFeatured" style="color:#ca8a04">—</div>
+        <div class="dash-card dash-card-featured" onclick="switchPkgFilter('featured','all')" style="cursor:pointer" title="Ver destacados">
+          <div class="dash-icon"><span class="material-symbols-outlined" style="color:#ca8a04">star</span></div>
+          <div class="dash-num" id="dFeatured">—</div>
           <div class="dash-label">Destacados</div>
         </div>
-        <div class="dash-card" onclick="switchPkgFilter('offer','all')" style="cursor:pointer" title="Ver con oferta">
-          <div class="dash-icon" style="background:#ffe4e6"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px">local_offer</span></div>
-          <div class="dash-num" id="dOffers" style="color:#dc2626;font-weight:800">—</div>
+        <div class="dash-card dash-card-offer" onclick="switchPkgFilter('offer','all')" style="cursor:pointer" title="Ver con oferta">
+          <div class="dash-icon"><span class="material-symbols-outlined" style="color:#e11d48">local_offer</span></div>
+          <div class="dash-num" id="dOffers">—</div>
           <div class="dash-label">En oferta</div>
         </div>
-        <div class="dash-card" onclick="switchPkgFilter('inactive','all')" style="cursor:pointer" title="Ver inactivos">
-          <div class="dash-icon" style="background:#fee2e2"><span class="material-symbols-outlined" style="color:#f87171;font-size:22px">cancel</span></div>
-          <div class="dash-num" id="dInactive" style="color:#dc2626;font-weight:800">—</div>
+        <div class="dash-card dash-card-inactive" onclick="switchPkgFilter('inactive','all')" style="cursor:pointer" title="Ver inactivos">
+          <div class="dash-icon"><span class="material-symbols-outlined" style="color:#dc2626">cancel</span></div>
+          <div class="dash-num" id="dInactive">—</div>
           <div class="dash-label">Inactivos</div>
         </div>
       </div>
