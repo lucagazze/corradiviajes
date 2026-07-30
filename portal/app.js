@@ -799,14 +799,123 @@ async function removePaxFromTrip(tid, pid) {
 function openAssignPax(tid) {
   const assigned = new Set(paxOfTrip(tid).map(p => p.id));
   window._assignSel = new Set(assigned);
-  const rows = A.pax.map(p => `<div class="msel-row ${assigned.has(p.id) ? 'sel' : ''}" data-id="${p.id}" onclick="toggleAssign('${p.id}',this)"><div class="cb"><span class="ms">check</span></div><div class="avatar" style="width:34px;height:34px;font-size:13px">${esc(initials(p.full_name))}</div><div style="flex:1;min-width:0"><div style="font-weight:600">${esc(p.full_name)}</div><div class="sub-mut" style="font-size:12px">DNI ${esc(p.dni)}</div></div></div>`).join('');
-  openModal(`<div class="modal-h"><h3>Asignar pasajeros</h3><button class="btn btn-icon btn-ghost" onclick="openTripDetail(${tid})"><span class="ms">close</span></button></div>
-  <div class="modal-b">
-    <div class="searchbox" style="max-width:none;margin-bottom:12px"><span class="ms">search</span><input id="asgSearch" placeholder="Buscar pasajero…" oninput="filterAssign()"></div>
-    ${A.pax.length ? `<div class="msel" id="asgList">${rows}</div>` : `<p class="sub-mut">No hay pasajeros. Creá pasajeros primero.</p>`}
-    <p class="sub-mut" style="font-size:12.5px;margin-top:10px">Tocá los pasajeros que van en este viaje.</p>
+  const rows = A.pax.map(p => `<div class="msel-row ${assigned.has(p.id) ? 'sel' : ''}" data-id="${p.id}" onclick="toggleAssign('${p.id}',this)"><div class="cb"><span class="ms">check</span></div><div class="avatar" style="width:34px;height:34px;font-size:13px">${esc(initials(p.full_name))}</div><div style="flex:1;min-width:0"><div style="font-weight:600;color:#0f172a">${esc(p.full_name)}</div><div class="sub-mut" style="font-size:12px;color:#475569">DNI ${esc(p.dni)}</div></div></div>`).join('');
+  openModal(`<div class="modal-h">
+    <h3 style="flex:1;color:#0f172a;font-weight:800">Asignar Pasajeros al Viaje</h3>
+    <button class="btn btn-icon btn-ghost" onclick="openTripDetail(${tid})"><span class="ms">close</span></button>
   </div>
-  <div class="modal-f"><button class="btn btn-ghost" onclick="openTripDetail(${tid})">Cancelar</button><button class="btn btn-primary" id="asgBtn" onclick="doAssign(${tid})">Guardar</button></div>`, true);
+  <div class="modal-b">
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <div class="searchbox" style="flex:1;max-width:none;background:#ffffff;border:1.5px solid #cbd5e1"><span class="ms">search</span><input id="asgSearch" placeholder="Buscar pasajero por DNI o nombre…" oninput="filterAssign()"></div>
+      <button class="btn btn-primary" onclick="openQuickNewPassenger(${tid})" style="border-radius:12px;white-space:nowrap">
+        <span class="ms">person_add</span>➕ Cargar Pasajero Nuevo
+      </button>
+    </div>
+    ${A.pax.length ? `<div class="msel" id="asgList">${rows}</div>` : `<p class="sub-mut" style="color:#64748b">No hay pasajeros cargados aún. Usá el botón "Cargar Pasajero Nuevo" para agregar uno.</p>`}
+    <p class="sub-mut" style="font-size:12.5px;margin-top:10px;color:#475569;font-weight:500">Tocá sobre los pasajeros que querés incluir en este viaje.</p>
+  </div>
+  <div class="modal-f">
+    <button class="btn btn-ghost" onclick="openTripDetail(${tid})">Cancelar</button>
+    <button class="btn btn-primary" id="asgBtn" onclick="doAssign(${tid})">Guardar Asignación</button>
+  </div>`, true);
+}
+
+function openQuickNewPassenger(tid) {
+  openModal(`
+    <div class="modal-h">
+      <h3 style="color:#0f172a;font-weight:800">➕ Cargar Pasajero Nuevo</h3>
+      <button class="btn btn-icon btn-ghost" onclick="openAssignPax(${tid})"><span class="ms">close</span></button>
+    </div>
+    <div class="modal-b">
+      <p class="sub-mut" style="margin-bottom:16px;color:#475569">Ingresá los datos del nuevo pasajero. Se guardará en la base de datos y quedará asignado al viaje automáticamente.</p>
+      
+      <div class="grid2">
+        <div class="fg">
+          <label class="fl">DNI / Documento *</label>
+          <input id="qnpDni" inputmode="numeric" placeholder="Ej: 38942109" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a;font-weight:600">
+        </div>
+        <div class="fg">
+          <label class="fl">Nombre y Apellido *</label>
+          <input id="qnpName" placeholder="Ej: Sofía Martínez" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a;font-weight:600">
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="fg">
+          <label class="fl">Email (Opcional)</label>
+          <input id="qnpEmail" type="email" placeholder="sofia@ejemplo.com" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a">
+        </div>
+        <div class="fg">
+          <label class="fl">Teléfono / WhatsApp (Opcional)</label>
+          <input id="qnpPhone" placeholder="+54 9 341 555-0192" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a">
+        </div>
+      </div>
+
+      <div class="grid2">
+        <div class="fg">
+          <label class="fl">Ciudad / Origen (Opcional)</label>
+          <input id="qnpCity" placeholder="Ej: Rosario, Santa Fe" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a">
+        </div>
+        <div class="fg">
+          <label class="fl">Fecha Nacimiento (Opcional)</label>
+          <input id="qnpBirth" type="date" style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a">
+        </div>
+      </div>
+
+      <div class="fg">
+        <label class="fl">Notas internas (Opcional)</label>
+        <textarea id="qnpNotes" rows="2" placeholder="Ej: Pasajero frecuente, prefiere asiento en pasillo..." style="background:#ffffff;border:1.5px solid #cbd5e1;color:#0f172a"></textarea>
+      </div>
+    </div>
+    <div class="modal-f">
+      <button class="btn btn-ghost" onclick="openAssignPax(${tid})">Volver</button>
+      <button class="btn btn-primary" id="qnpBtn" onclick="doQuickNewPassenger(${tid})">Crear y Asignar al Viaje</button>
+    </div>
+  `, true);
+}
+
+async function doQuickNewPassenger(tid) {
+  const full_name = $('qnpName').value.trim(), dni = $('qnpDni').value.trim();
+  const email = $('qnpEmail').value.trim(), phone = $('qnpPhone').value.trim();
+  const city = $('qnpCity').value.trim(), birth = $('qnpBirth').value;
+  const notesStr = $('qnpNotes').value.trim();
+
+  if (!full_name) { toast('Ingresá el Nombre y Apellido', 'err'); return; }
+  if (!/^\d{5,}$/.test(dni)) { toast('DNI inválido (mínimo 5 números)', 'err'); return; }
+
+  const btn = $('qnpBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    const { data: ex } = await db.from('pv_profiles').select('id').eq('dni', dni).maybeSingle();
+    if (ex) throw new Error('Ya existe un pasajero cargado con ese DNI');
+
+    const auth_email = `pv-${rid()}@pasajero.corradi`, auth_pw = 'k' + rid().replace(/-/g, '');
+    const tmp = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false, autoRefreshToken: false, storageKey: 'pv_tmp_' + Date.now() } });
+    const { data, error } = await tmp.auth.signUp({ email: auth_email, password: auth_pw });
+    if (error) throw new Error(error.message);
+    if (!data.user) throw new Error('No se pudo crear la cuenta del pasajero');
+
+    const uid = data.user.id;
+    const notesCombined = [city ? `Origen: ${city}` : '', birth ? `Nacimiento: ${birth}` : '', notesStr].filter(Boolean).join(' · ');
+
+    const { error: pErr } = await db.from('pv_profiles').insert({
+      id: uid, role: 'passenger', full_name, dni,
+      email: email || null, phone: phone || null,
+      notes: notesCombined || null, auth_email, auth_pw
+    });
+    try { await tmp.auth.signOut(); } catch (e) {}
+    if (pErr) throw new Error(pErr.message);
+
+    // Asignar al viaje
+    await db.from('pv_trip_passengers').insert({ trip_id: tid, passenger_id: uid });
+
+    toast('¡Pasajero creado y asignado al viaje! ✓', 'ok');
+    await loadAll();
+    openAssignPax(tid);
+  } catch (e) {
+    toast(e.message || 'Error al crear pasajero', 'err');
+    btn.disabled = false;
+    btn.textContent = 'Crear y Asignar al Viaje';
+  }
 }
 function toggleAssign(pid, el) { if (window._assignSel.has(pid)) { window._assignSel.delete(pid); el.classList.remove('sel'); } else { window._assignSel.add(pid); el.classList.add('sel'); } }
 function filterAssign() { const q = $('asgSearch').value.toLowerCase().trim(); document.querySelectorAll('#asgList .msel-row').forEach(r => { const p = A.pax.find(x => x.id === r.dataset.id); r.style.display = (!q || (p.full_name || '').toLowerCase().includes(q) || (p.dni || '').includes(q)) ? '' : 'none'; }); }
