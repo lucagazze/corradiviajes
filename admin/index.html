@@ -121,6 +121,19 @@ body, body.light {
   transform: none !important;
 }
 
+.dash-grid {
+  display: grid !important;
+  grid-template-columns: repeat(5, 1fr) !important;
+  gap: 14px !important;
+  margin-bottom: 24px !important;
+}
+@media (max-width: 1100px) {
+  .dash-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 700px) {
+  .dash-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
 /* Sidebar Sub-item Icon Colors */
 #sbFilterAll .ms, #sbFilterAll .ri { color: #0284c7 !important; }
 #sbFilterGrupal .ms, #sbFilterGrupal .ri { color: #2563eb !important; }
