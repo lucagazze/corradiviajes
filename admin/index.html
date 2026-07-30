@@ -79,12 +79,18 @@ body, body.light {
   color: #334155 !important;
   font-size: 13.5px;
   font-weight: 600 !important;
-  transition: all .15s;
+  transition: none !important;
+  transform: none !important;
   margin-bottom: 2px;
 }
-.sb-item:hover, .sb-item.active, .sb-item-parent:hover, .sb-item-parent.active {
+.sb-item.active, .sb-item-parent.active {
   background: #eff6ff !important;
   color: #0052cc !important;
+}
+.sb-item:hover:not(.active), .sb-item-parent:hover:not(.active) {
+  background: transparent !important;
+  color: #334155 !important;
+  transform: none !important;
 }
 .sb-item .ms, .sb-item-parent .ms, .sb-item .ri, .sb-item-parent .ri {
   font-size: 19px;
@@ -95,53 +101,24 @@ body, body.light {
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 7px 12px 7px 34px;
-  border-radius: 10px;
-  cursor: pointer;
-  color: #475569 !important;
-  font-size: 12.5px;
-  font-weight: 600 !important;
-  transition: all .15s;
-  margin-bottom: 1px;
-}
-.sb-sub-item:hover, .sb-sub-item.active {
-  background: #eff6ff !important;
-  color: #0052cc !important;
-}
-.sb-sub-item .ms, .sb-sub-item .ri {
-  font-size: 15px;
-  flex-shrink: 0;
-  color: inherit !important;
-}
-.dash-grid {
-  display: grid !important;
-  grid-template-columns: repeat(5, 1fr) !important;
-  gap: 14px !important;
-  margin-bottom: 24px !important;
-}
-@media (max-width: 1100px) {
-  .dash-grid { grid-template-columns: repeat(3, 1fr) !important; }
-}
-@media (max-width: 700px) {
-  .dash-grid { grid-template-columns: repeat(2, 1fr) !important; }
-}
-
-.sb-sub-item {
-  display: flex;
-  align-items: center;
-  gap: 9px;
   padding: 8px 12px 8px 34px;
   border-radius: 10px;
   cursor: pointer;
   color: #334155 !important;
   font-size: 13px;
   font-weight: 600 !important;
-  transition: all .15s;
+  transition: none !important;
+  transform: none !important;
   margin-bottom: 2px;
 }
-.sb-sub-item:hover, .sb-sub-item.active {
+.sb-sub-item.active {
   background: #eff6ff !important;
   color: #0052cc !important;
+}
+.sb-sub-item:hover:not(.active) {
+  background: transparent !important;
+  color: #334155 !important;
+  transform: none !important;
 }
 
 /* Sidebar Sub-item Icon Colors */
@@ -173,54 +150,68 @@ body, body.light {
 .dash-card {
   border-radius: 16px !important;
   padding: 20px 18px !important;
-  transition: transform .18s, box-shadow .18s, border-color .18s;
   box-shadow: 0 2px 8px rgba(0,0,0,0.03) !important;
+  transition: none !important;
+  transform: none !important;
 }
 .dash-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
+  transform: none !important;
 }
 
-/* Container colors per card */
+/* Enhanced contrast colors per card */
 .dash-card-total {
   background: #f0f9ff !important;
   border: 1.5px solid #bae6fd !important;
 }
-.dash-card-total .dash-num { color: #0284c7 !important; }
-.dash-card-total .dash-label { color: #0369a1 !important; }
-.dash-card-total .dash-icon { background: #e0f2fe !important; }
+.dash-card-total .dash-num { color: #0284c7 !important; font-size: 32px !important; font-weight: 800 !important; }
+.dash-card-total .dash-label { color: #0369a1 !important; font-weight: 800 !important; font-size: 11.5px !important; text-transform: uppercase !important; letter-spacing: .06em !important; }
+.dash-card-total .dash-icon { background: #e0f2fe !important; color: #0284c7 !important; }
 
 .dash-card-active {
   background: #f0fdf4 !important;
   border: 1.5px solid #bbf7d0 !important;
 }
-.dash-card-active .dash-num { color: #16a34a !important; }
-.dash-card-active .dash-label { color: #15803d !important; }
-.dash-card-active .dash-icon { background: #dcfce7 !important; }
+.dash-card-active .dash-num { color: #16a34a !important; font-size: 32px !important; font-weight: 800 !important; }
+.dash-card-active .dash-label { color: #15803d !important; font-weight: 800 !important; font-size: 11.5px !important; text-transform: uppercase !important; letter-spacing: .06em !important; }
+.dash-card-active .dash-icon { background: #dcfce7 !important; color: #16a34a !important; }
 
 .dash-card-featured {
   background: #fefce8 !important;
   border: 1.5px solid #fef08a !important;
 }
-.dash-card-featured .dash-num { color: #ca8a04 !important; }
-.dash-card-featured .dash-label { color: #a16207 !important; }
-.dash-card-featured .dash-icon { background: #fef9c3 !important; }
+.dash-card-featured .dash-num { color: #ca8a04 !important; font-size: 32px !important; font-weight: 800 !important; }
+.dash-card-featured .dash-label { color: #854d0e !important; font-weight: 800 !important; font-size: 11.5px !important; text-transform: uppercase !important; letter-spacing: .06em !important; }
+.dash-card-featured .dash-icon { background: #fef9c3 !important; color: #ca8a04 !important; }
 
 .dash-card-offer {
   background: #fff1f2 !important;
   border: 1.5px solid #fecdd3 !important;
 }
-.dash-card-offer .dash-num { color: #e11d48 !important; }
-.dash-card-offer .dash-label { color: #be123c !important; }
-.dash-card-offer .dash-icon { background: #ffe4e6 !important; }
+.dash-card-offer .dash-num { color: #e11d48 !important; font-size: 32px !important; font-weight: 800 !important; }
+.dash-card-offer .dash-label { color: #be123c !important; font-weight: 800 !important; font-size: 11.5px !important; text-transform: uppercase !important; letter-spacing: .06em !important; }
+.dash-card-offer .dash-icon { background: #ffe4e6 !important; color: #e11d48 !important; }
 
 .dash-card-inactive {
   background: #fef2f2 !important;
   border: 1.5px solid #fecaca !important;
 }
-.dash-card-inactive .dash-num { color: #dc2626 !important; }
-.dash-card-inactive .dash-label { color: #b91c1c !important; }
-.dash-card-inactive .dash-icon { background: #fee2e2 !important; }
+.dash-card-inactive .dash-num { color: #dc2626 !important; font-size: 32px !important; font-weight: 800 !important; }
+.dash-card-inactive .dash-label { color: #991b1b !important; font-weight: 800 !important; font-size: 11.5px !important; text-transform: uppercase !important; letter-spacing: .06em !important; }
+.dash-card-inactive .dash-icon { background: #fee2e2 !important; color: #dc2626 !important; }
+
+.dash-num {
+  font-size: 32px !important;
+  font-weight: 800 !important;
+  line-height: 1.1 !important;
+  margin-top: 6px !important;
+  margin-bottom: 4px !important;
+}
+.dash-label {
+  font-size: 11.5px !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .06em !important;
+}
 
 .dash-icon {
   width: 42px !important;
