@@ -267,14 +267,14 @@ function openPaxTrip(tid) {
   const tdocs = P.docs.filter(d => d.trip_id === tid);
   const du = daysUntil(t.depart_date), bimg = tripImg(t), dest = destOfTrip(t);
   openModal(`<div class="modal-h"><h3 style="flex:1">${esc(t.title)}</h3><button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
-  <div class="modal-b" style="padding-top:0">
-    ${bimg ? `<div style="height:190px;margin:0 -22px 18px;background:#0a1525"><img src="${esc(bimg)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.remove()"></div>` : '<div style="height:16px"></div>'}
-    <div style="font-size:15px;font-weight:700">${esc(t.destination || '')}${t.country ? ' · ' + esc(t.country) : ''}</div>
-    <div class="sub-mut" style="margin-top:4px">${t.depart_date ? 'Salís el ' + fmtDate(t.depart_date) : 'Fecha a confirmar'}${t.return_date ? ' · volvés el ' + fmtDate(t.return_date) : ''}${du !== null && du >= 0 && du <= 10 ? ` · <b style="color:var(--gold)">${du === 0 ? 'sale hoy' : du === 1 ? 'sale mañana' : 'faltan ' + du + ' días'}</b>` : ''}</div>
-    ${t.notes ? `<p class="sub-mut" style="margin-top:12px;white-space:pre-wrap">${esc(t.notes)}</p>` : ''}
+  <div class="modal-b" style="padding-top:16px">
+    ${bimg ? `<div style="height:200px;margin-bottom:18px;border-radius:16px;overflow:hidden;background:#f8fafc;border:1px solid #e2e8f0"><img src="${esc(bimg)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.remove()"></div>` : '<div style="height:10px"></div>'}
+    <div style="font-size:16px;font-weight:800;color:#0f172a">${esc(t.destination || '')}${t.country ? ' · ' + esc(t.country) : ''}</div>
+    <div class="sub-mut" style="margin-top:4px">${t.depart_date ? 'Salís el ' + fmtDate(t.depart_date) : 'Fecha a confirmar'}${t.return_date ? ' · volvés el ' + fmtDate(t.return_date) : ''}${du !== null && du >= 0 && du <= 10 ? ` · <b style="color:#d97706">${du === 0 ? 'sale hoy' : du === 1 ? 'sale mañana' : 'faltan ' + du + ' días'}</b>` : ''}</div>
+    ${t.notes ? `<p class="sub-mut" style="margin-top:12px;white-space:pre-wrap;color:#334155">${esc(t.notes)}</p>` : ''}
     <div class="section-t">Tu documentación (${tdocs.length})</div>
-    ${tdocs.length ? `<div class="rowlist">${tdocs.map(docRow).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Todavía no hay documentos cargados. Corradi los va a subir acá.</p>`}
-    ${dest ? destInfoHtml(dest, t) : `<div class="section-t">Sobre el destino</div><p class="sub-mut" style="font-size:13px">Corradi está preparando la guía de este destino.</p>`}
+    ${tdocs.length ? `<div class="rowlist">${tdocs.map(docRow).join('')}</div>` : `<p class="sub-mut" style="font-size:13.5px">Todavía no hay documentos cargados. Corradi los va a subir acá.</p>`}
+    ${dest ? destInfoHtml(dest, t) : `<div class="section-t">Sobre el destino</div><p class="sub-mut" style="font-size:13.5px">Corradi está preparando la guía de este destino.</p>`}
   </div>`, true);
 }
 function docRow(d) {
