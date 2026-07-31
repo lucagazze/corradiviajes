@@ -315,8 +315,9 @@ document.addEventListener('DOMContentLoaded', () => {
              <span class="font-['Geomanist'] font-bold text-[20px]" style="color:#3778b8">A consultar</span></div>`;
         
         const badge = p.badge ? `<span class="bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm shrink-0">${p.badge}</span>` : '';
-        const highlights = p.highlights ? p.highlights.split(/·|
-/).slice(0,3).map(h => h.trim()).filter(Boolean) : [];
+        const highlights = p.highlights
+          ? p.highlights.split(/[\n\u00b7]/).map(h => h.trim()).filter(Boolean).slice(0, 3)
+          : [];
 
         return `
         <article class="rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
@@ -360,4 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-
+  loadGrupales();   // <- esta llamada se habia perdido: la funcion se definia y nunca corria
+});
+</script>
+</body>
+</html>
