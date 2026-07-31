@@ -532,6 +532,7 @@ function renderPromoOffers() {
           <div>
             <h3 class="font-['Geomanist'] font-semibold text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
             <p class="text-slate-500 text-[13px] font-light line-clamp-2 mb-4">${descText(p.description)}</p>
+          ${highlights.length ? `<div class="flex flex-wrap gap-1.5 -mt-2 mb-4">${highlights.map(h => `<span class="text-[10.5px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full font-medium">${h}</span>`).join('')}</div>` : ''}
           </div>
           <div class="mt-auto flex items-end justify-between gap-3 pt-2 border-t border-slate-100">
             <div class="pt-3">
