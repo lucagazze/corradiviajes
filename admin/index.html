@@ -669,6 +669,69 @@ body.pkg-dragging .pkg-grid, body.pkg-dragging .pkg-list {
   border: 1px solid #fecdd3 !important;
 }
 
+
+/* ══ PILDORAS DE ESTADO ══
+   Venian con fondos de 10-14% de opacidad y texto claro (GRUPAL llegaba a
+   contraste ~2): sobre el fondo blanco de la fila practicamente no se leian.
+   Ahora todas tienen fondo solido suave, texto oscuro e icono para leerlas
+   de un vistazo. */
+.pill {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  padding: 3.5px 9px !important;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+.pill .ms { font-size: 12px !important; font-variation-settings: 'FILL' 1; }
+.pill-active   { background:#d1fae5 !important; color:#065f46 !important; border:1px solid #6ee7b7 !important; }
+.pill-inactive { background:#fee2e2 !important; color:#991b1b !important; border:1px solid #fca5a5 !important; }
+.pill-grupal   { background:#fde9c8 !important; color:#92400e !important; border:1px solid #f6c177 !important; }
+.pill-featured { background:#fef08a !important; color:#854d0e !important; border:1px solid #facc15 !important; }
+.pill-offer    { background:#ffe4e6 !important; color:#9f1239 !important; border:1px solid #fda4af !important; }
+
+.pill-expired  { background:#fef3c7 !important; color:#854d0e !important; border:1px solid #fcd34d !important; }
+.pkg-cardpills, .pli-cell-estado { gap:5px !important; }
+
+/* ══ BOTONES DE ACCION CON ESTADO ══
+   Antes solo cambiaba el color del icono: habia que mirar de cerca para saber
+   si un paquete estaba destacado o apagado. Ahora el boton entero se ve
+   "presionado" cuando el estado esta activo. */
+.pkg-qbtn.qbtn-star .ms { color:#94a3b8 !important; transition:color .15s, transform .15s; }
+.pkg-qbtn.qbtn-star:hover .ms { color:#f59e0b !important; }
+.qbtn-star.on {
+  background:#fef3c7 !important; border-color:#f59e0b !important;
+  box-shadow: inset 0 2px 5px rgba(180,83,9,.22) !important;
+}
+.pkg-qbtn.qbtn-star.on .ms { color:#d97706 !important; transform:scale(1.08); }
+.qbtn-star.on:hover { background:#fde68a !important; }
+.pkg-qbtn.qbtn-star.on:hover .ms { color:#b45309 !important; }
+
+.pkg-qbtn.qbtn-power .ms { color:#16a34a !important; transition:color .15s; }
+.qbtn-power:hover { border-color:#16a34a !important; }
+.qbtn-power.off {
+  background:#fee2e2 !important; border-color:#ef4444 !important;
+  box-shadow: inset 0 2px 5px rgba(153,27,27,.22) !important;
+}
+.pkg-qbtn.qbtn-power.off .ms { color:#b91c1c !important; }
+.qbtn-power:not(.off){ background:#f0fdf4 !important; border-color:#86efac !important; }
+.qbtn-power:not(.off):hover{ background:#dcfce7 !important; }
+.qbtn-power.off:hover { background:#fecaca !important; border-color:#dc2626 !important; }
+
+/* Mismos estados en la vista de tarjetas (botones sobre la foto) */
+.qbtn-star-card  { background:rgba(15,25,45,.78) !important; border:1px solid rgba(255,255,255,.18) !important; }
+.qbtn-star-card .ms { color:#e2e8f0 !important; }
+.qbtn-star-card.on { background:#f59e0b !important; border-color:#fbbf24 !important; box-shadow:0 0 0 3px rgba(245,158,11,.32) !important; }
+.qbtn-star-card.on .ms { color:#fff !important; }
+.qbtn-power-card { background:#22c55e !important; border:1px solid rgba(255,255,255,.18) !important; }
+.qbtn-power-card .ms { color:#fff !important; }
+.qbtn-power-card.off { background:#ef4444 !important; border-color:#fca5a5 !important; box-shadow:inset 0 2px 6px rgba(127,29,29,.4) !important; }
+
 /* Mini labels ("ORIGINAL", "DESCUENTO") */
 .pli-mini, .pce-lbl {
   font-size: 9.5px !important;
@@ -1323,7 +1386,7 @@ select option {
 .ctx-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;color:#0f172a;transition:background .12s}
 .ctx-item:hover{background:#f1f5f9;color:#0f172a;border:1px solid #cbd5e1;color:#fff}
 .ctx-item .ms{font-size:17px;flex-shrink:0}
-.ctx-item.danger{color:#f87171}
+.ctx-item.danger{color:#dc2626}
 .ctx-item.danger:hover{background:rgba(239,68,68,0.1)}
 .ctx-sep{height:1px;background:rgba(255,255,255,0.07);margin:4px 0}
 
@@ -2257,7 +2320,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
       <span class="ms material-symbols-outlined" style="font-size:15px;color:#15803d">power_settings_new</span> Activar
     </button>
     <button class="btn btn-ghost btn-sm" onclick="bulkToggleActive(false)" title="Desactivar seleccionados" style="padding: 6px 12px; font-size: 12px;">
-      <span class="ms material-symbols-outlined" style="font-size:15px;color:#f87171">power_settings_new</span> Desactivar
+      <span class="ms material-symbols-outlined" style="font-size:15px;color:#dc2626">power_settings_new</span> Desactivar
     </button>
     <button class="btn btn-ghost btn-sm" onclick="bulkToggleFeatured(true)" title="Destacar seleccionados" style="padding: 6px 12px; font-size: 12px;">
       <span class="ms material-symbols-outlined" style="font-size:15px;color:#ca8a04">star</span> Destacar
@@ -2351,7 +2414,7 @@ function isExpired(p) {
 }
 function expiredPill(p) {
   return isExpired(p)
-    ? '<span class="pill" style="background:#fef3c7;color:#b45309;border:1px solid rgba(217,119,6,0.28)" title="La fecha de expiración ya pasó: no se muestra en el sitio">Vencido</span>'
+    ? '<span class="pill pill-expired" title="La fecha de expiración ya pasó: no se muestra en el sitio"><span class="ms material-symbols-outlined">event_busy</span>Vencido</span>'
     : '';
 }
 async function isAdminUser(userId) {
@@ -2736,10 +2799,10 @@ function renderPkgCard(p, num) {
       <button class="pkg-qbtn" style="background:rgba(15,25,45,0.78)" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
         <span class="ms material-symbols-outlined" style="color:#fff">open_in_new</span>
       </button>
-      <button class="pkg-qbtn" style="background:${p.featured?'#f59e0b':'rgba(15,25,45,0.78)'}" onclick="event.stopPropagation();quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Marcar destacado'}">
+      <button class="pkg-qbtn qbtn-star-card${p.featured?' on':''}" aria-pressed="${p.featured?'true':'false'}" onclick="event.stopPropagation();quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Marcar destacado'}">
         <span class="ms material-symbols-outlined" style="color:#fff;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
       </button>
-      <button class="pkg-qbtn" style="background:${p.active?'#22c55e':'#ef4444'}" onclick="event.stopPropagation();quickToggleActive(${p.id})" title="${p.active?'Desactivar':'Activar'}">
+      <button class="pkg-qbtn qbtn-power-card${p.active?'':' off'}" aria-pressed="${p.active?'false':'true'}" onclick="event.stopPropagation();quickToggleActive(${p.id})" title="${p.active?'Desactivar':'Activar'}">
         <span class="ms material-symbols-outlined" style="color:#fff">power_settings_new</span>
       </button>
     </div>
@@ -2762,7 +2825,7 @@ function renderPkgCard(p, num) {
       </div>
       <div class="pkg-cardpills">
         ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}${expiredPill(p)}
-        ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:#fee2e2;color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
+        ${p.section==='salida_grupal'?'<span class="pill pill-grupal"><span class="ms material-symbols-outlined">groups</span>Grupal</span>':(hasOffer?'<span class="pill pill-offer"><span class="ms material-symbols-outlined">local_fire_department</span>Oferta</span>':'')}
         ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
       </div>
     </div>
@@ -2824,17 +2887,17 @@ function renderPkgListItem(p, num) {
     <!-- 8. Estado -->
     <div class="pli-cell pli-cell-estado">
       ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}${expiredPill(p)}
-      ${isGroup?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:#fee2e2;color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
+      ${isGroup?'<span class="pill pill-grupal"><span class="ms material-symbols-outlined">groups</span>Grupal</span>':(hasOffer?'<span class="pill pill-offer"><span class="ms material-symbols-outlined">local_fire_department</span>Oferta</span>':'')}
       ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
     </div>
 
     <!-- 9. Acciones -->
     <div class="pli-cell pli-cell-acciones" onclick="event.stopPropagation()">
-      <button class="pkg-qbtn pli-qbtn" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}">
-        <span class="ms material-symbols-outlined" style="color:${p.featured?'#f59e0b':'#94a3b8'};font-size:16px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
+      <button class="pkg-qbtn pli-qbtn qbtn-star${p.featured?' on':''}" onclick="quickToggleFeatured(${p.id})" title="${p.featured?'Quitar destacado':'Destacar'}" aria-pressed="${p.featured?'true':'false'}">
+        <span class="ms material-symbols-outlined" style="font-size:17px;font-variation-settings:'FILL' ${p.featured?'1':'0'}">star</span>
       </button>
-      <button class="pkg-qbtn pli-qbtn" onclick="quickToggleActive(${p.id})" title="${p.active?'Ocultar del sitio':'Publicar en el sitio'}">
-        <span class="ms material-symbols-outlined" style="color:${p.active?'#22c55e':'#ef4444'};font-size:16px">power_settings_new</span>
+      <button class="pkg-qbtn pli-qbtn qbtn-power${p.active?'':' off'}" onclick="quickToggleActive(${p.id})" title="${p.active?'Ocultar del sitio':'Publicar en el sitio'}" aria-pressed="${p.active?'false':'true'}">
+        <span class="ms material-symbols-outlined" style="font-size:17px">power_settings_new</span>
       </button>
       <button class="pkg-qbtn pli-qbtn" onclick="event.stopPropagation();viewPackageOnSite(${p.id})" title="Ver este viaje en la web (nueva pestaña)">
         <span class="ms material-symbols-outlined" style="color:#64748b;font-size:16px">open_in_new</span>
@@ -3338,8 +3401,8 @@ function renderImgStrip() {
       ondragend="pisDragEnd(event)">
       ${isBlob
         ? `<div onclick="openImgManager()" style="width:180px;height:130px;border-radius:10px;background:#fee2e2;border:2px dashed rgba(239,68,68,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer">
-             <span class="ms material-symbols-outlined" style="font-size:18px;color:#f87171">broken_image</span>
-             <span style="font-size:9px;color:#f87171;font-weight:600;text-align:center;line-height:1.3">URL<br>temporal</span>
+             <span class="ms material-symbols-outlined" style="font-size:18px;color:#dc2626">broken_image</span>
+             <span style="font-size:9px;color:#b91c1c;font-weight:700;text-align:center;line-height:1.3">URL<br>temporal</span>
            </div>`
         : `<img src="${url}" alt="" onerror="this.style.opacity='.2'" onclick="openImgManager()">`
       }
