@@ -122,7 +122,7 @@ html[data-theme="light"] [style*="background:#1a2d45"]:not(.faq-item) {
 
 /* ── Textos globales (fondo blanco/claro) ────── */
 
-html[data-theme="light"] .text-white:not(.faq-item *):not(section[style*="background-image"] *):not(.video-hero *):not(.cta-dark-card *):not([class*="bg-gradient"]):not([class*="from-blue"]):not([class*="bg-blue-"]):not([style*="background:#3778b8"]):not([style*="background:#ef4444"]):not([style*="background:#25D366"]):not([style*="background:rgba(55,120,184"]):not(#contactInfoLeft *):not(.photo-counter):not(.photo-counter *) { color: #0f172a !important; }
+html[data-theme="light"] .text-white:not(.discount-badge):not(.offer-label-badge):not(.featured-badge):not(.faq-item *):not(section[style*="background-image"] *):not(.video-hero *):not(.cta-dark-card *):not([class*="bg-gradient"]):not([class*="from-blue"]):not([class*="bg-blue-"]):not([style*="background:#3778b8"]):not([style*="background:#ef4444"]):not([style*="background:#25D366"]):not([style*="background:rgba(55,120,184"]):not(#contactInfoLeft *):not(.photo-counter):not(.photo-counter *) { color: #0f172a !important; }
 
 html[data-theme="light"] h1, html[data-theme="light"] h2,
 html[data-theme="light"] h3, html[data-theme="light"] h4 { color: #0f172a !important; }
