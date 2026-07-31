@@ -140,7 +140,8 @@ body, body.light {
 
 .pkg-order-num {
   position: absolute !important;
-  top: 10px !important;
+  /* Estaba arriba a la izquierda y tapaba el checkbox de seleccion */
+  bottom: 10px !important;
   left: 10px !important;
   z-index: 15 !important;
   background: rgba(15, 23, 42, 0.85) !important;
@@ -154,6 +155,122 @@ body, body.light {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25) !important;
   line-height: 1 !important;
 }
+
+/* Encabezados de los dos grupos de filtros del sidebar */
+.sb-group-lbl{
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  padding:4px 16px 5px; margin-top:2px;
+  font-size:9.5px; font-weight:800; letter-spacing:.09em; text-transform:uppercase;
+  color:#94a3b8;
+}
+.sb-group-hint{
+  font-size:8.5px; font-weight:700; letter-spacing:.03em; text-transform:none;
+  color:#2563eb; background:#eff6ff; border:1px solid #bfdbfe;
+  padding:1px 6px; border-radius:20px;
+}
+
+/* ══ ETIQUETAS CORTAS DE LA TARJETA (highlights) ══ */
+.hl-chips { display:flex; flex-wrap:wrap; gap:7px; min-height:34px; align-items:center;
+  padding:8px; border:1.5px dashed #cbd5e1; border-radius:11px; background:#f8fafc; }
+.hl-empty { font-size:12px; color:#94a3b8; font-style:italic; padding:0 4px; }
+.hl-chip { display:inline-flex; align-items:center; gap:5px;
+  background:#e0f2fe; color:#0369a1; border:1px solid #bae6fd;
+  border-radius:20px; padding:4px 6px 4px 11px;
+  font-size:12px; font-weight:700; }
+.hl-chip button { background:none; border:none; cursor:pointer; color:#0369a1;
+  display:flex; align-items:center; padding:0; border-radius:50%;
+  opacity:.55; transition:opacity .15s, background .15s; }
+.hl-chip button:hover { opacity:1; background:rgba(3,105,161,.15); }
+.hl-chip button .ms { font-size:14px; }
+
+/* ══ SELECTOR DE TIPO DE VIAJE (individual / grupal) ══ */
+.seg-choice { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+@media(max-width:700px){ .seg-choice{ grid-template-columns:1fr; } }
+.seg-opt {
+  position:relative; display:flex; align-items:flex-start; gap:11px; text-align:left;
+  padding:14px 14px 14px 13px; border-radius:14px; cursor:pointer;
+  background:#fff; border:2px solid #e2e8f0; font-family:inherit;
+  transition:border-color .16s, box-shadow .16s, background .16s, transform .12s;
+}
+.seg-opt:hover { border-color:#bfdbfe; background:#f8fbff; transform:translateY(-1px); }
+.seg-opt.active { border-color:#2563eb; background:#eff6ff; box-shadow:0 6px 18px rgba(37,99,235,.14); }
+.seg-ico {
+  width:38px; height:38px; border-radius:11px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:#eff6ff; color:#2563eb; transition:background .16s;
+}
+.seg-ico .ms { font-size:21px; }
+.seg-ico-gold { background:rgba(242,179,82,.16); color:#b45309; }
+.seg-opt.active .seg-ico { background:#2563eb; color:#fff; }
+.seg-opt.active .seg-ico-gold { background:#d97706; color:#fff; }
+.seg-txt { display:flex; flex-direction:column; gap:3px; min-width:0; }
+.seg-t { font-size:14px; font-weight:700; color:#0f172a; }
+.seg-d { font-size:11.5px; color:#64748b; line-height:1.35; }
+.seg-check {
+  position:absolute; top:10px; right:10px; font-size:19px; color:#2563eb;
+  opacity:0; transform:scale(.6); transition:opacity .16s, transform .16s;
+}
+.seg-opt.active .seg-check { opacity:1; transform:scale(1); }
+
+/* ══ ARRASTRE DE PAQUETES ══
+   .pkg-drop-placeholder, .dragging y body.pkg-dragging no tenian NINGUNA regla:
+   se arrastraba a ciegas, sin ver donde iba a caer la tarjeta. */
+.pkg-drop-placeholder {
+  border: 2px dashed #2563eb;
+  background: linear-gradient(135deg, rgba(37,99,235,.10), rgba(37,99,235,.04));
+  border-radius: 14px;
+  min-height: 100%;
+  align-self: stretch;
+  animation: phIn .16s ease;
+  position: relative;
+}
+.pkg-drop-placeholder::after {
+  content: 'Soltar acá';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11.5px; font-weight: 800; letter-spacing: .04em;
+  color: #2563eb; text-transform: uppercase; opacity: .85;
+}
+.pkg-drop-placeholder-list {
+  height: 46px; margin: 4px 0;
+  border: 2px dashed #2563eb;
+  background: linear-gradient(135deg, rgba(37,99,235,.10), rgba(37,99,235,.04));
+  border-radius: 10px;
+  animation: phIn .16s ease;
+  position: relative;
+}
+.pkg-drop-placeholder-list::after {
+  content: 'Soltar acá';
+  position: absolute; inset: 0;
+  display: flex; align-items: center; padding-left: 16px;
+  font-size: 11.5px; font-weight: 800; letter-spacing: .04em;
+  color: #2563eb; text-transform: uppercase; opacity: .85;
+}
+@keyframes phIn { from { opacity: 0; transform: scale(.96) } to { opacity: 1; transform: scale(1) } }
+
+/* La tarjeta que estás moviendo */
+.pkg-card.dragging, .pkg-list-item.dragging {
+  opacity: .35 !important;
+  transform: scale(.97) rotate(-.6deg);
+  filter: grayscale(.35);
+  transition: opacity .15s, transform .15s;
+}
+/* Mientras arrastrás: cursor de agarre y el resto se corre suave */
+body.pkg-dragging { cursor: grabbing !important; user-select: none; }
+body.pkg-dragging .pkg-card, body.pkg-dragging .pkg-list-item {
+  transition: transform .18s cubic-bezier(.2,.8,.2,1);
+}
+body.pkg-dragging .pkg-card:not(.dragging):hover { transform: none; box-shadow: none; }
+/* Zona de drop resaltada: deja claro que ahí se puede soltar */
+body.pkg-dragging .pkg-grid, body.pkg-dragging .pkg-list {
+  outline: 2px dashed rgba(37,99,235,.22);
+  outline-offset: 8px;
+  border-radius: 14px;
+  /* Colchon extra al final para poder soltar en la ultima posicion sin puntería */
+  padding-bottom: 26px;
+  transition: outline-color .2s;
+}
+.pkg-card[draggable="true"], .pkg-list-item[draggable="true"] { cursor: grab; }
 
 .pkg-list-order-num {
   background: #e0f2fe !important;
@@ -1500,11 +1617,37 @@ body.light .pli-label{color:rgba(0,0,0,0.6)}
   background:#ffffff;border:1px solid #cbd5e1;border:1px solid rgba(255,255,255,0.12);
   border-radius:7px;padding:5px 8px;font-family:inherit;outline:none;
   transition:width .18s,border-color .15s,background-color .15s,box-shadow .15s}
-.quick-price-input{text-align:right;font-size:12px;color:rgba(255,255,255,0.82);font-weight:600;width:88px}
-.pli-orig{color:rgba(255,255,255,0.85)!important}
-.pli-orig.pli-struck{color:rgba(255,255,255,0.42)!important;text-decoration:line-through}
+/* Estos colores venian del tema oscuro y, al ir DESPUES en la hoja, pisaban a
+   las reglas claras: el precio ORIGINAL quedaba blanco sobre blanco
+   (contraste 1.0, invisible mientras escribias). Ahora todos contrastan. */
+.quick-price-input{text-align:right;font-size:13px;color:#0f172a!important;font-weight:700;width:88px}
+.pli-orig{color:#334155!important}
+.pli-orig.pli-struck{color:#94a3b8!important;text-decoration:line-through}
 .pli-orig.pli-struck:placeholder-shown{text-decoration:none}
 .pli-desc{color:#0369a1!important;font-weight:700!important;font-size:13px!important;border-color:rgba(55,120,184,0.4)!important}
+
+/* Que se note que son editables: hover con borde y cursor de texto, foco con
+   anillo claro. Antes parecian texto plano y no se veia donde estabas escribiendo. */
+.quick-price-input, .quick-badge-input {
+  cursor:text;
+  background:#fff!important;
+  transition:background .15s, border-color .15s, box-shadow .15s;
+}
+.quick-price-input:hover:not(:focus), .quick-badge-input:hover:not(:focus) {
+  border-color:#94a3b8!important;
+  background:#f8fafc!important;
+  box-shadow:0 1px 3px rgba(15,23,42,.08)!important;
+}
+.quick-price-input:focus {
+  background:#fff!important;
+  color:#0f172a!important;
+  border-color:#2563eb!important;
+  box-shadow:0 0 0 3px rgba(37,99,235,.16)!important;
+  caret-color:#2563eb;
+}
+.quick-badge-input { background:#fffbe6!important; color:#92400e!important; }
+.quick-badge-input:hover:not(:focus) { background:#fef9dd!important; border-color:#eab308!important; }
+.quick-badge-input:focus { caret-color:#d97706; }
 /* Badge: ancho fijo en la tabla; al enfocarlo se expande para leerlo/editarlo entero */
 .quick-badge-input{width:100%;text-align:center;color:#ca8a04;font-weight:700;font-size:11.5px}
 /* Al enfocar se ensancha para leer la etiqueta entera. El fondo era #12233d
@@ -1530,7 +1673,7 @@ body.light .pli-qbtn:hover{background:rgba(0,0,0,0.11)}
 /* Vista cuadricula — bloque de edicion prolijo */
 .pkg-cardedit{display:flex;flex-direction:column;gap:5px;margin-top:9px}
 .pce-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.pce-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:rgba(255,255,255,0.55);flex-shrink:0}
+.pce-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#64748b;flex-shrink:0}
 body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 .pce-inp{width:auto!important;flex:1;max-width:120px;padding:3px 7px!important;font-size:11.5px!important}
 .quick-badge-input.pce-inp{text-align:center;color:#f59e0b;font-size:11px!important}
@@ -1580,6 +1723,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <span class="ms material-symbols-outlined">apps</span>Todos
           <span class="sb-sub-count" id="sbCountAll">—</span>
         </div>
+        <div class="sb-group-lbl">Por sección</div>
         <div class="sb-sub-item" id="sbFilterGrupal" onclick="switchPkgFilter('sec_grupal','all')">
           <span class="ms material-symbols-outlined" style="color:#0369a1">groups</span>Grupales
           <span class="sb-sub-count" id="sbCountGrupal" style="color:#0369a1;background:rgba(122,179,224,0.1)">—</span>
@@ -1592,7 +1736,8 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <span class="ms material-symbols-outlined" style="color:#f43f5e">local_fire_department</span>Viajes en Oferta
           <span class="sb-sub-count" id="sbCountSecOferta" style="color:#f43f5e;background:rgba(244,63,94,0.1)">—</span>
         </div>
-        <div class="sb-divider" style="margin: 8px 16px; opacity: 0.3;"></div>
+        <div class="sb-divider" style="margin: 10px 16px; opacity: 0.3;"></div>
+        <div class="sb-group-lbl">Por estado <span class="sb-group-hint">se suma al de arriba</span></div>
         <div class="sb-sub-item" id="sbFilterActive" onclick="switchPkgFilter('active','all')">
           <span class="ms material-symbols-outlined" style="color:#16a34a;font-weight:800">check_circle</span>Activos
           <span class="sb-sub-count" id="sbCountActive" style="color:#15803d;background:rgba(74,222,128,0.08)">—</span>
@@ -1819,14 +1964,31 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
               <div class="tgl-info"><div class="tgl-name">Destacado ★</div><div class="tgl-desc">Muestra la insignia de destacado en la web</div></div>
               <label class="tgl"><input type="checkbox" id="fFeatured"><span class="tgl-s"></span></label>
             </div>
-            <div class="fg" style="margin-top:6px">
-              <label class="fl">Sección de la web *</label>
-              <select id="fSection" class="fs">
-                <option value="salida_grupal">👥 Salida Grupal Acompañada (Sección 1)</option>
-                <option value="inspirador" selected>✨ Viaje Normal / Individual (Sección 2/3)</option>
-              </select>
-              <div style="font-size:11px;color:#475569;margin-top:6px;line-height:1.4">
-                Define el tipo de viaje. Si es Viaje Normal y tiene precio original (tachado), se moverá automáticamente a la sección de Ofertas.
+            <div class="fg" style="margin-top:10px">
+              <label class="fl">Tipo de viaje *</label>
+              <!-- Antes era un <select>: elegir entre dos opciones excluyentes se
+                   lee mucho mejor como dos tarjetas que como una lista. -->
+              <input type="hidden" id="fSection" value="inspirador">
+              <div class="seg-choice">
+                <button type="button" class="seg-opt" data-val="inspirador" onclick="setSection('inspirador')">
+                  <span class="seg-ico"><span class="ms material-symbols-outlined">person</span></span>
+                  <span class="seg-txt">
+                    <span class="seg-t">Viaje individual</span>
+                    <span class="seg-d">Lo arma cada pasajero por su cuenta</span>
+                  </span>
+                  <span class="ms material-symbols-outlined seg-check">check_circle</span>
+                </button>
+                <button type="button" class="seg-opt" data-val="salida_grupal" onclick="setSection('salida_grupal')">
+                  <span class="seg-ico seg-ico-gold"><span class="ms material-symbols-outlined">groups</span></span>
+                  <span class="seg-txt">
+                    <span class="seg-t">Salida grupal</span>
+                    <span class="seg-d">Grupo cerrado con acompañante de Corradi</span>
+                  </span>
+                  <span class="ms material-symbols-outlined seg-check">check_circle</span>
+                </button>
+              </div>
+              <div style="font-size:11.5px;color:#64748b;margin-top:8px;line-height:1.45">
+                Si es <b>individual</b> y le cargás un precio original (tachado), pasa solo a la sección <b>Ofertas</b> de la web.
               </div>
             </div>
           </div>
@@ -1875,6 +2037,23 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           </div>
           <input type="hidden" id="fCat" value="general">
           <input type="hidden" id="fDiff" value="fácil">
+        </div>
+
+        <!-- Etiquetas cortas de la tarjeta (highlights) -->
+        <div class="form-section">
+          <div class="form-section-title"><span class="ms material-symbols-outlined">sell</span>Etiquetas de la tarjeta</div>
+          <div class="fg">
+            <label class="fl">Etiquetas cortas</label>
+            <div id="hlChips" class="hl-chips"></div>
+            <input type="text" id="hlInput" class="fi" style="margin-top:8px"
+              placeholder="Escribí y presioná Enter — ej: Palm Beach, All Inclusive, Vuelo Directo"
+              onkeydown="hlKey(event)">
+            <input type="hidden" id="fHighlights">
+            <div style="font-size:11.5px;color:#64748b;margin-top:7px;line-height:1.45">
+              Son los cartelitos grises que salen en la tarjeta del paquete, debajo de la descripción.
+              Máximo 3 se muestran en la web. Enter o coma para agregar.
+            </div>
+          </div>
         </div>
 
         <!-- Precios -->
@@ -2683,7 +2862,85 @@ function bindCardEvents() {
   document.querySelectorAll('.pkg-card,.pkg-list-item').forEach(card => {
     card.addEventListener('contextmenu', e => e.preventDefault());
   });
+
+  // Antes el dragover solo escuchaba SOBRE otra tarjeta: los huecos entre
+  // tarjetas y todo el espacio despues de la ultima eran zona muerta, por eso
+  // costaba tanto soltar en la primera o en la ultima posicion.
+  // Ahora la zona de drop es el contenedor completo y se calcula la ranura mas
+  // cercana al puntero, incluida la de "al final de todo".
+  document.querySelectorAll('.pkg-grid, .pkg-list').forEach(wrap => {
+    if (wrap._dropBound) return;
+    wrap._dropBound = true;
+
+    wrap.addEventListener('dragover', e => {
+      if (!dragSrcId) return;
+      // Solo dentro de la misma seccion
+      const grupo = wrap.closest('.pkg-section-group')?.dataset.sectionGroup;
+      if (grupo && dragSrcSection && grupo !== dragSrcSection) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      colocarPlaceholder(wrap, e.clientX, e.clientY);
+    });
+
+    wrap.addEventListener('drop', e => {
+      if (!dragSrcId) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const src = dragSrcId;
+      const idx = getPhInsertIndex(src);
+      cleanupDrag();
+      dragSrcId = null; dropDestId = null;
+      if (src && idx >= 0) executeDropByIndex(src, idx);
+    });
+  });
 }
+
+// Inserta el placeholder en la ranura mas cercana al puntero.
+// Considera TODAS las ranuras: antes de la primera, entre cada par y al final.
+function colocarPlaceholder(wrap, x, y) {
+  const isList = viewMode === 'list';
+  const cards = [...wrap.children].filter(
+    c => c.dataset && c.dataset.id && !c.classList.contains('dragging') && c.id !== 'pkgDropPh'
+  );
+  if (!cards.length) return;
+
+  let ph = document.getElementById('pkgDropPh');
+  if (!ph) {
+    ph = document.createElement('div');
+    ph.id = 'pkgDropPh';
+    ph.className = isList ? 'pkg-drop-placeholder-list' : 'pkg-drop-placeholder';
+    ph.addEventListener('dragover', ev => { ev.preventDefault(); ev.dataTransfer.dropEffect = 'move'; });
+    ph.addEventListener('drop', ev => {
+      ev.preventDefault(); ev.stopPropagation();
+      const src = dragSrcId, idx = getPhInsertIndex(src);
+      cleanupDrag(); dragSrcId = null; dropDestId = null;
+      if (src && idx >= 0) executeDropByIndex(src, idx);
+    });
+  }
+
+  // Se busca la tarjeta cuyo CENTRO esta mas cerca del puntero y despues se
+  // decide si va antes o despues segun de que lado del centro cayo.
+  // Asi cualquier punto del contenedor tiene una ranura valida: arrastrar
+  // hacia el final (o el principio) siempre engancha la ultima/primera.
+  let ref = null, mejor = Infinity;
+  cards.forEach(card => {
+    const r = card.getBoundingClientRect();
+    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    // En lista lo que manda es la vertical; en grilla, la fila y despues la columna
+    const d = isList
+      ? Math.abs(cy - y) * 1000 + Math.abs(cx - x)
+      : Math.abs(cy - y) * 2 + Math.abs(cx - x);
+    if (d < mejor) { mejor = d; ref = { card, r, cx, cy }; }
+  });
+  if (!ref) return;
+
+  const despues = isList ? (y > ref.cy) : (x > ref.cx);
+  const destino = despues ? ref.card.nextSibling : ref.card;
+
+  if (ph.parentNode === wrap && ph.nextSibling === destino) return;
+  wrap.insertBefore(ph, destino);
+}
+
 
 // ── Quick toggles ──
 async function quickToggleFeatured(id) {
@@ -2857,6 +3114,44 @@ function switchEdTab(id, el) {
 }
 
 // ── Editor ──
+// ── Etiquetas cortas de la tarjeta (columna `highlights`) ──
+// El campo no existia en el admin: el payload guardaba siempre highlights:null,
+// asi que los cartelitos de la tarjeta solo se podian cargar desde la base.
+let hlItems = [];
+function renderHl() {
+  const box = document.getElementById('hlChips');
+  if (!box) return;
+  box.innerHTML = hlItems.length
+    ? hlItems.map((h, i) => `<span class="hl-chip">${escHtml(h)}<button type="button" onclick="hlRemove(${i})" title="Quitar"><span class="ms material-symbols-outlined">close</span></button></span>`).join('')
+    : '<span class="hl-empty">Sin etiquetas todavía</span>';
+  const hid = document.getElementById('fHighlights');
+  if (hid) hid.value = hlItems.join(String.fromCharCode(10));
+}
+function hlAdd(txt) {
+  String(txt).split(',').map(t => t.trim()).filter(Boolean).forEach(t => {
+    if (!hlItems.includes(t)) hlItems.push(t);
+  });
+  renderHl();
+}
+function hlRemove(i) { hlItems.splice(i, 1); renderHl(); }
+function hlKey(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    if (e.target.value.trim()) { hlAdd(e.target.value); e.target.value = ''; }
+  } else if (e.key === 'Backspace' && !e.target.value && hlItems.length) {
+    hlRemove(hlItems.length - 1);
+  }
+}
+
+// Selector de tipo de viaje (reemplaza al viejo <select id="fSection">)
+function setSection(val) {
+  const h = document.getElementById('fSection');
+  if (h) h.value = val;
+  document.querySelectorAll('.seg-choice .seg-opt').forEach(b => {
+    b.classList.toggle('active', b.dataset.val === val);
+  });
+}
+
 function openEditor(pkgId) {
   editingId = pkgId;
   const p = pkgId ? packages.find(x=>x.id===pkgId) : null;
@@ -2884,7 +3179,13 @@ function openEditor(pkgId) {
   // La sección legacy 'oferta' (viene del scraper) no existe en el select: sin esto
   // el desplegable quedaba EN BLANCO en 13 paquetes. Una oferta se define por tener
   // precio rebajado, no por la sección, así que se normaliza a 'inspirador'.
-  document.getElementById('fSection').value    = (p?.section === 'salida_grupal') ? 'salida_grupal' : 'inspirador';
+  setSection((p?.section === 'salida_grupal') ? 'salida_grupal' : 'inspirador');
+  hlItems = String((p && p.highlights) || '')
+    .split('\n').join('|').split('\u00b7').join('|').split('|')
+    .map(function (h) { return h.trim().replace(/^[\u2022\u2013\-*\u2b50]+\s*/, ''); })
+    .filter(Boolean);
+  renderHl();
+  const hlIn = document.getElementById('hlInput'); if (hlIn) hlIn.value = '';
   // Datetime-local necesita formato 'YYYY-MM-DDTHH:mm'
   if (p?.expires_at) {
     const d = new Date(p.expires_at);
@@ -3393,7 +3694,7 @@ async function savePackage() {
       if (html === '<br>' || html === '<p><br></p>' || html === '<div><br></div>') html = '';
       return html || null;
     })(),
-    highlights:  null,
+    highlights:  hlItems.length ? hlItems.join(String.fromCharCode(10)) : null,
     includes:    document.getElementById('fBulletsEnabled').checked ? getBulletsText('includes')||null : null,
     excludes:    document.getElementById('fBulletsEnabled').checked ? getBulletsText('excludes')||null : null,
     itinerary:   document.getElementById('fItineraryEnabled').checked ? serializeItinerary() : null,
@@ -4331,18 +4632,18 @@ function showAIModal() {
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
           <div class="fg">
-            <label class="fl">Destino / Ciudad</label>
-            <input type="text" id="aiDest" class="fi" placeholder="Ej: Roma, Florencia, Venecia" value="${escHtml(currentDest)}">
+            <label class="fl">Destino / Ciudades</label>
+            <input type="text" id="aiDest" class="fi" placeholder="Ej: Roma, Florencia, Venecia (separá con comas)" value="${escHtml(currentDest)}">
           </div>
           <div class="fg" style="position:relative">
-            <label class="fl">País (Buscá o Seleccioná)</label>
+            <label class="fl">País / Países</label>
             <!-- Antes era <input list=datalist>: el desplegable nativo es diminuto,
                  no muestra banderas y en Windows ni se nota que se puede scrollear. -->
             <div style="position:relative">
               <span id="aiCountryFlag" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);display:flex;align-items:center;pointer-events:none"></span>
               <input type="text" id="aiCountry" class="fi" autocomplete="off"
                 style="padding-left:38px;padding-right:32px"
-                placeholder="Escribí para buscar país…" value="${escHtml(currentCountry)}"
+                placeholder="Elegí uno o escribí varios separados por comas" value="${escHtml(currentCountry)}"
                 onfocus="aiCountryOpen()" oninput="aiCountryOpen(this.value)"
                 onkeydown="aiCountryKey(event)">
               <span class="ms material-symbols-outlined" onclick="aiCountryOpen()"
@@ -4389,8 +4690,10 @@ function aiCountrySync() {
   const inp = document.getElementById('aiCountry');
   const flagBox = document.getElementById('aiCountryFlag');
   if (!inp || !flagBox) return;
+  const partes = inp.value.split(',').map(x => x.trim()).filter(Boolean);
+  const ultimo = partes.length ? partes[partes.length - 1] : '';
   const c = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : [])
-    .find(x => x.name.toLowerCase() === inp.value.trim().toLowerCase());
+    .find(x => x.name.toLowerCase() === ultimo.toLowerCase());
   flagBox.innerHTML = c ? cpFlagImg(c.flag, 20)
     : '<span class="ms material-symbols-outlined" style="font-size:17px;color:#cbd5e1">public</span>';
 }
@@ -4398,7 +4701,8 @@ function aiCountryOpen(filter) {
   const box = document.getElementById('aiCountryList');
   const inp = document.getElementById('aiCountry');
   if (!box || !inp) return;
-  const q = (filter !== undefined ? filter : inp.value).trim().toLowerCase();
+  const crudo = (filter !== undefined ? filter : inp.value);
+  const q = crudo.split(',').pop().trim().toLowerCase();
   const all = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : []);
   const list = q ? all.filter(c => c.name.toLowerCase().includes(q) || (c.group||'').toLowerCase().includes(q)) : all;
   _aiCountryIdx = -1;
@@ -4419,7 +4723,15 @@ function aiCountryOpen(filter) {
 function aiCountryClose() { const b = document.getElementById('aiCountryList'); if (b) b.innerHTML = ''; }
 function aiCountryPick(name) {
   const inp = document.getElementById('aiCountry');
-  if (inp) inp.value = name;
+  if (inp) {
+    // Se pueden acumular varios paises: si ya hay uno cargado, suma con coma
+    const ya = inp.value.split(',').map(x => x.trim()).filter(Boolean);
+    const ultimoEsParcial = ya.length && !CP_COUNTRIES.some(c => c.name.toLowerCase() === ya[ya.length-1].toLowerCase());
+    if (ultimoEsParcial) ya.pop();           // reemplaza lo que se estaba tipeando
+    if (!ya.some(x => x.toLowerCase() === name.toLowerCase())) ya.push(name);
+    inp.value = ya.join(', ');
+    inp.focus();
+  }
   aiCountryClose(); aiCountrySync();
 }
 function aiCountryKey(e) {
@@ -4464,8 +4776,8 @@ async function runAIFromModal() {
   const context = [
     url     ? `URL O TEXTO DEL PAQUETE A IMPORTAR: "${url}"` : '',
     name    ? `Nombre sugerido: "${name}"` : '',
-    dest    ? `Destino / Ciudad: ${dest}` : '',
-    country ? `País: ${country}` : '',
+    dest    ? `Destinos / Ciudades a cubrir (pueden ser varias, separadas por comas): ${dest}` : '',
+    country ? `Países a cubrir (pueden ser varios, separados por comas): ${country}` : '',
     days    ? `Cantidad de Días: ${days}` : '',
     price   ? `Precio estimado USD: ${price}` : '',
     notes   ? `Notas / Descripción libre: ${notes}` : '',
@@ -4477,7 +4789,8 @@ Con la siguiente información del paquete (URL, destino, país, días y notas), 
 ${context}
 
 REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
-1. NO INVENTES NADA. Usá exclusivamente monumentos, atracciones turísticas, ciudades, plazas, museos y actividades REALES y verificadas del destino (${dest || 'destino especificado'}) y país (${country || 'país especificado'}).
+1. NO INVENTES NADA. Usá exclusivamente monumentos, atracciones turísticas, ciudades, plazas, museos y actividades REALES y verificadas de los destinos (${dest || 'destino especificado'}) y países (${country || 'país especificado'}).
+1.b. Si se indicó MÁS DE UNA ciudad o país, el viaje los recorre TODOS: investigá cada uno, repartí los días entre ellos de forma equilibrada y realista, e incluí explícitamente los traslados entre ciudades/países (vuelo, tren o bus) en el día que corresponda. No te concentres solo en el primero.
 2. Si se proporcionó una URL o texto de folleto, copiá e integrá fielmente los datos reales del viaje (vuelos, hoteles, excursiones incluidas, itinerario).
 3. Construí un itinerario día por día ("Día 1", "Día 2", etc.) ultra específico con recorridos lógicos y reales para exactamente esa cantidad de días (${days || 'según contexto'}).
 4. Redactá una descripción cautivadora, comercial y 100% profesional para la web de la agencia.
@@ -4486,8 +4799,8 @@ REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
 {
   "name": "nombre pulido y atractivo del paquete",
-  "destination": "ciudad o región principal",
-  "country": "país en español",
+  "destination": "las ciudades del recorrido separadas por comas, en orden",
+  "country": "el país principal en español (o los países separados por comas si son varios)",
   "days": número entero de días,
   "price_usd": número estimado en USD,
   "description": "descripción cautivadora y profesional del paquete",
@@ -5069,7 +5382,7 @@ function applyTemplate(type) {
   
   if (t.country) cpSetValue(t.country);
   
-  document.getElementById('fSection').value = t.section;
+  setSection(t.section === 'salida_grupal' ? 'salida_grupal' : 'inspirador');
   document.getElementById('fDesc').value = t.description;
   document.getElementById('fDescRich').innerHTML = t.description;
 

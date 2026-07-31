@@ -58,6 +58,18 @@
   .itinerary-html [style*="background-color"] { padding:2px 4px; border-radius:3px; }
   .itinerary-html br { display:block; margin:2px 0; }
 
+  /* Paquete sin imagenes cargadas */
+  .pkg-no-img{display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(145deg,#17396d 0%,#0f2550 100%);
+    border:1px solid rgba(255,255,255,0.10);min-height:340px}
+  .pkg-no-img__inner{text-align:center;padding:36px 24px;max-width:420px}
+  .pkg-no-img__inner .material-symbols-outlined{font-size:52px;color:rgba(255,255,255,0.32)}
+  .pkg-no-img__t{margin-top:14px;font-size:19px;font-weight:700;color:#fff}
+  .pkg-no-img__d{margin-top:7px;font-size:14px;line-height:1.55;color:rgba(255,255,255,0.6)}
+  html[data-theme="light"] .pkg-no-img{background:#f1f5f9;border-color:#e2e8f0}
+  html[data-theme="light"] .pkg-no-img__inner .material-symbols-outlined{color:#94a3b8}
+  html[data-theme="light"] .pkg-no-img__t{color:#0f172a!important}
+  html[data-theme="light"] .pkg-no-img__d{color:#64748b!important}
   .package-hero{position:relative;overflow:hidden;border-radius:32px;min-height:530px;max-height:770px;box-shadow:0 30px 80px rgba(0,0,0,0.25);width:100%;}
   .package-hero__slider { display:flex; width:100%; height:100%; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -ms-overflow-style:none; cursor:grab; position:absolute; inset:0; }
   .package-hero__slider::-webkit-scrollbar { display:none; }
@@ -516,7 +528,21 @@ function buildGallery(images, pkg) {
   lbImages = images;
   lbIdx = 0;
   const grid = document.getElementById('galleryGrid');
-  if (!images.length) return;
+  if (!images.length) {
+    // El paquete no tiene ninguna imagen cargada: se avisa en vez de mostrar
+    // una foto de stock que no corresponde al destino.
+    grid.innerHTML = `
+      <div class="package-hero pkg-no-img">
+        <div class="pkg-no-img__inner">
+          <span class="material-symbols-outlined">image_not_supported</span>
+          <p class="pkg-no-img__t">Sin imágenes todavía</p>
+          <p class="pkg-no-img__d">Estamos preparando las fotos de este viaje. Consultanos y te las pasamos.</p>
+        </div>
+      </div>`;
+    const th = document.getElementById('galleryThumbs'); if (th) th.classList.add('hidden');
+    const pg = document.getElementById('galleryPager');  if (pg) pg.classList.add('hidden');
+    return;
+  }
 
   const sanitize = text => String(text || '').replace(/`/g, '');
   const titleText = pkg ? sanitize(pkg.name) : 'Paquete destacado';
@@ -715,7 +741,7 @@ function buildGallery(images, pkg) {
       const imgs = Array.isArray(pkg.images) ? pkg.images : (() => { try { return JSON.parse(pkg.images); } catch(e) { return []; } })();
       images.push(...imgs.filter(u => u && !images.includes(u)));
     }
-    buildGallery(images.length ? images : ['https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80'], pkg);
+    buildGallery(images, pkg);   // sin imagenes -> placeholder propio, no una foto random
 
     // WhatsApp links
     const waLink = typeof whatsappLink === 'function' ? whatsappLink(pkg.name) : `https://wa.me/${WHATSAPP_NUMBER}`;
