@@ -266,9 +266,10 @@ function renderOffersCarousel() {
   function buildCard(p) {
     const img = p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80';
     const badgeColor = 'background:#f2b352;color:#0d1b2e;font-weight:700;text-shadow:none;box-shadow:0 2px 8px rgba(242,179,82,0.4)';
+    const highlights = p.highlights ? p.highlights.split(/·|\n/).slice(0,3).map(h => h.trim()).filter(Boolean) : [];
     return `
     <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
-      style="width:340px" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}">
+      style="width:440px;max-width:calc(100vw - 40px);" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}">
       <div class="relative overflow-hidden" style="height:220px">
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
           class="w-full h-full object-cover pointer-events-none">
@@ -286,7 +287,10 @@ function renderOffersCarousel() {
       <div class="p-5 flex flex-col flex-1 justify-between pointer-events-none">
         <div>
           <h3 class="font-['Geomanist'] font-medium text-[17px] text-slate-900 leading-tight mb-1.5">${p.name}</h3>
-          <p class="text-slate-400 text-[13px] font-light line-clamp-2">${descText(p.description)}</p>
+          <p class="text-slate-500 text-[13px] font-light line-clamp-2">${descText(p.description)}</p>
+          ${highlights.length ? `<div class="flex flex-wrap gap-1.5 mt-3">
+            ${highlights.map(h => `<span class="text-[10.5px] text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full font-medium">${h}</span>`).join('')}
+          </div>` : ''}
         </div>
         <div class="flex items-center justify-between mt-5 gap-3">
           <div>
@@ -330,7 +334,7 @@ function renderOffersCarousel() {
   if (prevBtn) prevBtn.style.display = '';
   if (nextBtn) nextBtn.style.display = '';
   track.style.justifyContent = '';
-  const CARD_W = 340;
+  const CARD_W = 440;
   const GAP = 20;
   const STEP = CARD_W + GAP;
 
