@@ -1165,11 +1165,11 @@ body.light .sorter-list { background: rgba(0,0,0,0.02) !important; border-color:
 .stat-label{font-size:11px;font-weight:600;color:#475569;text-transform:uppercase;letter-spacing:.05em}
 
 /* ── FILTER BAR ── */
-.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center;flex-shrink:0}
-.search-box{display:flex;align-items:center;gap:8px;background:#ffffff;border:1px solid #cbd5e1;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:8px 13px;flex:1;max-width:280px}
+.filter-bar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:nowrap;align-items:center;flex-shrink:0;min-width:0}
+.search-box{display:flex;align-items:center;gap:8px;background:#ffffff;border:1px solid #cbd5e1;border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:8px 13px;flex:1 1 160px;min-width:110px;max-width:280px}
 .search-box input{background:transparent;border:none;outline:none;color:#fff;font-size:14px;flex:1;font-family:inherit}
 .search-box input::placeholder{color:rgba(255,255,255,0.3)}
-.select-filter{background:#ffffff;border:1px solid #cbd5e1;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:600;color:#1e293b;cursor:pointer;outline:none;font-family:inherit;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.4)'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;background-size:18px}
+.select-filter{min-width:0;flex:0 1 auto;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;max-width:200px;background:#ffffff;border:1px solid #cbd5e1;border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:7px 12px;font-size:12px;font-weight:600;color:#1e293b;cursor:pointer;outline:none;font-family:inherit;appearance:none;padding-right:28px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='rgba(255,255,255,0.4)'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;background-size:18px}
 .select-filter option{background:#0b1525;color:#fff}
 .select-filter:focus{border-color:#3778b8}
 .chip{background:#ffffff;border:1px solid #cbd5e1;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:6px 13px;font-size:12px;font-weight:600;color:#475569;cursor:pointer;transition:all .15s;white-space:nowrap}
@@ -1950,9 +1950,6 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <span class="ms material-symbols-outlined" id="viewToggleIcon">grid_view</span>
         </button>
       </div>
-      <p class="pkg-view-hint">
-        <span class="ms material-symbols-outlined" style="font-size:13px;color:#0369a1;vertical-align:-2px">touch_app</span> Tocá cualquier paquete para editarlo · Cambiá precio y etiqueta directo desde la lista · Arrastrá <span class="ms material-symbols-outlined" style="font-size:13px;vertical-align:-2px">drag_indicator</span> para reordenar · Click derecho = más opciones
-      </p>
 
       <div id="pkgViewContainer"></div>
     </div>
