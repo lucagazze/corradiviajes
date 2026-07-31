@@ -1017,10 +1017,6 @@ body.light .sorter-list { background: rgba(0,0,0,0.02) !important; border-color:
 .pkg-card-date{font-size:10px;color:rgba(255,255,255,0.25)}
 .pkg-view-hint{font-size:11px;color:rgba(255,255,255,0.3);margin-bottom:16px;margin-top:-8px}
 .manual-hint{display:flex;align-items:center;gap:7px;background:rgba(55,120,184,0.1);border:1px solid rgba(55,120,184,0.25);border-radius:10px;padding:8px 14px;font-size:12px;color:rgba(255,255,255,0.55);margin-bottom:14px}
-.afb-label{font-size:11px;color:#64748b;font-weight:600}
-.afb-chip{display:inline-flex;align-items:center;gap:4px;background:#e0f2fe;border:1px solid rgba(55,120,184,0.3);border-radius:20px;padding:3px 10px 3px 12px;font-size:11px;color:#0369a1}
-.afb-chip-rm{background:none;border:none;cursor:pointer;color:#0369a1;display:flex;align-items:center;padding:0;margin-left:2px;font-family:inherit}
-.afb-clear{background:#ffffff;border:1px solid rgba(255,255,255,0.1);border-radius:20px;padding:3px 10px;font-size:11px;color:#475569;cursor:pointer;font-family:inherit}
 .pill{font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;text-transform:uppercase;letter-spacing:.04em}
 .pill-active{background:#dcfce7;color:#15803d;border:1px solid rgba(74,222,128,0.2)}
 .pill-inactive{background:rgba(239,68,68,0.1);color:#f87171;border:1px solid rgba(239,68,68,0.18)}
@@ -1511,8 +1507,14 @@ body.light .pli-label{color:rgba(0,0,0,0.6)}
 .pli-desc{color:#0369a1!important;font-weight:700!important;font-size:13px!important;border-color:rgba(55,120,184,0.4)!important}
 /* Badge: ancho fijo en la tabla; al enfocarlo se expande para leerlo/editarlo entero */
 .quick-badge-input{width:100%;text-align:center;color:#ca8a04;font-weight:700;font-size:11.5px}
-.quick-badge-input:focus{position:relative;z-index:40;width:270px!important;text-align:left;background:#12233d!important;border-color:#3778b8!important;box-shadow:0 8px 24px rgba(0,0,0,0.55)}
-body.light .quick-badge-input:focus{background:#fff!important}
+/* Al enfocar se ensancha para leer la etiqueta entera. El fondo era #12233d
+   (azul casi negro) y el override claro colgaba de `body.light`, clase que
+   applyTheme() borra: por eso el campo se ponia negro al escribir. */
+.quick-badge-input:focus{
+  position:relative;z-index:40;width:270px!important;text-align:left;
+  background:#ffffff!important;color:#92400e!important;
+  border-color:#d97706!important;
+  box-shadow:0 8px 24px rgba(15,23,42,0.16),0 0 0 3px rgba(217,119,6,0.14)!important}
 body.light .pli-orig{color:rgba(0,0,0,0.42)!important}
 /* Botón Editar */
 .pli-edit{width:auto!important;height:34px!important;padding:0 12px!important;gap:6px;
@@ -1713,13 +1715,16 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <span class="material-symbols-outlined" style="color:#64748b;font-size:18px">search</span>
           <input type="text" id="pkgSearch" placeholder="Buscar paquete…" oninput="renderPkgView()">
         </div>
-        <select class="select-filter" id="filterStatus" onchange="renderPkgView()">
-          <option value="all">Todos los paquetes</option>
-          <option value="active">Activos</option>
-          <option value="inactive">Inactivos</option>
+        <select class="select-filter" id="filterSection" onchange="onFilterSelectChange()">
+          <option value="all">Todas las secciones</option>
           <option value="sec_grupal">👥 Grupales</option>
           <option value="sec_inspirador">✨ Viajes Ind Sin Oferta</option>
           <option value="sec_oferta">🔥 Viajes Ind en Oferta</option>
+        </select>
+        <select class="select-filter" id="filterStatus" onchange="onFilterSelectChange()">
+          <option value="all">Activos e inactivos</option>
+          <option value="active">Solo activos</option>
+          <option value="inactive">Solo inactivos</option>
         </select>
         <div class="search-box" style="min-width:160px">
           <span class="material-symbols-outlined" style="color:#64748b;font-size:18px">flag</span>
@@ -1737,7 +1742,6 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <span class="ms material-symbols-outlined" id="viewToggleIcon">grid_view</span>
         </button>
       </div>
-      <div id="activeFiltersBar" style="display:none;align-items:center;gap:8px;margin-bottom:14px;margin-top:-6px;flex-wrap:wrap"></div>
       <p class="pkg-view-hint">
         <span class="ms material-symbols-outlined" style="font-size:13px;color:#0369a1;vertical-align:-2px">touch_app</span> Tocá cualquier paquete para editarlo · Cambiá precio y etiqueta directo desde la lista · Arrastrá <span class="ms material-symbols-outlined" style="font-size:13px;vertical-align:-2px">drag_indicator</span> para reordenar · Click derecho = más opciones
       </p>
@@ -2253,39 +2257,8 @@ function switchView(v) {
 }
 function capitalize(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
 
-// ── Filter helpers ──
-function clearAllFilters() {
-  const s = document.getElementById('pkgSearch'); if (s) s.value = '';
-  const fs = document.getElementById('filterStatus'); if (fs) fs.value = 'all';
-  const fc = document.getElementById('filterContinent'); if (fc) fc.value = 'all';
-  document.querySelectorAll('.sb-sub-item').forEach(el => el.classList.remove('active'));
-  document.getElementById('sbFilterAll')?.classList.add('active');
-  renderPkgView();
-}
-
-function updateActiveFiltersBar() {
-  const bar = document.getElementById('activeFiltersBar');
-  if (!bar) return;
-  const q   = document.getElementById('pkgSearch')?.value?.trim();
-  const st  = document.getElementById('filterStatus')?.value;
-  const cnt = document.getElementById('filterContinent')?.value;
-  const tags = [];
-  const stLabels = {active:'Activos',inactive:'Inactivos',featured:'Destacados',offer:'Con oferta'};
-  const cntLabels = {europa:'Europa',caribe:'Caribe & México',america_del_sur:'Sudamérica',asia:'Asia & Pacífico',africa:'África',oceania:'Oceanía',general:'General'};
-  if (q) tags.push({label:`"${q}"`, clear:()=>{document.getElementById('pkgSearch').value='';renderPkgView();}});
-  if (st && st!=='all') tags.push({label:stLabels[st]||st, clear:()=>{document.getElementById('filterStatus').value='all';renderPkgView();}});
-  if (cnt && cnt!=='all') tags.push({label:cntLabels[cnt]||cnt, clear:()=>{document.getElementById('filterContinent').value='all';renderPkgView();}});
-  if (!tags.length) { bar.style.display='none'; return; }
-  bar.style.display = 'flex';
-  bar.innerHTML = '<span class="afb-label">Filtros:</span>'
-    + tags.map((t,i)=>`<span class="afb-chip">
-        ${t.label}
-        <button onclick="(${t.clear.toString()})()" class="afb-chip-rm">
-          <span class="ms material-symbols-outlined" style="font-size:13px">close</span>
-        </button>
-      </span>`).join('')
-    + `<button onclick="clearAllFilters()" class="afb-clear">Limpiar todo</button>`;
-}
+// Nota: la barra de "Filtros activos" se removio: los filtros ya se ven y se
+// manejan desde el sidebar izquierdo, repetirlos arriba era redundante.
 
 // ── Ctrl+S to save ──
 document.addEventListener('keydown', e => {
@@ -2333,26 +2306,63 @@ function updateEditorTabDots() {
 
 // ── Sidebar quick filters ──
 let activeSbFilter = 'all';
-function switchPkgFilter(status, cont) {
+// Los filtros son DOS dimensiones independientes y se combinan entre sí:
+//   sección → todos | sec_grupal | sec_inspirador | sec_oferta
+//   estado  → todos | active | inactive
+// Antes ambas compartían el mismo valor en #filterStatus, así que elegir
+// "Grupales" pisaba "Activos" y nunca se podían aplicar los dos a la vez.
+// Volver a tocar un filtro ya activo lo apaga.
+let sbSection = 'all';
+let sbStatus  = 'all';
+
+function switchPkgFilter(value, cont) {
   closeEditor();
   switchView('packages');
-  const statusEl = document.getElementById('filterStatus');
-  const contEl   = document.getElementById('filterContinent');
-  if (statusEl) statusEl.value = status;
-  if (contEl)   contEl.value   = cont || 'all';
-  activeSbFilter = status;
-  document.querySelectorAll('.sb-sub-item').forEach(el => el.classList.remove('active'));
-  const map = {
-    all:'sbFilterAll',
-    active:'sbFilterActive',
-    inactive:'sbFilterInactive',
-    sec_grupal:'sbFilterGrupal',
-    sec_inspirador:'sbFilterInspirador',
-    sec_oferta:'sbFilterSecOferta'
-  };
-  document.getElementById(map[status])?.classList.add('active');
+
+  const esSeccion = value === 'sec_grupal' || value === 'sec_inspirador' || value === 'sec_oferta';
+  const esEstado  = value === 'active' || value === 'inactive';
+
+  if (value === 'all') { sbSection = 'all'; sbStatus = 'all'; }
+  else if (esSeccion)  { sbSection = (sbSection === value) ? 'all' : value; }
+  else if (esEstado)   { sbStatus  = (sbStatus  === value) ? 'all' : value; }
+
+  const contEl = document.getElementById('filterContinent');
+  if (contEl && cont !== undefined) contEl.value = cont || 'all';
+
+  syncFilterUI();
   renderPkgView();
 }
+
+// Refleja el estado de los filtros en el sidebar y en el <select> de arriba
+function syncFilterUI() {
+  const map = {
+    sec_grupal:'sbFilterGrupal', sec_inspirador:'sbFilterInspirador',
+    sec_oferta:'sbFilterSecOferta', active:'sbFilterActive', inactive:'sbFilterInactive'
+  };
+  document.querySelectorAll('.sb-sub-item').forEach(el => el.classList.remove('active'));
+  if (sbSection === 'all' && sbStatus === 'all') {
+    document.getElementById('sbFilterAll')?.classList.add('active');
+  } else {
+    if (sbSection !== 'all') document.getElementById(map[sbSection])?.classList.add('active');
+    if (sbStatus  !== 'all') document.getElementById(map[sbStatus])?.classList.add('active');
+  }
+  const sec = document.getElementById('filterSection');
+  const est = document.getElementById('filterStatus');
+  if (sec) sec.value = sbSection;
+  if (est) est.value = sbStatus;
+  activeSbFilter = sbSection !== 'all' ? sbSection : sbStatus;
+}
+
+// Los <select> de arriba escriben en las mismas variables
+function onFilterSelectChange() {
+  const sec = document.getElementById('filterSection');
+  const est = document.getElementById('filterStatus');
+  if (sec) sbSection = sec.value;
+  if (est) sbStatus  = est.value;
+  syncFilterUI();
+  renderPkgView();
+}
+
 function updateSbCounts() {
   const tot  = packages.length;
   const act  = packages.filter(p=>p.active).length;
@@ -2418,7 +2428,6 @@ function sortList(list, sort) {
 
 function getFilteredPackages() {
   const q    = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
-  const stat = document.getElementById('filterStatus')?.value || 'all';
   const cont = document.getElementById('filterContinent')?.value || 'all';
   const sort = document.getElementById('filterSort')?.value || 'manual';
 
@@ -2431,12 +2440,13 @@ function getFilteredPackages() {
   // Country search
   const cq = (document.getElementById('countrySearch')?.value||'').toLowerCase().trim();
   if (cq) list = list.filter(p => p.country?.toLowerCase().includes(cq));
-  if (stat==='active')   list = list.filter(p=>p.active);
-  if (stat==='inactive') list = list.filter(p=>!p.active);
+  // Estado y sección se aplican por separado, así se combinan
+  if (sbStatus==='active')   list = list.filter(p=>p.active);
+  if (sbStatus==='inactive') list = list.filter(p=>!p.active);
   
-  if (stat==='sec_grupal')     list = list.filter(p=>p.section==='salida_grupal');
-  if (stat==='sec_inspirador') list = list.filter(p=>p.section!=='salida_grupal' && !(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
-  if (stat==='sec_oferta')     list = list.filter(p=>p.section!=='salida_grupal' && (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
+  if (sbSection==='sec_grupal')     list = list.filter(p=>p.section==='salida_grupal');
+  if (sbSection==='sec_inspirador') list = list.filter(p=>p.section!=='salida_grupal' && !(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
+  if (sbSection==='sec_oferta')     list = list.filter(p=>p.section!=='salida_grupal' && (p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
 
   if (cont!=='all')      list = list.filter(p=>p.category===cont);
 
@@ -2471,14 +2481,12 @@ function formatDate(dateStr) {
 function renderPkgView() {
   const container = document.getElementById('pkgViewContainer');
   if (!container) return;
-  updateActiveFiltersBar();
   
   const q    = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
-  const stat = document.getElementById('filterStatus')?.value || 'all';
   const cont = document.getElementById('filterContinent')?.value || 'all';
   const sort = document.getElementById('filterSort')?.value || 'manual';
   
-  const isGroupedView = (stat === 'all' && !q && cont === 'all');
+  const isGroupedView = (sbSection === 'all' && sbStatus === 'all' && !q && cont === 'all');
   const isList = viewMode === 'list';
   const renderFn = isList ? renderPkgListItem : renderPkgCard;
   const wrapClass = isList ? 'pkg-list' : 'pkg-grid';
@@ -3553,9 +3561,8 @@ async function executeDropByIndex(srcId, insertIndex) {
   if (!p) return;
   
   const q = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
-  const stat = document.getElementById('filterStatus')?.value || 'all';
   const cont = document.getElementById('filterContinent')?.value || 'all';
-  const isGroupedView = (stat === 'all' && !q && cont === 'all');
+  const isGroupedView = (sbSection === 'all' && sbStatus === 'all' && !q && cont === 'all');
   
   let list;
   if (isGroupedView) {
