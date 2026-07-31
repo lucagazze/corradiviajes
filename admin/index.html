@@ -1774,9 +1774,6 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
         <span class="ms material-symbols-outlined">dashboard</span>Dashboard
       </div>
       <div class="sb-section">Contenido</div>
-      <div class="sb-item" id="navMedia" onclick="switchView('media')">
-        <span class="ms material-symbols-outlined">photo_library</span>Biblioteca
-      </div>
       <div class="sb-item-parent" id="navPkg" onclick="switchPkgFilter('all','all')">
         <span class="ms material-symbols-outlined">travel_explore</span>Paquetes
         <span class="ms material-symbols-outlined ms-arrow">expand_more</span>
@@ -1809,6 +1806,9 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <span class="ms material-symbols-outlined" style="color:rgba(255,255,255,0.3)">cancel</span>Inactivos
           <span class="sb-sub-count" id="sbCountInactive">—</span>
         </div>
+      </div>
+      <div class="sb-item" id="navMedia" onclick="switchView('media')">
+        <span class="ms material-symbols-outlined">photo_library</span>Biblioteca
       </div>
     </nav>
     <div class="sb-divider"></div>
@@ -4840,6 +4840,24 @@ document.addEventListener('click', (e) => {
   if (!e.target.closest('#aiCountryList') && e.target.id !== 'aiCountry') aiCountryClose();
 });
 
+// Descarga el texto legible de una URL (r.jina.ai lo convierte a texto plano
+// y permite CORS). Devuelve '' si no se pudo: la IA sigue con los otros datos.
+async function fetchUrlText(url) {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20000);
+    const r = await fetch('https://r.jina.ai/' + url, {
+      signal: ctrl.signal,
+      headers: { 'Accept': 'text/plain' }
+    });
+    clearTimeout(timer);
+    if (!r.ok) return '';
+    const t = await r.text();
+    // 15k caracteres alcanzan y no reventamos el limite de tokens
+    return t.slice(0, 15000);
+  } catch (e) { return ''; }
+}
+
 async function runAIFromModal() {
   const url     = document.getElementById('aiUrl')?.value.trim();
   const name    = document.getElementById('aiName')?.value.trim();
@@ -4858,8 +4876,18 @@ async function runAIFromModal() {
   const btn = document.getElementById('aiModalGenBtn');
   if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando e investigando destino…`; btn.disabled = true; }
 
+  // Si hay URL, se lee la pagina REAL y su texto va al prompt
+  let urlTexto = '';
+  if (url && /^https?:\/\//i.test(url)) {
+    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Leyendo la página…';
+    urlTexto = await fetchUrlText(url);
+    if (!urlTexto) showToast('No pude leer esa URL; genero con los demás datos', 'error');
+    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando e investigando destino…';
+  }
+
   const context = [
-    url     ? `URL O TEXTO DEL PAQUETE A IMPORTAR: "${url}"` : '',
+    url     ? `URL DEL PAQUETE A IMPORTAR: ${url}` : '',
+    urlTexto ? `CONTENIDO REAL EXTRAÍDO DE ESA PÁGINA (usalo como fuente principal):\n"""\n${urlTexto}\n"""` : '',
     name    ? `Nombre sugerido: "${name}"` : '',
     dest    ? `Destinos / Ciudades a cubrir (pueden ser varias, separadas por comas): ${dest}` : '',
     country ? `Países a cubrir (pueden ser varios, separados por comas): ${country}` : '',
