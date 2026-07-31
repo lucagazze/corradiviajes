@@ -11,9 +11,13 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 // ─────────────────────────────────────────────
 const SUPABASE_STORAGE = `${SUPABASE_URL}/storage/v1/object/public/corradi-media`;
 
+// Los videos se sirven desde el propio dominio (/video), no desde Supabase
+// Storage: ese bucket responde Cache-Control: no-cache, asi que el navegador
+// se bajaba los 25 MB completos en CADA visita. Ahora pesan 9.6 MB entre los
+// dos y quedan cacheados un anio (ver vercel.json).
 const VIDEOS = {
-  hero:    `${SUPABASE_STORAGE}/Video%20Project.mp4`,    // Hero principal (index)
-  section: `${SUPABASE_STORAGE}/Video%20Project%201.mp4`, // Sección secundaria (index)
+  hero:    'video/hero.mp4',
+  section: 'video/seccion.mp4',
 };
 
 // ─────────────────────────────────────────────

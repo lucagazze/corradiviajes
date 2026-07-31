@@ -209,9 +209,9 @@
   <section id="heroSection" class="w-[96%] md:w-[90%] max-w-[1800px] mx-auto pt-0 pb-12 flex flex-col items-center">
     <div class="video-hero relative w-full h-[65vh] md:h-[75vh] min-h-[450px] md:min-h-[500px] max-h-[800px] flex flex-col justify-center items-center text-center rounded-[32px] overflow-hidden">
       <div class="absolute inset-0 rounded-[32px] overflow-hidden">
-        <video autoplay muted loop playsinline preload="auto" poster="img/hero_travel_new.png"
+        <video autoplay muted loop playsinline preload="auto" poster="video/poster-hero.webp"
           style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scale(1.05);min-width:100%;min-height:100%;width:auto;height:auto;object-fit:cover;">
-          <source type="video/mp4" src="https://czocbnyoenjbpxmcqobn.supabase.co/storage/v1/object/public/corradi-media/Video%20Project.mp4">
+          <source type="video/mp4" src="video/hero.mp4">
         </video>
         <div class="absolute inset-0 pointer-events-none" style="background:rgba(0,0,0,0.35)"></div>
       </div>
@@ -469,9 +469,10 @@
 
   <!-- Cinematic Video Section 2 -->
   <section class="video-hero w-full relative h-[50vh] md:h-[60vh] min-h-[300px] max-h-[500px] overflow-hidden flex items-center justify-center text-center">
-    <video autoplay="" muted="" loop="" playsinline="" preload="auto" poster="img/hero_travel_new.png" class="absolute inset-0 w-full h-full object-cover" style="transform:scale(1.05);">
-      <source type="video/mp4" src="https://czocbnyoenjbpxmcqobn.supabase.co/storage/v1/object/public/corradi-media/Video%20Project%201.mp4">
-    </video>
+    <!-- Esta seccion esta muy abajo: el video no se descarga hasta que el
+         usuario se acerca (data-lazy-src). Antes bajaba 16 MB de entrada y le
+         robaba ancho de banda al hero de arriba. -->
+    <video muted="" loop="" playsinline="" preload="none" poster="video/poster-sec.webp" class="absolute inset-0 w-full h-full object-cover" style="transform:scale(1.05);" data-lazy-src="video/seccion.mp4"></video>
     <div class="absolute inset-0 pointer-events-none" style="background:rgba(0,0,0,0.45)"></div>
     <div class="relative z-10 px-6">
       <h2 class="font-['Geomanist'] font-bold text-[30px] md:text-[46px] leading-tight text-white drop-shadow-md">De Rosario al Mundo.</h2>

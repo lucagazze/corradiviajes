@@ -1,5 +1,6 @@
-# Videos locales — ahora alojados en Supabase Storage
-video/
+# Los videos del home viven en video/ y se sirven desde el propio dominio
+# (Supabase Storage devuelve Cache-Control: no-cache y se redescargaban
+#  25 MB en cada visita).
 
 # OS
 .DS_Store
