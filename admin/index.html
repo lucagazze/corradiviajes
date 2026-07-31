@@ -2368,6 +2368,8 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
 <script>
 // ═══════════════ CONFIG ═══════════════
 const SUPABASE_URL  = 'https://czocbnyoenjbpxmcqobn.supabase.co';
@@ -4682,6 +4684,7 @@ function escHtml(str) {
 function showAIModal() {
   const existing = document.getElementById('aiModal');
   if (existing) existing.remove();
+  aiPdfTexto = ''; aiPdfNombre = '';   // cada apertura del modal arranca sin PDF pegado de antes
 
   const currentName = document.getElementById('fName').value.trim();
   const currentDest = document.getElementById('fDest').value.trim();
@@ -4708,6 +4711,15 @@ function showAIModal() {
             <span class="material-symbols-outlined" style="font-size:16px">link</span> 🔗 URL del Viaje o Web a Copiar (Opcional)
           </label>
           <input type="url" id="aiUrl" class="fi" style="background:#ffffff" placeholder="https://agencia.com/paquete-europa-clasica">
+        </div>
+
+        <!-- Campo PDF -->
+        <div class="fg" style="background:#fdf4ff;border:1.5px solid #e9d5ff;border-radius:14px;padding:12px 14px">
+          <label class="fl" style="color:#9333ea;display:flex;align-items:center;gap:6px;margin-bottom:4px">
+            <span class="material-symbols-outlined" style="font-size:16px">picture_as_pdf</span> 📄 Folleto en PDF (Opcional)
+          </label>
+          <input type="file" id="aiPdf" accept="application/pdf" class="fi" style="background:#ffffff;padding-top:8px;padding-bottom:8px" onchange="onAiPdfChange(event)">
+          <div id="aiPdfStatus" style="font-size:11.5px;color:#7e22ce;margin-top:6px;line-height:1.4"></div>
         </div>
 
         <div class="fg">
@@ -4858,6 +4870,49 @@ async function fetchUrlText(url) {
   } catch (e) { return ''; }
 }
 
+// Guarda el texto ya extraído del PDF elegido, para no releerlo en cada click
+let aiPdfTexto = '';
+let aiPdfNombre = '';
+
+// Extrae el texto de un PDF pagina por pagina con pdf.js (misma libreria que
+// ya usa el Portal para las miniaturas). No hay backend: todo corre en el navegador.
+async function extractPdfText(file) {
+  if (!window.pdfjsLib) return '';
+  const buf = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
+  let texto = '';
+  const maxPaginas = Math.min(pdf.numPages, 25); // tope razonable para un folleto
+  for (let i = 1; i <= maxPaginas; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    texto += content.items.map(it => it.str).join(' ') + '\n\n';
+    if (texto.length > 18000) break; // no reventar el limite de tokens del prompt
+  }
+  return texto.slice(0, 18000);
+}
+
+// Se dispara al elegir el archivo: lee el PDF en el momento y muestra el estado,
+// asi el usuario ve si funcionó ANTES de tocar "Generar".
+async function onAiPdfChange(ev) {
+  const file = ev.target.files[0];
+  const status = document.getElementById('aiPdfStatus');
+  aiPdfTexto = ''; aiPdfNombre = '';
+  if (!file) { if (status) status.textContent = ''; return; }
+  if (status) status.innerHTML = '<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>Leyendo el PDF…';
+  try {
+    const texto = await extractPdfText(file);
+    if (!texto.trim()) {
+      if (status) status.innerHTML = '<span style="color:#b91c1c">⚠ No se pudo extraer texto de este PDF (¿es un escaneo/imagen?). Puede que ese folleto sea solo fotos: pegá el texto a mano en "Notas" si lo tenés.</span>';
+      return;
+    }
+    aiPdfTexto = texto;
+    aiPdfNombre = file.name;
+    if (status) status.innerHTML = `<span style="color:#15803d">✓ Leído: ${texto.length.toLocaleString('es-AR')} caracteres de "${escHtml(file.name)}". Se va a usar como fuente principal al generar.</span>`;
+  } catch (e) {
+    if (status) status.innerHTML = `<span style="color:#b91c1c">⚠ Error leyendo el PDF: ${escHtml(e.message || String(e))}</span>`;
+  }
+}
+
 async function runAIFromModal() {
   const url     = document.getElementById('aiUrl')?.value.trim();
   const name    = document.getElementById('aiName')?.value.trim();
@@ -4867,9 +4922,9 @@ async function runAIFromModal() {
   const price   = document.getElementById('aiPrice')?.value.trim();
   const notes   = document.getElementById('aiNotes')?.value.trim();
 
-  if (!url && !name && !dest && !country && !notes) {
+  if (!url && !name && !dest && !country && !notes && !aiPdfTexto) {
     document.getElementById('aiDest')?.focus();
-    showToast('Ingresá al menos una URL, destino, país o nombre para generar', 'error');
+    showToast('Ingresá al menos un PDF, URL, destino, país o nombre para generar', 'error');
     return;
   }
 
@@ -4888,6 +4943,7 @@ async function runAIFromModal() {
   const context = [
     url     ? `URL DEL PAQUETE A IMPORTAR: ${url}` : '',
     urlTexto ? `CONTENIDO REAL EXTRAÍDO DE ESA PÁGINA (usalo como fuente principal):\n"""\n${urlTexto}\n"""` : '',
+    aiPdfTexto ? `CONTENIDO REAL EXTRAÍDO DEL PDF "${aiPdfNombre}" (folleto del proveedor — usalo como fuente principal, tiene prioridad sobre suposiciones):\n"""\n${aiPdfTexto}\n"""` : '',
     name    ? `Nombre sugerido: "${name}"` : '',
     dest    ? `Destinos / Ciudades a cubrir (pueden ser varias, separadas por comas): ${dest}` : '',
     country ? `Países a cubrir (pueden ser varios, separados por comas): ${country}` : '',
@@ -4904,7 +4960,7 @@ ${context}
 REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 1. NO INVENTES NADA. Usá exclusivamente monumentos, atracciones turísticas, ciudades, plazas, museos y actividades REALES y verificadas de los destinos (${dest || 'destino especificado'}) y países (${country || 'país especificado'}).
 1.b. Si se indicó MÁS DE UNA ciudad o país, el viaje los recorre TODOS: investigá cada uno, repartí los días entre ellos de forma equilibrada y realista, e incluí explícitamente los traslados entre ciudades/países (vuelo, tren o bus) en el día que corresponda. No te concentres solo en el primero.
-2. Si se proporcionó una URL o texto de folleto, copiá e integrá fielmente los datos reales del viaje (vuelos, hoteles, excursiones incluidas, itinerario).
+2. Si se proporcionó una URL, un PDF o texto de folleto, copiá e integrá FIELMENTE los datos reales del viaje que figuren ahí (hoteles, vuelos, fechas, precios, excursiones incluidas, itinerario). No los reemplaces por suposiciones genéricas.
 3. Construí un itinerario día por día ("Día 1", "Día 2", etc.) ultra específico con recorridos lógicos y reales para exactamente esa cantidad de días (${days || 'según contexto'}).
 4. Redactá una descripción cautivadora, comercial y 100% profesional para la web de la agencia.
 5. Generá listas detalladas de servicios incluidos ("includes") y no incluidos ("excludes") adaptadas a paquetes turísticos reales desde Argentina.
@@ -4915,7 +4971,8 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   "destination": "las ciudades del recorrido separadas por comas, en orden",
   "country": "el país principal en español (o los países separados por comas si son varios)",
   "days": número entero de días,
-  "price_usd": número estimado en USD,
+  "price_usd": número: el precio FINAL/con descuento si el folleto muestra dos precios, o el único precio si solo hay uno,
+  "price_original_usd": número o null: el precio de lista SIN descuento, SOLO si el folleto muestra explícitamente un precio tachado o "antes/ahora". Si hay un solo precio, poné null,
   "description": "descripción cautivadora y profesional del paquete",
   "badge": "etiqueta corta y vendedora para la foto, max 18 caracteres (ej: SEPTIEMBRE 2026, Todo Incluido)",
   "highlights": ["3 o 4 etiquetas CORTAS de 1 a 3 palabras cada una: lugares iconicos o beneficios concretos del paquete (ej: Palm Beach, All Inclusive, Vuelo Directo)"],
@@ -4941,6 +4998,10 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
     if (pkg.days)        document.getElementById('fDays').value = pkg.days;
     if (pkg.price_usd && !document.getElementById('fPrice').value)
       document.getElementById('fPrice').value = pkg.price_usd;
+    if (pkg.price_original_usd && Number(pkg.price_original_usd) > Number(pkg.price_usd || 0) && !document.getElementById('fPriceOrig').value) {
+      document.getElementById('fPriceOrig').value = pkg.price_original_usd;
+      puesto.push('precio con descuento detectado');
+    }
     if (pkg.badge) {
       document.getElementById('fBadge').value = String(pkg.badge).slice(0, 24);
       puesto.push('etiqueta de foto');
