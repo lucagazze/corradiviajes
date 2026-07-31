@@ -435,7 +435,7 @@
             <img src="https://images.unsplash.com/photo-1501854140801-50d01698950b?q=80&w=600" alt="Experiencia local" class="w-full h-full object-cover" loading="lazy" decoding="async">
           </div>
           <div class="text-center md:text-left">
-            <h3 class="font-['Geomanist'] font-medium text-[22px] text-white mb-2">Más de 30 años de experiencia real</h3>
+            <h3 class="font-['Geomanist'] font-medium text-[22px] text-white mb-2">Más de 40 años de experiencia real</h3>
             <p class="text-white/60 font-light text-base leading-relaxed max-w-lg">Conocemos cada destino porque lo vivimos. Nuestros asesores viajan constantemente para traerte las recomendaciones más actualizadas y genuinas del mercado.</p>
           </div>
         </div>
@@ -468,11 +468,21 @@
 
 
   <!-- Cinematic Video Section 2 -->
-  <section class="w-full relative h-[50vh] md:h-[60vh] min-h-[300px] max-h-[500px] overflow-hidden">
+  <section class="video-hero w-full relative h-[50vh] md:h-[60vh] min-h-[300px] max-h-[500px] overflow-hidden flex items-center justify-center text-center">
     <video autoplay="" muted="" loop="" playsinline="" preload="auto" poster="img/hero_travel_new.png" class="absolute inset-0 w-full h-full object-cover" style="transform:scale(1.05);">
       <source type="video/mp4" src="https://czocbnyoenjbpxmcqobn.supabase.co/storage/v1/object/public/corradi-media/Video%20Project%201.mp4">
     </video>
-    <div class="absolute inset-0 pointer-events-none" style="background:rgba(0,0,0,0.35)"></div>
+    <div class="absolute inset-0 pointer-events-none" style="background:rgba(0,0,0,0.45)"></div>
+    <div class="relative z-10 px-6">
+      <h2 class="font-['Geomanist'] font-bold text-[30px] md:text-[46px] leading-tight text-white drop-shadow-md">De Rosario al Mundo.</h2>
+      <p class="hero-text mt-3 text-[15px] md:text-[18px] font-light max-w-xl mx-auto drop-shadow-sm" style="color:rgba(255,255,255,0.9)">
+        Contanos a dónde querés ir y lo armamos con vos.
+      </p>
+      <a href="contacto.html" class="btn-solid inline-flex items-center gap-2 mt-7 font-semibold text-[15px] px-7 py-3.5 rounded-full transition-all hover:scale-105 active:scale-95 shadow-[0_8px_30px_rgba(0,0,0,0.3)]" style="background:#3778b8;color:#fff">
+        Armá tu viaje
+        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+      </a>
+    </div>
   </section>
 
   <!-- Preguntas Frecuentes Section -->
@@ -645,7 +655,7 @@
   <section class="w-full py-20 overflow-hidden" style="background:#0c1b2e">
     <div class="max-w-5xl mx-auto px-6 text-center mb-12">
       <h2 class="font-['Geomanist'] font-medium text-[32px] text-white mb-3">Lo que dicen nuestros viajeros</h2>
-      <p class="text-white/60 font-light text-lg">Más de 30 años creando experiencias que se recuerdan para siempre.</p>
+      <p class="text-white/60 font-light text-lg">Más de 40 años creando experiencias que se recuerdan para siempre.</p>
     </div>
 
     <!-- Marquee Wrapper -->
@@ -692,19 +702,8 @@
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="w-full border-t border-white/10 px-8 py-12 flex flex-col items-center gap-4 text-center" style="background:#0a1525">
-  <div class="mb-8">
-    <img src="img/logonavblanco.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300 dark-logo block mx-auto" loading="lazy" decoding="async">
-    <img src="img/logonavbnegro.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity duration-300 light-logo hidden mx-auto" loading="lazy" decoding="async">
-  </div>
-  <div class="flex gap-6 mb-4">
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros.html">Nosotros</a>
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="#">Términos</a>
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto.html">Contacto</a>
-  </div>
-  <p class="font-['Geomanist'] text-sm text-white/30">© 2026 Corradi Viajes. Agencia en Rosario.</p>
-</footer>
+<!-- Footer (mismo componente que el resto del sitio) -->
+<app-footer></app-footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="js/config.js" defer></script>

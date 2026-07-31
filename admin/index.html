@@ -683,10 +683,168 @@ body, body.light {
 .bullet-item input, .itin-row textarea {
   color: #0f172a !important;
 }
+/* ══════════════════════════════════════════════════════════════
+   IMÁGENES DEL ADMIN — este bloque faltaba por completo.
+   Sin él, .media-grid / .img-adder-grid / .imm-sel-thumb no existían
+   como reglas y cada <img> se dibujaba a su tamaño natural: la
+   Biblioteca medía 25.000px de alto y "Administrar" mostraba las
+   fotos gigantes, una debajo de la otra.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Biblioteca (vista principal) */
+.media-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 16px;
+}
 .media-card {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform .15s, box-shadow .15s, border-color .15s;
 }
+.media-card:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(15,23,42,.12); border-color: #93c5fd !important; }
+.media-card > img {
+  width: 100%;
+  height: 130px;
+  object-fit: cover;
+  display: block;
+  background: #f1f5f9;
+}
+.media-card-body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; }
+.media-card-name {
+  font-size: 12.5px; font-weight: 600; color: #1e293b;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.media-card-date { font-size: 11px; color: #94a3b8; }
+.media-card-actions { display: flex; gap: 6px; margin-top: 8px; }
+.media-btn {
+  flex: 1; border: 1px solid #e2e8f0; background: #f8fafc; color: #334155;
+  font-size: 11.5px; font-weight: 600; padding: 6px 8px; border-radius: 8px;
+  cursor: pointer; transition: background .15s, color .15s, border-color .15s;
+}
+.media-btn:hover { background: #eef2f7; }
+.media-btn-copy:hover { border-color: #93c5fd; color: #1d4ed8; }
+.media-btn-del { flex: 0 0 34px; color: #dc2626; }
+.media-btn-del:hover { background: #fee2e2; border-color: #fca5a5; }
+.media-card.picker-mode .media-card-actions { display: none; }
+
+/* Selector de imágenes dentro del editor y del modal "Administrar" */
+.img-adder-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+.img-adder-item {
+  position: relative; border-radius: 10px; overflow: hidden; cursor: pointer;
+  border: 2px solid transparent; background: #f1f5f9; aspect-ratio: 4/3;
+  transition: border-color .15s, transform .12s;
+}
+.img-adder-item:hover { transform: scale(1.03); border-color: #93c5fd; }
+.img-adder-item > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.img-adder-item.selected { border-color: #2563eb; }
+.sel-check {
+  position: absolute; top: 5px; right: 5px;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #2563eb; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: scale(.6); transition: opacity .15s, transform .15s;
+  box-shadow: 0 2px 6px rgba(15,23,42,.3);
+}
+.sel-check .ms { font-size: 15px; }
+.img-adder-item.selected .sel-check { opacity: 1; transform: scale(1); }
+
+/* Miniaturas ordenables del modal "Administrar" */
+#imgMgrSelected { display: flex; flex-wrap: wrap; gap: 10px; }
+.imm-sel-thumb {
+  position: relative; width: 118px; height: 88px;
+  border-radius: 10px; overflow: hidden; cursor: grab;
+  border: 2px solid #e2e8f0; background: #f1f5f9; flex-shrink: 0;
+  transition: border-color .15s, transform .12s, box-shadow .15s;
+}
+.imm-sel-thumb:hover { box-shadow: 0 6px 16px rgba(15,23,42,.14); }
+.imm-sel-thumb > img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.imm-sel-thumb.imm-main { border-color: #2563eb; }
+.imm-badge {
+  position: absolute; left: 4px; bottom: 4px;
+  font-size: 9px; font-weight: 800; letter-spacing: .5px;
+  padding: 2px 6px; border-radius: 20px; background: #2563eb; color: #fff;
+}
+.imm-num {
+  position: absolute; left: 4px; top: 4px;
+  min-width: 18px; height: 18px; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; border-radius: 20px;
+  background: rgba(15,23,42,.62); color: #fff;
+}
+.imm-rm {
+  position: absolute; top: 4px; right: 4px;
+  width: 20px; height: 20px; border: none; border-radius: 50%;
+  background: rgba(15,23,42,.62); color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transition: opacity .15s, background .15s;
+}
+.imm-rm .ms { font-size: 14px; }
+.imm-sel-thumb:hover .imm-rm { opacity: 1; }
+.imm-rm:hover { background: #dc2626; }
+.imm-dragging { opacity: .45; transform: scale(.95); cursor: grabbing; }
+.imm-drop-before { border-left: 3px solid #2563eb; }
+.imm-drop-after  { border-right: 3px solid #2563eb; }
+@keyframes immLanded { 0%{transform:scale(.9)} 60%{transform:scale(1.05)} 100%{transform:scale(1)} }
+.imm-landed { animation: immLanded .28s ease; }
+
+/* Miniatura de las filas del listado de paquetes */
+.pkg-list-thumb, .pkg-list-thumb-ph {
+  width: 54px; height: 40px; border-radius: 8px; object-fit: cover;
+  flex-shrink: 0; background: #f1f5f9; border: 1px solid #e2e8f0;
+}
+.pkg-list-thumb-ph { display: flex; align-items: center; justify-content: center; }
+
+/* Desplegable de país del modal de IA */
+.ai-cl {
+  position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 50;
+  background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;
+  box-shadow: 0 18px 44px rgba(15,23,42,.16);
+  max-height: 300px; overflow-y: auto; overscroll-behavior: contain;
+  padding: 4px;
+}
+.ai-cl::-webkit-scrollbar { width: 10px; }
+.ai-cl::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 0 12px 12px 0; }
+.ai-cl::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; border: 2px solid transparent; background-clip: content-box; }
+.ai-cl::-webkit-scrollbar-thumb:hover { background: #94a3b8; background-clip: content-box; }
+.ai-cl-group {
+  font-size: 10.5px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase;
+  color: #94a3b8; padding: 9px 10px 5px;
+}
+.ai-cl-opt {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 10px; border-radius: 8px; cursor: pointer;
+  font-size: 14px; color: #1e293b; transition: background .12s;
+}
+.ai-cl-opt:hover, .ai-cl-opt.hl { background: #eff6ff; color: #1d4ed8; }
+.ai-cl-hint {
+  position: sticky; bottom: 0;
+  padding: 7px 10px; text-align: center;
+  font-size: 11.5px; font-weight: 600; color: #94a3b8;
+  background: linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 55%);
+  pointer-events: none;
+}
+
+/* Spinner de "Cargando…" / "Subiendo…" */
+.spinner {
+  width: 16px; height: 16px; flex-shrink: 0;
+  border: 2px solid #cbd5e1; border-top-color: #2563eb;
+  border-radius: 50%; display: inline-block;
+  animation: spinnerRot .7s linear infinite;
+}
+@keyframes spinnerRot { to { transform: rotate(360deg) } }
 #imgMgrBox, #sorterBox {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
@@ -1123,6 +1281,20 @@ select option {
 .tgl-s::before{content:'';position:absolute;height:17px;width:17px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:transform .2s}
 .tgl input:checked+.tgl-s{background:#3778b8}
 .tgl input:checked+.tgl-s::before{transform:translateX(19px)}
+/* El admin corre con <body class="light">. En estado APAGADO el track era
+   rgba(255,255,255,.1) y la perilla #fff: blanco sobre blanco = toggle invisible.
+   Por eso "Destacado" y "¿Incluir itinerario?" parecían no tener switch. */
+/* OJO: applyTheme() borra la clase `light` del <body>, así que TODAS las reglas
+   `body.light ...` de este archivo nunca llegan a aplicarse. Por eso estos
+   overrides van sin prefijo: el admin se ve claro sí o sí. */
+.tgl-s{background:#cbd5e1;box-shadow:inset 0 1px 2px rgba(15,23,42,.12)}
+.tgl-s::before{background:#fff;box-shadow:0 1px 3px rgba(15,23,42,.35)}
+.tgl-s:hover{background:#b6c2d1}
+.tgl input:checked+.tgl-s{background:#2563eb;box-shadow:0 2px 8px rgba(37,99,235,.35)}
+.tgl input:checked+.tgl-s:hover{background:#1d4ed8}
+.tgl input:focus-visible+.tgl-s{outline:2px solid #2563eb;outline-offset:2px}
+.tgl-desc{color:#64748b}
+.tgl-name{color:#0f172a;font-weight:600}
 
 /* Drop zone */
 .drop-zone{width:100%;min-height:160px;border:2px dashed rgba(255,255,255,0.15);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;position:relative;gap:8px;color:#64748b}
@@ -1759,11 +1931,11 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
             ondragleave="stripUploadZoneLeave()"
             ondrop="stripDropUpload(event)"
             onclick="document.getElementById('stripFileInput').click()"
-            style="border:2px dashed rgba(255,255,255,0.12);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:14px">
-            <span class="ms material-symbols-outlined" style="font-size:26px;color:rgba(255,255,255,0.25);flex-shrink:0">upload_file</span>
+            style="border:2px dashed #cbd5e1;background:#f8fafc;border-radius:12px;padding:16px 18px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .2s,background .2s;margin-bottom:14px">
+            <span class="ms material-symbols-outlined" style="font-size:28px;color:#2563eb;flex-shrink:0">upload_file</span>
             <div>
-              <div style="font-size:13px;color:#475569;font-weight:600">Arrastrá imágenes acá o tocá para seleccionar</div>
-              <div style="font-size:11px;color:rgba(255,255,255,0.25);margin-top:2px">Se suben a la biblioteca y se agregan al paquete automáticamente</div>
+              <div style="font-size:13.5px;color:#1e293b;font-weight:700">Arrastrá imágenes acá o tocá para seleccionar</div>
+              <div style="font-size:11.5px;color:#64748b;margin-top:3px">Se suben a la biblioteca y se agregan al paquete automáticamente</div>
             </div>
             <input type="file" id="stripFileInput" accept="image/*" multiple onchange="stripQuickUpload(event)" style="display:none">
           </div>
@@ -1987,6 +2159,18 @@ try { localStorage.removeItem('corradi_theme'); } catch(e) {}
 applyTheme();
 
 // Verifica que el usuario logueado sea admin (rol en pv_profiles)
+// Un paquete vencido sigue con active=true en la DB pero el sitio no lo muestra.
+// Sin un indicador, desde el admin parece publicado y no lo está.
+function isExpired(p) {
+  if (!p || !p.expires_at) return false;
+  const d = new Date(p.expires_at);
+  return !isNaN(d) && d.getTime() < Date.now();
+}
+function expiredPill(p) {
+  return isExpired(p)
+    ? '<span class="pill" style="background:#fef3c7;color:#b45309;border:1px solid rgba(217,119,6,0.28)" title="La fecha de expiración ya pasó: no se muestra en el sitio">Vencido</span>'
+    : '';
+}
 async function isAdminUser(userId) {
   try {
     const { data } = await db.from('pv_profiles').select('role').eq('id', userId).maybeSingle();
@@ -2390,7 +2574,7 @@ function renderPkgCard(p, num) {
         </div>
       </div>
       <div class="pkg-cardpills">
-        ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+        ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}${expiredPill(p)}
         ${p.section==='salida_grupal'?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:#fee2e2;color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
         ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
       </div>
@@ -2452,7 +2636,7 @@ function renderPkgListItem(p, num) {
 
     <!-- 8. Estado -->
     <div class="pli-cell pli-cell-estado">
-      ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+      ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}${expiredPill(p)}
       ${isGroup?'<span class="pill" style="background:rgba(242,179,82,0.14);color:#f2b352;border:1px solid rgba(242,179,82,0.25)">Grupal</span>':(hasOffer?'<span class="pill" style="background:#fee2e2;color:#f87171;border:1px solid rgba(239,68,68,0.22)">Oferta</span>':'')}
       ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
     </div>
@@ -2689,7 +2873,10 @@ function openEditor(pkgId) {
   document.getElementById('fBadge').value      = p?.badge || '';
   document.getElementById('fActive').checked   = p ? p.active : true;
   document.getElementById('fFeatured').checked = p?.featured || false;
-  document.getElementById('fSection').value    = p?.section || 'inspirador';
+  // La sección legacy 'oferta' (viene del scraper) no existe en el select: sin esto
+  // el desplegable quedaba EN BLANCO en 13 paquetes. Una oferta se define por tener
+  // precio rebajado, no por la sección, así que se normaliza a 'inspirador'.
+  document.getElementById('fSection').value    = (p?.section === 'salida_grupal') ? 'salida_grupal' : 'inspirador';
   // Datetime-local necesita formato 'YYYY-MM-DDTHH:mm'
   if (p?.expires_at) {
     const d = new Date(p.expires_at);
@@ -3763,6 +3950,23 @@ document.addEventListener('click', e => {
 });
 
 // ═══════════════ COUNTRY PICKER ══════════
+// Los emoji de bandera no se dibujan en Windows: se ven como "AR".
+// El emoji ya codifica el ISO del pais en sus dos regional indicators,
+// asi que lo convertimos y usamos una imagen real de flagcdn.
+function cpIsoFromFlag(flagEmoji) {
+  const cps = [...String(flagEmoji || '')].map(c => c.codePointAt(0));
+  if (cps.length < 2) return null;
+  const a = cps[0] - 0x1F1E6, b = cps[1] - 0x1F1E6;
+  if (a < 0 || a > 25 || b < 0 || b > 25) return null;
+  return String.fromCharCode(97 + a) + String.fromCharCode(97 + b);
+}
+function cpFlagImg(flagEmoji, w) {
+  const iso = cpIsoFromFlag(flagEmoji);
+  const width = w || 20;
+  if (!iso) return '<span class="ms material-symbols-outlined" style="font-size:15px;opacity:.4;flex-shrink:0">public</span>';
+  return '<img src="https://flagcdn.com/w40/' + iso + '.png" alt="" loading="lazy" style="width:' + width + 'px;height:' + Math.round(width*0.75) + 'px;object-fit:cover;border-radius:3px;flex-shrink:0;box-shadow:0 0 0 1px rgba(15,23,42,.15) inset">';
+}
+
 const CP_COUNTRIES = [
   { group:'Europa', flag:'🇦🇩', name:'Andorra' },
   { group:'Europa', flag:'🇦🇱', name:'Albania' },
@@ -3931,7 +4135,7 @@ function cpRender(query) {
       const count = used ? packages.filter(p => p.country === c.name).length : 0;
       const badge = used ? `<span style="margin-left:auto;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;background:rgba(55,120,184,0.25);color:#0369a1">${count} pkg</span>` : '';
       html += `<div class="cp-option${sel}" data-idx="${c._idx}" data-name="${c.name}" data-flag="${c.flag}"
-        onmousedown="cpSelect('${c.name.replace(/'/g,"\\'")}','${c.flag}', true)">${c.flag} ${c.name}${badge}</div>`;
+        onmousedown="cpSelect('${c.name.replace(/'/g,"\\'")}','${c.flag}', true)">${cpFlagImg(c.flag)}<span>${c.name}</span>${badge}</div>`;
     });
   }
   list.innerHTML = html;
@@ -3971,7 +4175,7 @@ function cpClose() {
 function cpSelect(name, flag, autoSetCategory = false) {
   document.getElementById('fCountry').value = name;
   const disp = document.getElementById('cpDisplay');
-  document.getElementById('cpFlag').textContent = flag;
+  document.getElementById('cpFlag').innerHTML = cpFlagImg(flag, 22);
   document.getElementById('cpLabel').textContent = name;
   disp.classList.remove('empty');
 
@@ -4007,12 +4211,12 @@ function cpSetValue(name) {
     cpSelect(name, country.flag);
   } else if (name) {
     document.getElementById('fCountry').value = name;
-    document.getElementById('cpFlag').textContent = '🌍';
+    document.getElementById('cpFlag').innerHTML = '<span class="ms material-symbols-outlined" style="font-size:16px;opacity:.5">public</span>';
     document.getElementById('cpLabel').textContent = name;
     document.getElementById('cpDisplay').classList.remove('empty');
   } else {
     document.getElementById('fCountry').value = '';
-    document.getElementById('cpFlag').textContent = '';
+    document.getElementById('cpFlag').innerHTML = '';
     document.getElementById('cpLabel').textContent = '— Seleccioná un país —';
     document.getElementById('cpDisplay').classList.add('empty');
   }
@@ -4091,9 +4295,6 @@ function showAIModal() {
   const currentCountry = document.getElementById('fCountry').value.trim();
   const currentDays = document.getElementById('fDays').value.trim();
 
-  const countryOptions = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : [])
-    .map(c => `<option value="${escHtml(c.name)}">${c.flag} ${escHtml(c.name)}</option>`).join('');
-
   const modal = document.createElement('div');
   modal.id = 'aiModal';
   modal.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.6);backdrop-filter:blur(6px)';
@@ -4126,12 +4327,21 @@ function showAIModal() {
             <label class="fl">Destino / Ciudad</label>
             <input type="text" id="aiDest" class="fi" placeholder="Ej: Roma, Florencia, Venecia" value="${escHtml(currentDest)}">
           </div>
-          <div class="fg">
+          <div class="fg" style="position:relative">
             <label class="fl">País (Buscá o Seleccioná)</label>
-            <input type="text" id="aiCountry" class="fi" list="aiCountryDatalist" placeholder="Escribí para buscar país..." value="${escHtml(currentCountry)}">
-            <datalist id="aiCountryDatalist">
-              ${countryOptions}
-            </datalist>
+            <!-- Antes era <input list=datalist>: el desplegable nativo es diminuto,
+                 no muestra banderas y en Windows ni se nota que se puede scrollear. -->
+            <div style="position:relative">
+              <span id="aiCountryFlag" style="position:absolute;left:11px;top:50%;transform:translateY(-50%);display:flex;align-items:center;pointer-events:none"></span>
+              <input type="text" id="aiCountry" class="fi" autocomplete="off"
+                style="padding-left:38px;padding-right:32px"
+                placeholder="Escribí para buscar país…" value="${escHtml(currentCountry)}"
+                onfocus="aiCountryOpen()" oninput="aiCountryOpen(this.value)"
+                onkeydown="aiCountryKey(event)">
+              <span class="ms material-symbols-outlined" onclick="aiCountryOpen()"
+                style="position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:19px;color:#94a3b8;cursor:pointer">expand_more</span>
+            </div>
+            <div id="aiCountryList"></div>
           </div>
         </div>
 
@@ -4165,6 +4375,66 @@ function showAIModal() {
     if (destInput && !destInput.value) destInput.focus();
   }, 80);
 }
+
+// ── Desplegable de país del modal de IA (con banderas reales y scroll visible) ──
+let _aiCountryIdx = -1;
+function aiCountrySync() {
+  const inp = document.getElementById('aiCountry');
+  const flagBox = document.getElementById('aiCountryFlag');
+  if (!inp || !flagBox) return;
+  const c = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : [])
+    .find(x => x.name.toLowerCase() === inp.value.trim().toLowerCase());
+  flagBox.innerHTML = c ? cpFlagImg(c.flag, 20)
+    : '<span class="ms material-symbols-outlined" style="font-size:17px;color:#cbd5e1">public</span>';
+}
+function aiCountryOpen(filter) {
+  const box = document.getElementById('aiCountryList');
+  const inp = document.getElementById('aiCountry');
+  if (!box || !inp) return;
+  const q = (filter !== undefined ? filter : inp.value).trim().toLowerCase();
+  const all = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : []);
+  const list = q ? all.filter(c => c.name.toLowerCase().includes(q) || (c.group||'').toLowerCase().includes(q)) : all;
+  _aiCountryIdx = -1;
+  aiCountrySync();
+  if (!list.length) {
+    box.innerHTML = `<div class="ai-cl"><div style="padding:14px;text-align:center;color:#94a3b8;font-size:13px">Sin resultados para "${escHtml(q)}"</div></div>`;
+    return;
+  }
+  let lastGroup = '';
+  const rows = list.map((c, i) => {
+    let head = '';
+    if (c.group && c.group !== lastGroup && !q) { lastGroup = c.group; head = `<div class="ai-cl-group">${escHtml(c.group)}</div>`; }
+    return head + `<div class="ai-cl-opt" data-i="${i}" onmousedown="aiCountryPick('${c.name.replace(/'/g,"\\'")}')">
+      ${cpFlagImg(c.flag, 22)}<span>${escHtml(c.name)}</span></div>`;
+  }).join('');
+  box.innerHTML = `<div class="ai-cl">${rows}${list.length > 6 ? `<div class="ai-cl-hint">${list.length} países · desplazá para ver todos</div>` : ''}</div>`;
+}
+function aiCountryClose() { const b = document.getElementById('aiCountryList'); if (b) b.innerHTML = ''; }
+function aiCountryPick(name) {
+  const inp = document.getElementById('aiCountry');
+  if (inp) inp.value = name;
+  aiCountryClose(); aiCountrySync();
+}
+function aiCountryKey(e) {
+  const opts = [...document.querySelectorAll('#aiCountryList .ai-cl-opt')];
+  if (e.key === 'Escape') { aiCountryClose(); return; }
+  if (!opts.length) return;
+  if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    _aiCountryIdx = e.key === 'ArrowDown'
+      ? Math.min(_aiCountryIdx + 1, opts.length - 1)
+      : Math.max(_aiCountryIdx - 1, 0);
+    opts.forEach(o => o.classList.remove('hl'));
+    opts[_aiCountryIdx].classList.add('hl');
+    opts[_aiCountryIdx].scrollIntoView({ block: 'nearest' });
+  } else if (e.key === 'Enter' && _aiCountryIdx >= 0) {
+    e.preventDefault();
+    aiCountryPick(opts[_aiCountryIdx].textContent.trim());
+  }
+}
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#aiCountryList') && e.target.id !== 'aiCountry') aiCountryClose();
+});
 
 async function runAIFromModal() {
   const url     = document.getElementById('aiUrl')?.value.trim();
@@ -4228,24 +4498,65 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 
     document.getElementById('aiModal')?.remove();
 
-    // Llenar todos los campos del formulario
+    // ── Datos básicos ──
     if (pkg.name)        document.getElementById('fName').value = pkg.name;
     if (pkg.destination) document.getElementById('fDest').value = pkg.destination;
     if (pkg.country)     cpSetValue(pkg.country);
     if (pkg.days)        document.getElementById('fDays').value = pkg.days;
     if (pkg.price_usd && !document.getElementById('fPrice').value)
       document.getElementById('fPrice').value = pkg.price_usd;
+    if (pkg.badge && !document.getElementById('fBadge').value)
+      document.getElementById('fBadge').value = pkg.badge;
+    if (pkg.category) document.getElementById('fCat').value = pkg.category;
 
-    if (pkg.description)
-      document.getElementById('fDesc').value = pkg.description;
-    if (pkg.includes?.length) { includesItems = pkg.includes; renderBullets('includes'); }
-    if (pkg.excludes?.length) { excludesItems = pkg.excludes; renderBullets('excludes'); }
-    if (pkg.itinerary?.length) {
-      itineraryItems = pkg.itinerary.map(d => ({ day: d.day || '', desc: d.desc || '' }));
-      renderItineraryRows();
+    const puesto = [];
+
+    // ── Descripción ──
+    // El editor real es el contenteditable #fDescRich (#fDesc no existe).
+    // Además hay que ENCENDER el toggle: si queda apagado, savePkg guarda null
+    // y se perdía todo lo que generaba la IA.
+    if (pkg.description) {
+      const parrafos = String(pkg.description)
+        .split(/\n{2,}|\r\n\r\n/).map(s => s.trim()).filter(Boolean);
+      let html = parrafos.map(p => `<p>${escHtml(p).replace(/\n/g, '<br>')}</p>`).join('');
+      // Los "highlights" se suman como lista para que no se pierdan
+      if (pkg.highlights?.length) {
+        html += `<p><strong>Lo más destacado</strong></p><ul>` +
+          pkg.highlights.map(h => `<li>${escHtml(String(h))}</li>`).join('') + `</ul>`;
+      }
+      document.getElementById('fDescRich').innerHTML = html;
+      document.getElementById('fDescEnabled').checked = true;
+      toggleDescSection(true);
+      puesto.push('descripción');
     }
 
-    showToast('¡Paquete e itinerario generados! Revisá los detalles antes de guardar.', 'success');
+    // ── Incluye / No incluye ──
+    if (pkg.includes?.length || pkg.excludes?.length) {
+      if (pkg.includes?.length) { includesItems = pkg.includes.map(String); renderBullets('includes'); }
+      if (pkg.excludes?.length) { excludesItems = pkg.excludes.map(String); renderBullets('excludes'); }
+      document.getElementById('fBulletsEnabled').checked = true;
+      toggleBulletsSection(true);
+      puesto.push('servicios');
+    }
+
+    // ── Itinerario ──
+    if (pkg.itinerary?.length) {
+      itineraryItems = pkg.itinerary.map(d => ({ day: d.day || '', desc: d.desc || d.description || '' }));
+      renderItineraryRows();
+      document.getElementById('fItineraryEnabled').checked = true;
+      toggleItinerarySection(true);
+      puesto.push(`itinerario (${itineraryItems.length} días)`);
+    }
+
+    // Llevar al usuario a la pestaña donde está lo generado
+    const tabBtn = document.querySelector('[onclick*="switchEdTab(\'details\'"]');
+    if (tabBtn && puesto.length) tabBtn.click();
+
+    showToast(
+      puesto.length
+        ? `Listo: se completó ${puesto.join(', ')}. Revisá y guardá.`
+        : 'Paquete generado. Revisá los detalles antes de guardar.',
+      'success');
   } catch (err) {
     console.error('[AI]', err);
     if (btn) { btn.innerHTML = `<span class="ms material-symbols-outlined">auto_fix_high</span>Generar plan completo`; btn.disabled = false; }

@@ -14,6 +14,14 @@ const COUNTRY_ISO = { 'argentina': 'ar', 'brasil': 'br', 'brazil': 'br', 'chile'
 function flagUrl(country) { const iso = COUNTRY_ISO[(country || '').trim().toLowerCase()]; return iso ? `https://flagcdn.com/w640/${iso}.png` : null; }
 // Imagen del viaje: la cargada, o la bandera del país, o null
 function tripImg(t) { return t.image_url || flagUrl(t.country) || null; }
+// ¿El banner es una bandera de fallback? Una bandera recortada con object-fit:cover
+// queda espantosa (el escudo cortado por la mitad), así que se muestra entera.
+function tripImgIsFlag(t) { return !t.image_url && !!flagUrl(t.country); }
+function tripBannerImgStyle(t) {
+  return tripImgIsFlag(t)
+    ? 'width:100%;height:100%;object-fit:contain;padding:18px'
+    : 'width:100%;height:100%;object-fit:cover';
+}
 function tripThumb(t, size) {
   const u = tripImg(t), s = size || 44;
   if (u) return `<img src="${esc(u)}" alt="" style="width:${s}px;height:${s}px;border-radius:12px;object-fit:cover;flex-shrink:0" onerror="this.outerHTML='<div class=\\'avatar\\' style=\\'background:rgba(242,179,82,.15);color:var(--gold)\\'><span class=\\'ms\\'>luggage</span></div>'">`;
@@ -237,7 +245,7 @@ async function renderPassenger() {
     const nd = D.filter(d => d.trip_id === t.id).length;
     const bimg = tripImg(t);
     html += `<div class="card click" onclick="openPaxTrip(${t.id})" style="overflow:hidden;margin-bottom:16px;cursor:pointer">
-      ${bimg ? `<div style="height:170px;background:#0a1525;position:relative"><img src="${esc(bimg)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.remove()"><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,18,32,0) 45%,rgba(8,18,32,.85) 100%)"></div></div>` : ''}
+      ${bimg ? `<div style="height:170px;background:${tripImgIsFlag(t) ? '#0f1e34' : '#0a1525'};position:relative"><img src="${esc(bimg)}" alt="" style="${tripBannerImgStyle(t)}" onerror="this.parentElement.remove()">${tripImgIsFlag(t) ? '' : '<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,18,32,0) 45%,rgba(8,18,32,.85) 100%)"></div>'}</div>` : ''}
       <div style="padding:18px 20px">
         <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
           <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:17px">${esc(t.title)}</div>
@@ -359,7 +367,7 @@ function openPaxTrip(tid) {
   const du = daysUntil(t.depart_date), bimg = tripImg(t), dest = destOfTrip(t);
   openModal(`<div class="modal-h"><h3 style="flex:1">${esc(t.title)}</h3><button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
   <div class="modal-b" style="padding-top:16px">
-    ${bimg ? `<div style="height:200px;margin-bottom:18px;border-radius:16px;overflow:hidden;background:#f8fafc;border:1px solid #e2e8f0"><img src="${esc(bimg)}" alt="" style="width:100%;height:100%;object-fit:cover" onerror="this.parentElement.remove()"></div>` : '<div style="height:10px"></div>'}
+    ${bimg ? `<div style="height:200px;margin-bottom:18px;border-radius:16px;overflow:hidden;background:#f8fafc;border:1px solid #e2e8f0"><img src="${esc(bimg)}" alt="" style="${tripBannerImgStyle(t)}" onerror="this.parentElement.remove()"></div>` : '<div style="height:10px"></div>'}
     <div style="font-size:16px;font-weight:800;color:#0f172a">${esc(t.destination || '')}${t.country ? ' · ' + esc(t.country) : ''}</div>
     <div class="sub-mut" style="margin-top:4px">${t.depart_date ? 'Salís el ' + fmtDate(t.depart_date) : 'Fecha a confirmar'}${t.return_date ? ' · volvés el ' + fmtDate(t.return_date) : ''}${du !== null && du >= 0 && du <= 10 ? ` · <b style="color:#d97706">${du === 0 ? 'sale hoy' : du === 1 ? 'sale mañana' : 'faltan ' + du + ' días'}</b>` : ''}</div>
     ${t.notes ? `<p class="sub-mut" style="margin-top:12px;white-space:pre-wrap;color:#334155">${esc(t.notes)}</p>` : ''}

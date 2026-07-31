@@ -87,9 +87,11 @@
   }
   #mobileStickyBar.show { transform: translateY(0); }
   
+  /* El FAB flotante sobra en esta página: ya hay CTA de WhatsApp en el panel
+     lateral (desktop) y en la barra fija (mobile), y encima se le montaba arriba. */
+  #waFab { display: none !important; }
   @media(max-width: 1023px) {
-    #waFab { display: none !important; }
-    body { padding-bottom: 90px; } /* Space for the sticky bar */
+    body { padding-bottom: 90px; } /* Espacio para la barra fija */
   }
 
   /* Light mode overrides for Sticky Bar */
@@ -172,7 +174,7 @@
   <span class="material-symbols-outlined text-[48px] mb-4 opacity-30">travel_off</span>
   <h2 class="font-bold text-[24px] mb-2">Destino no encontrado</h2>
   <p class="mb-6" style="color:rgba(255,255,255,0.5)">El paquete que buscás no existe o fue eliminado.</p>
-  <a href="busqueda.html" class="font-medium text-sm px-6 py-3 rounded-full transition-all" style="background:#3778b8;color:#fff">Ver todos los destinos</a>
+  <a href="busqueda.html" class="btn-solid font-medium text-sm px-6 py-3 rounded-full transition-all hover:scale-105" style="background:#3778b8;color:#fff">Ver todos los destinos</a>
 </div>
 
 <!-- Main Content -->
@@ -207,12 +209,7 @@
         </div>
         <h1 id="pkgTitle" class="font-bold text-[32px] md:text-[42px] leading-tight mb-3">Cargando…</h1>
         <div class="flex flex-wrap gap-3 items-center">
-          <div class="flex items-center gap-1">
-            <span class="material-symbols-outlined text-yellow-400 text-[18px]" style="font-variation-settings:'FILL' 1">star</span>
-            <span class="font-semibold text-[15px]">5.0</span>
-            <span class="text-sm" style="color:rgba(255,255,255,0.75)">(Opiniones verificadas)</span>
-          </div>
-          <span style="color:rgba(255,255,255,0.35)">•</span>
+          <span id="pkgGroupChip" class="hidden text-sm font-bold px-3 py-1 rounded-full uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e">Salida grupal</span>
           <span id="pkgCategory" class="text-sm font-medium px-3 py-1 rounded-full" style="background:rgba(55,120,184,0.25);color:#a8d0f0;border:1px solid rgba(55,120,184,0.4)">Categoría</span>
           <span id="pkgDays" class="hidden text-sm font-medium px-3 py-1 rounded-full" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.18)">
             <span class="material-symbols-outlined text-[14px] align-middle" style="vertical-align:-2px">schedule</span>
@@ -304,7 +301,7 @@
       <!-- Mobile Summary Section (Before Footer) -->
       <section class="lg:hidden mt-12 mb-8 rounded-[24px] p-6" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 50px rgba(0,0,0,0.3)">
         <div class="mb-5">
-          <div class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,0.65)">Desde</div>
+          <div class="pkg-price-label text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,0.65)">Precio</div>
           <div id="pkgPriceMobile" class="font-bold text-[34px] leading-none" style="color:#3778b8">A consultar</div>
           <div id="pkgPriceOrigMobile" class="hidden font-medium text-[16px] line-through mt-1" style="color:rgba(255,255,255,0.45)"></div>
         </div>
@@ -347,7 +344,7 @@
     <div class="hidden lg:block lg:col-span-4">
       <div class="sticky top-[90px] rounded-[20px] p-6" style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);box-shadow:0 20px 50px rgba(0,0,0,0.3)">
         <div class="mb-5">
-          <div class="text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,0.65)">Desde</div>
+          <div class="pkg-price-label text-[11px] font-semibold uppercase tracking-wider mb-1" style="color:rgba(255,255,255,0.65)">Precio</div>
           <div id="pkgPrice" class="font-bold text-[34px] leading-none" style="color:#3778b8">A consultar</div>
           <div id="pkgPriceOrig" class="hidden font-medium text-[16px] line-through mt-1" style="color:rgba(255,255,255,0.45)"></div>
         </div>
@@ -399,8 +396,8 @@
   <!-- Mobile Sticky Bar -->
   <div id="mobileStickyBar" class="lg:hidden fixed bottom-0 left-0 right-0 z-[100] px-5 py-4 flex items-center justify-between pb-safe">
     <div class="flex flex-col">
-      <span class="text-[10px] font-bold uppercase tracking-[0.1em] text-white/40 mb-0.5">Precio desde</span>
-      <span id="mobileStickyPrice" class="text-[20px] font-bold text-white leading-none">USD 0</span>
+      <span class="pkg-price-label text-[10px] font-bold uppercase tracking-[0.1em] text-white/40 mb-0.5">Precio</span>
+      <span id="mobileStickyPrice" class="text-[20px] font-bold text-white leading-none">A consultar</span>
     </div>
     <a id="mobileStickyBtn" href="#" target="_blank" rel="noopener" 
        class="flex items-center gap-2 bg-[#25D366] text-white font-bold text-[14px] px-6 py-3.5 rounded-[14px] shadow-[0_8px_20px_rgba(37,211,102,0.3)] active:scale-95 transition-all"
@@ -566,9 +563,8 @@ function buildGallery(images, pkg) {
 
 // ── Package Detail Loader ─────────────────────────
 (async function() {
-  const { createClient } = supabase;
-  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  const USE_LOCAL = SUPABASE_ANON_KEY.includes('REEMPLAZAR');
+  const db = getDb();          // cliente único compartido (js/config.js)
+  const USE_LOCAL = false;
 
   const id = new URLSearchParams(window.location.search).get('id');
   const loadingEl = document.getElementById('loadingState');
@@ -623,14 +619,27 @@ function buildGallery(images, pkg) {
       };
       return map[cat.toLowerCase()] || cat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
-    document.getElementById('pkgCategory').textContent = formatCategory(pkg.category) || pkg.country;
+    document.getElementById('pkgCategory').textContent = formatCategory(pkg.category) || pkg.country || 'Paquete';
+    if (pkg.section === 'salida_grupal') {
+      document.getElementById('pkgGroupChip')?.classList.remove('hidden');
+    }
     document.getElementById('pkgDesc').innerHTML = pkg.description || 'Descripción no disponible.';
 
-    const priceStr = `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}`;
+    // Precio: 0 / null / vacío → "A consultar" (nunca "USD 0")
+    const hasPrice = pkg.price_usd !== null && pkg.price_usd !== '' && Number(pkg.price_usd) > 0;
+    const priceStr = hasPrice ? `USD ${Number(pkg.price_usd).toLocaleString('es-AR')}` : 'A consultar';
     document.getElementById('pkgPrice').textContent = priceStr;
     document.getElementById('pkgPriceMobile').textContent = priceStr;
+    // El rótulo "Desde" sólo tiene sentido si hay un número
+    document.querySelectorAll('.pkg-price-label').forEach(el => {
+      el.textContent = hasPrice ? 'Desde' : 'Precio';
+    });
+    if (!hasPrice) {
+      document.getElementById('pkgPrice').style.fontSize = '26px';
+      document.getElementById('pkgPriceMobile').style.fontSize = '26px';
+    }
 
-    if (pkg.price_original_usd && pkg.price_original_usd > pkg.price_usd) {
+    if (hasPrice && pkg.price_original_usd && pkg.price_original_usd > pkg.price_usd) {
       const origStr = `USD ${Number(pkg.price_original_usd).toLocaleString('es-AR')}`;
       document.getElementById('pkgPriceOrig').textContent = origStr;
       document.getElementById('pkgPriceOrig').classList.remove('hidden');

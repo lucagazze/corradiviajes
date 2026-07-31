@@ -1,8 +1,6 @@
 // ── Supabase & Config ─────────────────────────────
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-const USE_LOCAL = false; // Usar Supabase directo para mostrar los paquetes cargados en admin
-const LOCAL_API = 'http://localhost:5000/api';
+// Cliente único compartido (js/config.js)
+const db = getDb();
 
 let allPackages = [];
 let activeCategory = 'all';
@@ -56,24 +54,8 @@ document.getElementById('searchInput')?.addEventListener('input', function() {
 async function loadPackages() {
   const grid = document.getElementById('searchResultsGrid');
   try {
-    if (USE_LOCAL) {
-      const res = await fetch(`${LOCAL_API}/packages`);
-      allPackages = await res.json();
-    } else {
-      const { data, error } = await db
-        .from('corradi_packages')
-        .select('*')
-        .eq('active', true)
-        .order('sort_order', { ascending: true, nullsFirst: false })
-        .order('id');
-      if (error) throw error;
-      allPackages = (data || []).filter(p => {
-        if (!p.expires_at) return true;
-        const exp = new Date(p.expires_at);
-        return isNaN(exp) || exp.getTime() >= Date.now();
-      });
-    }
-    populateCountrySelect();
+    allPackages = await fetchPackages();
+    if (window.populateCountrySelect) window.populateCountrySelect();
     renderResults();
   } catch(e) {
     if (grid) grid.innerHTML = '<div class="col-span-full text-center py-10 font-medium" style="color:rgba(255,100,100,0.8)">Error al cargar destinos. Verificá la conexión.</div>';
@@ -95,9 +77,25 @@ function setupFilters() {
   });
 }
 
+// Limpia todos los filtros y vuelve al listado completo
+window.clearAllFilters = function() {
+  liveQuery = ''; activeCategory = 'all'; activeFeature = 'all';
+  priceMin = null; priceMax = null; sortBy = 'relevance';
+  const si = document.getElementById('searchInput'); if (si) si.value = '';
+  const pMin = document.getElementById('priceMin'); if (pMin) pMin.value = '';
+  const pMax = document.getElementById('priceMax'); if (pMax) pMax.value = '';
+  const cv = document.getElementById('cddCountryValue'); if (cv) cv.textContent = 'Todos';
+  const fv = document.getElementById('cddFeatureValue'); if (fv) fv.textContent = 'Todos';
+  document.querySelectorAll('#cddCountryPanel .cdd-option, #cddFeaturePanel .cdd-option').forEach(o => {
+    o.classList.toggle('selected', o.dataset.value === 'all');
+  });
+  if (window.populateCountrySelect) window.populateCountrySelect();
+  renderResults();
+};
+
 function renderResults() {
   const grid = document.getElementById('searchResultsGrid');
-  let filtered = allPackages;
+  let filtered = [...allPackages];
 
   if (liveQuery) {
     filtered = filtered.filter(p =>
@@ -114,16 +112,23 @@ function renderResults() {
   if (activeFeature !== 'all') {
     if (activeFeature === 'destacados') {
       filtered = filtered.filter(p => p.featured);
+    } else if (activeFeature === 'grupal') {
+      filtered = filtered.filter(p => p.section === 'salida_grupal');
     } else if (activeFeature === 'oferta') {
       filtered = filtered.filter(p => p.section !== 'salida_grupal' && p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd));
     }
   }
 
-  if (priceMin !== null) filtered = filtered.filter(p => Number(p.price_usd) >= priceMin);
-  if (priceMax !== null) filtered = filtered.filter(p => Number(p.price_usd) <= priceMax);
+  // Filtro de precio: los viajes "A consultar" (sin precio cargado) no se descartan,
+  // porque no sabemos su valor y esconderlos vaciaba la búsqueda entera.
+  const sinPrecio = p => !(Number(p.price_usd) > 0);
+  if (priceMin !== null) filtered = filtered.filter(p => sinPrecio(p) || Number(p.price_usd) >= priceMin);
+  if (priceMax !== null) filtered = filtered.filter(p => sinPrecio(p) || Number(p.price_usd) <= priceMax);
 
-  if (sortBy === 'price_asc') filtered.sort((a, b) => Number(a.price_usd) - Number(b.price_usd));
-  else if (sortBy === 'price_desc') filtered.sort((a, b) => Number(b.price_usd) - Number(a.price_usd));
+  // Al ordenar por precio, los "A consultar" van siempre al final
+  const priceRank = (p, dir) => (Number(p.price_usd) > 0 ? Number(p.price_usd) : (dir === 'asc' ? Infinity : -Infinity));
+  if (sortBy === 'price_asc') filtered.sort((a, b) => priceRank(a, 'asc') - priceRank(b, 'asc'));
+  else if (sortBy === 'price_desc') filtered.sort((a, b) => priceRank(b, 'desc') - priceRank(a, 'desc'));
   else if (sortBy === 'az') filtered.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
   else if (sortBy === 'za') filtered.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
   else if (sortBy === 'newest') filtered.sort((a, b) => b.id - a.id);
@@ -132,12 +137,34 @@ function renderResults() {
   const infoEl = document.getElementById('resultsInfo');
   if (infoEl) {
     infoEl.textContent = `${filtered.length} ${filtered.length === 1 ? 'destino encontrado' : 'destinos encontrados'}`;
-    if (filtered.length || liveQuery || activeCategory !== 'all') infoEl.classList.remove('hidden');
-    else infoEl.classList.add('hidden');
+    infoEl.classList.toggle('hidden', filtered.length === 0);
   }
 
   if (!filtered.length) {
-    grid.innerHTML = '<div class="col-span-full text-center py-20 font-medium" style="color:rgba(255,255,255,0.4)">No se encontraron paquetes con esos filtros.</div>';
+    const wa = typeof whatsappLink === 'function'
+      ? whatsappLink('un viaje a medida', 'topic')
+      : 'https://wa.me/5493416057588';
+    grid.innerHTML = `
+      <div class="col-span-full flex flex-col items-center text-center py-16 md:py-20 px-6">
+        <div class="w-20 h-20 rounded-full flex items-center justify-center mb-5"
+          style="background:rgba(55,120,184,0.12);border:1px solid rgba(55,120,184,0.25)">
+          <span class="material-symbols-outlined text-[36px]" style="color:#7ab3e0">search_off</span>
+        </div>
+        <h3 class="font-bold text-[21px] md:text-[24px] mb-2">No encontramos viajes con esa búsqueda</h3>
+        <p class="text-[15px] max-w-md mb-7 leading-relaxed" style="color:rgba(255,255,255,0.55)">
+          Probá con otro destino o limpiá los filtros. Y si el viaje que buscás no está en la lista, lo armamos a medida.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <button onclick="clearAllFilters()" class="btn-solid inline-flex items-center justify-center gap-2 font-semibold text-[14px] px-6 py-3 rounded-full transition-all hover:scale-105" style="background:#3778b8;color:#fff">
+            <span class="material-symbols-outlined text-[18px]">restart_alt</span>
+            Limpiar filtros
+          </button>
+          <a href="${wa}" target="_blank" rel="noopener" class="btn-solid inline-flex items-center justify-center gap-2 font-semibold text-[14px] px-6 py-3 rounded-full transition-all hover:scale-105" style="background:#25D366;color:#fff">
+            <span class="material-symbols-outlined text-[18px]">chat</span>
+            Armar mi viaje a medida
+          </a>
+        </div>
+      </div>`;
     return;
   }
 
@@ -151,35 +178,27 @@ function renderResults() {
     const isGroup = p.section === 'salida_grupal';
     const isOffer = !isGroup && hasDiscount;
 
+    // Badges en una fila flex: se acomodan solos y nunca se superponen
     let leftBadge = '';
     if (isGroup) {
-      leftBadge += `<span class="group-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
+      leftBadge += `<span class="group-label-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
           <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
           Grupal
          </span>`;
-      if (p.featured) {
-        leftBadge += `<span class="featured-badge absolute top-3 left-[92px] inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>`;
-      }
-    } else {
-      if (p.featured) {
-        leftBadge += `<span class="featured-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>`;
-        if (isOffer) {
-          leftBadge += `<span class="offer-label-badge absolute top-3 left-[110px] inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
-              <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
-              Oferta
-             </span>`;
-        }
-      } else if (isOffer) {
-        leftBadge += `<span class="offer-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
-            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
-            Oferta
-           </span>`;
-      }
+    }
+    if (p.featured) {
+      leftBadge += `<span class="featured-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>`;
+    }
+    if (isOffer) {
+      leftBadge += `<span class="offer-label-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
+          <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
+          Oferta
+         </span>`;
     }
 
-    const badgeRight = p.badge 
-      ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>`
-      : (discountPct ? `<span class="discount-badge absolute top-3 right-3 bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">-${discountPct}%</span>` : '');
+    const badgeRight = p.badge
+      ? `<span class="ml-auto bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm shrink-0">${p.badge}</span>`
+      : (discountPct ? `<span class="discount-badge ml-auto bg-red-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm shrink-0">-${discountPct}%</span>` : '');
 
     const highlights = p.highlights 
       ? p.highlights.split(/\n|·/).map(h => h.trim().replace(/^⭐\s*|^•\s*/, '')).filter(Boolean).slice(0, 3) 
@@ -194,8 +213,7 @@ function renderResults() {
           src="${p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'}"
           onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"/>
         <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>
-        ${leftBadge}
-        ${badgeRight}
+        <div class="absolute top-3 left-3 right-3 flex flex-wrap items-start gap-2">${leftBadge}${badgeRight}</div>
         <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country || ''}${p.days ? ' · '+p.days+' días' : ''}</span>
       </div>
       <div class="p-5 flex flex-col flex-grow justify-between">
@@ -223,4 +241,11 @@ function renderResults() {
   }).join('');
 }
 
-loadPackages();
+// Arrancar recién cuando el HTML terminó de parsear: los <script> inline de la
+// página (populateCountrySelect, initCDD…) se definen DESPUÉS de este archivo,
+// y con la caché de paquetes la carga es tan rápida que llegaba antes.
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', loadPackages);
+} else {
+  loadPackages();
+}

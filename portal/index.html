@@ -9,6 +9,8 @@
 <link rel="icon" type="image/webp" href="/img/logocorradi.webp">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<!-- Remix Icon: el portal usa 13 íconos ri-* que nunca se cargaban (salían vacíos) -->
+<link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
 <script>!function(){var t=localStorage.getItem('corradiTheme')||'light';document.documentElement.setAttribute('data-theme',t)}()</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -72,6 +74,38 @@ label.fl{display:block;font-size:12px;font-weight:600;color:var(--mut);margin-bo
 .card{background:var(--panel);border:1px solid var(--line);border-radius:18px}
 .hidden{display:none!important}
 
+/* ── NAV DE PESTAÑAS (.anav) ──
+   La usan las pestañas del pasajero y la navegación del portal-admin.
+   No tenía CSS en ninguna parte: los botones salían con el estilo por defecto
+   del navegador (cuadrados, grises, sin íconos alineados). */
+.anav{display:flex;gap:6px;flex-wrap:wrap;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:5px}
+.anav button{
+  display:inline-flex;align-items:center;gap:8px;
+  border:none;background:transparent;color:var(--mut);
+  font-size:13.5px;font-weight:700;
+  padding:10px 16px;border-radius:10px;cursor:pointer;white-space:nowrap;
+  transition:background .15s,color .15s;
+}
+.anav button i,.anav button .ms{font-size:17px;line-height:1}
+.anav button:hover{background:rgba(120,150,190,.12);color:var(--txt)}
+.anav button.active{background:var(--blue);color:#fff;box-shadow:0 4px 12px rgba(55,120,184,.28)}
+.anav button.active:hover{background:var(--blue);color:#fff}
+
+/* Vistas del portal-admin (Inicio / Pasajeros / Viajes / Biblioteca).
+   `.view` tampoco tenía CSS: adminView() alternaba la clase .active pero las
+   cuatro secciones se renderizaban apiladas al mismo tiempo. */
+.view{display:none}
+.view.active{display:block}
+html[data-theme="light"] .anav{background:#fff;border-color:#e2e8f0;box-shadow:0 1px 3px rgba(15,23,42,.05)}
+html[data-theme="light"] .anav button{color:#475569}
+html[data-theme="light"] .anav button:hover{background:#f1f5f9;color:#0f172a}
+html[data-theme="light"] .anav button.active{background:#0052cc;color:#fff}
+@media(max-width:640px){
+  .anav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  .anav::-webkit-scrollbar{display:none}
+  .anav button{padding:9px 13px;font-size:12.5px}
+}
+
 /* ── LOGIN (WHITE THEME) ── */
 #loginScreen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#f8fafc!important}
 .login-card{width:100%;max-width:400px;background:#ffffff!important;border:1.5px solid #cbd5e1!important;border-radius:24px;padding:44px 36px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,0.06)!important;color:#0f172a!important}
@@ -117,7 +151,8 @@ select option{background-color:#ffffff!important;color:#0f172a!important;font-si
 .dinfo li{font-size:14px;line-height:1.6;color:#334155!important;padding-left:18px;position:relative;font-weight:500!important}
 .dinfo li:before{content:'';position:absolute;left:0;top:8px;width:7px;height:7px;border-radius:50%;background:#0052cc!important}
 .dinfo li b{color:#0f172a!important;font-weight:800!important}
-.dfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:10px}
+.dfacts{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin-top:12px}
+/* Con 130px entraban 5 columnas y el 6º dato quedaba solo en una fila huérfana. */
 .dfact{background:#f8fafc!important;border:1.5px solid #cbd5e1!important;border-radius:12px;padding:10px 12px}
 .dfact .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:#0052cc!important;font-weight:800!important}
 .dfact .v{font-size:13.5px;font-weight:700!important;color:#0f172a!important;margin-top:3px}
@@ -263,7 +298,7 @@ select option{background-color:#ffffff!important;color:#0f172a!important;font-si
             <p class="sub-mut" style="margin-bottom:0;color:#475569">Descargá tus vouchers o subí tus documentos requeridos (Pasaporte, DNI, Seguro) para tu viaje.</p>
           </div>
           <button class="btn btn-primary" onclick="openPassengerUploadModal()" style="border-radius:12px">
-            <i class="ri-upload-cloud-2-line"></i> 📤 Subir Mi Documento
+            <i class="ri-upload-cloud-2-line"></i> Subir Mi Documento
           </button>
         </div>
         <div id="paxDocsList" class="rowlist"></div>

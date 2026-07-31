@@ -230,10 +230,18 @@
       <h2 class="font-['Geomanist'] font-bold text-[26px] md:text-[32px] leading-tight">Rioja 2226, Rosario</h2>
       <p class="text-[15px] mt-1" style="color:rgba(255,255,255,0.55)">Santa Fe, Argentina</p>
     </div>
-    <div class="rounded-[24px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.35)] border border-white/10">
+    <!-- El embed de Google tarda un segundo en pintar: debajo hay un placeholder
+         para que nunca se vea un rectángulo vacío mientras carga. -->
+    <div class="relative rounded-[24px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.35)] border border-white/10" style="height:420px">
+      <div class="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none" style="background:linear-gradient(135deg,#17396d 0%,#0f2550 100%)">
+        <span class="material-symbols-outlined text-[34px]" style="color:rgba(255,255,255,0.5);font-variation-settings:'FILL' 1">location_on</span>
+        <span class="text-[14px] font-semibold" style="color:rgba(255,255,255,0.75)">Rioja 2226, Rosario</span>
+        <span class="text-[12px]" style="color:rgba(255,255,255,0.4)">Cargando mapa…</span>
+      </div>
       <iframe
         src="https://www.google.com/maps?q=Rioja%202226%2C%20Rosario%2C%20Santa%20Fe%2C%20Argentina&z=16&output=embed"
-        width="100%" height="420" style="border:0;display:block" allowfullscreen="" loading="lazy"
+        width="100%" height="420" style="border:0;display:block;position:relative;z-index:1;opacity:0;transition:opacity .5s ease"
+        onload="setTimeout(()=>this.style.opacity=1,1800)" allowfullscreen=""
         referrerpolicy="no-referrer-when-downgrade" title="Ubicación Corradi Viajes - Rioja 2226, Rosario"></iframe>
     </div>
     <div class="text-center mt-5">
@@ -418,8 +426,7 @@
 <script src="js/components.js"></script>
 <script>
 // Supabase client
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const db = getDb();  // cliente único compartido (js/config.js)
 
 // Set WhatsApp link from config
 const waBtn = document.getElementById('ctcWaBtn');
@@ -440,6 +447,7 @@ function initFAQ() {
         if (otherBtn !== btn) {
           const otherContent = otherBtn.nextElementSibling;
           const otherIcon = otherBtn.querySelector('.faq-icon');
+          otherBtn.closest('.faq-item')?.classList.remove('active');
           if (otherContent) {
             otherContent.style.maxHeight = null;
             otherContent.style.opacity = '0';
@@ -449,15 +457,18 @@ function initFAQ() {
           }
         }
       });
-      
+
       // Toggle current
+      const item = btn.closest('.faq-item');
       if (content.style.maxHeight) {
         content.style.maxHeight = null;
         content.style.opacity = '0';
+        item?.classList.remove('active');
         if (icon) icon.style.transform = 'rotate(0deg)';
       } else {
         content.style.maxHeight = content.scrollHeight + "px";
         content.style.opacity = '1';
+        item?.classList.add('active');
         if (icon) icon.style.transform = 'rotate(180deg)';
       }
     });

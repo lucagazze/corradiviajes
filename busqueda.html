@@ -70,9 +70,32 @@
     opacity:0; transform:translateY(-6px) scale(0.98);
     pointer-events:none;
     transition:opacity .18s ease, transform .18s ease;
-    max-height:240px; overflow-y:auto;
+    max-height:min(420px,60vh); overflow-y:auto;
+    overscroll-behavior:contain;
   }
   .cdd-panel.open { opacity:1; transform:translateY(0) scale(1); pointer-events:auto; }
+  /* El sitio esconde TODAS las barras de scroll (::-webkit-scrollbar{width:0}),
+     así que en el desplegable de países no se notaba que había más opciones.
+     Acá se fuerza una barra visible. */
+  .cdd-panel::-webkit-scrollbar { width:10px !important; height:10px !important; }
+  .cdd-panel::-webkit-scrollbar-track { background:rgba(255,255,255,.05); border-radius:0 12px 12px 0; }
+  .cdd-panel::-webkit-scrollbar-thumb { background:rgba(255,255,255,.28); border-radius:8px; border:2px solid transparent; background-clip:content-box; }
+  .cdd-panel::-webkit-scrollbar-thumb:hover { background:rgba(255,255,255,.45); background-clip:content-box; }
+  .cdd-panel { scrollbar-width:thin; scrollbar-color:rgba(255,255,255,.3) transparent; }
+  html[data-theme="light"] .cdd-panel::-webkit-scrollbar-track { background:#f1f5f9; }
+  html[data-theme="light"] .cdd-panel::-webkit-scrollbar-thumb { background:#cbd5e1; background-clip:content-box; }
+  html[data-theme="light"] .cdd-panel::-webkit-scrollbar-thumb:hover { background:#94a3b8; background-clip:content-box; }
+  html[data-theme="light"] .cdd-panel { scrollbar-color:#cbd5e1 transparent; }
+  /* Contador + pista de scroll al pie del panel */
+  .cdd-hint {
+    position:sticky; bottom:0; z-index:2;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+    padding:7px 12px; font-size:11.5px; font-weight:600; letter-spacing:.02em;
+    color:rgba(255,255,255,.5);
+    background:linear-gradient(180deg,rgba(13,27,46,0) 0%,#0d1b2e 55%);
+    pointer-events:none;
+  }
+  html[data-theme="light"] .cdd-hint { color:#94a3b8; background:linear-gradient(180deg,rgba(255,255,255,0) 0%,#fff 55%); }
 
   .cdd-option {
     display:flex; align-items:center; gap:10px;
@@ -117,29 +140,32 @@
 <main class="w-full max-w-[1400px] mx-auto px-5 md:px-16">
 
   <!-- Page Header -->
-  <div class="pt-[100px] pb-4 md:pt-[110px] md:pb-5 flex items-baseline gap-4">
-    <h1 class="font-bold text-[26px] md:text-[34px] leading-tight">Destinos</h1>
-    <p class="hidden md:block text-[15px]" style="color:rgba(255,255,255,0.45)">Encontrá tu próxima aventura.</p>
+  <div class="pt-[110px] pb-7 md:pt-[130px] md:pb-9">
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-3 text-[11px] font-bold uppercase tracking-wider" style="background:rgba(55,120,184,0.14);color:#7ab3e0;border:1px solid rgba(55,120,184,0.25)">
+      <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">travel_explore</span>
+      Catálogo completo
+    </div>
+    <h1 class="font-bold text-[30px] md:text-[42px] leading-tight mb-2">Destinos</h1>
+    <p class="text-[15px] md:text-[17px] max-w-2xl" style="color:rgba(255,255,255,0.5)">Todos nuestros viajes en un solo lugar. Filtrá por país, precio o tipo de salida.</p>
   </div>
 
-  <!-- Search Bar -->
-  <div class="flex gap-3 mb-3">
-    <div class="flex items-center gap-2 flex-1 max-w-xl rounded-[12px] px-3 py-2.5 transition-all" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12)">
+  <!-- Barra de filtros (una sola fila prolija) -->
+  <div class="rounded-[18px] p-3 md:p-3.5 mb-6 grid grid-cols-1 md:grid-cols-12 gap-2.5 md:gap-3 md:items-center"
+    style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)">
+
+    <!-- Buscador -->
+    <div class="md:col-span-3 flex items-center gap-2 rounded-[12px] px-3 py-2.5 transition-all" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12)">
       <span class="material-symbols-outlined text-[18px]" style="color:rgba(255,255,255,0.5)">search</span>
       <input type="text" id="searchInput"
-        class="flex-1 bg-transparent border-none outline-none text-white placeholder:text-white/40 font-medium text-[14px] focus:ring-0"
+        class="flex-1 min-w-0 bg-transparent border-none outline-none text-white placeholder:text-white/40 font-medium text-[14px] focus:ring-0"
         placeholder="Buscar destino…"/>
     </div>
-  </div>
-
-  <!-- Main Filters Row -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-2 mb-2">
 
     <!-- Country Custom Dropdown -->
-    <div class="cdd" id="cddCountry">
+    <div class="cdd md:col-span-2" id="cddCountry">
       <div class="cdd-trigger" id="cddCountryTrigger">
         <span class="cdd-label">País</span>
-        <span class="cdd-value" id="cddCountryValue">Todos los destinos</span>
+        <span class="cdd-value" id="cddCountryValue">Todos</span>
         <span class="material-symbols-outlined cdd-chevron">expand_more</span>
       </div>
       <div class="cdd-panel" id="cddCountryPanel">
@@ -151,15 +177,19 @@
     </div>
 
     <!-- Feature Custom Dropdown -->
-    <div class="cdd" id="cddFeature">
+    <div class="cdd md:col-span-2" id="cddFeature">
       <div class="cdd-trigger" id="cddFeatureTrigger">
-        <span class="cdd-label">Mostrar</span>
-        <span class="cdd-value" id="cddFeatureValue">Todos los tipos</span>
+        <span class="cdd-label">Tipo</span>
+        <span class="cdd-value" id="cddFeatureValue">Todos</span>
         <span class="material-symbols-outlined cdd-chevron">expand_more</span>
       </div>
       <div class="cdd-panel" id="cddFeaturePanel">
         <div class="cdd-option selected" data-value="all">
           <span style="flex:1" class="truncate">Todos los tipos</span>
+          <span class="material-symbols-outlined cdd-check">check</span>
+        </div>
+        <div class="cdd-option" data-value="grupal">
+          <span style="flex:1" class="truncate">Salidas grupales</span>
           <span class="material-symbols-outlined cdd-check">check</span>
         </div>
         <div class="cdd-option" data-value="destacados">
@@ -174,32 +204,31 @@
     </div>
 
     <!-- Price Filter -->
-    <div class="flex items-center gap-2">
-      <div class="relative flex-1">
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[11px] font-bold" style="color:rgba(255,255,255,0.4)">USD</span>
+    <div class="md:col-span-2 flex items-center gap-2">
+      <div class="relative flex-1 min-w-0">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold pointer-events-none" style="color:rgba(255,255,255,0.4)">USD</span>
         <input type="number" id="priceMin" placeholder="Mín" min="0"
           oninput="priceMin=this.value?Number(this.value):null;renderResults()"
           onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-          class="w-full rounded-[12px] pl-[48px] pr-3 py-2.5 text-[14px] font-medium outline-none transition-all"
+          class="w-full rounded-[12px] pl-[40px] pr-2 py-2.5 text-[14px] font-medium outline-none transition-all"
           style="background:rgba(255,255,255,0.07);color:#fff;border:1px solid rgba(255,255,255,0.12)"/>
       </div>
       <span style="color:rgba(255,255,255,0.3)" class="text-[15px] shrink-0 font-light">—</span>
-      <div class="relative flex-1">
-        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-[11px] font-bold" style="color:rgba(255,255,255,0.4)">USD</span>
+      <div class="relative flex-1 min-w-0">
+        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-bold pointer-events-none" style="color:rgba(255,255,255,0.4)">USD</span>
         <input type="number" id="priceMax" placeholder="Máx" min="0"
           oninput="priceMax=this.value?Number(this.value):null;renderResults()"
           onkeypress="return event.charCode >= 48 && event.charCode <= 57"
-          class="w-full rounded-[12px] pl-[48px] pr-3 py-2.5 text-[14px] font-medium outline-none transition-all"
+          class="w-full rounded-[12px] pl-[40px] pr-2 py-2.5 text-[14px] font-medium outline-none transition-all"
           style="background:rgba(255,255,255,0.07);color:#fff;border:1px solid rgba(255,255,255,0.12)"/>
       </div>
     </div>
-  </div>
 
-  <!-- Sort Row -->
-  <div class="flex mt-2 mb-5">
-    <div class="cdd w-full md:w-[320px]" id="cddSort">
+    <!-- Orden -->
+    <div class="cdd md:col-span-3" id="cddSort">
       <div class="cdd-trigger" id="cddSortTrigger">
-        <span class="cdd-value" id="cddSortValue">Ordenar: Relevancia</span>
+        <span class="cdd-label">Orden</span>
+        <span class="cdd-value" id="cddSortValue">Relevancia</span>
         <span class="material-symbols-outlined cdd-chevron">expand_more</span>
       </div>
       <div class="cdd-panel" id="cddSortPanel">
@@ -306,38 +335,8 @@ initCDD('cddSortTrigger', 'cddSortPanel', 'cddSortValue', (val) => {
 });
 
 // Override populateCountrySelect to use custom dropdown with real SVG flags
-const COUNTRY_CODES = {
-  'argentina': 'ar', 'brasil': 'br', 'chile': 'cl', 'peru': 'pe',
-  'perú': 'pe', 'colombia': 'co', 'uruguay': 'uy', 'bolivia': 'bo',
-  'paraguay': 'py', 'ecuador': 'ec', 'venezuela': 've',
-  'mexico': 'mx', 'méxico': 'mx', 'cuba': 'cu', 'jamaica': 'jm',
-  'república dominicana': 'do', 'rep. dominicana': 'do',
-  'costa rica': 'cr', 'panamá': 'pa', 'panama': 'pa',
-  'estados unidos': 'us', 'canadá': 'ca', 'canada': 'ca',
-  'españa': 'es', 'espana': 'es', 'francia': 'fr', 'italia': 'it',
-  'grecia': 'gr', 'portugal': 'pt', 'alemania': 'de', 'suiza': 'ch',
-  'austria': 'at', 'holanda': 'nl', 'países bajos': 'nl', 'paises bajos': 'nl',
-  'bélgica': 'be', 'belgica': 'be',
-  'reino unido': 'gb', 'inglaterra': 'gb', 'irlanda': 'ie',
-  'croacia': 'hr', 'turquía': 'tr', 'turquia': 'tr',
-  'hungría': 'hu', 'hungria': 'hu',
-  'rep. checa': 'cz', 'república checa': 'cz', 'republica checa': 'cz',
-  'noruega': 'no', 'suecia': 'se', 'dinamarca': 'dk', 'finlandia': 'fi',
-  'egipto': 'eg', 'marruecos': 'ma', 'sudáfrica': 'za', 'kenia': 'ke',
-  'japón': 'jp', 'japon': 'jp', 'china': 'cn', 'tailandia': 'th',
-  'indonesia': 'id', 'india': 'in', 'vietnam': 'vn', 'cambodia': 'kh',
-  'emiratos árabes': 'ae', 'dubai': 'ae', 'israel': 'il',
-  'maldivas': 'mv', 'australia': 'au', 'nueva zelanda': 'nz',
-  'antillas holandesas': 'cw'
-};
-function getFlagHtml(country) {
-  const key = (country || '').toLowerCase().trim();
-  const code = COUNTRY_CODES[key];
-  if (code) {
-    return `<img src="https://flagcdn.com/w20/${code}.png" class="cdd-flag" alt="${code}">`;
-  }
-  return `<span class="material-symbols-outlined text-[14px] opacity-50 flex-shrink-0">public</span>`;
-}
+// El diccionario de banderas vive en js/config.js (COUNTRY_FLAGS) para todo el sitio.
+function getFlagHtml(country) { return countryFlagImg(country, {className:'cdd-flag', width:40}); }
 
 window.populateCountrySelect = function(filter = '') {
   const panel = document.getElementById('cddCountryPanel');
@@ -403,6 +402,14 @@ window.populateCountrySelect = function(filter = '') {
   listContainer.innerHTML = html;
 
   // 5. Update display label if needed
+  // Pista de scroll: deja claro que la lista sigue hacia abajo
+  if (countries.length > 5) {
+    const hint = document.createElement('div');
+    hint.className = 'cdd-hint';
+    hint.innerHTML = `<span class="material-symbols-outlined" style="font-size:14px">keyboard_double_arrow_down</span>${countries.length} destinos · desplazá para ver todos`;
+    panel.appendChild(hint);
+  }
+
   if (activeCategory !== 'all' && valueEl) {
     const match = countries.find(c => c === activeCategory);
     if (match) valueEl.textContent = match;

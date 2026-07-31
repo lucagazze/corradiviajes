@@ -24,7 +24,9 @@ class AppNavbar extends HTMLElement {
       { href: 'contacto.html',         label: 'Contacto',         icon: 'mail',           match: 'contacto' },
     ];
 
-    const isHomePage = currentPath.endsWith('/') || currentPath.endsWith('/') || currentPath === '';
+    // Home = "/", "" o "/index.html" (en local se sirve con el .html)
+    const isHomePage = currentPath === '' || currentPath === '/' ||
+      /\/(index(\.html)?)?$/.test(currentPath);
 
     const desktopLinks = links.map(l => {
       const isActive = l.isIndex ? isHomePage : currentPath.includes(l.match);
@@ -163,21 +165,16 @@ class AppNavbar extends HTMLElement {
 
     // ── Ocultar "Ofertas" del navbar si no hay ninguna oferta activa ──
     // (igual que la sección del inicio: si no hay ofertas, no se muestra)
+    // Reutiliza la caché compartida (fetchPackages) en vez de abrir un segundo
+    // cliente de Supabase y disparar otra consulta completa en cada página.
     (async () => {
       try {
-        if (typeof supabase === 'undefined' || typeof SUPABASE_URL === 'undefined') return;
-        const _db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const { data, error } = await _db.from('corradi_packages')
-          .select('price_usd, price_original_usd, expires_at, section')
-          .eq('active', true)
-          .neq('section', 'salida_grupal')
-          .not('price_original_usd', 'is', null);
-        if (error) return;
-        const now = Date.now();
-        const hasOffers = (data || []).some(p => {
-          if (p.expires_at) { const e = new Date(p.expires_at); if (!isNaN(e) && e.getTime() < now) return false; }
-          return p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd);
-        });
+        if (typeof fetchPackages !== 'function') return;
+        const data = await fetchPackages();
+        const hasOffers = (data || []).some(p =>
+          p.section !== 'salida_grupal' &&
+          p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)
+        );
         if (!hasOffers) {
           document.querySelectorAll('a[href="ofertas.html"]').forEach(a => { a.style.display = 'none'; });
         }

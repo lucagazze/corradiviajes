@@ -17,6 +17,127 @@ const VIDEOS = {
 };
 
 // ─────────────────────────────────────────────
+// 🔌 CLIENTE SUPABASE ÚNICO + CACHÉ DE PAQUETES
+// Antes cada página creaba 2 clientes (uno en la página y otro en
+// components.js) y hacía 2 consultas completas con select('*').
+// Con muchas visitas simultáneas eso multiplica innecesariamente los
+// pedidos y podés chocar contra los límites del plan de Supabase.
+// ─────────────────────────────────────────────
+let _corradiDb = null;
+function getDb() {
+  if (_corradiDb) return _corradiDb;
+  if (typeof supabase === 'undefined') return null;
+  _corradiDb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false }
+  });
+  return _corradiDb;
+}
+
+// Columnas mínimas para los listados (sin itinerary/description largos)
+const PKG_LIST_COLUMNS =
+  'id,name,country,destination,category,section,days,price_usd,price_original_usd,' +
+  'badge,featured,active,expires_at,sort_order,image_url,description,highlights,departure_city';
+
+const _PKG_CACHE_KEY = 'corradi_pkgs_v1';
+const _PKG_CACHE_TTL = 60 * 1000; // 60 s: alcanza para navegar el sitio sin re-consultar
+let _pkgPromise = null;
+
+// Devuelve todos los paquetes activos y NO vencidos.
+// - Una sola consulta por sesión de navegación (caché en sessionStorage).
+// - Si dos partes de la página piden a la vez, comparten la misma promesa.
+async function fetchPackages() {
+  try {
+    const raw = sessionStorage.getItem(_PKG_CACHE_KEY);
+    if (raw) {
+      const c = JSON.parse(raw);
+      if (c && Date.now() - c.t < _PKG_CACHE_TTL && Array.isArray(c.d)) return c.d;
+    }
+  } catch (e) {}
+
+  if (_pkgPromise) return _pkgPromise;
+
+  _pkgPromise = (async () => {
+    const db = getDb();
+    if (!db) return [];
+    const { data, error } = await db
+      .from('corradi_packages')
+      .select(PKG_LIST_COLUMNS)
+      .eq('active', true)
+      .order('sort_order', { ascending: true, nullsFirst: false })
+      .order('id');
+    if (error) throw error;
+    const now = Date.now();
+    const live = (data || []).filter(p => {
+      if (!p.expires_at) return true;
+      const exp = new Date(p.expires_at);
+      return isNaN(exp) || exp.getTime() >= now;
+    });
+    try { sessionStorage.setItem(_PKG_CACHE_KEY, JSON.stringify({ t: now, d: live })); } catch (e) {}
+    return live;
+  })();
+
+  try { return await _pkgPromise; }
+  finally { _pkgPromise = null; }
+}
+
+// ─────────────────────────────────────────────
+// 🏳️ BANDERAS — diccionario ÚNICO para todo el sitio
+// Antes cada página tenía su propia copia y se desincronizaban:
+// "Aruba" existía en la base pero en ninguna copia, así que salía sin bandera.
+// Si agregás un país nuevo en el admin, sumalo SOLO acá.
+// ─────────────────────────────────────────────
+const COUNTRY_FLAGS = {
+  // América
+  'argentina':'ar','brasil':'br','brazil':'br','chile':'cl','uruguay':'uy','paraguay':'py',
+  'bolivia':'bo','perú':'pe','peru':'pe','colombia':'co','ecuador':'ec','venezuela':'ve',
+  'méxico':'mx','mexico':'mx','cuba':'cu','jamaica':'jm','aruba':'aw','curazao':'cw',
+  'antillas holandesas':'cw','bahamas':'bs','barbados':'bb',
+  'república dominicana':'do','republica dominicana':'do','rep. dominicana':'do',
+  'costa rica':'cr','panamá':'pa','panama':'pa','guatemala':'gt','honduras':'hn',
+  'nicaragua':'ni','el salvador':'sv','belice':'bz','puerto rico':'pr',
+  'estados unidos':'us','usa':'us','eeuu':'us','canadá':'ca','canada':'ca',
+  // Europa
+  'españa':'es','espana':'es','francia':'fr','italia':'it','portugal':'pt','grecia':'gr',
+  'alemania':'de','suiza':'ch','austria':'at','bélgica':'be','belgica':'be',
+  'holanda':'nl','países bajos':'nl','paises bajos':'nl',
+  'reino unido':'gb','inglaterra':'gb','escocia':'gb','irlanda':'ie',
+  'croacia':'hr','eslovenia':'si','hungría':'hu','hungria':'hu','polonia':'pl',
+  'rep. checa':'cz','república checa':'cz','republica checa':'cz','chequia':'cz',
+  'noruega':'no','suecia':'se','dinamarca':'dk','finlandia':'fi','islandia':'is',
+  'rusia':'ru','turquía':'tr','turquia':'tr','malta':'mt','chipre':'cy',
+  // África / Medio Oriente
+  'egipto':'eg','marruecos':'ma','túnez':'tn','tunez':'tn','sudáfrica':'za','sudafrica':'za',
+  'kenia':'ke','kenya':'ke','tanzania':'tz','namibia':'na','botsuana':'bw',
+  'israel':'il','jordania':'jo','emiratos árabes':'ae','emiratos arabes':'ae',
+  'emiratos árabes unidos':'ae','emiratos arabes unidos':'ae','dubai':'ae','qatar':'qa',
+  // Asia / Oceanía
+  'japón':'jp','japon':'jp','china':'cn','hong kong':'hk','corea del sur':'kr',
+  'tailandia':'th','vietnam':'vn','camboya':'kh','cambodia':'kh','laos':'la',
+  'indonesia':'id','malasia':'my','singapur':'sg','filipinas':'ph',
+  'india':'in','nepal':'np','sri lanka':'lk','maldivas':'mv',
+  'australia':'au','nueva zelanda':'nz','polinesia francesa':'pf','fiji':'fj'
+};
+
+// Código ISO del país (o null si no está en el diccionario)
+function countryIso(country) {
+  return COUNTRY_FLAGS[(country || '').trim().toLowerCase()] || null;
+}
+// URL de la bandera. width: 20 | 40 | 80 | 160 | 320 | 640
+function countryFlagUrl(country, width) {
+  const iso = countryIso(country);
+  return iso ? `https://flagcdn.com/w${width || 40}/${iso}.png` : null;
+}
+// <img> de la bandera, o un ícono genérico de globo si el país no está mapeado
+function countryFlagImg(country, opts) {
+  const o = opts || {};
+  const url = countryFlagUrl(country, o.width || 40);
+  const cls = o.className || '';
+  const style = o.style || 'width:20px;height:15px;object-fit:cover;border-radius:3px;flex-shrink:0;box-shadow:0 0 0 1px rgba(0,0,0,.12) inset';
+  if (url) return `<img src="${url}" alt="${country || ''}" class="${cls}" style="${style}" loading="lazy">`;
+  return `<span class="material-symbols-outlined ${cls}" style="font-size:16px;opacity:.45;flex-shrink:0">public</span>`;
+}
+
+// ─────────────────────────────────────────────
 // 📱 NÚMERO DE WHATSAPP — actualizar con el real
 // Formato: código país + área + número sin guiones
 // ─────────────────────────────────────────────
@@ -80,6 +201,8 @@ document.addEventListener('DOMContentLoaded', () => {
       left:100%; top:50%; transform:translateY(-50%);
       border:5px solid transparent; border-left-color:#ffffff;
     }
+    /* En mobile el globito tapa contenido: solo el ícono */
+    @media(max-width:767px){ .waFab-tooltip { display:none; } }
   `;
   document.head.appendChild(style);
 

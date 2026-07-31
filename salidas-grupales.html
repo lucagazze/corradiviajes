@@ -183,7 +183,7 @@
           No te vendemos un viaje. Te acompañamos a vivirlo.
         </h2>
         <p class="font-normal text-[16px] md:text-[17px] leading-relaxed drop-shadow-md" style="color:white !important">
-          Hace más de 30 años nuestro equipo viaja para que vos viajes tranquilo. Cuando salís con una salida grupal de Corradi, sabés que del otro lado hay gente que ya recorrió ese destino, conoce los hoteles y sabe qué hacer en cada momento.
+          Hace más de 40 años nuestro equipo viaja para que vos viajes tranquilo. Cuando salís con una salida grupal de Corradi, sabés que del otro lado hay gente que ya recorrió ese destino, conoce los hoteles y sabe qué hacer en cada momento.
         </p>
       </div>
     </div>
@@ -248,18 +248,7 @@
 </section>
 
 <!-- Footer -->
-<footer class="w-full border-t border-white/10 px-8 py-12 flex flex-col items-center gap-4 text-center" style="background:#0a1525">
-  <div class="mb-8">
-    <img src="img/logonavblanco.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 dark-logo block mx-auto" loading="lazy" decoding="async">
-    <img src="img/logonavbnegro.webp" alt="Corradi Viajes Logo" class="h-28 w-auto object-contain opacity-90 light-logo hidden mx-auto" loading="lazy" decoding="async">
-  </div>
-  <div class="flex gap-6 mb-4">
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros.html">Nosotros</a>
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto.html">Contacto</a>
-    <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="/">Inicio</a>
-  </div>
-  <p class="font-['Geomanist'] text-sm text-white/30">© 2026 Corradi Viajes. De Rosario al Mundo.</p>
-</footer>
+<app-footer></app-footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
 <script src="js/config.js" defer></script>
@@ -267,8 +256,7 @@
 <script src="js/theme.js" defer></script>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  const { createClient } = supabase;
-  const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const db = getDb();  // cliente único compartido (js/config.js)
 
   // WhatsApp CTAs — mensaje dedicado para Salidas Grupales
   const grupalMsg = 'Hola Corradi 👋 Me interesan los viajes *Acompañados por Corradi*. ¿Me pasan más info? ¡Gracias!';
@@ -323,8 +311,8 @@ document.addEventListener('DOMContentLoaded', () => {
                <span class="font-['Geomanist'] font-bold text-[22px]" style="color:#3778b8">USD ${price.toLocaleString('es-AR')}</span>
              </div></div>`
           : `<div><span class="text-slate-400 text-[10px] font-semibold uppercase tracking-wider block">Precio</span>
-             <span class="font-['Geomanist'] font-medium text-[15px] text-slate-500 italic">A consultar</span></div>`;
-        const badge = p.badge ? `<span class="absolute top-3 right-3 bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm">${p.badge}</span>` : '';
+             <span class="font-['Geomanist'] font-bold text-[20px]" style="color:#3778b8">A consultar</span></div>`;
+        const badge = p.badge ? `<span class="ml-auto bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm shrink-0">${p.badge}</span>` : '';
         const highlights = p.highlights ? p.highlights.split('·').slice(0,3).map(h => h.trim()).filter(Boolean) : [];
 
         return `
@@ -335,12 +323,15 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80'" alt="${p.name}"
               class="w-full h-full object-cover pointer-events-none">
             <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
-            <span class="group-label-badge absolute top-3 left-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
-              <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
-              Salida Grupal
-            </span>
-            ${p.featured ? `<span class="featured-badge absolute top-3 left-[136px] inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
-            ${badge}
+            <!-- Fila de badges en flex: nunca se pisan entre sí -->
+            <div class="absolute top-3 left-3 right-3 flex flex-wrap items-start gap-2">
+              <span class="group-label-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#f2b352;color:#0d1b2e;box-shadow:0 4px 14px rgba(242,179,82,0.4)">
+                <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
+                Salida Grupal
+              </span>
+              ${p.featured ? `<span class="featured-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
+              ${badge}
+            </div>
             <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country || ''}${p.days ? ' · '+p.days+' días' : ''}</span>
           </div>
           <div class="p-5 flex flex-col flex-1">

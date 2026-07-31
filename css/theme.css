@@ -263,17 +263,32 @@ html[data-theme="light"] #destinosTrackMobile#destinosTrackMobile#destinosTrackM
 html[data-theme="light"] .offer-card .relative span[class*="absolute"]:not(.bg-white\/90),
 html[data-theme="light"] .offer-card .relative .absolute:not(.bg-white\/90) { color: #ffffff !important; }
 
-/* FAQ accordion items (bg-[#1a2d45]) → mantener fondo oscuro + texto blanco */
+/* FAQ accordion items → en modo claro son tarjetas claras (no bloques oscuros
+   sobre página blanca, que era la peor inconsistencia visual del sitio) */
 html[data-theme="light"] .faq-item {
-  background-color: #1a2d45 !important;
-  border-color: rgba(255,255,255,0.1) !important;
+  background-color: #ffffff !important;
+  border: 1px solid rgba(15,23,42,0.09) !important;
+  box-shadow: 0 1px 3px rgba(15,23,42,0.04) !important;
+}
+html[data-theme="light"] .faq-item:hover {
+  border-color: rgba(55,120,184,0.35) !important;
+  box-shadow: 0 6px 20px rgba(15,23,42,0.07) !important;
+}
+html[data-theme="light"] .faq-item.active {
+  background-color: #f8fafc !important;
+  border-color: rgba(55,120,184,0.45) !important;
+  box-shadow: 0 10px 30px rgba(55,120,184,0.10) !important;
 }
 html[data-theme="light"] .faq-item .faq-btn,
 html[data-theme="light"] .faq-item .text-white,
-html[data-theme="light"] .faq-item button { color: #ffffff !important; }
+html[data-theme="light"] .faq-item button { color: #0f172a !important; }
 html[data-theme="light"] .faq-item .text-white\/60,
-html[data-theme="light"] .faq-item .faq-content div { color: rgba(255,255,255,0.72) !important; }
-html[data-theme="light"] .faq-item .text-slate-400 { color: rgba(255,255,255,0.5) !important; }
+html[data-theme="light"] .faq-item .faq-content div { color: #475569 !important; }
+html[data-theme="light"] .faq-item .text-slate-400,
+html[data-theme="light"] .faq-item .faq-icon { color: #94a3b8 !important; }
+/* Rótulos de grupo del FAQ (Sobre el servicio / Reservas y pagos / …) */
+html[data-theme="light"] #faqAccordion > p,
+html[data-theme="light"] #faqAccordionContacto > p { color: #64748b !important; }
 
 /* Panel izquierdo oscuro de contacto.html → mantener texto blanco */
 html[data-theme="light"] #contactInfoLeft { color: rgba(255,255,255,0.85) !important; }
@@ -310,9 +325,26 @@ html[data-theme="light"] #bentoNext {
   color: #3778b8 !important;
 }
 
-html[data-theme="light"] a[href="busqueda.html"],
-html[data-theme="light"] a[href="ofertas.html"] {
+/* Links de texto "Ver todos" → azul. Se excluyen los del navbar (si no, Destinos
+   y Ofertas quedaban siempre pintados como si fueran la página activa) y los
+   botones sólidos (texto azul sobre fondo azul = invisible). */
+html[data-theme="light"] a[href="busqueda.html"]:not(.btn-solid):not(#nav-destinos):not(#mobileDropdown a),
+html[data-theme="light"] a[href="ofertas.html"]:not(.btn-solid):not(#nav-ofertas):not(#mobileDropdown a) {
   color: #3778b8 !important;
+}
+html[data-theme="light"] header a#nav-destinos:not(.text-blue-400),
+html[data-theme="light"] header a#nav-ofertas:not(.text-blue-400) { color: #334155 !important; }
+
+/* Botones sólidos (fondo de color): el texto SIEMPRE blanco, en cualquier tema.
+   Sin esto, las reglas globales de modo claro pintaban el label del mismo color
+   que el fondo y el botón quedaba "vacío". */
+.btn-solid,
+.btn-solid *,
+html[data-theme] .btn-solid,
+html[data-theme] .btn-solid *,
+html[data-theme="light"] .btn-solid,
+html[data-theme="light"] .btn-solid * {
+  color: #ffffff !important;
 }
 
 /* Polishes for promo/offer cards in light mode */
@@ -437,9 +469,12 @@ html[data-theme="light"] .discount-badge * {
   }
 }
 
-/* ── General container padding on small screens ── */
+/* ── General container padding on small screens ──
+   OJO: antes esto era `[class*="max-w-"]`, que le metía 16px de padding a
+   CUALQUIER elemento con una utilidad max-w-* (párrafos, tarjetas, badges) y
+   los desalineaba respecto del título. Ahora solo aplica a contenedores reales. */
 @media (max-width: 480px) {
-  .container, [class*="max-w-"] {
+  .container {
     padding-left: 16px !important;
     padding-right: 16px !important;
   }
