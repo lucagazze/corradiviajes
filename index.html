@@ -292,9 +292,9 @@
   <!-- Salidas Grupales Acompañadas - Sección destacada principal -->
   <section class="w-full" style="background:#0d1b2e;padding-top:4rem;padding-bottom:4rem">
     <div class="max-w-7xl mx-auto px-6 hidden md:block">
-      <div class="mb-10 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+      <div class="mb-4 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
         <div>
-          <div class="inline-flex items-center gap-2 bg-[#f2b352]/15 text-[#f2b352] text-xs font-semibold px-3 py-1.5 rounded-full mb-3 uppercase tracking-wider">
+          <div class="inline-flex items-center gap-2 bg-[#f2b352]/15 text-[#f2b352] text-xs font-semibold px-3 py-1.5 rounded-full mb-2 uppercase tracking-wider">
             <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">groups</span>
             Acompañados por Corradi
           </div>
@@ -305,7 +305,7 @@
     </div>
 
     <!-- MOBILE header -->
-    <div class="md:hidden px-4 mb-8">
+    <div class="md:hidden px-4 mb-4">
       <div class="flex flex-col gap-2">
         <div class="inline-flex items-center gap-2 bg-[#f2b352]/15 text-[#f2b352] text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider w-max">
           <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
@@ -328,14 +328,14 @@
 
     <!-- DESKTOP: center-focused scale carousel -->
     <div class="hidden md:block">
-    <div class="relative w-full" style="padding:20px 0 60px;">
+    <div class="relative w-full" style="padding:0 0 40px;">
       <!-- Left Arrow -->
       <button id="offersPrev" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-slate-100 flex items-center justify-center hover:border-[#3778b8] hover:text-[#3778b8] transition-all active:scale-95">
         <span class="material-symbols-outlined text-[22px]">chevron_left</span>
       </button>
 
       <!-- Viewport: overflow-x:clip corta horizontal sin cortar escala vertical -->
-      <div class="w-full" id="offersViewport" style="overflow-x:clip;overflow-y:visible;padding:30px 0">
+      <div class="w-full" id="offersViewport" style="overflow-x:clip;overflow-y:visible;padding:8px 0">
         <div id="offersCarouselTrack" class="flex gap-5 will-change-transform" style="transition:transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94)">
           <div class="flex items-center justify-center h-72 w-80 text-slate-400 flex-shrink-0 mx-auto">Cargando ofertas...</div>
         </div>
@@ -707,9 +707,9 @@
 <app-footer></app-footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="js/config.js?v=3" defer></script>
-<script src="js/components.js?v=3" defer></script>
-<script src="js/main.js?v=3" defer></script>
+<script src="js/config.js?v=4" defer></script>
+<script src="js/components.js?v=4" defer></script>
+<script src="js/main.js?v=4" defer></script>
 <script>
   // Popover helpers — fixed positioning to escape overflow:hidden hero
   function positionBelow(trigger, popup) {
