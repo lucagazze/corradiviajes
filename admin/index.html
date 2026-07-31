@@ -1752,7 +1752,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
     <img src="../img/logonegroestirado2.png" alt="Corradi Viajes" class="login-logo">
     <h1>Panel de Administración</h1>
     <p>Ingresá con tu email y contraseña</p>
-    <input type="email" id="emailInput" class="login-input" placeholder="Email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('passInput').focus()">
+    <input type="text" id="emailInput" class="login-input" placeholder="Usuario o email" autocomplete="username" onkeydown="if(event.key==='Enter')document.getElementById('passInput').focus()">
     <input type="password" id="passInput" class="login-input" placeholder="Contraseña" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
     <button class="login-btn" onclick="doLogin()">Ingresar</button>
     <div class="login-err" id="loginErr"></div>
@@ -2429,7 +2429,9 @@ function enterApp() {
   initApp();
 }
 async function doLogin() {
-  const email = (document.getElementById('emailInput').value || '').trim();
+  let email = (document.getElementById('emailInput').value || '').trim();
+  // Alias: se puede entrar escribiendo solo 'admin' como usuario
+  if (email && !email.includes('@')) email = email.toLowerCase() + '@corradiviajes.com.ar';
   const v = document.getElementById('passInput').value;
   const errEl = document.getElementById('loginErr');
   const btn = document.querySelector('.login-btn');

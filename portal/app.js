@@ -144,7 +144,8 @@ async function loginPassenger() {
   loginErr(''); await afterLogin();
 }
 async function loginAdmin() {
-  const email = $('admEmail').value.trim(), pass = $('admPass').value;
+  let email = $('admEmail').value.trim(); const pass = $('admPass').value;
+  if (email && !email.includes('@')) email = email.toLowerCase() + '@corradiviajes.com.ar';  // alias 'admin'
   if (!email || !pass) { loginErr('Completá email y contraseña.'); return; }
   loginErr('Ingresando…');
   const { error } = await db.auth.signInWithPassword({ email, password: pass });
