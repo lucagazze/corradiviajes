@@ -290,63 +290,53 @@
 
 
   <!-- Salidas Grupales Acompañadas - Sección destacada principal -->
-  <section class="w-full" style="background:#0d1b2e;padding-top:4rem;padding-bottom:4rem">
-    <div class="max-w-7xl mx-auto px-6 hidden md:block">
-      <div class="mb-4 flex flex-col md:flex-row md:justify-between md:items-end gap-4">
+  <section class="w-full py-xl" style="background:#0d1b2e">
+    <div class="max-w-[1500px] mx-auto px-margin-mobile md:px-margin-desktop">
+      <div class="flex justify-between items-end mb-lg">
         <div>
-          <div class="inline-flex items-center gap-2 bg-[#f2b352]/15 text-[#f2b352] text-xs font-semibold px-3 py-1.5 rounded-full mb-2 uppercase tracking-wider">
+          <div class="inline-flex items-center gap-2 bg-[#f2b352]/15 text-[#f2b352] text-xs font-semibold px-3 py-1.5 rounded-full mb-3 uppercase tracking-wider">
             <span class="material-symbols-outlined text-[14px]" style="font-variation-settings:'FILL' 1">groups</span>
-            Acompañados por Corradi
+            Acompañadas por Corradi
           </div>
-          <h2 class="font-['Geomanist'] font-medium text-[32px] text-white mb-1">Salidas Grupales Acompañadas</h2>
-          <p class="text-white/60 font-light text-base">Viajá con nuestro equipo. Grupos cerrados, fechas confirmadas y experiencia compartida.</p>
+          <h2 class="font-h2 text-h2 text-white mb-xs">Salidas Grupales Acompañadas</h2>
+          <p class="font-body-md text-body-md text-white/60">Viajá con nuestro equipo. Grupos cerrados, fechas confirmadas y experiencia compartida.</p>
+        </div>
+        <a href="salidas-grupales.html" class="hidden md:flex items-center gap-1 font-label-md text-label-md transition-colors" style="color: #75a7ec">
+          Ver Todas <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </a>
+      </div>
+
+      <!-- MOBILE: snap-scroll carousel -->
+      <div class="md:hidden flex flex-col gap-3">
+        <div id="offersTrackMobile" class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2"
+          style="scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-x;"
+          onscroll="updateOffersDots()">
+          <div class="flex items-center justify-center h-72 w-[78vw] shrink-0 text-white/40">Cargando...</div>
+        </div>
+        <div id="offersDotsMobile" class="flex justify-center gap-1.5 mt-1"></div>
+      </div>
+
+      <!-- DESKTOP: carousel -->
+      <div class="hidden md:block">
+        <div class="relative w-full">
+          <!-- Left Arrow -->
+          <button id="offersPrev" class="absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-slate-100 flex items-center justify-center hover:border-[#3778b8] hover:text-[#3778b8] transition-all active:scale-95">
+            <span class="material-symbols-outlined text-[22px]">chevron_left</span>
+          </button>
+
+          <!-- Viewport -->
+          <div class="w-full" id="offersViewport" style="overflow-x:clip;overflow-y:visible;padding:6px 0">
+            <div id="offersCarouselTrack" class="flex gap-5 will-change-transform" style="transition:transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94)">
+              <div class="flex items-center justify-center h-72 w-80 text-slate-400 flex-shrink-0 mx-auto">Cargando ofertas...</div>
+            </div>
+          </div>
+
+          <!-- Right Arrow -->
+          <button id="offersNext" class="absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-slate-100 flex items-center justify-center hover:border-[#3778b8] hover:text-[#3778b8] transition-all active:scale-95">
+            <span class="material-symbols-outlined text-[22px]">chevron_right</span>
+          </button>
         </div>
       </div>
-    </div>
-
-    <!-- MOBILE header -->
-    <div class="md:hidden px-4 mb-4">
-      <div class="flex flex-col gap-2">
-        <div class="inline-flex items-center gap-2 bg-[#f2b352]/15 text-[#f2b352] text-[10px] font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider w-max">
-          <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
-          Acompañadas por Corradi
-        </div>
-        <h2 class="font-['Geomanist'] font-medium text-[28px] text-white mb-1">Salidas Grupales Acompañadas</h2>
-        <p class="text-white/60 font-light text-sm">Viajá con nuestro equipo. Fechas confirmadas, experiencia compartida.</p>
-      </div>
-    </div>
-
-    <!-- MOBILE: snap-scroll carousel (igual que Destinos Populares) -->
-    <div class="md:hidden flex flex-col gap-3 px-4">
-      <div id="offersTrackMobile" class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2"
-        style="scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-x;"
-        onscroll="updateOffersDots()">
-        <div class="flex items-center justify-center h-72 w-[78vw] shrink-0 text-white/40">Cargando...</div>
-      </div>
-      <div id="offersDotsMobile" class="flex justify-center gap-1.5 mt-1"></div>
-    </div>
-
-    <!-- DESKTOP: center-focused scale carousel -->
-    <div class="hidden md:block">
-    <div class="relative w-full" style="padding:0 0 40px;">
-      <!-- Left Arrow -->
-      <button id="offersPrev" class="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-slate-100 flex items-center justify-center hover:border-[#3778b8] hover:text-[#3778b8] transition-all active:scale-95">
-        <span class="material-symbols-outlined text-[22px]">chevron_left</span>
-      </button>
-
-      <!-- Viewport: overflow-x:clip corta horizontal sin cortar escala vertical -->
-      <div class="w-full" id="offersViewport" style="overflow-x:clip;overflow-y:visible;padding:8px 0">
-        <div id="offersCarouselTrack" class="flex gap-5 will-change-transform" style="transition:transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94)">
-          <div class="flex items-center justify-center h-72 w-80 text-slate-400 flex-shrink-0 mx-auto">Cargando ofertas...</div>
-        </div>
-      </div>
-
-      <!-- Right Arrow -->
-      <button id="offersNext" class="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white shadow-[0_4px_20px_rgba(0,0,0,0.12)] border border-slate-100 flex items-center justify-center hover:border-[#3778b8] hover:text-[#3778b8] transition-all active:scale-95">
-        <span class="material-symbols-outlined text-[22px]">chevron_right</span>
-      </button>
-    </div>
-
     </div>
   </section>
 
@@ -707,9 +697,9 @@
 <app-footer></app-footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
-<script src="js/config.js?v=4" defer></script>
-<script src="js/components.js?v=4" defer></script>
-<script src="js/main.js?v=4" defer></script>
+<script src="js/config.js?v=5" defer></script>
+<script src="js/components.js?v=5" defer></script>
+<script src="js/main.js?v=5" defer></script>
 <script>
   // Popover helpers — fixed positioning to escape overflow:hidden hero
   function positionBelow(trigger, popup) {
