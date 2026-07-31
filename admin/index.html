@@ -1848,27 +1848,27 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
       </div>
 
       <div class="dash-grid" id="dashGrid">
-        <div class="dash-card dash-card-total" onclick="switchPkgFilter('all','all')" style="cursor:pointer" title="Ver todos">
+        <div class="dash-card dash-card-total" onclick="dashFilter('all')" style="cursor:pointer" title="Ver todos">
           <div class="dash-icon"><span class="material-symbols-outlined" style="color:#0284c7">travel_explore</span></div>
           <div class="dash-num" id="dTotal">—</div>
           <div class="dash-label">Paquetes totales</div>
         </div>
-        <div class="dash-card dash-card-active" onclick="switchPkgFilter('active','all')" style="cursor:pointer" title="Ver activos">
+        <div class="dash-card dash-card-active" onclick="dashFilter('active')" style="cursor:pointer" title="Ver activos">
           <div class="dash-icon"><span class="material-symbols-outlined" style="color:#16a34a">check_circle</span></div>
           <div class="dash-num" id="dActive">—</div>
           <div class="dash-label">Activos</div>
         </div>
-        <div class="dash-card dash-card-featured" onclick="switchPkgFilter('featured','all')" style="cursor:pointer" title="Ver destacados">
+        <div class="dash-card dash-card-featured" onclick="dashFilter('featured')" style="cursor:pointer" title="Ver destacados">
           <div class="dash-icon"><span class="material-symbols-outlined" style="color:#ca8a04">star</span></div>
           <div class="dash-num" id="dFeatured">—</div>
           <div class="dash-label">Destacados</div>
         </div>
-        <div class="dash-card dash-card-offer" onclick="switchPkgFilter('offer','all')" style="cursor:pointer" title="Ver con oferta">
+        <div class="dash-card dash-card-offer" onclick="dashFilter('offer')" style="cursor:pointer" title="Ver con oferta">
           <div class="dash-icon"><span class="material-symbols-outlined" style="color:#e11d48">local_offer</span></div>
           <div class="dash-num" id="dOffers">—</div>
           <div class="dash-label">En oferta</div>
         </div>
-        <div class="dash-card dash-card-inactive" onclick="switchPkgFilter('inactive','all')" style="cursor:pointer" title="Ver inactivos">
+        <div class="dash-card dash-card-inactive" onclick="dashFilter('inactive')" style="cursor:pointer" title="Ver inactivos">
           <div class="dash-icon"><span class="material-symbols-outlined" style="color:#dc2626">cancel</span></div>
           <div class="dash-num" id="dInactive">—</div>
           <div class="dash-label">Inactivos</div>
@@ -2558,17 +2558,31 @@ let activeSbFilter = 'all';
 // Volver a tocar un filtro ya activo lo apaga.
 let sbSection = 'all';
 let sbStatus  = 'all';
+let sbFeatured = 'all';   // filtro extra del dashboard (tarjeta Destacados)
+
+// Atajos del dashboard: muestran EXACTAMENTE ese conjunto.
+// A diferencia del sidebar (que combina filtros), aca se resetea todo
+// y se aplica solo el filtro de la tarjeta tocada.
+function dashFilter(value) {
+  sbSection = 'all'; sbStatus = 'all'; sbFeatured = 'all';
+  if (value !== 'all') switchPkgFilter(value, 'all');
+  else { closeEditor(); switchView('packages'); syncFilterUI(); renderPkgView(); }
+}
 
 function switchPkgFilter(value, cont) {
   closeEditor();
   switchView('packages');
 
+  // Las tarjetas del dashboard mandan 'offer' y 'featured':
+  // 'offer' es la seccion de ofertas; 'featured' es un filtro propio.
+  if (value === 'offer') value = 'sec_oferta';
   const esSeccion = value === 'sec_grupal' || value === 'sec_inspirador' || value === 'sec_oferta';
   const esEstado  = value === 'active' || value === 'inactive';
 
-  if (value === 'all') { sbSection = 'all'; sbStatus = 'all'; }
+  if (value === 'all') { sbSection = 'all'; sbStatus = 'all'; sbFeatured = 'all'; }
   else if (esSeccion)  { sbSection = (sbSection === value) ? 'all' : value; }
   else if (esEstado)   { sbStatus  = (sbStatus  === value) ? 'all' : value; }
+  else if (value === 'featured') { sbFeatured = (sbFeatured === 'featured') ? 'all' : 'featured'; }
 
   const contEl = document.getElementById('filterContinent');
   if (contEl && cont !== undefined) contEl.value = cont || 'all';
@@ -2687,6 +2701,7 @@ function getFilteredPackages() {
   // Estado y sección se aplican por separado, así se combinan
   if (sbStatus==='active')   list = list.filter(p=>p.active);
   if (sbStatus==='inactive') list = list.filter(p=>!p.active);
+  if (sbFeatured==='featured') list = list.filter(p=>p.featured);
   
   if (sbSection==='sec_grupal')     list = list.filter(p=>p.section==='salida_grupal');
   if (sbSection==='sec_inspirador') list = list.filter(p=>p.section!=='salida_grupal' && !(p.price_original_usd && Number(p.price_original_usd) > Number(p.price_usd)));
@@ -2730,7 +2745,7 @@ function renderPkgView() {
   const cont = document.getElementById('filterContinent')?.value || 'all';
   const sort = document.getElementById('filterSort')?.value || 'manual';
   
-  const isGroupedView = (sbSection === 'all' && sbStatus === 'all' && !q && cont === 'all');
+  const isGroupedView = (sbSection === 'all' && sbStatus === 'all' && sbFeatured === 'all' && !q && cont === 'all');
   const isList = viewMode === 'list';
   const renderFn = isList ? renderPkgListItem : renderPkgCard;
   const wrapClass = isList ? 'pkg-list' : 'pkg-grid';
@@ -2818,11 +2833,11 @@ function renderPkgCard(p, num) {
         </div>
         <div class="pce-row">
           <span class="pce-lbl">Original</span>
-          <input type="number" class="quick-price-input pli-orig pce-inp ${hasOffer?'pli-struck':''}" value="${hasOffer ? p.price_original_usd : (p.price_usd||'')}" placeholder="—" title="Precio normal del viaje" onchange="quickUpdatePrices(${p.id})">
+          <input type="number" class="quick-price-input pli-orig pce-inp ${hasOffer?'pli-struck':''}" value="${hasOffer ? p.price_original_usd : (p.price_usd||'')}" placeholder="—" title="Precio normal del viaje" onchange="quickUpdatePrices(${p.id}, this)">
         </div>
         <div class="pce-row">
           <span class="pce-lbl">Descuento</span>
-          <input type="number" class="quick-price-input pli-desc pce-inp" value="${hasOffer ? p.price_usd : ''}" placeholder="—" title="Precio con descuento. Si lo completás, pasa a Ofertas." onchange="quickUpdatePrices(${p.id})">
+          <input type="number" class="quick-price-input pli-desc pce-inp" value="${hasOffer ? p.price_usd : ''}" placeholder="—" title="Precio con descuento. Si lo completás, pasa a Ofertas." onchange="quickUpdatePrices(${p.id}, this)">
         </div>
       </div>
       <div class="pkg-cardpills">
@@ -2877,12 +2892,12 @@ function renderPkgListItem(p, num) {
       <div class="pli-price-line">
         <span class="pli-mini">Original</span>
         <input type="number" class="quick-price-input pli-orig ${hasOffer?'pli-struck':''}" value="${hasOffer ? p.price_original_usd : (p.price_usd||'')}" placeholder="—"
-          title="Precio normal del viaje" onchange="quickUpdatePrices(${p.id})">
+          title="Precio normal del viaje" onchange="quickUpdatePrices(${p.id}, this)">
       </div>
       <div class="pli-price-line">
         <span class="pli-mini">Descuento</span>
         <input type="number" class="quick-price-input pli-desc" value="${hasOffer ? p.price_usd : ''}" placeholder="—"
-          title="Precio con descuento. Si lo completás, el viaje pasa a Ofertas." onchange="quickUpdatePrices(${p.id})">
+          title="Precio con descuento. Si lo completás, el viaje pasa a Ofertas." onchange="quickUpdatePrices(${p.id}, this)">
       </div>
     </div>
 
@@ -3073,10 +3088,16 @@ async function quickUpdatePriceOrig(id, val) {
 }
 
 // Modelo Original/Descuento: si hay descuento => es OFERTA (precio original tachado)
-async function quickUpdatePrices(id) {
+async function quickUpdatePrices(id, srcEl) {
   const p = packages.find(x=>x.id===id);
   if (!p) return;
-  const row = document.querySelector(`.pkg-list-item[data-id="${id}"], .pkg-card[data-id="${id}"]`);
+  // OJO: el Dashboard ("Ultimos paquetes") renderiza filas con el MISMO
+  // data-id que la vista de Paquetes. querySelector devolvia la PRIMERA del
+  // DOM (la del dashboard, con inputs vacios) y se guardaba precio 0 aunque
+  // el usuario habia escrito uno. Por eso se toma la fila del input real.
+  const row = srcEl
+    ? srcEl.closest('[data-id]')
+    : document.querySelector(`.pkg-list-item[data-id="${id}"], .pkg-card[data-id="${id}"]`);
   if (!row) return;
   const oEl = row.querySelector('.pli-orig');
   const dEl = row.querySelector('.pli-desc');
@@ -3930,7 +3951,7 @@ async function executeDropByIndex(srcId, insertIndex) {
   
   const q = (document.getElementById('pkgSearch')?.value||'').toLowerCase().trim();
   const cont = document.getElementById('filterContinent')?.value || 'all';
-  const isGroupedView = (sbSection === 'all' && sbStatus === 'all' && !q && cont === 'all');
+  const isGroupedView = (sbSection === 'all' && sbStatus === 'all' && sbFeatured === 'all' && !q && cont === 'all');
   
   let list;
   if (isGroupedView) {
@@ -4871,7 +4892,8 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   "days": número entero de días,
   "price_usd": número estimado en USD,
   "description": "descripción cautivadora y profesional del paquete",
-  "highlights": ["punto destacado 1", "punto destacado 2", "punto destacado 3", "punto destacado 4"],
+  "badge": "etiqueta corta y vendedora para la foto, max 18 caracteres (ej: SEPTIEMBRE 2026, Todo Incluido)",
+  "highlights": ["3 o 4 etiquetas CORTAS de 1 a 3 palabras cada una: lugares iconicos o beneficios concretos del paquete (ej: Palm Beach, All Inclusive, Vuelo Directo)"],
   "includes": ["servicio incluido 1", "servicio incluido 2", "servicio incluido 3", "servicio incluido 4", "servicio incluido 5"],
   "excludes": ["servicio no incluido 1", "servicio no incluido 2"],
   "itinerary": [
@@ -4885,6 +4907,8 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 
     document.getElementById('aiModal')?.remove();
 
+    const puesto = [];   // resumen de que completo la IA (se declara antes del badge)
+
     // ── Datos básicos ──
     if (pkg.name)        document.getElementById('fName').value = pkg.name;
     if (pkg.destination) document.getElementById('fDest').value = pkg.destination;
@@ -4892,11 +4916,12 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
     if (pkg.days)        document.getElementById('fDays').value = pkg.days;
     if (pkg.price_usd && !document.getElementById('fPrice').value)
       document.getElementById('fPrice').value = pkg.price_usd;
-    if (pkg.badge && !document.getElementById('fBadge').value)
-      document.getElementById('fBadge').value = pkg.badge;
+    if (pkg.badge) {
+      document.getElementById('fBadge').value = String(pkg.badge).slice(0, 24);
+      puesto.push('etiqueta de foto');
+    }
     if (pkg.category) document.getElementById('fCat').value = pkg.category;
 
-    const puesto = [];
 
     // ── Descripción ──
     // El editor real es el contenteditable #fDescRich (#fDesc no existe).
@@ -4906,15 +4931,17 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
       const parrafos = String(pkg.description)
         .split(/\n{2,}|\r\n\r\n/).map(s => s.trim()).filter(Boolean);
       let html = parrafos.map(p => `<p>${escHtml(p).replace(/\n/g, '<br>')}</p>`).join('');
-      // Los "highlights" se suman como lista para que no se pierdan
-      if (pkg.highlights?.length) {
-        html += `<p><strong>Lo más destacado</strong></p><ul>` +
-          pkg.highlights.map(h => `<li>${escHtml(String(h))}</li>`).join('') + `</ul>`;
-      }
       document.getElementById('fDescRich').innerHTML = html;
       document.getElementById('fDescEnabled').checked = true;
       toggleDescSection(true);
       puesto.push('descripción');
+    }
+
+    // ── Etiquetas cortas (chips de la tarjeta) ──
+    if (pkg.highlights?.length) {
+      hlItems = pkg.highlights.map(h => String(h).trim()).filter(Boolean).slice(0, 6);
+      renderHl();
+      puesto.push('etiquetas');
     }
 
     // ── Incluye / No incluye ──

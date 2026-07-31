@@ -831,6 +831,26 @@ function openTripDetail(tid) {
   const t = A.trips.find(x => x.id === tid); if (!t) return;
   const px = paxOfTrip(tid), req = A.reqs.filter(r => r.trip_id === tid).map(r => r.category);
   const du = daysUntil(t.depart_date), dest = destOfTrip(t);
+  // Documentacion ya cargada en este viaje, agrupada: el mismo archivo subido
+  // 'a todos' aparece una sola vez con la lista de pasajeros que lo tienen.
+  const tripDocs = A.docs.filter(d => d.trip_id === tid);
+  const grupos = {};
+  tripDocs.forEach(d => {
+    const k = d.file_path + '|' + (d.title || '');
+    (grupos[k] = grupos[k] || []).push(d);
+  });
+  const docsHtml = Object.values(grupos).map(g => {
+    const d = g[0];
+    const noms = g.map(x => (A.pax.find(p => p.id === x.passenger_id) || {}).full_name || '¿?');
+    const quien = (px.length > 1 && g.length >= px.length) ? `Todos (${g.length})` : noms.join(', ');
+    const ids = g.map(x => x.id).join(',');
+    return `<div class="doc click" style="cursor:pointer" onclick='openPreview(${JSON.stringify(d.file_path)}, ${JSON.stringify(d.title || '')})'>
+      ${thumbBox(d.file_path, d.file_name || d.file_path)}
+      <div class="info"><div class="t">${esc(d.title)}</div><div class="s">${esc(d.category || 'Documento')} · ${esc(quien)}</div></div>
+      <button class="btn btn-ghost btn-sm"><span class="ms">visibility</span>Ver</button>
+      <button class="btn btn-icon btn-danger" title="Borrar" onclick='event.stopPropagation();deleteTripDocGroup("${ids}", ${JSON.stringify(d.file_path)}, "${d.source}", ${tid})'><span class="ms">delete</span></button>
+    </div>`;
+  }).join('');
   const html = `<div class="modal-h">${tripThumb(t)}<h3 style="flex:1">${esc(t.title)}</h3>
     <button class="btn btn-icon btn-ghost" title="Editar" onclick="openNewTrip(${tid})"><span class="ms">edit</span></button>
     <button class="btn btn-icon btn-danger" title="Eliminar" onclick="deleteTrip(${tid})"><span class="ms">delete</span></button>
@@ -851,10 +871,13 @@ function openTripDetail(tid) {
         <button class="btn btn-ghost btn-sm" onclick="openEditDest(${tid})"><span class="ms">edit</span>A mano</button></div>`}
     <div class="section-t">Pasajeros (${px.length})</div>
     ${px.length ? `<div class="rowlist">${px.map(p => { const m = missingForPax(p.id).length; return `<div class="rowitem"><div class="avatar">${esc(initials(p.full_name))}</div><div class="info click" onclick="openPassengerDetail('${p.id}')"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${m ? ' · ⚠ ' + m + ' doc. pendiente(s)' : ''}</div></div><button class="btn btn-icon btn-danger" title="Quitar del viaje" onclick="removePaxFromTrip(${tid},'${p.id}')"><span class="ms">person_remove</span></button></div>`; }).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Sin pasajeros asignados.</p>`}
+    <div class="section-t">Documentación del viaje (${Object.keys(grupos).length})</div>
+    ${docsHtml ? `<div class="rowlist">${docsHtml}</div>` : `<p class="sub-mut" style="font-size:13px">Todavía no hay archivos. Subí acá el voucher, pasaporte, DNI, seguro, visa o lo que necesite el pasajero.</p>`}
   </div>
   <div class="modal-f" style="flex-wrap:wrap">
     ${A.lib.length ? `<button class="btn btn-ghost" onclick="openAttachTripLib(${tid})"><span class="ms">library_add</span>De biblioteca a todos</button>` : ''}
     <button class="btn btn-ghost" onclick="openUploadTripDoc(${tid})"><span class="ms">upload_file</span>Subir doc a todos</button>
+    ${px.length ? `<button class="btn btn-ghost" onclick="openUploadPaxDoc(${tid})"><span class="ms">person</span>Subir a un pasajero</button>` : ''}
     <button class="btn btn-primary" onclick="openAssignPax(${tid})"><span class="ms">group_add</span>Asignar pasajeros</button>
   </div>`;
   openModal(html, true);
@@ -886,6 +909,42 @@ async function doUploadTripDoc(tid) {
     toast(`Cargado a ${px.length} pasajero(s) ✓`, 'ok'); await loadAll(); openTripDetail(tid);
   } catch (e) { toast('Error: ' + (e.message || e), 'err'); btn.disabled = false; btn.textContent = 'Subir a todos'; }
 }
+// Subir un documento a UN pasajero puntual del viaje (pasaporte, DNI, visa…)
+function openUploadPaxDoc(tid) {
+  const px = paxOfTrip(tid);
+  if (!px.length) { toast('Primero asigná pasajeros al viaje', 'err'); return; }
+  openModal(`<div class="modal-h"><h3>Subir documento a un pasajero</h3><button class="btn btn-icon btn-ghost" onclick="openTripDetail(${tid})"><span class="ms">close</span></button></div>
+  <div class="modal-b">
+    <div class="fg"><label class="fl">Pasajero *</label><select id="pdPax">${px.map(p => `<option value="${p.id}">${esc(p.full_name)} — DNI ${esc(p.dni)}</option>`).join('')}</select></div>
+    <div class="fg"><label class="fl">Tipo *</label><select id="pdCat" onchange="if(!$('pdTitle').dataset.tocado)$('pdTitle').value=this.value">${CATS.map(c => `<option>${c}</option>`).join('')}</select></div>
+    <div class="fg"><label class="fl">Título *</label><input id="pdTitle" value="Voucher" oninput="this.dataset.tocado='1'"></div>
+    <div class="fg"><label class="fl">Archivo *</label><input type="file" id="pdFile" accept=".pdf,.jpg,.jpeg,.png,.webp,.doc,.docx"></div>
+  </div>
+  <div class="modal-f"><button class="btn btn-ghost" onclick="openTripDetail(${tid})">Volver</button><button class="btn btn-primary" id="pdBtn" onclick="doUploadPaxDoc(${tid})">Subir</button></div>`);
+}
+async function doUploadPaxDoc(tid) {
+  const pid = $('pdPax').value, file = $('pdFile').files[0];
+  const title = $('pdTitle').value.trim(), cat = $('pdCat').value;
+  if (!title) { toast('Poné un título', 'err'); return; }
+  if (!file) { toast('Elegí un archivo', 'err'); return; }
+  const btn = $('pdBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  try {
+    const path = await uploadFileTo(pid, file);
+    const { error } = await db.from('pv_documents').insert({ passenger_id: pid, trip_id: tid, title, category: cat, file_path: path, file_name: file.name, source: 'admin', uploaded_by: me.id });
+    if (error) throw error;
+    toast('Documento cargado ✓', 'ok'); await loadAll(); openTripDetail(tid);
+  } catch (e) { toast('Error: ' + (e.message || e), 'err'); btn.disabled = false; btn.textContent = 'Subir'; }
+}
+// Borrar un doc del viaje (todas sus copias si se subio 'a todos')
+async function deleteTripDocGroup(idsCsv, file_path, source, tid) {
+  const ids = String(idsCsv).split(',').map(Number).filter(Boolean);
+  if (!ids.length) return;
+  if (!confirm(ids.length > 1 ? `¿Borrar este documento de los ${ids.length} pasajeros?` : '¿Borrar este documento?')) return;
+  await db.from('pv_documents').delete().in('id', ids);
+  if (source !== 'library') { await db.storage.from(BUCKET).remove([file_path]).catch(() => {}); }
+  toast('Documento borrado', 'ok'); await loadAll(); openTripDetail(tid);
+}
+
 async function deleteTrip(tid) {
   if (!confirm('¿Eliminar este viaje? Se quitará a los pasajeros (sus documentos no se borran).')) return;
   const { error } = await db.from('pv_trips').delete().eq('id', tid);
