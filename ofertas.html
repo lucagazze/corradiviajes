@@ -27,6 +27,20 @@
   input[type=number]::-webkit-inner-spin-button,
   input[type=number]::-webkit-outer-spin-button { -webkit-appearance:none; margin:0; }
 
+  /* Controles de la barra de filtros: todos con la MISMA altura */
+  .cdd-trigger { height: 44px; }
+  .search-flt {
+    display:flex; align-items:center; gap:8px; width:100%;
+    height:44px; padding:0 13px; border-radius:12px;
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.15);
+    transition:border-color .2s, background .2s, box-shadow .2s;
+  }
+  .search-flt:focus-within { border-color:rgba(55,120,184,0.7); background:rgba(55,120,184,0.1); }
+  html[data-theme="light"] .search-flt { background:#fff; border-color:rgba(0,0,0,0.13); box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+  html[data-theme="light"] .search-flt:focus-within { border-color:#3778b8; background:#fff; box-shadow:0 0 0 3px rgba(55,120,184,0.15); }
+  .price-flt, #priceMin, #priceMax { height:44px !important; padding-top:0 !important; padding-bottom:0 !important; }
+
   /* ── Custom Dropdown ── */
   .cdd { position:relative; }
   .cdd-trigger {
@@ -140,7 +154,7 @@
     style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1)">
 
     <!-- Buscador -->
-    <div class="md:col-span-4 flex items-center gap-2 rounded-[12px] px-3 py-2.5 transition-all" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12)">
+    <div class="md:col-span-4 search-flt">
       <span class="material-symbols-outlined text-[18px]" style="color:rgba(255,255,255,0.5)">search</span>
       <input type="text" id="searchInput"
         class="flex-1 min-w-0 bg-transparent border-none outline-none text-white placeholder:text-white/40 font-medium text-[14px] focus:ring-0"

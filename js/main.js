@@ -269,7 +269,7 @@ function renderOffersCarousel() {
     const highlights = p.highlights ? p.highlights.split(/·|\n/).slice(0,3).map(h => h.trim()).filter(Boolean) : [];
     return `
     <div class="offer-card flex-shrink-0 rounded-[24px] overflow-hidden bg-white border border-slate-100 flex flex-col cursor-pointer group transition-all duration-300 shadow-[0_12px_40px_rgba(0,0,0,0.18)] hover:shadow-[0_20px_60px_rgba(0,0,0,0.28)] hover:-translate-y-1"
-      style="width:440px;max-width:calc(100vw - 40px);" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}">
+      style="flex:0 1 440px;min-width:300px;max-width:calc(100vw - 40px);" data-id="${p.id}" data-name="${p.name.replace(/"/g, '&quot;')}" data-has-desc="${!!(p.description || '').trim()}">
       <div class="relative overflow-hidden" style="height:220px">
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
           class="w-full h-full object-cover pointer-events-none">
@@ -320,6 +320,12 @@ function renderOffersCarousel() {
     track.style.transform = 'none';
     track.style.justifyContent = 'center';
     track.style.gap = '24px';
+    track.style.flexWrap = 'nowrap';   // se encogen (flex 0 1) en vez de partirse en dos filas
+    // Sin translate no hace falta recortar: overflow visible para la sombra
+    if (viewport) {
+      viewport.style.overflow = 'visible';
+      viewport.style.padding = '10px 6px 30px';
+    }
     track.innerHTML = origCards.map(p => buildCard(p)).join('');
     // Click → ir al paquete
     track.querySelectorAll('.offer-card').forEach(el => {
@@ -334,6 +340,13 @@ function renderOffersCarousel() {
   if (prevBtn) prevBtn.style.display = '';
   if (nextBtn) nextBtn.style.display = '';
   track.style.justifyContent = '';
+  track.style.flexWrap = 'nowrap';
+  // Restaura el recorte que pide el translate del carrusel
+  if (viewport) {
+    viewport.style.overflowX = 'clip';
+    viewport.style.overflowY = 'visible';
+    viewport.style.padding = '30px 0';
+  }
   const CARD_W = 440;
   const GAP = 20;
   const STEP = CARD_W + GAP;
@@ -344,6 +357,7 @@ function renderOffersCarousel() {
   track.style.transition = 'none';
 
   const cardEls = [...track.querySelectorAll('.offer-card')];
+  cardEls.forEach(el => { el.style.flex = '0 0 440px'; });
   let idx = total; // start at the middle set
 
   function getOffset() {
