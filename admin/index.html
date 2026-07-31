@@ -2413,7 +2413,9 @@ function isExpired(p) {
   return !isNaN(d) && d.getTime() < Date.now();
 }
 function expiredPill(p) {
-  return '';
+  return isExpired(p)
+    ? '<span class="pill pill-expired" title="La fecha de expiración ya pasó: no se muestra en el sitio"><span class="ms material-symbols-outlined">event_busy</span>Vencido</span>'
+    : '';
 }
 async function isAdminUser(userId) {
   try {
@@ -2624,14 +2626,6 @@ async function loadPackages() {
   const { data, error } = await db.from('corradi_packages').select('*').order('id', {ascending:false});
   if (error) { showToast('Error al cargar paquetes','error'); return; }
   packages = data || [];
-  
-  // Auto-deactivar automáticamente paquetes vencidos
-  const expiredToDeactivate = packages.filter(p => p.active && isExpired(p));
-  if (expiredToDeactivate.length > 0) {
-    expiredToDeactivate.forEach(p => { p.active = false; });
-    Promise.all(expiredToDeactivate.map(p => db.from('corradi_packages').update({ active: false }).eq('id', p.id))).catch(console.error);
-  }
-
   updateStats();
   renderPkgView();
   renderDashboard();
@@ -2830,7 +2824,7 @@ function renderPkgCard(p, num) {
         </div>
       </div>
       <div class="pkg-cardpills">
-        ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+        ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}${expiredPill(p)}
         ${p.section==='salida_grupal'?'<span class="pill pill-grupal"><span class="ms material-symbols-outlined">groups</span>Grupal</span>':(hasOffer?'<span class="pill pill-offer"><span class="ms material-symbols-outlined">local_fire_department</span>Oferta</span>':'')}
         ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
       </div>
@@ -2892,7 +2886,7 @@ function renderPkgListItem(p, num) {
 
     <!-- 8. Estado -->
     <div class="pli-cell pli-cell-estado">
-      ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}
+      ${p.active?'<span class="pill pill-active">Activo</span>':'<span class="pill pill-inactive">Inactivo</span>'}${expiredPill(p)}
       ${isGroup?'<span class="pill pill-grupal"><span class="ms material-symbols-outlined">groups</span>Grupal</span>':(hasOffer?'<span class="pill pill-offer"><span class="ms material-symbols-outlined">local_fire_department</span>Oferta</span>':'')}
       ${p.featured?'<span class="pill pill-featured">★ Destacado</span>':''}
     </div>
