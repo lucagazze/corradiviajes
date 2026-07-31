@@ -145,14 +145,14 @@ function renderResults() {
           src="${p.image_url || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'}"
           onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"/>
         <div class="absolute inset-0" style="background:linear-gradient(to top,rgba(0,0,0,0.55) 0%,transparent 60%)"></div>
-        <div class="absolute top-3 left-3 right-3 flex flex-wrap items-start gap-2">
-          ${p.featured ? `<span class="featured-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
+        <div class="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10 pointer-events-none">
           ${showBadge ? `<span class="offer-label-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
             <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
             Oferta
           </span>` : ''}
-          ${badgeRight}
+          ${p.featured ? `<span class="featured-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
         </div>
+        ${badgeRight ? `<div class="absolute top-3 right-3 z-10 pointer-events-none">${badgeRight.replace('ml-auto ', '')}</div>` : ''}
         <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country || ''}${p.days ? ' · '+p.days+' días' : ''}</span>
       </div>
       <div class="p-5 flex flex-col flex-grow justify-between">

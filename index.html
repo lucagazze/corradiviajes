@@ -319,7 +319,7 @@
     <!-- MOBILE: snap-scroll carousel (igual que Destinos Populares) -->
     <div class="md:hidden flex flex-col gap-3 px-4">
       <div id="offersTrackMobile" class="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2"
-        style="scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;"
+        style="scroll-behavior:smooth;scrollbar-width:none;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-x;"
         onscroll="updateOffersDots()">
         <div class="flex items-center justify-center h-72 w-[78vw] shrink-0 text-white/40">Cargando...</div>
       </div>

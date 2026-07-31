@@ -244,7 +244,7 @@ function renderOffersCarousel() {
         <img alt="${p.name}" src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'"
           class="w-full h-full object-cover"/>
         <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
-        <div class="absolute top-3 left-3 right-3 flex flex-wrap items-start gap-2">
+        <div class="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10 pointer-events-none">
           <span class="group-label-badge px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide rounded-full shrink-0" style="background:#f2b352;color:#0d1b2e">Grupal</span>
           ${p.featured ? `<span class="featured-badge px-2.5 py-1 text-white text-[11px] font-bold uppercase tracking-wide rounded-full shrink-0" style="background:#3778b8">Destacado</span>` : ''}
         </div>
@@ -273,11 +273,14 @@ function renderOffersCarousel() {
         <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
           class="w-full h-full object-cover pointer-events-none">
         <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
-        <div class="absolute top-3 left-3 right-3 flex flex-wrap items-start gap-2">
-          <span class="group-label-badge px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="${badgeColor}">Salida Grupal</span>
+        <div class="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10 pointer-events-none">
+          <span class="group-label-badge px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="${badgeColor}">
+            <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">groups</span>
+            Salida Grupal
+          </span>
           ${p.featured ? `<span class="featured-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
-          ${p.badge ? `<span class="ml-auto bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm shrink-0">${p.badge}</span>` : ''}
         </div>
+        ${p.badge ? `<div class="absolute top-3 right-3 z-10 pointer-events-none"><span class="bg-white/95 backdrop-blur-sm text-slate-800 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-sm shrink-0">${p.badge}</span></div>` : ''}
         <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country}</span>
       </div>
       <div class="p-5 flex flex-col flex-1 justify-between pointer-events-none">
@@ -496,14 +499,14 @@ function renderPromoOffers() {
           <img src="${img}" onerror="this.src='https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80'" alt="${p.name}"
             class="w-full h-full object-cover pointer-events-none"/>
           <div class="absolute inset-0" style="background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 60%)"></div>
-          <div class="absolute top-3 left-3 right-3 flex flex-wrap items-start gap-2">
-            ${p.featured ? `<span class="featured-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
+          <div class="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-10 pointer-events-none">
             <span class="offer-label-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#ef4444;color:#ffffff;box-shadow:0 4px 14px rgba(239,68,68,0.4)">
               <span class="material-symbols-outlined text-[12px]" style="font-variation-settings:'FILL' 1">local_fire_department</span>
               Oferta
             </span>
-            ${badgeRight}
+            ${p.featured ? `<span class="featured-badge inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wide shrink-0" style="background:#3778b8;color:#ffffff;box-shadow:0 4px 14px rgba(55,120,184,0.4)">Destacado</span>` : ''}
           </div>
+          ${badgeRight ? `<div class="absolute top-3 right-3 z-10 pointer-events-none">${badgeRight.replace('ml-auto ', '')}</div>` : ''}
           <span class="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-slate-700 rounded-full px-3 py-1 text-[12px] font-semibold">${p.country || ''}${p.days ? ' · '+p.days+' días' : ''}</span>
           ${expiresLabel ? `<span class="absolute bottom-3 left-3 inline-flex items-center gap-1 bg-black/55 backdrop-blur-sm text-white rounded-full px-2.5 py-1 text-[11px] font-medium"><span class="material-symbols-outlined text-[13px]">schedule</span>${expiresLabel}</span>` : ''}
         </div>

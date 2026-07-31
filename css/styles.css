@@ -779,10 +779,11 @@ h1,h2,h3,h4{font-family:'Outfit',system-ui,sans-serif;line-height:1.05;letter-sp
   .hero-actions .btn{width:100%;justify-content:center;padding:14px 24px;font-size:.88rem}
   .container{padding:0 22px}
 }
-@media(max-width:480px){
-  .modal{padding:32px 22px}
-  .hero h1{font-size:clamp(3.4rem,15vw,4.8rem)}
-  .hero-meta{font-size:.6rem;letter-spacing:2.5px;bottom:18px}
-  .hero-desc{font-size:.86rem}
-  .hero-actions .btn{padding:13px 20px;font-size:.85rem}
 }
+
+/* Scroll containment for carousels & horizontal lists */
+.overflow-x-auto, [id*="Track"] {
+  overscroll-behavior: contain;
+  touch-action: pan-x;
+}
+
