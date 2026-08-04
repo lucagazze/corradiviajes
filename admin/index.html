@@ -4498,12 +4498,16 @@ let cpOpen = false;
 let cpHighlightIdx = -1;
 let cpFilteredItems = [];
 
+function cpSearchText(value) {
+  return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+}
+
 function cpRender(query) {
-  const q = (query||'').toLowerCase().trim();
+  const q = cpSearchText(query);
   const list = document.getElementById('cpList');
   if (!list) return;
-  const usedCountries = new Set(packages.map(p => p.country).filter(Boolean));
-  cpFilteredItems = CP_COUNTRIES.filter(c => c.name.toLowerCase().includes(q) || c.group.toLowerCase().includes(q));
+  const usedCountries = new Set((packages || []).map(p => p.country).filter(Boolean));
+  cpFilteredItems = CP_COUNTRIES.filter(c => cpSearchText(c.name).includes(q) || cpSearchText(c.group).includes(q));
   if (!q && usedCountries.size) {
     cpFilteredItems = [
       ...cpFilteredItems.filter(c => usedCountries.has(c.name)),
@@ -4536,6 +4540,31 @@ function cpRender(query) {
   }
   list.innerHTML = html;
   cpHighlightIdx = -1;
+}
+
+function cpFilter(value) {
+  cpRender(value);
+}
+
+function cpSearchKey(event) {
+  if (event.key === 'Escape') { event.preventDefault(); cpClose(); return; }
+  if (!cpFilteredItems.length) return;
+  if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+    event.preventDefault();
+    cpHighlightIdx = event.key === 'ArrowDown'
+      ? Math.min(cpHighlightIdx + 1, cpFilteredItems.length - 1)
+      : Math.max(cpHighlightIdx - 1, 0);
+    document.querySelectorAll('#cpList .cp-option').forEach(o => o.classList.remove('hl'));
+    const option = document.querySelector(`#cpList .cp-option[data-idx="${cpHighlightIdx}"]`);
+    if (option) { option.classList.add('hl'); option.scrollIntoView({block:'nearest'}); }
+  } else if (event.key === 'Enter') {
+    event.preventDefault();
+    const index = cpHighlightIdx >= 0 ? cpHighlightIdx : cpFilteredItems.length === 1 ? 0 : -1;
+    if (index >= 0) {
+      const country = cpFilteredItems[index];
+      cpSelect(country.name, country.flag, true);
+    }
+  }
 }
 
 function cpToggle() {
@@ -4602,7 +4631,17 @@ function cpSelect(name, flag, autoSetCategory = false) {
 }
 
 function cpSetValue(name) {
-  const country = CP_COUNTRIES.find(c => c.name === name);
+  const names = String(name || '').split(',').map(x => x.trim()).filter(Boolean);
+  if (names.length > 1) {
+    const countries = names.map(raw => CP_COUNTRIES.find(c => cpSearchText(c.name) === cpSearchText(raw))).filter(Boolean);
+    document.getElementById('fCountry').value = names.join(', ');
+    document.getElementById('cpFlag').innerHTML = countries.slice(0, 3).map(c => cpFlagImg(c.flag, 18)).join('') || '<span class="ms material-symbols-outlined" style="font-size:16px;opacity:.5">public</span>';
+    document.getElementById('cpLabel').textContent = names.join(', ');
+    document.getElementById('cpDisplay').classList.remove('empty');
+    return;
+  }
+  name = names[0] || '';
+  const country = CP_COUNTRIES.find(c => cpSearchText(c.name) === cpSearchText(name));
   if (name && country) {
     cpSelect(name, country.flag);
   } else if (name) {
@@ -4793,7 +4832,7 @@ function aiCountrySync() {
   const partes = inp.value.split(',').map(x => x.trim()).filter(Boolean);
   const ultimo = partes.length ? partes[partes.length - 1] : '';
   const c = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : [])
-    .find(x => x.name.toLowerCase() === ultimo.toLowerCase());
+    .find(x => cpSearchText(x.name) === cpSearchText(ultimo));
   flagBox.innerHTML = c ? cpFlagImg(c.flag, 20)
     : '<span class="ms material-symbols-outlined" style="font-size:17px;color:#cbd5e1">public</span>';
 }
@@ -4802,9 +4841,9 @@ function aiCountryOpen(filter) {
   const inp = document.getElementById('aiCountry');
   if (!box || !inp) return;
   const crudo = (filter !== undefined ? filter : inp.value);
-  const q = crudo.split(',').pop().trim().toLowerCase();
+  const q = cpSearchText(crudo.split(',').pop());
   const all = (typeof CP_COUNTRIES !== 'undefined' ? CP_COUNTRIES : []);
-  const list = q ? all.filter(c => c.name.toLowerCase().includes(q) || (c.group||'').toLowerCase().includes(q)) : all;
+  const list = q ? all.filter(c => cpSearchText(c.name).includes(q) || cpSearchText(c.group).includes(q)) : all;
   _aiCountryIdx = -1;
   aiCountrySync();
   if (!list.length) {
@@ -4826,9 +4865,9 @@ function aiCountryPick(name) {
   if (inp) {
     // Se pueden acumular varios paises: si ya hay uno cargado, suma con coma
     const ya = inp.value.split(',').map(x => x.trim()).filter(Boolean);
-    const ultimoEsParcial = ya.length && !CP_COUNTRIES.some(c => c.name.toLowerCase() === ya[ya.length-1].toLowerCase());
+    const ultimoEsParcial = ya.length && !CP_COUNTRIES.some(c => cpSearchText(c.name) === cpSearchText(ya[ya.length-1]));
     if (ultimoEsParcial) ya.pop();           // reemplaza lo que se estaba tipeando
-    if (!ya.some(x => x.toLowerCase() === name.toLowerCase())) ya.push(name);
+    if (!ya.some(x => cpSearchText(x) === cpSearchText(name))) ya.push(name);
     inp.value = ya.join(', ');
     inp.focus();
   }
@@ -5125,7 +5164,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 }`;
 
   try {
-    const pkg = await askAI(prompt, 2500, { allowFallback: !(aiPdfTexto || urlTexto) });
+    const pkg = await askAI(prompt, 2500, { allowFallback: false });
 
     document.getElementById('aiModal')?.remove();
 
@@ -5135,7 +5174,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
     // ── Datos básicos ──
     if (pkg.name)        document.getElementById('fName').value = pkg.name;
     if (pkg.destination) document.getElementById('fDest').value = pkg.destination;
-    if (pkg.country)     cpSetValue(pkg.country);
+    if (pkg.country || country) cpSetValue(pkg.country || country);
     if (pkg.days)        document.getElementById('fDays').value = pkg.days;
     if (pkg.price_usd && (usingSource || !document.getElementById('fPrice').value))
       document.getElementById('fPrice').value = pkg.price_usd;
@@ -5288,9 +5327,9 @@ function generateFallbackAI(promptStr) {
   };
 }
 
-// La IA corre en el servidor o usa el motor inteligente de contingencia local si la red o Edge Function no responde
+// La IA corre en el servidor. Si falla, se informa el error para no guardar un paquete genÃ©rico como si fuera real.
 async function askAI(prompt, maxTokens, options = {}) {
-  const allowFallback = options.allowFallback !== false;
+  const allowFallback = options.allowFallback === true;
   try {
     const { data, error } = await db.functions.invoke('ai-gen', { body: { prompt, max_tokens: maxTokens || 2500 } });
     if (error) {
@@ -5359,7 +5398,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 El itinerario debe tener exactamente tantos ítems como el campo "days". Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
 
   try {
-    const pkg = await askAI(prompt, 2048);
+    const pkg = await askAI(prompt, 2048, { allowFallback: false });
 
     if (pkg.destination && !dest)   document.getElementById('fDest').value = pkg.destination;
     if (pkg.country    && !country) cpSetValue(pkg.country);
