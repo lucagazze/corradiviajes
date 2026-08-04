@@ -66,6 +66,9 @@ Deno.serve(async (req) => {
     const place = typeof body?.place === "string" ? body.place.trim() : "";
     if (!place) return json({ error: "Falta el destino" }, 400);
     const model = Deno.env.get("OPENAI_MODEL") || "gpt-5-mini";
+    const modelOptions = /^gpt-5-mini$/i.test(model)
+      ? { reasoning_effort: "low" }
+      : { temperature: 0.3 };
 
     const openAIResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -73,6 +76,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model,
         max_completion_tokens: 2200,
+        ...modelOptions,
         response_format: { type: "json_object" },
         messages: [
           {

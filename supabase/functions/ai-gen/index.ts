@@ -69,10 +69,13 @@ Deno.serve(async (req) => {
 
     const requestedTokens = Number(body?.max_completion_tokens);
     const maxTokens = Math.min(
-      Math.max(Number.isFinite(requestedTokens) ? Math.round(requestedTokens) : 6000, 1000),
-      8000,
+      Math.max(Number.isFinite(requestedTokens) ? Math.round(requestedTokens) : 4500, 1000),
+      6000,
     );
     const model = Deno.env.get("OPENAI_MODEL") || "gpt-5-mini";
+    const modelOptions = /^gpt-5-mini$/i.test(model)
+      ? { reasoning_effort: "low" }
+      : { temperature: 0.2 };
 
     const openAIResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -80,6 +83,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model,
         max_completion_tokens: maxTokens,
+        ...modelOptions,
         response_format: { type: "json_object" },
         messages: [
           {

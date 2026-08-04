@@ -411,6 +411,33 @@ body.pkg-dragging .pkg-grid, body.pkg-dragging .pkg-list {
 .form-section-title .ms, .form-section-title .ri {
   color: #0052cc !important;
 }
+.itinerary-row {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr) 38px;
+  gap: 12px;
+  align-items: start;
+  margin-bottom: 10px;
+  padding: 10px;
+  background: linear-gradient(135deg, #f8fbff 0%, #ffffff 72%);
+  border: 1px solid #dbe7f5;
+  border-left: 4px solid #2563eb;
+  border-radius: 14px;
+  box-shadow: 0 3px 12px rgba(37, 99, 235, .06);
+}
+.itinerary-row:hover { border-color: #93c5fd; box-shadow: 0 8px 22px rgba(37, 99, 235, .10); }
+.itinerary-day-cell { display: flex; flex-direction: column; gap: 5px; }
+.itinerary-day-index { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 22px; border-radius: 7px; background: #dbeafe; color: #1d4ed8; font-size: 10px; font-weight: 800; letter-spacing: .06em; }
+.itinerary-day-caption, .itinerary-desc-label { color: #64748b; font-size: 10px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.itinerary-day-input { font-weight: 800 !important; }
+.itinerary-desc-cell { min-width: 0; }
+.itinerary-desc-label { display: block; margin: 2px 0 6px; }
+.itinerary-desc-input { min-height: 86px !important; line-height: 1.55 !important; font-size: 13.5px !important; }
+.itinerary-remove { margin-top: 29px; width: 38px !important; height: 38px !important; }
+@media(max-width:700px){
+  .itinerary-row { grid-template-columns: 1fr 38px; }
+  .itinerary-day-cell, .itinerary-desc-cell { grid-column: 1; }
+  .itinerary-remove { grid-column: 2; grid-row: 1 / span 2; }
+}
 .fl {
   font-size: 11.5px;
   font-weight: 700 !important;
@@ -4153,17 +4180,20 @@ function renderItineraryRows() {
   }
 
   container.innerHTML = itineraryItems.map((item, index) => `
-    <div class="itinerary-row" style="display:grid; grid-template-columns: 180px 1fr 36px; gap: 12px; margin-bottom: 8px; align-items: start;">
-      <div class="fg">
-        <input type="text" class="fi" value="${item.day}" placeholder="Día X" 
-          oninput="itineraryItems[${index}].day = this.value" style="font-weight: 700;">
+    <div class="itinerary-row">
+      <div class="itinerary-day-cell">
+        <span class="itinerary-day-index">${String(index + 1).padStart(2, '0')}</span>
+        <span class="itinerary-day-caption">Día del recorrido</span>
+        <input type="text" class="fi itinerary-day-input" value="${escHtml(item.day)}" placeholder="Día X"
+          oninput="itineraryItems[${index}].day = this.value">
       </div>
-      <div class="fg">
-        <textarea class="ft" style="min-height: 70px; line-height: 1.5; font-size: 13.5px;" 
-          placeholder="Descripción de las actividades de este día..." 
-          oninput="itineraryItems[${index}].desc = this.value">${item.desc}</textarea>
+      <div class="itinerary-desc-cell">
+        <label class="itinerary-desc-label">Plan y experiencias</label>
+        <textarea class="ft itinerary-desc-input"
+          placeholder="Actividades, traslados, comidas y alojamiento de este día..."
+          oninput="itineraryItems[${index}].desc = this.value">${escHtml(item.desc)}</textarea>
       </div>
-      <button type="button" class="bullet-rm" onclick="removeItineraryRow(${index})" style="margin-top: 6px; width: 36px; height: 36px;">
+      <button type="button" class="bullet-rm itinerary-remove" onclick="removeItineraryRow(${index})" title="Eliminar día">
         <span class="ms material-symbols-outlined" style="font-size: 18px">delete</span>
       </button>
     </div>
@@ -4720,6 +4750,18 @@ function escHtml(str) {
   return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
+function cleanAiDescription(value) {
+  let text = String(value || '').replace(/\r\n?/g, '\n').trim();
+  if (!text) return '';
+  text = text.replace(/^\s*(?:detalle\s+del\s+folleto|fuentes?|fuente\s+principal)\s*:?\s*/i, '');
+  const internalHeading = text.search(/\n\s*(?:detalle\s+del\s+folleto|fuentes?\s*(?:\(|:)|contenido\s+extra[ií]do|nota\s+sobre\s+contradicci[oó]n)/i);
+  if (internalHeading > 0) text = text.slice(0, internalHeading).trim();
+  return text
+    .replace(/\b(?:seg[uú]n|de acuerdo con)\s+(?:el|la)\s+(?:PDF|folleto|documento)\b/gi, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 // ═══════════════ AI ASSISTANT & WEB PACKAGE IMPORTER ══════════════
 function showAIModal() {
   const existing = document.getElementById('aiModal');
@@ -5003,35 +5045,33 @@ async function onAiPdfChange(ev) {
   aiPdfTexto = ''; aiPdfNombre = '';
   if (!files.length) { if (status) status.textContent = ''; return; }
 
+  if (status) status.innerHTML = `<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>Leyendo ${files.length} PDF${files.length === 1 ? '' : 's'} en paralelo…`;
+  const results = await Promise.all(files.map(async file => {
+    try {
+      const texto = await extractPdfText(file, msg => {
+        if (status) status.innerHTML = `<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>${msg}: "${escHtml(file.name)}"…`;
+      });
+      return { file, texto, issue: '' };
+    } catch (e) {
+      return { file, texto: '', issue: e.message || 'error de lectura' };
+    }
+  }));
   const parts = [];
   const read = [];
   const unread = [];
   const truncated = [];
   let totalChars = 0;
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-    if (status) status.innerHTML = `<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>Leyendo PDF ${i + 1} de ${files.length}: "${escHtml(file.name)}"…`;
-    try {
-      const texto = await extractPdfText(file, msg => {
-        if (status) status.innerHTML = `<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>${msg}: "${escHtml(file.name)}"…`;
-      });
-      if (!texto.trim()) {
-        unread.push(file.name);
-        continue;
-      }
-      const remaining = MAX_AI_PDF_CHARS - totalChars;
-      if (remaining <= 0) {
-        truncated.push(file.name);
-        continue;
-      }
-      const recortado = texto.slice(0, remaining);
-      parts.push(`--- PDF: ${file.name} ---\n${recortado}`);
-      totalChars += recortado.length;
-      read.push(file.name);
-      if (recortado.length < texto.length) truncated.push(file.name);
-    } catch (e) {
-      unread.push(`${file.name} (${e.message || 'error de lectura'})`);
-    }
+  for (const result of results) {
+    const { file, texto, issue } = result;
+    if (issue) { unread.push(`${file.name} (${issue})`); continue; }
+    if (!texto.trim()) { unread.push(file.name); continue; }
+    const remaining = MAX_AI_PDF_CHARS - totalChars;
+    if (remaining <= 0) { truncated.push(file.name); continue; }
+    const recortado = texto.slice(0, remaining);
+    parts.push(`--- PDF: ${file.name} ---\n${recortado}`);
+    totalChars += recortado.length;
+    read.push(file.name);
+    if (recortado.length < texto.length) truncated.push(file.name);
   }
 
   aiPdfTexto = parts.join('\n\n');
@@ -5075,7 +5115,7 @@ async function runAIFromModal() {
   }
 
   const btn = document.getElementById('aiModalGenBtn');
-  if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando e investigando destino…`; btn.disabled = true; }
+  if (btn) { btn.innerHTML = `<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Armando el paquete…`; btn.disabled = true; }
 
   // Si hay URL, se lee la pagina REAL y su texto va al prompt
   let urlTexto = '';
@@ -5083,7 +5123,7 @@ async function runAIFromModal() {
     if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Leyendo la página…';
     urlTexto = await fetchUrlText(url);
     if (!urlTexto) showToast('No pude leer esa URL; genero con los demás datos', 'error');
-    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando e investigando destino…';
+    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Armando el paquete…';
   }
 
   const normalizedUrl = normalizeAiUrl(url);
@@ -5096,7 +5136,7 @@ async function runAIFromModal() {
       showToast('No se puede generar: la URL no pudo leerse completa.', 'error');
       return;
     }
-    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando la informacion de la URL…';
+    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Armando el paquete…';
   }
 
   const urlPolicy = urlTexto ? `
@@ -5104,7 +5144,7 @@ FUENTE PRINCIPAL OBLIGATORIA — URL:
 - Usa el contenido completo extraido de la URL como fuente de verdad.
 - Conserva todos los datos concretos de la pagina: fechas, noches, ciudades, hoteles, habitaciones, regimen, vuelos, aerolineas, horarios, traslados, excursiones, precios, impuestos, promociones, condiciones y observaciones.
 - No inventes datos que no figuren en la pagina; si faltan, dejalos vacios o marcados para revision.
-- Si un dato no entra en un campo, incluyelo completo en description o itinerary.
+- No vuelques texto bruto ni encabezados de la pagina; distribui la informacion util entre los campos visibles, servicios e itinerario con redaccion clara.
 ` : '';
 
   const context = [
@@ -5125,7 +5165,7 @@ FUENTE PRINCIPAL OBLIGATORIA — PDF:
 - Extrae y conserva fechas, noches, ciudades, hoteles, habitaciones, regimen, vuelos, aerolineas, horarios, traslados, excursiones, entradas, seguros, precios, impuestos, promociones, condiciones y observaciones.
 - No inventes datos faltantes ni reemplaces datos del PDF por informacion turistica generica.
 - Si dos PDFs se contradicen, conserva ambos datos y marca la contradiccion para revision.
-- Si un dato no entra en un campo, incluyelo completo dentro de description o del itinerario.
+- No vuelques texto bruto ni encabezados del material; distribui la informacion util entre los campos visibles, servicios e itinerario con redaccion clara.
 ` : '';
 
   const prompt = `Sos un experto gestor de viajes y guía turístico profesional de Corradi Viajes, agencia de viajes de Rosario, Argentina.
@@ -5140,8 +5180,10 @@ REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 1.b. Si se indicó MÁS DE UNA ciudad o país, el viaje los recorre TODOS: investigá cada uno, repartí los días entre ellos de forma equilibrada y realista, e incluí explícitamente los traslados entre ciudades/países (vuelo, tren o bus) en el día que corresponda. No te concentres solo en el primero.
 2. Si se proporcionó una URL, un PDF o texto de folleto, copiá e integrá FIELMENTE los datos reales del viaje que figuren ahí (hoteles, vuelos, fechas, precios, excursiones incluidas, itinerario). No los reemplaces por suposiciones genéricas.
 3. Construí un itinerario día por día ("Día 1", "Día 2", etc.) ultra específico con recorridos lógicos y reales para exactamente esa cantidad de días (${days || 'según contexto'}).
-4. Redactá una descripción cautivadora, comercial y 100% profesional para la web de la agencia.
-5. Generá listas detalladas de servicios incluidos ("includes") y no incluidos ("excludes") adaptadas a paquetes turísticos reales desde Argentina.
+4. Redactá una descripción cautivadora, comercial y 100% profesional para la web de la agencia, en 2 párrafos breves (70 a 120 palabras).
+5. Generá listas detalladas de servicios incluidos ("includes") y no incluidos ("excludes") adaptadas a paquetes turísticos reales desde Argentina; incorporá allí vuelos, hoteles, traslados, impuestos, seguros, suplementos y condiciones que el cliente necesite conocer.
+6. La descripción es material comercial para el cliente: jamás menciones PDFs, folletos, fuentes, documentos, extracción, "según el PDF", "detalle del folleto" ni contradicciones internas.
+7. Si el material indica 7 noches y un día de salida, el paquete tiene 8 días. El campo "days" y el itinerario deben tener exactamente la misma cantidad de días y no se puede omitir el traslado de regreso.
 
 Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
 {
@@ -5152,7 +5194,6 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   "price_usd": número: el precio FINAL/con descuento si el folleto muestra dos precios, o el único precio si solo hay uno,
   "price_original_usd": número o null: el precio de lista SIN descuento, SOLO si el folleto muestra explícitamente un precio tachado o "antes/ahora". Si hay un solo precio, poné null,
   "description": "descripción cautivadora y profesional del paquete",
-  "source_details": "todos los datos operativos del PDF que no entren en otros campos: fechas, vuelos, hoteles, horarios, precios, condiciones y observaciones",
   "badge": "etiqueta corta y vendedora para la foto, max 18 caracteres (ej: SEPTIEMBRE 2026, Todo Incluido)",
   "highlights": ["3 o 4 etiquetas CORTAS de 1 a 3 palabras cada una: lugares iconicos o beneficios concretos del paquete (ej: Palm Beach, All Inclusive, Vuelo Directo)"],
   "includes": ["servicio incluido 1", "servicio incluido 2", "servicio incluido 3", "servicio incluido 4", "servicio incluido 5"],
@@ -5164,7 +5205,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 }`;
 
   try {
-    const pkg = await askAI(prompt, 6000, { allowFallback: false });
+    const pkg = await askAI(prompt, 4500, { allowFallback: false });
 
     document.getElementById('aiModal')?.remove();
 
@@ -5195,8 +5236,8 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
     // El editor real es el contenteditable #fDescRich (#fDesc no existe).
     // Además hay que ENCENDER el toggle: si queda apagado, savePkg guarda null
     // y se perdía todo lo que generaba la IA.
-    if (pkg.description || pkg.source_details) {
-      const descripcion = [pkg.description, pkg.source_details ? `Detalle del folleto:\n${pkg.source_details}` : ''].filter(Boolean).join('\n\n');
+    const descripcion = cleanAiDescription(pkg.description);
+    if (descripcion) {
       const parrafos = String(descripcion)
         .split(/\n{2,}|\r\n\r\n/).map(s => s.trim()).filter(Boolean);
       let html = parrafos.map(p => `<p>${escHtml(p).replace(/\n/g, '<br>')}</p>`).join('');
@@ -5331,7 +5372,7 @@ function generateFallbackAI(promptStr) {
 async function askAI(prompt, maxTokens, options = {}) {
   const allowFallback = options.allowFallback === true;
   try {
-    const { data, error } = await db.functions.invoke('ai-gen', { body: { prompt, max_completion_tokens: maxTokens || 6000 } });
+    const { data, error } = await db.functions.invoke('ai-gen', { body: { prompt, max_completion_tokens: maxTokens || 4500 } });
     if (error) {
       let detail = 'La IA no pudo analizar el contenido';
       try { const body = await error.context?.json(); if (body?.error) detail = body.error; } catch (e) {}
