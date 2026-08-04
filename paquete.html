@@ -163,6 +163,20 @@
   #pkgDesc ol { list-style: decimal; padding-left: 24px; margin: 10px 0; }
   #pkgDesc li { margin-bottom: 5px; }
   #pkgDesc a { color: #3778b8; text-decoration: underline; }
+  /* Texto de lectura larga: un poco más firme y legible sin usar negro puro. */
+  #pkgItinerary p,
+  #pkgDesc p,
+  #pkgDesc li {
+    font-weight: 500;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1;
+  }
+  #pkgItinerary .pkg-itinerary-desc { color: rgba(255,255,255,0.82); }
+  html[data-theme="light"] #pkgItinerary .pkg-itinerary-desc,
+  html[data-theme="light"] #pkgDesc p,
+  html[data-theme="light"] #pkgDesc li {
+    color: #334155 !important;
+  }
 </style>
 </head>
 <body style="background:#0d1b2e;color:#fff" class="antialiased overflow-x-hidden min-h-screen font-['Geomanist','Plus_Jakarta_Sans',sans-serif]">
@@ -754,7 +768,7 @@ function buildGallery(images, pkg) {
             return `
             <div class="py-5 border-b border-white/10 last:border-0 last:pb-0">
               <h4 class="font-semibold text-white text-[15px] mb-2 leading-snug">${escapePackageText(d.day)}</h4>
-              <p class="text-[13.5px] leading-relaxed" style="color:rgba(255,255,255,0.7)">${formatPackageLine(desc)}</p>
+              <p class="text-[13.5px] leading-relaxed pkg-itinerary-desc">${formatPackageLine(desc)}</p>
               ${meals ? `<span class="inline-flex items-center gap-1.5 mt-3 text-[12px] font-medium px-3 py-1 rounded-full" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.08)">🍽 ${meals}</span>` : ''}
             </div>`;
           }).join('');
