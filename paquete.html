@@ -164,14 +164,23 @@
   #pkgDesc li { margin-bottom: 5px; }
   #pkgDesc a { color: #3778b8; text-decoration: underline; }
   /* Texto de lectura larga: un poco más firme y legible sin usar negro puro. */
-  #pkgItinerary p,
   #pkgDesc p,
   #pkgDesc li {
     font-weight: 500;
     text-rendering: optimizeLegibility;
     font-feature-settings: "kern" 1;
   }
+  #pkgItinerary p {
+    font-weight: 400;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: "kern" 1;
+  }
   #pkgItinerary .pkg-itinerary-desc { color: rgba(255,255,255,0.82); }
+  #pkgItinerary .pkg-itinerary-title {
+    font-weight: 700;
+    margin-right: .28em;
+  }
+  #pkgItinerary .pkg-itinerary-body { font-weight: 400; }
   html[data-theme="light"] #pkgItinerary .pkg-itinerary-desc,
   html[data-theme="light"] #pkgDesc p,
   html[data-theme="light"] #pkgDesc li {
@@ -724,6 +733,16 @@ function buildGallery(images, pkg) {
       }
       return html;
     }
+    function formatItineraryLine(value) {
+      const source = String(value || '').trim();
+      const titleMatch = source.match(/^(?:\*\*|__)?([A-ZÁÉÍÓÚÑ0-9][A-ZÁÉÍÓÚÑ0-9 &/.,'’()]{1,52}?)(?:\*\*|__)?\s*(—|–|-)\s+([\s\S]+)$/);
+      if (titleMatch) {
+        const title = formatPackageLine(titleMatch[1].trim());
+        const body = formatPackageLine(titleMatch[3].trim());
+        return `<span class="pkg-itinerary-title">${title} ${titleMatch[2]}</span><span class="pkg-itinerary-body">${body}</span>`;
+      }
+      return `<span class="pkg-itinerary-body">${formatPackageLine(source)}</span>`;
+    }
     function parseLines(str) {
       if (!str) return [];
       if (Array.isArray(str)) return str.map(s => String(s).trim()).filter(Boolean);
@@ -768,7 +787,7 @@ function buildGallery(images, pkg) {
             return `
             <div class="py-5 border-b border-white/10 last:border-0 last:pb-0">
               <h4 class="font-semibold text-white text-[15px] mb-2 leading-snug">${escapePackageText(d.day)}</h4>
-              <p class="text-[13.5px] leading-relaxed pkg-itinerary-desc">${formatPackageLine(desc)}</p>
+              <p class="text-[13.5px] leading-relaxed pkg-itinerary-desc">${formatItineraryLine(desc)}</p>
               ${meals ? `<span class="inline-flex items-center gap-1.5 mt-3 text-[12px] font-medium px-3 py-1 rounded-full" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.5);border:1px solid rgba(255,255,255,0.08)">🍽 ${meals}</span>` : ''}
             </div>`;
           }).join('');
