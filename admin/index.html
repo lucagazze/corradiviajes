@@ -4846,8 +4846,20 @@ function showAIModal() {
         </div>
 
         <div class="fg">
-          <label class="fl">Descripción libre o Texto del folleto</label>
-          <textarea id="aiNotes" class="ft" style="min-height:90px" placeholder="Pegá el texto completo del folleto o indicá preferencias: hoteles 4 estrellas, régimen all inclusive, excursiones en barco..."></textarea>
+          <label class="fl">Datos manuales y objetivo de venta</label>
+          <textarea id="aiNotes" class="ft" style="min-height:90px" placeholder="Pegá datos del viaje, público ideal o lo que querés destacar: familias, parejas, hoteles 4 estrellas, all inclusive, excursiones..."></textarea>
+        </div>
+
+        <div class="fg">
+          <label class="fl">Enfoque comercial (opcional)</label>
+          <select id="aiFocus" class="fs">
+            <option value="auto">Elegir automáticamente según el viaje</option>
+            <option value="familias">Familias: comodidad, seguridad y actividades para compartir</option>
+            <option value="parejas">Parejas: conexión, momentos especiales y experiencias</option>
+            <option value="lujo">Premium: servicio, exclusividad y confort</option>
+            <option value="aventura">Aventura: descubrimiento, naturaleza y emoción</option>
+            <option value="grupal">Salida grupal: acompañamiento, comunidad y tranquilidad</option>
+          </select>
         </div>
       </div>
 
@@ -5097,6 +5109,8 @@ async function runAIFromModal() {
   const days    = document.getElementById('aiDays')?.value.trim();
   const price   = document.getElementById('aiPrice')?.value.trim();
   const notes   = document.getElementById('aiNotes')?.value.trim();
+  const focus   = document.getElementById('aiFocus')?.value || 'auto';
+  const focusLabel = document.getElementById('aiFocus')?.selectedOptions?.[0]?.textContent?.trim() || 'Elegir automáticamente según el viaje';
 
   if (!url && !name && !dest && !country && !notes && !aiPdfFiles.length && !aiPdfTexto) {
     document.getElementById('aiDest')?.focus();
@@ -5157,6 +5171,7 @@ FUENTE PRINCIPAL OBLIGATORIA — URL:
     days    ? `Cantidad de Días: ${days}` : '',
     price   ? `Precio estimado USD: ${price}` : '',
     notes   ? `Notas / Descripción libre: ${notes}` : '',
+    focus !== 'auto' ? `Enfoque comercial elegido: ${focusLabel}` : '',
   ].filter(Boolean).join('\n\n');
 
   const pdfPolicy = aiPdfTexto ? `
@@ -5175,6 +5190,12 @@ ${pdfPolicy}
 ${urlPolicy}
 ${context}
 
+OBJETIVO COMERCIAL Y ADAPTACION:
+- El material de origen aporta los hechos; tu trabajo es convertirlos en una propuesta clara, deseable y lista para vender.
+- Si el usuario eligio un enfoque comercial, aplicalo: ${focusLabel}. Si eligio automatico, deducilo del destino, experiencias, duracion y tipo de salida.
+- Habla al viajero, no al administrador: muestra que va a vivir, que problema le resolvemos y por que este programa resulta comodo y especial.
+- Usa nombres reales, detalles concretos y beneficios demostrables. Evita adjetivos vacios como "increible", "magico" o "imperdible" si no estan respaldados por una experiencia concreta.
+
 REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 1. NO INVENTES NADA. Usá exclusivamente monumentos, atracciones turísticas, ciudades, plazas, museos y actividades REALES y verificadas de los destinos (${dest || 'destino especificado'}) y países (${country || 'país especificado'}).
 1.b. Si se indicó MÁS DE UNA ciudad o país, el viaje los recorre TODOS: investigá cada uno, repartí los días entre ellos de forma equilibrada y realista, e incluí explícitamente los traslados entre ciudades/países (vuelo, tren o bus) en el día que corresponda. No te concentres solo en el primero.
@@ -5184,6 +5205,12 @@ REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 5. Generá listas detalladas de servicios incluidos ("includes") y no incluidos ("excludes") adaptadas a paquetes turísticos reales desde Argentina; incorporá allí vuelos, hoteles, traslados, impuestos, seguros, suplementos y condiciones que el cliente necesite conocer.
 6. La descripción es material comercial para el cliente: jamás menciones PDFs, folletos, fuentes, documentos, extracción, "según el PDF", "detalle del folleto" ni contradicciones internas.
 7. Si el material indica 7 noches y un día de salida, el paquete tiene 8 días. El campo "days" y el itinerario deben tener exactamente la misma cantidad de días y no se puede omitir el traslado de regreso.
+8. La descripción debe tener 2 o 3 párrafos naturales: primero una apertura emocional basada en la experiencia real; después el recorrido, los diferenciales y la tranquilidad de tener la operación resuelta. Debe dar ganas de consultar sin sonar exagerada ni genérica.
+9. Las etiquetas "highlights" deben ser concretas y vendibles: lugares, experiencias o beneficios reales del programa; no uses palabras abstractas como "aventura" o "calidad" solas.
+10. Cada elemento de "includes" y "excludes" debe ser autocontenido y específico. Conserva aerolíneas, rutas, hoteles, régimen, traslados, impuestos, seguros, precios, suplementos y condiciones de reserva cuando figuren en la fuente. No agregues condiciones que no estén informadas.
+11. Cada día del itinerario debe explicar qué sucede, dónde, cómo se traslada el pasajero y qué experiencia obtiene. Integra fechas, comidas, entradas, hoteles y opcionales cuando existan. No repitas la misma frase entre días.
+12. Si hay conflicto entre fuentes, prioriza el dato manual explícito; si no hay una instrucción manual, prioriza la fuente más detallada y conserva el dato que requiera revisión dentro de un servicio o condición redactado con claridad, nunca dentro de la descripción comercial.
+13. No copies párrafos largos de la fuente: reescribe con voz editorial de Corradi Viajes, manteniendo todos los hechos necesarios.
 
 Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
 {
@@ -5193,11 +5220,11 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   "days": número entero de días,
   "price_usd": número: el precio FINAL/con descuento si el folleto muestra dos precios, o el único precio si solo hay uno,
   "price_original_usd": número o null: el precio de lista SIN descuento, SOLO si el folleto muestra explícitamente un precio tachado o "antes/ahora". Si hay un solo precio, poné null,
-  "description": "descripción cautivadora y profesional del paquete",
+  "description": "2 o 3 párrafos comerciales, sensoriales y específicos que expliquen la experiencia real y los beneficios de elegir este programa",
   "badge": "etiqueta corta y vendedora para la foto, max 18 caracteres (ej: SEPTIEMBRE 2026, Todo Incluido)",
   "highlights": ["3 o 4 etiquetas CORTAS de 1 a 3 palabras cada una: lugares iconicos o beneficios concretos del paquete (ej: Palm Beach, All Inclusive, Vuelo Directo)"],
-  "includes": ["servicio incluido 1", "servicio incluido 2", "servicio incluido 3", "servicio incluido 4", "servicio incluido 5"],
-  "excludes": ["servicio no incluido 1", "servicio no incluido 2"],
+  "includes": ["6 a 10 servicios o datos incluidos, redactados de forma específica"],
+  "excludes": ["4 a 8 servicios, opcionales o condiciones no incluidos, solo si están informados"],
   "itinerary": [
     {"day": "Día 1", "desc": "Llegada, recepción en aeropuerto y primer recorrido por..."},
     {"day": "Día 2", "desc": "Visita guiada por los puntos históricos..."}
