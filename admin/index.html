@@ -5164,7 +5164,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 }`;
 
   try {
-    const pkg = await askAI(prompt, 2500, { allowFallback: false });
+    const pkg = await askAI(prompt, 6000, { allowFallback: false });
 
     document.getElementById('aiModal')?.remove();
 
@@ -5331,7 +5331,7 @@ function generateFallbackAI(promptStr) {
 async function askAI(prompt, maxTokens, options = {}) {
   const allowFallback = options.allowFallback === true;
   try {
-    const { data, error } = await db.functions.invoke('ai-gen', { body: { prompt, max_completion_tokens: maxTokens || 2500 } });
+    const { data, error } = await db.functions.invoke('ai-gen', { body: { prompt, max_completion_tokens: maxTokens || 6000 } });
     if (error) {
       let detail = 'La IA no pudo analizar el contenido';
       try { const body = await error.context?.json(); if (body?.error) detail = body.error; } catch (e) {}
@@ -5398,7 +5398,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 El itinerario debe tener exactamente tantos ítems como el campo "days". Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
 
   try {
-    const pkg = await askAI(prompt, 2048, { allowFallback: false });
+    const pkg = await askAI(prompt, 4000, { allowFallback: false });
 
     if (pkg.destination && !dest)   document.getElementById('fDest').value = pkg.destination;
     if (pkg.country    && !country) cpSetValue(pkg.country);

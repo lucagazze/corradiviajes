@@ -36,14 +36,21 @@ async function isAdminRequest(req: Request) {
 }
 
 function cleanOpenAIError(status: number, raw: string) {
+  const statusHint = status === 401
+    ? "La API key de OpenAI es inválida, está vencida o no tiene permisos."
+    : status === 404
+      ? "El modelo configurado no está disponible para esta API key. Revisá OPENAI_MODEL en Supabase."
+      : status === 429
+        ? "OpenAI rechazó la solicitud por cuota, crédito disponible o límite de uso. El crédito de ChatGPT no es el mismo que el crédito de la API."
+        : "";
   try {
     const parsed = JSON.parse(raw);
     const message = parsed?.error?.message || parsed?.message;
-    if (message) return `OpenAI respondió con error ${status}: ${message}`;
+    if (message) return `${statusHint ? `${statusHint} ` : ""}OpenAI respondió con error ${status}: ${message}`;
   } catch (_) {
     // The provider occasionally returns plain text instead of JSON.
   }
-  return `OpenAI respondió con error ${status}: ${raw.slice(0, 500)}`;
+  return `${statusHint ? `${statusHint} ` : ""}OpenAI respondió con error ${status}: ${raw.slice(0, 500)}`;
 }
 
 Deno.serve(async (req) => {
@@ -62,11 +69,10 @@ Deno.serve(async (req) => {
 
     const requestedTokens = Number(body?.max_completion_tokens);
     const maxTokens = Math.min(
-      Math.max(Number.isFinite(requestedTokens) ? Math.round(requestedTokens) : 2500, 500),
-      6000,
+      Math.max(Number.isFinite(requestedTokens) ? Math.round(requestedTokens) : 6000, 1000),
+      8000,
     );
     const model = Deno.env.get("OPENAI_MODEL") || "gpt-5-mini";
-    const isReasoningModel = /^(gpt-5|o[1-9])/i.test(model);
 
     const openAIResponse = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
@@ -74,7 +80,6 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         model,
         max_completion_tokens: maxTokens,
-        ...(isReasoningModel ? { reasoning_effort: "low" } : { temperature: 0.2 }),
         response_format: { type: "json_object" },
         messages: [
           {
