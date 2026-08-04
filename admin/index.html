@@ -2369,6 +2369,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
 <script>if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';</script>
 <script>
 // ═══════════════ CONFIG ═══════════════
@@ -4684,7 +4685,8 @@ function escHtml(str) {
 function showAIModal() {
   const existing = document.getElementById('aiModal');
   if (existing) existing.remove();
-  aiPdfTexto = ''; aiPdfNombre = '';   // cada apertura del modal arranca sin PDF pegado de antes
+  aiPdfTexto = ''; aiPdfNombre = ''; aiPdfFiles = []; aiPdfIssues = [];
+  aiUrlTexto = ''; aiUrlLeida = ''; aiUrlIssue = '';   // cada apertura arranca sin fuentes anteriores
 
   const currentName = document.getElementById('fName').value.trim();
   const currentDest = document.getElementById('fDest').value.trim();
@@ -4710,15 +4712,16 @@ function showAIModal() {
           <label class="fl" style="color:#0284c7;display:flex;align-items:center;gap:6px;margin-bottom:4px">
             <span class="material-symbols-outlined" style="font-size:16px">link</span> 🔗 URL del Viaje o Web a Copiar (Opcional)
           </label>
-          <input type="url" id="aiUrl" class="fi" style="background:#ffffff" placeholder="https://agencia.com/paquete-europa-clasica">
+          <input type="url" id="aiUrl" class="fi" style="background:#ffffff" placeholder="https://agencia.com/paquete-europa-clasica" onblur="onAiUrlChange(event)">
+          <div id="aiUrlStatus" style="font-size:11.5px;color:#0369a1;margin-top:6px;line-height:1.4"></div>
         </div>
 
         <!-- Campo PDF -->
         <div class="fg" style="background:#fdf4ff;border:1.5px solid #e9d5ff;border-radius:14px;padding:12px 14px">
           <label class="fl" style="color:#9333ea;display:flex;align-items:center;gap:6px;margin-bottom:4px">
-            <span class="material-symbols-outlined" style="font-size:16px">picture_as_pdf</span> 📄 Folleto en PDF (Opcional)
+            <span class="material-symbols-outlined" style="font-size:16px">picture_as_pdf</span> 📄 Folletos en PDF (podés elegir varios, opcional)
           </label>
-          <input type="file" id="aiPdf" accept="application/pdf" class="fi" style="background:#ffffff;padding-top:8px;padding-bottom:8px" onchange="onAiPdfChange(event)">
+          <input type="file" id="aiPdf" accept="application/pdf,.pdf" multiple class="fi" style="background:#ffffff;padding-top:8px;padding-bottom:8px" onchange="onAiPdfChange(event)">
           <div id="aiPdfStatus" style="font-size:11.5px;color:#7e22ce;margin-top:6px;line-height:1.4"></div>
         </div>
 
@@ -4852,65 +4855,159 @@ document.addEventListener('click', (e) => {
   if (!e.target.closest('#aiCountryList') && e.target.id !== 'aiCountry') aiCountryClose();
 });
 
-// Descarga el texto legible de una URL (r.jina.ai lo convierte a texto plano
-// y permite CORS). Devuelve '' si no se pudo: la IA sigue con los otros datos.
+const MAX_AI_URL_CHARS = 300000;
+let aiUrlTexto = '';
+let aiUrlLeida = '';
+let aiUrlIssue = '';
+
+function normalizeAiUrl(value) {
+  const raw = (value || '').trim();
+  if (!raw) return '';
+  try { return new URL(/^https?:\/\//i.test(raw) ? raw : 'https://' + raw).href; }
+  catch (e) { return ''; }
+}
+
+// r.jina.ai convierte una pagina web a texto legible y permite CORS.
+// Se conserva el contenido completo hasta el limite seguro del prompt.
 async function fetchUrlText(url) {
+  const normalized = normalizeAiUrl(url);
+  if (!normalized) throw new Error('La URL no es valida');
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 30000);
   try {
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 20000);
-    const r = await fetch('https://r.jina.ai/' + url, {
+    const r = await fetch('https://r.jina.ai/' + normalized, {
       signal: ctrl.signal,
       headers: { 'Accept': 'text/plain' }
     });
-    clearTimeout(timer);
-    if (!r.ok) return '';
+    if (!r.ok) throw new Error(`No se pudo leer la URL (HTTP ${r.status})`);
     const t = await r.text();
-    // 15k caracteres alcanzan y no reventamos el limite de tokens
-    return t.slice(0, 15000);
-  } catch (e) { return ''; }
+    if (!t.trim()) throw new Error('La URL no devolvio contenido legible');
+    if (t.length > MAX_AI_URL_CHARS) throw new Error('La URL supera el limite de texto procesable; usa la pagina especifica del paquete o un PDF');
+    return t;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function onAiUrlChange(ev) {
+  const raw = ev?.target?.value?.trim() || document.getElementById('aiUrl')?.value.trim() || '';
+  const status = document.getElementById('aiUrlStatus');
+  aiUrlTexto = ''; aiUrlLeida = ''; aiUrlIssue = '';
+  if (!raw) { if (status) status.textContent = ''; return ''; }
+  if (status) status.innerHTML = '<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>Leyendo la URL completa…';
+  try {
+    const normalized = normalizeAiUrl(raw);
+    const texto = await fetchUrlText(normalized);
+    aiUrlTexto = texto;
+    aiUrlLeida = normalized;
+    if (status) status.innerHTML = `<span style="color:#15803d">✓ URL leída completa: ${texto.length.toLocaleString('es-AR')} caracteres. Se usará como fuente principal.</span>`;
+    return texto;
+  } catch (e) {
+    aiUrlIssue = e.message || String(e);
+    if (status) status.innerHTML = `<span style="color:#b91c1c">⚠ ${escHtml(aiUrlIssue)}. No se generará un viaje basado en una URL que no se pudo leer.</span>`;
+    return '';
+  }
 }
 
 // Guarda el texto ya extraído del PDF elegido, para no releerlo en cada click
 let aiPdfTexto = '';
 let aiPdfNombre = '';
+let aiPdfFiles = [];
+let aiPdfIssues = [];
+// Contexto amplio para no perder precios, hoteles, vuelos, fechas ni condiciones.
+// Si un conjunto de archivos supera este limite, se avisa en pantalla en vez de
+// ocultar silenciosamente parte de la fuente.
+const MAX_AI_PDF_CHARS = 300000;
 
 // Extrae el texto de un PDF pagina por pagina con pdf.js (misma libreria que
 // ya usa el Portal para las miniaturas). No hay backend: todo corre en el navegador.
-async function extractPdfText(file) {
+async function extractPdfText(file, onProgress) {
   if (!window.pdfjsLib) return '';
   const buf = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
   let texto = '';
-  const maxPaginas = Math.min(pdf.numPages, 25); // tope razonable para un folleto
+  const maxPaginas = pdf.numPages;
   for (let i = 1; i <= maxPaginas; i++) {
     const page = await pdf.getPage(i);
     const content = await page.getTextContent();
     texto += content.items.map(it => it.str).join(' ') + '\n\n';
-    if (texto.length > 18000) break; // no reventar el limite de tokens del prompt
   }
-  return texto.slice(0, 18000);
+  // Respaldo para PDFs escaneados: renderiza todas las paginas y pasa OCR en el
+  // navegador. Es mas lento, pero evita enviar un folleto incompleto a la IA.
+  if (!texto.trim() && window.Tesseract) {
+    const maxOcrPaginas = pdf.numPages;
+    for (let i = 1; i <= maxOcrPaginas; i++) {
+      if (onProgress) onProgress(`OCR pagina ${i} de ${maxOcrPaginas}`);
+      const page = await pdf.getPage(i);
+      const viewport = page.getViewport({ scale: 1.5 });
+      const canvas = document.createElement('canvas');
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: canvas.getContext('2d'), viewport }).promise;
+      const ocr = await Tesseract.recognize(canvas, 'spa+eng');
+      texto += (ocr.data?.text || '') + '\n\n';
+    }
+  }
+  return texto;
 }
 
 // Se dispara al elegir el archivo: lee el PDF en el momento y muestra el estado,
 // asi el usuario ve si funcionó ANTES de tocar "Generar".
 async function onAiPdfChange(ev) {
-  const file = ev.target.files[0];
+  const files = Array.from(ev.target.files || []).filter(file => {
+    const name = (file.name || '').toLowerCase();
+    return file.type === 'application/pdf' || name.endsWith('.pdf');
+  });
   const status = document.getElementById('aiPdfStatus');
+  aiPdfFiles = files;
+  aiPdfIssues = [];
   aiPdfTexto = ''; aiPdfNombre = '';
-  if (!file) { if (status) status.textContent = ''; return; }
-  if (status) status.innerHTML = '<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>Leyendo el PDF…';
-  try {
-    const texto = await extractPdfText(file);
-    if (!texto.trim()) {
-      if (status) status.innerHTML = '<span style="color:#b91c1c">⚠ No se pudo extraer texto de este PDF (¿es un escaneo/imagen?). Puede que ese folleto sea solo fotos: pegá el texto a mano en "Notas" si lo tenés.</span>';
-      return;
+  if (!files.length) { if (status) status.textContent = ''; return; }
+
+  const parts = [];
+  const read = [];
+  const unread = [];
+  const truncated = [];
+  let totalChars = 0;
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    if (status) status.innerHTML = `<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>Leyendo PDF ${i + 1} de ${files.length}: "${escHtml(file.name)}"…`;
+    try {
+      const texto = await extractPdfText(file, msg => {
+        if (status) status.innerHTML = `<span class="spinner" style="width:11px;height:11px;margin-right:5px;vertical-align:-1px"></span>${msg}: "${escHtml(file.name)}"…`;
+      });
+      if (!texto.trim()) {
+        unread.push(file.name);
+        continue;
+      }
+      const remaining = MAX_AI_PDF_CHARS - totalChars;
+      if (remaining <= 0) {
+        truncated.push(file.name);
+        continue;
+      }
+      const recortado = texto.slice(0, remaining);
+      parts.push(`--- PDF: ${file.name} ---\n${recortado}`);
+      totalChars += recortado.length;
+      read.push(file.name);
+      if (recortado.length < texto.length) truncated.push(file.name);
+    } catch (e) {
+      unread.push(`${file.name} (${e.message || 'error de lectura'})`);
     }
-    aiPdfTexto = texto;
-    aiPdfNombre = file.name;
-    if (status) status.innerHTML = `<span style="color:#15803d">✓ Leído: ${texto.length.toLocaleString('es-AR')} caracteres de "${escHtml(file.name)}". Se va a usar como fuente principal al generar.</span>`;
-  } catch (e) {
-    if (status) status.innerHTML = `<span style="color:#b91c1c">⚠ Error leyendo el PDF: ${escHtml(e.message || String(e))}</span>`;
   }
+
+  aiPdfTexto = parts.join('\n\n');
+  aiPdfNombre = read.join(', ');
+  aiPdfIssues = [...unread, ...truncated];
+  const resumen = read.length
+    ? `<span style="color:#15803d">✓ ${read.length} PDF${read.length === 1 ? '' : 's'} leído${read.length === 1 ? '' : 's'}: ${totalChars.toLocaleString('es-AR')} caracteres. Se usarán como fuente principal.</span>`
+    : '<span style="color:#b91c1c">⚠ No se pudo extraer texto de los PDFs elegidos.</span>';
+  const advertencia = unread.length
+    ? `<br><span style="color:#b91c1c">⚠ Sin texto extraíble (posible escaneo/imagen): ${unread.map(escHtml).join(', ')}. Estos archivos necesitan OCR o texto pegado en “Notas”.</span>`
+    : '';
+  const recorteAviso = truncated.length
+    ? `<br><span style="color:#b45309">⚠ El contexto máximo se alcanzó; revisá o dividí estos PDFs para incluir absolutamente todo: ${truncated.map(escHtml).join(', ')}.</span>`
+    : '';
+  if (status) status.innerHTML = resumen + advertencia + recorteAviso;
 }
 
 async function runAIFromModal() {
@@ -4922,9 +5019,19 @@ async function runAIFromModal() {
   const price   = document.getElementById('aiPrice')?.value.trim();
   const notes   = document.getElementById('aiNotes')?.value.trim();
 
-  if (!url && !name && !dest && !country && !notes && !aiPdfTexto) {
+  if (!url && !name && !dest && !country && !notes && !aiPdfFiles.length && !aiPdfTexto) {
     document.getElementById('aiDest')?.focus();
     showToast('Ingresá al menos un PDF, URL, destino, país o nombre para generar', 'error');
+    return;
+  }
+
+  if (aiPdfFiles.length && !aiPdfTexto && !url && !name && !dest && !country && !notes) {
+    showToast('No pude leer texto de esos PDFs. Si son escaneos, pega el texto en Notas o carga una version con texto seleccionable.', 'error');
+    return;
+  }
+
+  if (aiPdfIssues.length) {
+    showToast('No se puede generar todavía: hay PDFs que no fueron leídos completos. Revisa el aviso, vuelve a seleccionar esos archivos o usa OCR/texto seleccionable.', 'error');
     return;
   }
 
@@ -4933,12 +5040,33 @@ async function runAIFromModal() {
 
   // Si hay URL, se lee la pagina REAL y su texto va al prompt
   let urlTexto = '';
-  if (url && /^https?:\/\//i.test(url)) {
+  if (false && url && /^https?:\/\//i.test(url)) {
     if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Leyendo la página…';
     urlTexto = await fetchUrlText(url);
     if (!urlTexto) showToast('No pude leer esa URL; genero con los demás datos', 'error');
     if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando e investigando destino…';
   }
+
+  const normalizedUrl = normalizeAiUrl(url);
+  if (url) {
+    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Leyendo la pagina completa…';
+    if (aiUrlLeida === normalizedUrl && aiUrlTexto) urlTexto = aiUrlTexto;
+    else urlTexto = await onAiUrlChange({ target: { value: normalizedUrl } });
+    if (!urlTexto) {
+      if (btn) { btn.disabled = false; btn.innerHTML = '<span class="ms material-symbols-outlined">auto_fix_high</span>Generar plan completo'; }
+      showToast('No se puede generar: la URL no pudo leerse completa.', 'error');
+      return;
+    }
+    if (btn) btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;margin-right:6px"></span>Analizando la informacion de la URL…';
+  }
+
+  const urlPolicy = urlTexto ? `
+FUENTE PRINCIPAL OBLIGATORIA — URL:
+- Usa el contenido completo extraido de la URL como fuente de verdad.
+- Conserva todos los datos concretos de la pagina: fechas, noches, ciudades, hoteles, habitaciones, regimen, vuelos, aerolineas, horarios, traslados, excursiones, precios, impuestos, promociones, condiciones y observaciones.
+- No inventes datos que no figuren en la pagina; si faltan, dejalos vacios o marcados para revision.
+- Si un dato no entra en un campo, incluyelo completo en description o itinerary.
+` : '';
 
   const context = [
     url     ? `URL DEL PAQUETE A IMPORTAR: ${url}` : '',
@@ -4952,9 +5080,20 @@ async function runAIFromModal() {
     notes   ? `Notas / Descripción libre: ${notes}` : '',
   ].filter(Boolean).join('\n\n');
 
+  const pdfPolicy = aiPdfTexto ? `
+FUENTE PRINCIPAL OBLIGATORIA — PDF:
+- Los PDFs son la fuente de verdad. Usa todos los datos que aparecen, sin resumirlos de forma que se pierdan datos operativos.
+- Extrae y conserva fechas, noches, ciudades, hoteles, habitaciones, regimen, vuelos, aerolineas, horarios, traslados, excursiones, entradas, seguros, precios, impuestos, promociones, condiciones y observaciones.
+- No inventes datos faltantes ni reemplaces datos del PDF por informacion turistica generica.
+- Si dos PDFs se contradicen, conserva ambos datos y marca la contradiccion para revision.
+- Si un dato no entra en un campo, incluyelo completo dentro de description o del itinerario.
+` : '';
+
   const prompt = `Sos un experto gestor de viajes y guía turístico profesional de Corradi Viajes, agencia de viajes de Rosario, Argentina.
 Con la siguiente información del paquete (URL, destino, país, días y notas), analizá en detalle el lugar y redactá un plan de viaje completo, realista, profesional y de máxima calidad:
 
+${pdfPolicy}
+${urlPolicy}
 ${context}
 
 REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
@@ -4974,6 +5113,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   "price_usd": número: el precio FINAL/con descuento si el folleto muestra dos precios, o el único precio si solo hay uno,
   "price_original_usd": número o null: el precio de lista SIN descuento, SOLO si el folleto muestra explícitamente un precio tachado o "antes/ahora". Si hay un solo precio, poné null,
   "description": "descripción cautivadora y profesional del paquete",
+  "source_details": "todos los datos operativos del PDF que no entren en otros campos: fechas, vuelos, hoteles, horarios, precios, condiciones y observaciones",
   "badge": "etiqueta corta y vendedora para la foto, max 18 caracteres (ej: SEPTIEMBRE 2026, Todo Incluido)",
   "highlights": ["3 o 4 etiquetas CORTAS de 1 a 3 palabras cada una: lugares iconicos o beneficios concretos del paquete (ej: Palm Beach, All Inclusive, Vuelo Directo)"],
   "includes": ["servicio incluido 1", "servicio incluido 2", "servicio incluido 3", "servicio incluido 4", "servicio incluido 5"],
@@ -4985,20 +5125,22 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 }`;
 
   try {
-    const pkg = await askAI(prompt, 2500);
+    const pkg = await askAI(prompt, 2500, { allowFallback: !(aiPdfTexto || urlTexto) });
 
     document.getElementById('aiModal')?.remove();
 
     const puesto = [];   // resumen de que completo la IA (se declara antes del badge)
+    const usingSource = !!(aiPdfTexto || urlTexto);
 
     // ── Datos básicos ──
     if (pkg.name)        document.getElementById('fName').value = pkg.name;
     if (pkg.destination) document.getElementById('fDest').value = pkg.destination;
     if (pkg.country)     cpSetValue(pkg.country);
     if (pkg.days)        document.getElementById('fDays').value = pkg.days;
-    if (pkg.price_usd && !document.getElementById('fPrice').value)
+    if (pkg.price_usd && (usingSource || !document.getElementById('fPrice').value))
       document.getElementById('fPrice').value = pkg.price_usd;
-    if (pkg.price_original_usd && Number(pkg.price_original_usd) > Number(pkg.price_usd || 0) && !document.getElementById('fPriceOrig').value) {
+    if (usingSource && !pkg.price_original_usd) document.getElementById('fPriceOrig').value = '';
+    if (pkg.price_original_usd && Number(pkg.price_original_usd) > Number(pkg.price_usd || 0) && (usingSource || !document.getElementById('fPriceOrig').value)) {
       document.getElementById('fPriceOrig').value = pkg.price_original_usd;
       puesto.push('precio con descuento detectado');
     }
@@ -5006,6 +5148,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
       document.getElementById('fBadge').value = String(pkg.badge).slice(0, 24);
       puesto.push('etiqueta de foto');
     }
+    if (usingSource && !pkg.badge) document.getElementById('fBadge').value = '';
     if (pkg.category) document.getElementById('fCat').value = pkg.category;
 
 
@@ -5013,8 +5156,9 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
     // El editor real es el contenteditable #fDescRich (#fDesc no existe).
     // Además hay que ENCENDER el toggle: si queda apagado, savePkg guarda null
     // y se perdía todo lo que generaba la IA.
-    if (pkg.description) {
-      const parrafos = String(pkg.description)
+    if (pkg.description || pkg.source_details) {
+      const descripcion = [pkg.description, pkg.source_details ? `Detalle del folleto:\n${pkg.source_details}` : ''].filter(Boolean).join('\n\n');
+      const parrafos = String(descripcion)
         .split(/\n{2,}|\r\n\r\n/).map(s => s.trim()).filter(Boolean);
       let html = parrafos.map(p => `<p>${escHtml(p).replace(/\n/g, '<br>')}</p>`).join('');
       document.getElementById('fDescRich').innerHTML = html;
@@ -5028,6 +5172,8 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
       hlItems = pkg.highlights.map(h => String(h).trim()).filter(Boolean).slice(0, 6);
       renderHl();
       puesto.push('etiquetas');
+    } else if (usingSource) {
+      hlItems = []; renderHl();
     }
 
     // ── Incluye / No incluye ──
@@ -5037,6 +5183,9 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
       document.getElementById('fBulletsEnabled').checked = true;
       toggleBulletsSection(true);
       puesto.push('servicios');
+    } else if (usingSource) {
+      includesItems = []; excludesItems = [];
+      renderBullets('includes'); renderBullets('excludes');
     }
 
     // ── Itinerario ──
@@ -5140,17 +5289,25 @@ function generateFallbackAI(promptStr) {
 }
 
 // La IA corre en el servidor o usa el motor inteligente de contingencia local si la red o Edge Function no responde
-async function askAI(prompt, maxTokens) {
+async function askAI(prompt, maxTokens, options = {}) {
+  const allowFallback = options.allowFallback !== false;
   try {
     const { data, error } = await db.functions.invoke('ai-gen', { body: { prompt, max_tokens: maxTokens || 2500 } });
+    if (error) {
+      let detail = 'La IA no pudo analizar el contenido';
+      try { const body = await error.context?.json(); if (body?.error) detail = body.error; } catch (e) {}
+      throw new Error(detail);
+    }
     if (!error && data && data.text) {
       const m = data.text.match(/\{[\s\S]*\}/);
       if (m) return JSON.parse(m[0]);
     }
+    throw new Error('La IA no devolvio un JSON valido');
   } catch (err) {
+    if (!allowFallback) throw err;
     console.warn('[AI Edge Warning, using Smart Local Engine]', err);
   }
-  // Contingencia local garantizada al 100%
+  // El fallback solo se permite cuando no hay un PDF que deba respetarse.
   return generateFallbackAI(prompt);
 }
 
