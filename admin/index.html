@@ -4170,6 +4170,30 @@ function parseBullets(text) {
 // ── ITINERARY STRUCTURED EDITOR ──
 let itineraryItems = [];
 
+function normalizeItineraryDateLabel(value) {
+  const text = String(value || '').replace(/\s+/g, ' ').trim();
+  if (!text) return '';
+  const normalized = text.toLowerCase();
+  return normalized.charAt(0).toUpperCase() + normalized.slice(1)
+    .replace(/\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)\b/gi, month => month.charAt(0).toUpperCase() + month.slice(1));
+}
+
+function normalizeItineraryItem(item, index) {
+  let day = String(item?.day || '').trim();
+  let desc = String(item?.desc || item?.description || '').replace(/\r\n?/g, '\n').trim();
+  const weekDay = '(?:lunes|martes|miércoles|miercoles|jueves|viernes|sábado|sabado|domingo)';
+  const monthToken = '(?:\\d{1,2}|[a-záéíóú]{3,})';
+  const datePart = `(${weekDay}\\s+\\d{1,2}\\s*(?:(?:\\/|-|\\.)\\s*${monthToken}|(?:\\s+de)?\\s+[a-záéíóú]{3,})(?:\\s*(?:\\/|-|\\.)\\s*\\d{2,4})?)`;
+  const dateWithText = new RegExp(`^\\s*${datePart}\\s*(?:[—–-]\\s*|:\\s+)([\\s\\S]*)$`, 'i');
+  const dateOnlyWithText = new RegExp(`^\\s*(\\d{1,2}\\s*(?:(?:\\/|-|\\.)\\s*${monthToken}|(?:\\s+de)?\\s+[a-záéíóú]{3,})(?:\\s*(?:\\/|-|\\.)\\s*\\d{2,4})?)\\s*(?:[—–-]\\s*|:\\s+)([\\s\\S]*)$`, 'i');
+  const fromDay = day.match(new RegExp(datePart, 'i'));
+  const fromDesc = desc.match(dateWithText) || desc.match(dateOnlyWithText);
+  const dateLabel = fromDay?.[1] || fromDesc?.[1] || '';
+  if (dateLabel) day = normalizeItineraryDateLabel(dateLabel);
+  if (fromDesc?.[2]) desc = fromDesc[2].trim();
+  return { day: day || `Día ${index + 1}`, desc };
+}
+
 function renderItineraryRows() {
   const container = document.getElementById('itineraryRows');
   if (!container) return;
@@ -4183,8 +4207,8 @@ function renderItineraryRows() {
     <div class="itinerary-row">
       <div class="itinerary-day-cell">
         <span class="itinerary-day-index">${String(index + 1).padStart(2, '0')}</span>
-        <span class="itinerary-day-caption">Día del recorrido</span>
-        <input type="text" class="fi itinerary-day-input" value="${escHtml(item.day)}" placeholder="Día X"
+        <span class="itinerary-day-caption">Fecha / día del recorrido</span>
+        <input type="text" class="fi itinerary-day-input" value="${escHtml(item.day)}" placeholder="Jueves 29/10 o Día 1"
           oninput="itineraryItems[${index}].day = this.value">
       </div>
       <div class="itinerary-desc-cell">
@@ -4216,16 +4240,16 @@ function parseItinerary(text) {
   // Try JSON array first
   try {
     const arr = JSON.parse(text);
-    if (Array.isArray(arr)) return arr.map(d => ({ day: String(d.day || ''), desc: d.desc || d.description || '' }));
+    if (Array.isArray(arr)) return arr.map((d, i) => normalizeItineraryItem(d, i));
   } catch(e) {}
   // Legacy HTML/text fallback
   const parts = text.split(/<br\s*\/?>\s*<br\s*\/?>|\n\n/gi);
-  return parts.map(p => {
+  return parts.map((p, i) => {
     const match = p.match(/^(?:<strong>)?(D[íi]a\s*[\d\w]+)(?:<\/strong>)?\s*[—\-:]?\s*(.*)/is);
     if (match) {
-      return { day: match[1].trim(), desc: match[2].replace(/<br\s*\/?>/gi, '\n').replace(/<\/?[^>]+(>|$)/g, '').trim() };
+      return normalizeItineraryItem({ day: match[1].trim(), desc: match[2].replace(/<br\s*\/?>/gi, '\n').replace(/<\/?[^>]+(>|$)/g, '').trim() }, i);
     }
-    return { day: '', desc: p.replace(/<\/?[^>]+(>|$)/g, '').trim() };
+    return normalizeItineraryItem({ day: '', desc: p.replace(/<\/?[^>]+(>|$)/g, '').trim() }, i);
   }).filter(x => x.day || x.desc);
 }
 
@@ -5252,6 +5276,8 @@ REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 12. Si hay conflicto entre fuentes, prioriza el dato manual explícito; si no hay una instrucción manual, prioriza la fuente más detallada y conserva el dato que requiera revisión dentro de un servicio o condición redactado con claridad, nunca dentro de la descripción comercial.
 13. No copies párrafos largos de la fuente: reescribe con voz editorial de Corradi Viajes, manteniendo todos los hechos necesarios.
 
+14. En cada objeto del itinerario, el campo "day" debe contener la fecha real y el día de la semana cuando aparezcan en la fuente, por ejemplo "Jueves 29/10", "Viernes 30/10" o "Domingo 1/11". Usá "Día 1", "Día 2" y así sucesivamente únicamente cuando no exista una fecha. La fecha debe ir únicamente en "day", nunca al comienzo de "desc".
+
 Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
 {
   "name": "nombre pulido y atractivo del paquete",
@@ -5266,8 +5292,8 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   "includes": ["6 a 10 ítems específicos; cada uno comienza con una etiqueta clara seguida de dos puntos, por ejemplo Alojamiento: ... o Aéreos: ..."],
   "excludes": ["4 a 8 ítems específicos; cada uno comienza con una etiqueta clara seguida de dos puntos, por ejemplo Opcionales: ... o Condiciones: ..."],
   "itinerary": [
-    {"day": "Día 1", "desc": "Llegada, recepción en aeropuerto y primer recorrido por..."},
-    {"day": "Día 2", "desc": "Visita guiada por los puntos históricos..."}
+    {"day": "Jueves 29/10 o Día 1", "desc": "Llegada, recepción en aeropuerto y primer recorrido por..."},
+    {"day": "Viernes 30/10 o Día 2", "desc": "Visita guiada por los puntos históricos..."}
   ]
 }`;
 
@@ -5335,7 +5361,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
 
     // ── Itinerario ──
     if (pkg.itinerary?.length) {
-      itineraryItems = pkg.itinerary.map(d => ({ day: d.day || '', desc: d.desc || d.description || '' }));
+      itineraryItems = pkg.itinerary.map((d, i) => normalizeItineraryItem(d, i));
       renderItineraryRows();
       document.getElementById('fItineraryEnabled').checked = true;
       toggleItinerarySection(true);
@@ -5501,7 +5527,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   ]
 }
 
-El itinerario debe tener exactamente tantos ítems como el campo "days". Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
+El itinerario debe tener exactamente tantos ítems como el campo "days". Si en la información aparecen fechas, poné el día de la semana y la fecha en el campo "day" (por ejemplo "Jueves 29/10") y no la repitas al comienzo de "desc"; usá "Día 1", "Día 2" solo cuando no haya una fecha. Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
 
   try {
     const pkg = await askAI(prompt, 4000, { allowFallback: false });
@@ -5524,7 +5550,7 @@ El itinerario debe tener exactamente tantos ítems como el campo "days". Mencion
       renderBullets('excludes');
     }
     if (pkg.itinerary?.length) {
-      itineraryItems = pkg.itinerary.map(d => ({ day: d.day || '', desc: d.desc || '' }));
+      itineraryItems = pkg.itinerary.map((d, i) => normalizeItineraryItem(d, i));
       renderItineraryRows();
     }
 
