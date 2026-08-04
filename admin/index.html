@@ -5276,7 +5276,7 @@ REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 12. Si hay conflicto entre fuentes, prioriza el dato manual explícito; si no hay una instrucción manual, prioriza la fuente más detallada y conserva el dato que requiera revisión dentro de un servicio o condición redactado con claridad, nunca dentro de la descripción comercial.
 13. No copies párrafos largos de la fuente: reescribe con voz editorial de Corradi Viajes, manteniendo todos los hechos necesarios.
 
-14. En cada objeto del itinerario, el campo "day" debe contener la fecha real y el día de la semana cuando aparezcan en la fuente, por ejemplo "Jueves 29/10", "Viernes 30/10" o "Domingo 1/11". Usá "Día 1", "Día 2" y así sucesivamente únicamente cuando no exista una fecha. La fecha debe ir únicamente en "day", nunca al comienzo de "desc".
+14. Fechas del itinerario: si el PDF, la URL o las notas manuales muestran una fecha exacta, copiala en el campo "day" junto con el día de la semana cuando esté informado, por ejemplo "Jueves 29/10", "Viernes 30/10" o "Domingo 1/11". Si solo aparece una fecha numérica, conservá esa fecha; si no aparece ninguna fecha confiable, usá "Día 1", "Día 2" y así sucesivamente. Nunca inventes ni calcules el día de la semana, el mes o el año a partir de la duración del viaje, la fecha actual o una suposición. La fecha debe ir únicamente en "day", nunca al comienzo de "desc".
 
 Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código, sin texto adicional):
 {
@@ -5527,7 +5527,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   ]
 }
 
-El itinerario debe tener exactamente tantos ítems como el campo "days". Si en la información aparecen fechas, poné el día de la semana y la fecha en el campo "day" (por ejemplo "Jueves 29/10") y no la repitas al comienzo de "desc"; usá "Día 1", "Día 2" solo cuando no haya una fecha. Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
+El itinerario debe tener exactamente tantos ítems como el campo "days". Si en la información aparecen fechas exactas, copiá esas fechas en el campo "day" y no las repitas al comienzo de "desc"; si no hay una fecha confiable, usá "Día 1", "Día 2" y así sucesivamente. No inventes ni calcules fechas, meses, años o días de la semana. Mencioná lugares reales, atracciones específicas y experiencias únicas del destino.`;
 
   try {
     const pkg = await askAI(prompt, 4000, { allowFallback: false });
