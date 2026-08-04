@@ -66,9 +66,8 @@ Deno.serve(async (req) => {
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model,
-        ...(isReasoningModel
-          ? { reasoning_effort: "low", max_completion_tokens: 2200 }
-          : { temperature: 0.3, max_tokens: 2200 }),
+        max_completion_tokens: 2200,
+        ...(isReasoningModel ? { reasoning_effort: "low" } : { temperature: 0.3 }),
         response_format: { type: "json_object" },
         messages: [
           {

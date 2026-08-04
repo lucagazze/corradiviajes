@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
     const prompt = typeof body?.prompt === "string" ? body.prompt.trim() : "";
     if (!prompt) return json({ error: "Falta el prompt" }, 400);
 
-    const requestedTokens = Number(body?.max_tokens);
+    const requestedTokens = Number(body?.max_completion_tokens);
     const maxTokens = Math.min(
       Math.max(Number.isFinite(requestedTokens) ? Math.round(requestedTokens) : 2500, 500),
       6000,
@@ -73,9 +73,8 @@ Deno.serve(async (req) => {
       headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
         model,
-        ...(isReasoningModel
-          ? { reasoning_effort: "low", max_completion_tokens: maxTokens }
-          : { temperature: 0.2, max_tokens: maxTokens }),
+        max_completion_tokens: maxTokens,
+        ...(isReasoningModel ? { reasoning_effort: "low" } : { temperature: 0.2 }),
         response_format: { type: "json_object" },
         messages: [
           {
