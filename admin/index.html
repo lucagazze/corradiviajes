@@ -4762,6 +4762,46 @@ function cleanAiDescription(value) {
     .trim();
 }
 
+function aiInlineMarkdown(value) {
+  return escHtml(value)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__(.+?)__/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, '$1<em>$2</em>');
+}
+
+function aiMarkdownToHtml(value) {
+  const lines = cleanAiDescription(value).split('\n');
+  const blocks = [];
+  let paragraph = [];
+  let list = [];
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    blocks.push(`<p>${aiInlineMarkdown(paragraph.join('\n')).replace(/\n/g, '<br>')}</p>`);
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (!list.length) return;
+    blocks.push(`<ul>${list.map(item => `<li>${aiInlineMarkdown(item)}</li>`).join('')}</ul>`);
+    list = [];
+  };
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) { flushParagraph(); flushList(); continue; }
+    const heading = line.match(/^(#{1,3})\s+(.+)$/);
+    if (heading) {
+      flushParagraph(); flushList();
+      const tag = heading[1].length === 1 ? 'h1' : heading[1].length === 2 ? 'h2' : 'h3';
+      blocks.push(`<${tag}>${aiInlineMarkdown(heading[2])}</${tag}>`);
+      continue;
+    }
+    const bullet = line.match(/^[-*•]\s+(.+)$/);
+    if (bullet) { flushParagraph(); list.push(bullet[1]); continue; }
+    flushList(); paragraph.push(line);
+  }
+  flushParagraph(); flushList();
+  return blocks.join('');
+}
+
 // ═══════════════ AI ASSISTANT & WEB PACKAGE IMPORTER ══════════════
 function showAIModal() {
   const existing = document.getElementById('aiModal');
@@ -5205,7 +5245,7 @@ REGLAS ESTRICTAS DE VERACIDAD E INVESTIGACIÓN PROFESIONAL:
 5. Generá listas detalladas de servicios incluidos ("includes") y no incluidos ("excludes") adaptadas a paquetes turísticos reales desde Argentina; incorporá allí vuelos, hoteles, traslados, impuestos, seguros, suplementos y condiciones que el cliente necesite conocer.
 6. La descripción es material comercial para el cliente: jamás menciones PDFs, folletos, fuentes, documentos, extracción, "según el PDF", "detalle del folleto" ni contradicciones internas.
 7. Si el material indica 7 noches y un día de salida, el paquete tiene 8 días. El campo "days" y el itinerario deben tener exactamente la misma cantidad de días y no se puede omitir el traslado de regreso.
-8. La descripción debe tener 2 o 3 párrafos naturales: primero una apertura emocional basada en la experiencia real; después el recorrido, los diferenciales y la tranquilidad de tener la operación resuelta. Debe dar ganas de consultar sin sonar exagerada ni genérica.
+8. La descripción debe usar Markdown liviano para verse editorial en la web: empezá con un título "##" breve y atractivo, seguí con 2 o 3 párrafos naturales y cerrá con una lista corta si aporta valor. Usá "**negrita**" solo para ciudades, experiencias, hoteles, servicios o beneficios concretos. Primero debe emocionar con una experiencia real; después debe explicar el recorrido, los diferenciales y la tranquilidad de tener la operación resuelta. Debe dar ganas de consultar sin sonar exagerada ni genérica.
 9. Las etiquetas "highlights" deben ser concretas y vendibles: lugares, experiencias o beneficios reales del programa; no uses palabras abstractas como "aventura" o "calidad" solas.
 10. Cada elemento de "includes" y "excludes" debe ser autocontenido y específico. Conserva aerolíneas, rutas, hoteles, régimen, traslados, impuestos, seguros, precios, suplementos y condiciones de reserva cuando figuren en la fuente. No agregues condiciones que no estén informadas.
 11. Cada día del itinerario debe explicar qué sucede, dónde, cómo se traslada el pasajero y qué experiencia obtiene. Integra fechas, comidas, entradas, hoteles y opcionales cuando existan. No repitas la misma frase entre días.
@@ -5220,11 +5260,11 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
   "days": número entero de días,
   "price_usd": número: el precio FINAL/con descuento si el folleto muestra dos precios, o el único precio si solo hay uno,
   "price_original_usd": número o null: el precio de lista SIN descuento, SOLO si el folleto muestra explícitamente un precio tachado o "antes/ahora". Si hay un solo precio, poné null,
-  "description": "2 o 3 párrafos comerciales, sensoriales y específicos que expliquen la experiencia real y los beneficios de elegir este programa",
+  "description": "Markdown liviano: ## título breve, 2 o 3 párrafos comerciales y específicos, **negritas** para diferenciales reales y una lista corta con guiones cuando ayude a vender",
   "badge": "etiqueta corta y vendedora para la foto, max 18 caracteres (ej: SEPTIEMBRE 2026, Todo Incluido)",
   "highlights": ["3 o 4 etiquetas CORTAS de 1 a 3 palabras cada una: lugares iconicos o beneficios concretos del paquete (ej: Palm Beach, All Inclusive, Vuelo Directo)"],
-  "includes": ["6 a 10 servicios o datos incluidos, redactados de forma específica"],
-  "excludes": ["4 a 8 servicios, opcionales o condiciones no incluidos, solo si están informados"],
+  "includes": ["6 a 10 ítems específicos; cada uno comienza con una etiqueta clara seguida de dos puntos, por ejemplo Alojamiento: ... o Aéreos: ..."],
+  "excludes": ["4 a 8 ítems específicos; cada uno comienza con una etiqueta clara seguida de dos puntos, por ejemplo Opcionales: ... o Condiciones: ..."],
   "itinerary": [
     {"day": "Día 1", "desc": "Llegada, recepción en aeropuerto y primer recorrido por..."},
     {"day": "Día 2", "desc": "Visita guiada por los puntos históricos..."}
@@ -5265,9 +5305,7 @@ Respondé ÚNICAMENTE con un JSON válido (sin markdown, sin bloques de código,
     // y se perdía todo lo que generaba la IA.
     const descripcion = cleanAiDescription(pkg.description);
     if (descripcion) {
-      const parrafos = String(descripcion)
-        .split(/\n{2,}|\r\n\r\n/).map(s => s.trim()).filter(Boolean);
-      let html = parrafos.map(p => `<p>${escHtml(p).replace(/\n/g, '<br>')}</p>`).join('');
+      const html = aiMarkdownToHtml(descripcion);
       document.getElementById('fDescRich').innerHTML = html;
       document.getElementById('fDescEnabled').checked = true;
       toggleDescSection(true);
