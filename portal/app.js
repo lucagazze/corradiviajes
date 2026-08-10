@@ -2,7 +2,9 @@
 // Portal de Pasajeros — Corradi Viajes
 // ══════════════════════════════════════════════════════════
 const SUPABASE_URL = 'https://czocbnyoenjbpxmcqobn.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6b2NibnlvZW5qYnB4bWNxb2JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NDI5MTMsImV4cCI6MjA2ODQxODkxM30.pNgJnwAY8uxb6yCQilJfD92VNwsCkntr4Ie_os2lI44';
+// Publishable key nueva. Las legacy (anon/service_role) se desactivaron el 2026-08-07
+// en este project y devuelven 401 "Legacy API keys are disabled".
+const SUPABASE_ANON_KEY = 'sb_publishable_qqTTCyfpaM3SIM15AH_O8Q_fPoHatiI';
 const BUCKET = 'pv-docs';
 // Categorías de documentos. El admin carga todo lo del viaje (voucher, vuelos, etc.)
 const CATS = ['Voucher', 'Vuelos', 'Hotel', 'Seguro', 'Itinerario', 'Info del destino', 'Pasaporte', 'DNI', 'Visa', 'Otro'];
