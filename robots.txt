@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /portal/
 
-Sitemap: https://corradi.vercel.app/sitemap.xml
+Sitemap: https://www.corradiviajes.com.ar/sitemap.xml

@@ -2,11 +2,24 @@
 <html lang="es">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<!-- viewport-fit=cover + los safe-area-inset del CSS: sin esto, en iPhone con notch
+     la barra de abajo tapa la navegación cuando corre como app instalada. -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>Portal de Pasajeros — Corradi Viajes</title>
 <meta name="description" content="Portal de pasajeros de Corradi Viajes para consultar itinerarios, documentación y detalles del viaje.">
 <meta name="robots" content="noindex, nofollow">
 <link rel="icon" type="image/webp" href="/img/logocorradi.webp">
+<!-- ── App instalable (PWA) ────────────────────────────────────────────
+     El portal se agrega a la pantalla de inicio y se abre en pantalla
+     completa, sin barra del navegador. No hace falta App Store ni Play
+     Store, no hay cuota anual ni revisión de tienda. -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#0d1b2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Corradi Viajes">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
 <!-- Remix Icon: el portal usa 13 íconos ri-* que nunca se cargaban (salían vacíos) -->
@@ -243,7 +256,137 @@ select option{background-color:#ffffff!important;color:#0f172a!important;font-si
 .msel-row.sel .cb .ms{color:#fff;font-size:15px}
 .spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
 @keyframes sp{to{transform:rotate(360deg)}}
-@media(max-width:640px){.grid2{grid-template-columns:1fr}.wrap{padding:16px 14px 70px}.topbar .who .name{display:none}}
+/* ═══════════════════════════════════════════════════════════════
+   ARREGLOS DE CONTRASTE
+   Restos del tema oscuro original que quedaron sobre superficies
+   blancas: se veían como "nada" (blanco sobre blanco).
+   ═══════════════════════════════════════════════════════════════ */
+#toast{background:#0f2036;color:#ffffff;border-color:rgba(255,255,255,.14)}
+#toast.ok{border-color:rgba(34,197,94,.55)}
+#toast.err{border-color:rgba(239,68,68,.55)}
+.crumb a:hover{background:#f1f5f9;color:#0f172a}
+.crumb a.dropok,.crumb .cur{color:#0f172a}
+.crumb,.crumb a{color:#475569}
+.msel{border-color:#cbd5e1;background:#ffffff}
+.msel-row:hover{background:#f1f5f9}
+.msel-row.sel{background:#eff6ff}
+.msel-row .cb{border-color:#cbd5e1}
+.thumb{background:#f8fafc;border-color:#cbd5e1}
+.thumb .ms{color:#94a3b8}
+.stat{background:#ffffff;border-color:#cbd5e1}
+.stat .n{color:#0f172a}
+.stat .l{color:#475569}
+::-webkit-scrollbar-thumb{background:#cbd5e1}
+
+/* ═══════════════════════════════════════════════════════════════
+   BANNER "INSTALAR APP"
+   ═══════════════════════════════════════════════════════════════ */
+#pwaBanner{
+  position:fixed;z-index:300;left:50%;transform:translateX(-50%);
+  bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  width:min(560px,calc(100vw - 24px));
+  display:flex;align-items:center;gap:12px;
+  background:#ffffff;border:1.5px solid #cbd5e1;border-radius:16px;
+  padding:12px 14px;box-shadow:0 18px 44px rgba(15,23,42,.18);
+  animation:pwaUp .32s cubic-bezier(.2,.8,.3,1)}
+@keyframes pwaUp{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+#pwaBanner .pwa-i{font-size:26px;color:#0052cc;flex-shrink:0}
+#pwaBanner .pwa-t{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+#pwaBanner .pwa-t b{font-size:14px;font-weight:800;color:#0f172a}
+#pwaBanner .pwa-t span{font-size:12.5px;color:#475569;font-weight:500}
+#pwaBanner .pwa-x{padding:6px;min-width:auto}
+#pwaBanner .pwa-x .ms{font-size:18px}
+@media(max-width:480px){
+  #pwaBanner{flex-wrap:wrap}
+  #pwaBanner .pwa-t{flex:1 1 100%;order:1}
+  #pwaBanner .pwa-i{order:0}
+  #pwaBanner .btn-primary{order:2;flex:1}
+  #pwaBanner .pwa-x{order:3}
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+/* Nada puede empujar la página a lo ancho */
+html,body{max-width:100%;overflow-x:hidden}
+img,video,canvas,iframe{max-width:100%}
+/* Tablas y bloques anchos scrollean adentro suyo, no arrastran el body */
+.modal-b table,.dinfo table{display:block;max-width:100%;overflow-x:auto}
+
+/* Corre como app instalada: respetar el notch y la barra de gestos */
+@supports(padding:env(safe-area-inset-top)){
+  .topbar{padding-top:calc(12px + env(safe-area-inset-top,0px))}
+  .wrap{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ── Tablet ── */
+@media(max-width:900px){
+  .wrap{padding:20px 18px 80px}
+  .modal.wide{max-width:100%}
+}
+
+/* ── Mobile ── */
+@media(max-width:640px){
+  .grid2{grid-template-columns:1fr}
+  .wrap{padding:16px 14px 76px}
+  .topbar{padding-left:14px;padding-right:14px;gap:8px}
+  .topbar .who{gap:6px}
+  .topbar .who .name{display:none}
+  .topbar strong{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* El encabezado de sección apilado: título arriba, buscador y botón
+     a lo ancho. Antes los tres competían por 390px y quedaban ilegibles. */
+  .page-h{gap:10px}
+  .page-h h2{flex:1 1 100%;font-size:20px}
+  .page-h .spacer{display:none}
+  .searchbox{max-width:none;flex:1 1 100%}
+  .page-h .btn{flex:1 1 100%;justify-content:center}
+
+  /* 16px reales: con menos, iOS hace zoom solo al tocar un campo */
+  input,select,textarea{font-size:16px;padding:12px 14px}
+  .searchbox input{font-size:16px}
+
+  /* Objetivos táctiles cómodos */
+  .btn{padding:12px 16px;min-height:44px}
+  .btn-sm{padding:9px 12px;min-height:38px}
+  .btn-icon{width:42px;height:42px;min-height:42px;padding:9px;flex:0 0 auto}
+
+  .stats{grid-template-columns:repeat(2,1fr);gap:10px}
+  .stat{padding:14px}
+  .stat .n{font-size:24px}
+  .dfacts{grid-template-columns:1fr 1fr}
+
+  .rowitem{padding:12px 13px;gap:11px}
+  .rowitem .end{gap:6px}
+  .avatar{width:40px;height:40px;font-size:14px}
+  .doc{padding:10px 12px;gap:10px}
+
+  /* Modal casi a pantalla completa: en 390px, 24px de aire por lado
+     dejaban el formulario en una columna de 340px. */
+  .modal-bg{padding:10px;align-items:flex-end}
+  .modal{max-height:94dvh;border-radius:20px!important}
+  .modal-h{padding:15px 16px;border-radius:20px 20px 0 0}
+  .modal-h h3{font-size:16.5px}
+  .modal-b{padding:16px}
+  .modal-f{padding:13px 16px;gap:8px}
+  .modal-f .btn{flex:1;justify-content:center}
+}
+
+/* ── Mobile chico (iPhone SE, 360px) ── */
+@media(max-width:380px){
+  .stats{grid-template-columns:1fr}
+  .dfacts{grid-template-columns:1fr}
+  .login-card{padding:34px 22px}
+  .rowitem .end .chip{display:none}
+  .rowitem .end .chip:first-child{display:inline-flex}
+}
+
+/* Pantallas bajas y apaisadas: el modal no puede pasarse de alto */
+@media(max-height:520px){
+  .modal{max-height:96dvh}
+  .login-card{padding:26px 24px}
+  .login-logo{height:36px;margin-bottom:14px}
+}
 </style>
 </head>
 <body>
@@ -458,5 +601,62 @@ function switchPaxTab(tab) {
 }
 </script>
 <script src="/portal/app.js"></script>
+<script>
+// ── Instalación como app ────────────────────────────────────────────
+// El service worker se registra siempre (es lo que habilita el "Instalar"
+// de Chrome y el modo offline). Si falla, el portal sigue funcionando igual.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/portal/sw.js', { scope: '/portal/' }).catch(() => {});
+  });
+}
+
+// Banner "Instalar app". En Android/Chrome se engancha al evento nativo;
+// en iPhone no existe ese evento, así que mostramos el paso a paso de Compartir.
+(function () {
+  const KEY = 'corradi_pwa_dismiss';
+  const standalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  if (standalone || localStorage.getItem(KEY) === '1') return;
+
+  let deferred = null;
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+
+  function show(html) {
+    if (document.getElementById('pwaBanner')) return;
+    const el = document.createElement('div');
+    el.id = 'pwaBanner';
+    el.innerHTML = html;
+    document.body.appendChild(el);
+  }
+  function dismiss() {
+    localStorage.setItem(KEY, '1');
+    const el = document.getElementById('pwaBanner');
+    if (el) el.remove();
+  }
+  window.pwaDismiss = dismiss;
+  window.pwaInstall = async function () {
+    if (!deferred) return;
+    deferred.prompt();
+    await deferred.userChoice;
+    deferred = null;
+    dismiss();
+  };
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferred = e;
+    show(`<span class="ms pwa-i">install_mobile</span>
+      <div class="pwa-t"><b>Instalá el portal en tu celular</b><span>Se abre como app, sin buscar el link cada vez.</span></div>
+      <button class="btn btn-primary btn-sm" onclick="pwaInstall()">Instalar</button>
+      <button class="btn btn-ghost btn-sm pwa-x" onclick="pwaDismiss()" aria-label="Cerrar"><span class="ms">close</span></button>`);
+  });
+
+  if (isIOS) {
+    setTimeout(() => show(`<span class="ms pwa-i">ios_share</span>
+      <div class="pwa-t"><b>Agregalo a tu pantalla de inicio</b><span>Tocá Compartir y después "Agregar a inicio".</span></div>
+      <button class="btn btn-ghost btn-sm pwa-x" onclick="pwaDismiss()" aria-label="Cerrar"><span class="ms">close</span></button>`), 2500);
+  }
+})();
+</script>
 </body>
 </html>
