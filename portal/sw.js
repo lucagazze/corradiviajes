@@ -13,14 +13,15 @@
 //   - Supabase (datos, auth, storage): siempre a la red.
 //   - Documentos con signed URL: son temporales y privados.
 
-const VERSION = 'corradi-portal-v1';
+// Rutas absolutas: el portal se sirve en /portal SIN barra final, así que './'
+// resolvía a '/portal/' y Vercel lo redirige con un 308.
+const VERSION = 'corradi-portal-v2';
 const SHELL = [
-  './',
-  './index.html',
-  './app.js',
-  './manifest.webmanifest',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
+  '/portal',
+  '/portal/app.js',
+  '/portal/manifest.webmanifest',
+  '/portal/icons/icon-192.png',
+  '/portal/icons/icon-512.png',
 ];
 
 self.addEventListener('install', (e) => {
@@ -47,7 +48,7 @@ self.addEventListener('fetch', (e) => {
   const url = new URL(req.url);
   // Supabase y cualquier otro origen: derecho a la red, sin tocar la caché.
   if (url.origin !== self.location.origin) return;
-  if (url.pathname.startsWith('/portal/') === false) return;
+  if (!url.pathname.startsWith('/portal')) return;
 
   e.respondWith(
     fetch(req)
@@ -64,7 +65,7 @@ self.addEventListener('fetch', (e) => {
         if (hit) return hit;
         // Navegación sin conexión y sin caché de esa URL → el shell
         if (req.mode === 'navigate') {
-          const shell = await caches.match('./index.html');
+          const shell = await caches.match('/portal');
           if (shell) return shell;
         }
         return new Response('Sin conexión', {
