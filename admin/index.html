@@ -1783,6 +1783,17 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 .dash-card-featured .dash-num{color:#a16207!important}
 .dash-card-featured .material-symbols-outlined{color:#a16207!important}
 
+/* Textos y botones que quedaron con el color "claro" de cada tono sobre su
+   propio fondo pastel: verde claro sobre verde claro, rojo claro sobre rojo
+   claro. Se pasan a la version oscura del mismo color. */
+.btn-green{color:#15803d !important}
+.btn-danger{color:#b91c1c !important}
+.media-btn-del{color:#b91c1c}
+.media-card-date{color:#64748b}
+.dash-card-total .material-symbols-outlined{color:#0369a1 !important}
+.dash-card-active .material-symbols-outlined{color:#15803d !important}
+.dash-card-inactive .material-symbols-outlined{color:#b91c1c !important}
+
 /* El check de selección múltiple era una caja oscura translúcida sobre
    tarjeta blanca; ahora se ve el recuadro y se puede tocar. */
 .pkg-bulk-check-wrap{background:#ffffff;border:1.5px solid #cbd5e1;padding:6px;
@@ -1790,18 +1801,50 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 .pkg-bulk-check-wrap:hover{background:#eff6ff;border-color:#0052cc}
 .pkg-bulk-check{width:18px;height:18px;accent-color:#0052cc}
 
+@media(max-width:900px){
+  /* Ningún bloque puede empujar la página a lo ancho */
+  html,body{max-width:100%;overflow-x:hidden}
+  img,video,canvas,iframe{max-width:100%}
+  /* El sidebar como cajón tiene que respetar el notch y la barra de gestos */
+  .sidebar{padding-top:env(safe-area-inset-top,0px)}
+  .mobile-topbar{padding-top:calc(12px + env(safe-area-inset-top,0px))}
+  .view{padding-bottom:calc(60px + env(safe-area-inset-bottom,0px))}
+  /* Ítems del menú lateral: eran de 31px, quedaban pegados entre sí */
+  .sb-sub-item{padding:11px 12px 11px 34px;font-size:13.5px;margin-bottom:3px}
+  .sb-item{padding-top:11px;padding-bottom:11px}
+}
+
 @media(max-width:640px){
-  /* 44px es el mínimo cómodo para el pulgar */
+  /* 44px es el mínimo cómodo para el pulgar. Casi todos estos controles
+     estaban entre 22 y 31px: en el celular había que apuntar. */
   .pkg-bulk-check-wrap{padding:11px;top:8px;left:8px}
   .pkg-bulk-check{width:20px;height:20px}
   .drag-list-handle,.pkg-drag-handle{min-width:40px;min-height:40px;padding:0 10px}
   .drag-list-handle .ms,.pkg-drag-handle .ms{font-size:22px!important}
   /* Los "+7 días" / "+15 días" tenían 24px de alto */
-  .btn.btn-ghost{min-height:36px;padding:8px 12px}
+  .btn{min-height:40px}
+  .btn.btn-ghost,.btn.btn-green,.btn.btn-danger{min-height:40px;padding:9px 14px}
   .pli-qbtn{width:40px;height:40px}
-  /* Ningún bloque puede empujar la página a lo ancho */
-  html,body{max-width:100%;overflow-x:hidden}
-  img,video,canvas,iframe{max-width:100%}
+  /* Biblioteca de imágenes: "Copiar URL" y la ✕ de borrar */
+  .media-btn{min-height:40px;font-size:13px}
+  .media-btn-del{flex:0 0 44px}
+  /* ✕ para sacar una imagen de la tira: era de 22px, imposible */
+  .pis-rm{width:30px;height:30px;top:-9px;right:-9px}
+  .pis-rm .ms,.pis-rm .ri{font-size:17px}
+  /* Barra de formato del texto enriquecido (N, K, listas…) */
+  .tb-btn{min-width:38px;height:38px;font-size:13px;padding:0 9px}
+  /* Celdas de la lista de paquetes */
+  .pli-cell{min-height:34px;display:flex;align-items:center}
+  .pli-cell-etq{min-height:38px}
+  /* Cerrar el editor */
+  #editorPanel .ed-header button{min-height:40px}
+  /* Inputs a 16px reales: con menos, iOS hace zoom solo al enfocar */
+  input,select,textarea{font-size:16px}
+}
+
+/* Pantallas bajas / apaisadas */
+@media(max-height:520px){
+  .ed-body{padding-bottom:80px}
 }
 </style>
 </head>

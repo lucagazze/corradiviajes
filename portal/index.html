@@ -143,9 +143,20 @@ html[data-theme="light"] .anav button{color:#475569}
 html[data-theme="light"] .anav button:hover{background:#f1f5f9;color:#0f172a}
 html[data-theme="light"] .anav button.active{background:#0052cc;color:#fff}
 @media(max-width:640px){
-  .anav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}
+  .anav{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;
+    /* Sombra al borde derecho cuando queda contenido por scrollear: sin esto
+       no había ninguna señal de que hubiera más pestañas. */
+    background-image:linear-gradient(to right,#fff,#fff),linear-gradient(to right,#fff,#fff),
+      linear-gradient(to right,rgba(15,23,42,.10),rgba(15,23,42,0)),
+      linear-gradient(to left,rgba(15,23,42,.10),rgba(15,23,42,0));
+    background-position:left center,right center,left center,right center;
+    background-repeat:no-repeat;
+    background-size:22px 100%,22px 100%,12px 100%,12px 100%;
+    background-attachment:local,local,scroll,scroll}
   .anav::-webkit-scrollbar{display:none}
-  .anav button{padding:9px 13px;font-size:12.5px}
+  .anav button{padding:10px 13px;font-size:12.5px;min-height:40px}
+  /* Los títulos largos de las pestañas del pasajero no entran en 390px */
+  .lbl-full{display:none}
 }
 
 /* ── LOGIN (WHITE THEME) ── */
@@ -297,6 +308,9 @@ select option{background-color:#ffffff!important;color:#0f172a!important;font-si
 #toast{background:#0f2036;color:#ffffff;border-color:rgba(255,255,255,.14)}
 #toast.ok{border-color:rgba(34,197,94,.55)}
 #toast.err{border-color:rgba(239,68,68,.55)}
+/* El ícono de alerta roja daba 4.41:1, justo abajo del mínimo */
+.alert-red .ms{color:#b91c1c!important}
+.alert-warn .ms{color:#a16207!important}
 .crumb a:hover{background:#f1f5f9;color:#0f172a}
 .crumb a.dropok,.crumb .cur{color:#0f172a}
 .crumb,.crumb a{color:#475569}
@@ -494,10 +508,12 @@ img,video,canvas,iframe{max-width:100%}
     
     <!-- Passenger Navigation Tabs -->
     <div class="anav" id="paxTabsNav" style="margin-bottom:20px">
-      <button id="paxTabBtnNext" class="active" onclick="switchPaxTab('next')"><i class="ri-flight-takeoff-line"></i> Próximo Viaje</button>
-      <button id="paxTabBtnDocs" onclick="switchPaxTab('docs')"><i class="ri-file-shield-line"></i> Mis Documentos & Vouchers</button>
-      <button id="paxTabBtnHistory" onclick="switchPaxTab('history')"><i class="ri-history-line"></i> Historial de Viajes</button>
-      <button id="paxTabBtnProfile" onclick="switchPaxTab('profile')"><i class="ri-user-settings-line"></i> Mi Perfil</button>
+      <!-- La parte en .lbl-full se oculta en celular: con los títulos completos
+           solo entraba una pestaña y media, y no se veía que hubiera más. -->
+      <button id="paxTabBtnNext" class="active" onclick="switchPaxTab('next')"><i class="ri-flight-takeoff-line"></i> Próximo<span class="lbl-full"> Viaje</span></button>
+      <button id="paxTabBtnDocs" onclick="switchPaxTab('docs')"><i class="ri-file-shield-line"></i> <span class="lbl-full">Mis </span>Documentos<span class="lbl-full"> &amp; Vouchers</span></button>
+      <button id="paxTabBtnHistory" onclick="switchPaxTab('history')"><i class="ri-history-line"></i> Historial<span class="lbl-full"> de Viajes</span></button>
+      <button id="paxTabBtnProfile" onclick="switchPaxTab('profile')"><i class="ri-user-settings-line"></i> <span class="lbl-full">Mi </span>Perfil</button>
     </div>
 
     <div id="paxAlerts"></div>
