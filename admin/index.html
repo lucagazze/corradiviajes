@@ -1862,6 +1862,22 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
   .pli-cell-etq{min-height:38px}
   /* Cerrar el editor */
   #editorPanel .ed-header button{min-height:40px}
+  /* Las pestañas del editor se cortan sin ninguna señal de que hay más:
+     scroll horizontal + sombra en el borde para que se note. */
+  .ed-tabs{overflow-x:auto;scrollbar-width:none;padding:0 14px;
+    background-image:linear-gradient(to right,#fff,#fff),linear-gradient(to right,#fff,#fff),
+      linear-gradient(to right,rgba(15,23,42,.10),rgba(15,23,42,0)),
+      linear-gradient(to left,rgba(15,23,42,.10),rgba(15,23,42,0));
+    background-position:left center,right center,left center,right center;
+    background-repeat:no-repeat;
+    background-size:20px 100%,20px 100%,12px 100%,12px 100%;
+    background-attachment:local,local,scroll,scroll}
+  .ed-tabs::-webkit-scrollbar{display:none}
+  .ed-tab{padding:13px 14px;flex-shrink:0}
+  /* La barra de acciones de arriba tampoco entra en 390px */
+  .ed-header{overflow-x:auto;scrollbar-width:none}
+  .ed-header::-webkit-scrollbar{display:none}
+  .ed-header>*{flex-shrink:0}
   /* Inputs a 16px reales: con menos, iOS hace zoom solo al enfocar */
   input,select,textarea{font-size:16px}
 }
