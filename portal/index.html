@@ -389,6 +389,14 @@ img,video,canvas,iframe{max-width:100%}
   .stat .n{font-size:24px}
   .dfacts{grid-template-columns:1fr 1fr}
 
+  /* Los chips del checklist de documentación son BOTONES (se tocan para
+     marcar/desmarcar) y medían 21px de alto: imposible acertarles. Los chips
+     que solo informan siguen chicos. */
+  button.chip,.reqchip{min-height:38px;padding:9px 14px;font-size:12.5px}
+  /* Migas de pan de la biblioteca: eran de 27px */
+  .crumb a,.crumb .cur{padding:9px 11px;font-size:14px}
+  .crumb{gap:2px}
+
   .rowitem{padding:12px 13px;gap:11px}
   .rowitem .end{gap:6px}
   .avatar{width:40px;height:40px;font-size:14px}
