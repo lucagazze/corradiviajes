@@ -6,9 +6,14 @@ class AppNavbar extends HTMLElement {
   connectedCallback() {
     const currentPath = window.location.pathname;
 
+    // Instagram de Move by Corradi (quinceañeras). Va en el menú principal porque
+    // mucha gente entra al sitio buscando específicamente quinceañeras.
+    const MOVE_IG = 'https://www.instagram.com/movebycorradi/';
+
     const links = [
       { id: 'nav-inicio',    href: '/',           label: 'Inicio',          isIndex: true },
       { id: 'nav-grupales',  href: 'salidas-grupales.html', label: 'Salidas Grupales', match: 'salidas-grupales' },
+      { id: 'nav-quinces',   href: MOVE_IG,                label: 'Quinceañeras',    external: true },
       { id: 'nav-destinos',  href: 'busqueda.html',        label: 'Destinos',        match: 'busqueda' },
       { id: 'nav-ofertas',   href: 'ofertas.html',         label: 'Ofertas',         match: 'ofertas' },
       { id: 'nav-nosotros',  href: 'nosotros.html',        label: 'Nosotros',        match: 'nosotros' },
@@ -18,6 +23,7 @@ class AppNavbar extends HTMLElement {
     const mobileNavItems = [
       { href: '/',            label: 'Inicio',           icon: 'home',           isIndex: true },
       { href: 'salidas-grupales.html', label: 'Salidas Grupales', icon: 'groups',          match: 'salidas-grupales' },
+      { href: MOVE_IG,                 label: 'Quinceañeras',     icon: 'celebration',    external: true },
       { href: 'busqueda.html',         label: 'Destinos',         icon: 'travel_explore', match: 'busqueda' },
       { href: 'ofertas.html',          label: 'Ofertas',          icon: 'local_offer',    match: 'ofertas' },
       { href: 'nosotros.html',         label: 'Nosotros',         icon: 'flag',           match: 'nosotros' },
@@ -29,9 +35,13 @@ class AppNavbar extends HTMLElement {
       /\/(index(\.html)?)?$/.test(currentPath);
 
     const desktopLinks = links.map(l => {
-      const isActive = l.isIndex ? isHomePage : currentPath.includes(l.match);
-      const isGroup = l.id === 'nav-grupales';
-      if (isGroup) {
+      const isActive = !l.external && (l.isIndex ? isHomePage : currentPath.includes(l.match));
+      // Quinceañeras: rosa Move + ícono, para que se distinga del resto y se note que sale a Instagram
+      if (l.id === 'nav-quinces') {
+        return `<a id="${l.id}" href="${l.href}" target="_blank" rel="noopener" class="flex items-center gap-1.5 font-medium font-['Geomanist'] text-base whitespace-nowrap transition-all hover:brightness-125" style="color:#f472b6;text-shadow:0 0 12px rgba(244,114,182,0.3)">
+          <span class="material-symbols-outlined text-[19px]" style="font-variation-settings:'FILL' 1">celebration</span>${l.label}</a>`;
+      }
+      if (l.id === 'nav-grupales') {
         return `<a id="${l.id}" href="${l.href}" class="font-medium font-['Geomanist'] text-base whitespace-nowrap transition-all" style="color:#f2b352;text-shadow:0 0 12px rgba(242,179,82,0.25)">${l.label}</a>`;
       }
       return `<a id="${l.id}" href="${l.href}" class="whitespace-nowrap ${isActive
@@ -40,9 +50,21 @@ class AppNavbar extends HTMLElement {
     }).join('');
 
     const mobileItems = mobileNavItems.map(item => {
-      const isActive = item.isIndex ? isHomePage : currentPath.includes(item.match);
+      const isActive = !item.external && (item.isIndex ? isHomePage : currentPath.includes(item.match));
+      const ext = item.external ? ' target="_blank" rel="noopener"' : '';
+      // Quinceañeras: mismo tratamiento rosa que en desktop + flecha de "se abre afuera"
+      if (item.external) {
+        return `
+        <a href="${item.href}"${ext} class="flex items-center gap-4 px-6 py-4 rounded-[14px] transition-all duration-150 group" style="background:rgba(244,114,182,0.10);color:#f9a8d4">
+          <div class="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0" style="background:rgba(244,114,182,0.22)">
+            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings:'FILL' 1">${item.icon}</span>
+          </div>
+          <span class="font-['Geomanist'] font-medium text-[15px]">${item.label}</span>
+          <span class="material-symbols-outlined text-[18px] ml-auto opacity-60">open_in_new</span>
+        </a>`;
+      }
       return `
-        <a href="${item.href}" class="flex items-center gap-4 px-6 py-4 rounded-[14px] transition-all duration-150 ${isActive
+        <a href="${item.href}"${ext} class="flex items-center gap-4 px-6 py-4 rounded-[14px] transition-all duration-150 ${isActive
           ? 'bg-white/10 text-white'
           : 'text-white/70 hover:bg-white/10 hover:text-white'} group">
           <div class="w-10 h-10 rounded-[10px] flex items-center justify-center ${isActive ? 'bg-blue-500/30' : 'bg-white/10 group-hover:bg-white/15'} transition-colors shrink-0">
@@ -64,7 +86,8 @@ class AppNavbar extends HTMLElement {
         </div>
 
         <!-- Center: Navigation Links -->
-        <nav class="hidden md:flex items-center gap-8 justify-center order-2">${desktopLinks}</nav>
+        <!-- gap reducido en md: con Quinceañeras son 7 links y a 1024px se desbordaba -->
+        <nav class="hidden md:flex items-center gap-5 lg:gap-8 justify-center order-2">${desktopLinks}</nav>
 
         <!-- Right: CTA Button & Mobile Menu -->
         <div class="relative flex items-center justify-end gap-3 order-3">
@@ -209,6 +232,7 @@ class AppFooter extends HTMLElement {
         <div class="flex gap-6 mb-5">
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="nosotros.html">Nosotros</a>
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="salidas-grupales.html">Salidas Grupales</a>
+          <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#f472b6] transition-colors" href="https://www.instagram.com/movebycorradi/" target="_blank" rel="noopener">Quinceañeras</a>
           <a class="font-['Geomanist'] text-sm text-white/50 hover:text-[#3778b8] transition-colors" href="contacto.html">Contacto</a>
         </div>
         <div class="flex flex-col items-center gap-3 mb-5">
@@ -222,7 +246,7 @@ class AppFooter extends HTMLElement {
             <a href="https://www.instagram.com/movebycorradi/" target="_blank" rel="noopener" aria-label="Instagram Move by Corradi"
               class="inline-flex items-center gap-2 pl-3 pr-4 py-2 rounded-full border border-white/12 hover:border-[#f2b352] hover:bg-white/5 transition-all text-sm font-medium text-white/70 hover:text-white">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
-              @movebycorradi
+              @movebycorradi · Quinceañeras
             </a>
           </div>
         </div>
