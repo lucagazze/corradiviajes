@@ -643,6 +643,65 @@ function buildGallery(images, pkg) {
     errorEl.style.display = 'flex';
   }
 
+  // ── SEO por paquete ────────────────────────────────────────────────
+  // Reescribe title, description, canonical, Open Graph y datos
+  // estructurados con los datos del paquete que se está mostrando.
+  function setPackageSEO(pkg) {
+    const SITE = 'https://www.corradiviajes.com.ar';
+    const url = `${SITE}/paquete?id=${encodeURIComponent(pkg.id)}`;
+    const lugar = pkg.destination || pkg.country || '';
+    const dias = pkg.days ? `${pkg.days} días` : '';
+    const desde = pkg.price_usd ? `desde USD ${pkg.price_usd}` : '';
+
+    const title = `${pkg.name}${lugar && !pkg.name.includes(lugar) ? ' — ' + lugar : ''} | Corradi Viajes`;
+    const desc = [
+      `Viajá a ${lugar || pkg.name} con Corradi Viajes, agencia de Rosario.`,
+      dias, desde,
+      (pkg.description || '').replace(/\s+/g, ' ').trim().slice(0, 110),
+    ].filter(Boolean).join(' · ').slice(0, 300);
+
+    const img = pkg.image_url || `${SITE}/assets/logo.png`;
+
+    document.title = title;
+    const set = (sel, attr, val) => {
+      const el = document.querySelector(sel);
+      if (el) el.setAttribute(attr, val);
+    };
+    set('link[rel="canonical"]', 'href', url);
+    set('meta[name="description"]', 'content', desc);
+    set('meta[property="og:url"]', 'content', url);
+    set('meta[property="og:title"]', 'content', title);
+    set('meta[property="og:description"]', 'content', desc);
+    set('meta[property="og:image"]', 'content', img);
+    set('meta[property="twitter:url"]', 'content', url);
+    set('meta[property="twitter:title"]', 'content', title);
+    set('meta[property="twitter:description"]', 'content', desc);
+    set('meta[property="twitter:image"]', 'content', img);
+
+    // Ficha del producto para Google. Solo campos que existen de verdad:
+    // si el paquete no tiene precio, no se inventa una oferta.
+    const ld = {
+      '@context': 'https://schema.org',
+      '@type': 'TouristTrip',
+      name: pkg.name,
+      description: desc,
+      url,
+      image: img,
+      provider: { '@type': 'TravelAgency', '@id': SITE + '/#agency', name: 'Corradi Viajes' },
+    };
+    if (lugar) ld.itinerary = { '@type': 'Place', name: lugar };
+    if (pkg.price_usd) {
+      ld.offers = {
+        '@type': 'Offer', price: String(pkg.price_usd), priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock', url,
+      };
+    }
+    const s = document.createElement('script');
+    s.type = 'application/ld+json';
+    s.textContent = JSON.stringify(ld);
+    document.head.appendChild(s);
+  }
+
   try {
     let pkg;
     if (USE_LOCAL) {
@@ -659,8 +718,12 @@ function buildGallery(images, pkg) {
       pkg = data;
     }
 
-    // Update page title
-    document.title = `${pkg.name} - Corradi Viajes`;
+    // ── SEO por paquete ──────────────────────────────────────────────
+    // Los 31 paquetes compartían el mismo <title>, la misma description y
+    // el mismo canonical (/paquete), así que para Google eran 31 copias de
+    // una única página y no indexaba ninguna. Acá se reescriben con los
+    // datos del paquete: Google ejecuta el JS y toma estos valores.
+    setPackageSEO(pkg);
 
     // Populate fields
     document.getElementById('pkgTitle').textContent = pkg.name;
