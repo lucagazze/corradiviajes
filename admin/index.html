@@ -1769,6 +1769,37 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 .quick-badge-input.pce-inp{text-align:center;color:#f59e0b;font-size:11px!important}
 .quick-badge-input.pce-inp:focus{width:auto!important;max-width:120px!important;position:static!important;box-shadow:none!important}
 .pkg-cardpills{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LEGIBILIDAD Y USO EN CELULAR
+   Restos del diseño oscuro original que quedaron sobre el sidebar y las
+   tarjetas blancas, más objetivos táctiles que en el celular no se podían
+   tocar sin errarle.
+   ═══════════════════════════════════════════════════════════════════ */
+/* Estaba en blanco al 20% sobre un sidebar blanco: no se veía nada */
+.sb-version{color:#94a3b8}
+.sb-group-lbl{color:#475569;font-size:10.5px}
+
+/* El check de selección múltiple era una caja oscura translúcida sobre
+   tarjeta blanca; ahora se ve el recuadro y se puede tocar. */
+.pkg-bulk-check-wrap{background:#ffffff;border:1.5px solid #cbd5e1;padding:6px;
+  box-shadow:0 2px 6px rgba(15,23,42,.12)}
+.pkg-bulk-check-wrap:hover{background:#eff6ff;border-color:#0052cc}
+.pkg-bulk-check{width:18px;height:18px;accent-color:#0052cc}
+
+@media(max-width:640px){
+  /* 44px es el mínimo cómodo para el pulgar */
+  .pkg-bulk-check-wrap{padding:11px;top:8px;left:8px}
+  .pkg-bulk-check{width:20px;height:20px}
+  .drag-list-handle,.pkg-drag-handle{min-width:40px;min-height:40px;padding:0 10px}
+  .drag-list-handle .ms,.pkg-drag-handle .ms{font-size:22px!important}
+  /* Los "+7 días" / "+15 días" tenían 24px de alto */
+  .btn.btn-ghost{min-height:36px;padding:8px 12px}
+  .pli-qbtn{width:40px;height:40px}
+  /* Ningún bloque puede empujar la página a lo ancho */
+  html,body{max-width:100%;overflow-x:hidden}
+  img,video,canvas,iframe{max-width:100%}
+}
 </style>
 </head>
 <body class="light">

@@ -45,6 +45,11 @@ html[data-theme="light"], body.light {
   --mut2: #94a3b8;
   --blue: #0052cc;
   --blue2: #1d4ed8;
+  /* El dorado de marca (#f2b352) sobre blanco da 1.85:1 — ilegible. Como
+     --gold solo se usa para TEXTO e íconos (los fondos dorados van con
+     rgba() literal), acá va la versión oscura. */
+  --gold: #9a5b00;
+  --mut2: #64748b;
 }
 html[data-theme="light"] .topbar {
   background: #ffffff !important;
@@ -78,6 +83,15 @@ input:disabled,select:disabled,textarea:disabled{background:#e2e8f0;color:#64748
 input:-webkit-autofill,input:-webkit-autofill:hover,input:-webkit-autofill:focus{
   -webkit-text-fill-color:#0f172a;caret-color:#0f172a;
   -webkit-box-shadow:0 0 0 1000px #f8fafc inset;box-shadow:0 0 0 1000px #f8fafc inset}
+/* Los file input nativos se ven como un control roto y dicen "Choose File".
+   Con esto el botón se lee como botón y el campo entra en el mismo lenguaje
+   visual que el resto del formulario. */
+input[type=file]{padding:8px 10px;cursor:pointer;font-weight:600;color:#475569}
+input[type=file]::file-selector-button{
+  margin-right:12px;padding:9px 15px;border:none;border-radius:9px;
+  background:#0052cc;color:#ffffff;font-family:inherit;font-size:13.5px;
+  font-weight:700;cursor:pointer;transition:background .15s}
+input[type=file]::file-selector-button:hover{background:#003d9b}
 select option{background:#ffffff;color:#0f172a}
 select{-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364748b'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;background-size:20px;padding-right:36px}
 .reqchip{cursor:pointer;user-select:none;transition:background .12s,color .12s,border-color .12s}
@@ -380,15 +394,24 @@ img,video,canvas,iframe{max-width:100%}
   .avatar{width:40px;height:40px;font-size:14px}
   .doc{padding:10px 12px;gap:10px}
 
-  /* Modal casi a pantalla completa: en 390px, 24px de aire por lado
-     dejaban el formulario en una columna de 340px. */
-  .modal-bg{padding:10px;align-items:flex-end}
-  .modal{max-height:94dvh;border-radius:20px!important}
-  .modal-h{padding:15px 16px;border-radius:20px 20px 0 0}
-  .modal-h h3{font-size:16.5px}
+  /* Los modales en mobile son una hoja que sube desde abajo, como en una app.
+     Antes tenían 24px de aire por lado (formulario de 340px en una pantalla de
+     390px) y quedaban centrados, lejos del pulgar. */
+  .modal-bg{padding:0;align-items:flex-end}
+  .modal{
+    margin:0;width:100%;max-width:none;max-height:92dvh;
+    border-radius:22px 22px 0 0!important;border-bottom:none!important;
+    animation:sheetUp .26s cubic-bezier(.2,.8,.3,1)}
+  @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+  /* Barrita de "agarre", la señal universal de que esto se puede cerrar */
+  .modal-h{padding:20px 16px 15px;border-radius:22px 22px 0 0;position:relative}
+  .modal-h:before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);
+    width:38px;height:4px;border-radius:2px;background:#cbd5e1}
+  .modal-h h3{font-size:17px}
   .modal-b{padding:16px}
-  .modal-f{padding:13px 16px;gap:8px}
-  .modal-f .btn{flex:1;justify-content:center}
+  /* Footer pegado abajo, botones grandes y por encima de la barra de gestos */
+  .modal-f{padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));gap:8px}
+  .modal-f .btn{flex:1;justify-content:center;min-height:48px;font-size:15px}
 }
 
 /* ── Mobile chico (iPhone SE, 360px) ── */
@@ -626,7 +649,10 @@ function switchPaxTab(tab) {
 // de Chrome y el modo offline). Si falla, el portal sigue funcionando igual.
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/portal/sw.js', { scope: '/portal/' }).catch(() => {});
+    // scope '/portal' (sin barra) para que cubra la URL real del portal.
+    // Requiere el header Service-Worker-Allowed de vercel.json.
+    navigator.serviceWorker.register('/portal/sw.js', { scope: '/portal' })
+      .catch(() => navigator.serviceWorker.register('/portal/sw.js').catch(() => {}));
   });
 }
 
