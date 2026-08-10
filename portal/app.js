@@ -631,12 +631,15 @@ function aiAccessMsg(pid) {
   const p = A.pax.find(x => x.id === pid); if (!p) return;
   const viajes = tripsOfPax(pid).map(t => t.title).join(', ');
   withAIBtn('aiMsgBtn', 'Redactando…', async () => {
+    const nombre = (p.full_name || '').split(' ')[0];
     const r = await askAI(
-      `Escribí un mensaje de WhatsApp de Corradi Viajes (agencia de Rosario) para ${p.full_name}.\n` +
-      `Le avisamos que ya tiene su viaje cargado en el portal.\n` +
-      `${viajes ? 'Viaje(s): ' + viajes + '.' : ''}\n` +
-      `Tiene que incluir, tal cual: el link ${PORTAL_URL} y que su usuario es su DNI ${p.dni}.\n` +
-      `Reglas: tuteo argentino, cálido, máximo 60 palabras. Sin emojis. ` +
+      `Escribí un mensaje de WhatsApp de Corradi Viajes (agencia de Rosario) para ${nombre}.\n` +
+      `Le avisamos que ya tiene el viaje cargado en el portal.\n` +
+      (viajes ? `Se llama: ${viajes}. Nombralo con naturalidad, no como una lista.\n` : '') +
+      `Tiene que incluir, tal cual: el link ${PORTAL_URL} y que entra con su DNI ${p.dni}.\n` +
+      `Reglas: hablale de VOS todo el tiempo (tenés, entrá, escribinos). ` +
+      `NUNCA lo trates de usted ni escribas "su usuario" o "su DNI": es "tu usuario", "tu DNI". ` +
+      `Cálido y breve, máximo 60 palabras. Sin emojis. ` +
       `NO inventes fechas, vuelos, hoteles ni precios.\n` +
       `Devolvé JSON: {"mensaje":"..."}`, 900);
     const txt = (r.mensaje || r.message || '').trim();
