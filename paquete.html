@@ -653,11 +653,19 @@ function buildGallery(images, pkg) {
     const dias = pkg.days ? `${pkg.days} días` : '';
     const desde = pkg.price_usd ? `desde USD ${pkg.price_usd}` : '';
 
+    // La descripción del paquete viene con HTML (<p>, <br>, entidades): en una
+    // meta description eso se muestra tal cual, con las etiquetas a la vista.
+    const plano = (html) => {
+      const t = document.createElement('div');
+      t.innerHTML = html || '';
+      return (t.textContent || '').replace(/\s+/g, ' ').trim();
+    };
+
     const title = `${pkg.name}${lugar && !pkg.name.includes(lugar) ? ' — ' + lugar : ''} | Corradi Viajes`;
     const desc = [
       `Viajá a ${lugar || pkg.name} con Corradi Viajes, agencia de Rosario.`,
       dias, desde,
-      (pkg.description || '').replace(/\s+/g, ' ').trim().slice(0, 110),
+      plano(pkg.description).slice(0, 110),
     ].filter(Boolean).join(' · ').slice(0, 300);
 
     const img = pkg.image_url || `${SITE}/assets/logo.png`;
