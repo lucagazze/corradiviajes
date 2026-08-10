@@ -540,8 +540,114 @@ function destInfoHtml(dest, trip) {
 }
 
 // ── Generación con IA ──
-// La clave de OpenAI vive en el servidor (Supabase Edge Function "dest-ia"),
-// nunca en el navegador. Solo un admin logueado puede invocarla.
+// ══════════════════════════════════════════════════════════
+//  IA
+// ══════════════════════════════════════════════════════════
+// La clave de OpenAI vive en el servidor (Edge Functions "dest-ia" y "ai-gen"),
+// nunca en el navegador. Las dos verifican adentro que quien llama sea admin.
+//   dest-ia → guía del destino (estructura fija)
+//   ai-gen  → IA genérica, la misma que usa el admin de paquetes
+async function askAI(prompt, maxTokens) {
+  const { data, error } = await db.functions.invoke('ai-gen', {
+    body: { prompt, max_completion_tokens: maxTokens || 1800 },
+  });
+  if (error) {
+    let msg = 'La IA no pudo responder';
+    try { const b = await error.context.json(); if (b && b.error) msg = b.error; } catch (e) {}
+    throw new Error(msg);
+  }
+  if (!data || !data.text) throw new Error('La IA no devolvió contenido');
+  const m = data.text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error('La IA no devolvió un JSON válido');
+  return JSON.parse(m[0]);
+}
+
+// Deja el botón en "Generando…" y lo restaura pase lo que pase.
+async function withAIBtn(id, label, fn) {
+  const btn = $(id);
+  const prev = btn ? btn.innerHTML : '';
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span>' + (label || 'Generando…'); }
+  try { await fn(); }
+  catch (e) { toast('Error: ' + (e.message || e), 'err'); }
+  finally { if (btn) { btn.disabled = false; btn.innerHTML = prev; } }
+}
+
+// ── Notas del viaje ──────────────────────────────────────────────────
+// Escribe la info práctica que el pasajero ve al abrir su viaje.
+function aiTripNotes() {
+  const titulo = ($('ntTitle') || {}).value || '';
+  const dest = ($('ntDest') || {}).value || '';
+  const pais = ($('ntCountry') || {}).value || '';
+  const dep = ($('ntDep') || {}).value || '';
+  const ret = ($('ntRet') || {}).value || '';
+  if (!dest && !pais && !titulo) { toast('Cargá al menos el destino o el país', 'err'); return; }
+  withAIBtn('aiNotesBtn', 'Escribiendo…', async () => {
+    const r = await askAI(
+      `Sos de Corradi Viajes, agencia de Rosario, Argentina. Escribí las notas que el ` +
+      `pasajero va a leer al abrir su viaje en el portal.\n` +
+      `Viaje: "${titulo}". Destino: ${dest || '(sin ciudad)'}. País: ${pais || '(sin país)'}. ` +
+      `Salida: ${dep || 'sin fecha'}. Regreso: ${ret || 'sin fecha'}.\n\n` +
+      `Reglas: tuteo argentino, cálido y concreto. Entre 60 y 110 palabras. ` +
+      `Hablá de qué llevar, clima esperable y recomendaciones prácticas del destino. ` +
+      `NO inventes vuelos, hoteles, horarios, precios ni servicios contratados: no los conocés. ` +
+      `NO uses emojis ni viñetas.\n` +
+      `Devolvé JSON: {"notas":"..."}`, 1200);
+    const txt = (r.notas || r.notes || '').trim();
+    if (!txt) throw new Error('La IA no devolvió texto');
+    const ta = $('ntNotes');
+    if (ta) { ta.value = txt; ta.focus(); }
+    toast('Notas escritas ✓ revisalas antes de guardar', 'ok');
+  });
+}
+
+// ── Checklist de documentación ───────────────────────────────────────
+// Marca qué papeles hacen falta para ESE destino (visa, seguro, etc.).
+function aiReqDocs() {
+  const dest = ($('ntDest') || {}).value || '';
+  const pais = ($('ntCountry') || {}).value || '';
+  if (!dest && !pais) { toast('Cargá el destino o el país primero', 'err'); return; }
+  withAIBtn('aiReqBtn', 'Pensando…', async () => {
+    const r = await askAI(
+      `Un pasajero argentino viaja a ${[dest, pais].filter(Boolean).join(', ')}.\n` +
+      `De esta lista exacta, decime cuáles corresponden para ese destino: ` +
+      `${JSON.stringify(REQ_CATS)}.\n` +
+      `Criterio: incluí siempre Pasaporte si el destino es fuera del Mercosur, DNI si es Mercosur, ` +
+      `Visa solo si los argentinos realmente la necesitan, y Seguro si es obligatorio o muy recomendable.\n` +
+      `Devolvé JSON: {"categorias":["..."],"motivo":"una frase corta"}`, 900);
+    const cats = (r.categorias || r.categories || []).map(String);
+    if (!cats.length) throw new Error('La IA no sugirió ninguna categoría');
+    let n = 0;
+    document.querySelectorAll('.reqchip').forEach(ch => {
+      const on = cats.some(c => norm(c) === norm(ch.dataset.c));
+      ch.classList.toggle('sel', on);
+      if (on) n++;
+    });
+    toast(`${n} marcadas${r.motivo ? ' · ' + r.motivo : ''}`, 'ok');
+  });
+}
+
+// ── Mensaje de acceso para el pasajero ───────────────────────────────
+function aiAccessMsg(pid) {
+  const p = A.pax.find(x => x.id === pid); if (!p) return;
+  const viajes = tripsOfPax(pid).map(t => t.title).join(', ');
+  withAIBtn('aiMsgBtn', 'Redactando…', async () => {
+    const r = await askAI(
+      `Escribí un mensaje de WhatsApp de Corradi Viajes (agencia de Rosario) para ${p.full_name}.\n` +
+      `Le avisamos que ya tiene su viaje cargado en el portal.\n` +
+      `${viajes ? 'Viaje(s): ' + viajes + '.' : ''}\n` +
+      `Tiene que incluir, tal cual: el link ${PORTAL_URL} y que su usuario es su DNI ${p.dni}.\n` +
+      `Reglas: tuteo argentino, cálido, máximo 60 palabras. Sin emojis. ` +
+      `NO inventes fechas, vuelos, hoteles ni precios.\n` +
+      `Devolvé JSON: {"mensaje":"..."}`, 900);
+    const txt = (r.mensaje || r.message || '').trim();
+    if (!txt) throw new Error('La IA no devolvió texto');
+    _aiMsg[pid] = txt;
+    openPassengerDetail(pid);
+    toast('Mensaje redactado ✓', 'ok');
+  });
+}
+const _aiMsg = {};   // mensajes redactados por IA, por pasajero (no se guardan)
+
 async function genDest(tid) {
   const t = A.trips.find(x => x.id === tid); if (!t) return;
   if (!t.country && !t.destination) { toast('Primero cargale el país o la ciudad al viaje', 'err'); return; }
@@ -761,6 +867,7 @@ function accessMessage(p) {
 
 function accessBox(p) {
   const wa = (p.phone || '').replace(/\D/g, '');
+  const msg = _aiMsg[p.id];
   return `<div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:14px 16px;margin-bottom:16px">
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
       <span class="ms" style="color:#0052cc;font-size:19px">key</span>
@@ -768,17 +875,21 @@ function accessBox(p) {
     </div>
     <div style="font-size:13.5px;color:#334155;font-weight:500;margin-bottom:4px">Entra con su DNI. No usa contraseña.</div>
     <div style="font-family:ui-monospace,monospace;font-size:21px;font-weight:800;color:#0f172a;letter-spacing:.04em;margin-bottom:12px">${esc(p.dni)}</div>
+    ${msg ? `<div style="background:#ffffff;border:1px solid #bfdbfe;border-radius:11px;padding:11px 13px;margin-bottom:11px;
+        font-size:13.5px;color:#334155;line-height:1.5;white-space:pre-wrap">${esc(msg)}</div>` : ''}
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <button class="btn btn-ghost btn-sm" onclick="copyAccess('${p.id}')"><span class="ms">content_copy</span>Copiar instrucciones</button>
+      <button class="btn btn-ghost btn-sm" onclick="copyAccess('${p.id}')"><span class="ms">content_copy</span>Copiar${msg ? ' mensaje' : ' instrucciones'}</button>
+      <button class="btn btn-ghost btn-sm" id="aiMsgBtn" onclick="aiAccessMsg('${p.id}')"><span class="ms">auto_awesome</span>${msg ? 'Otra versión' : 'Redactar con IA'}</button>
       ${wa ? `<a class="btn btn-primary btn-sm" target="_blank" rel="noopener"
-        href="https://wa.me/${wa}?text=${encodeURIComponent(accessMessage(p))}"><span class="ms">send</span>Enviar por WhatsApp</a>` : ''}
+        href="https://wa.me/${wa}?text=${encodeURIComponent(msg || accessMessage(p))}"><span class="ms">send</span>Enviar por WhatsApp</a>` : ''}
     </div>
   </div>`;
 }
 
 async function copyAccess(pid) {
   const p = A.pax.find(x => x.id === pid); if (!p) return;
-  const txt = accessMessage(p);
+  // Si la IA redactó uno, se copia ese; si no, el texto fijo.
+  const txt = _aiMsg[pid] || accessMessage(p);
   try {
     await navigator.clipboard.writeText(txt);
     toast('Instrucciones copiadas ✓', 'ok');
@@ -925,7 +1036,14 @@ function openNewTrip(edit) {
       <datalist id="pvCountries">${COUNTRIES.map(c => `<option value="${esc(c)}">`).join('')}</datalist></div></div>
     <div class="grid2"><div class="fg"><label class="fl">Fecha de salida</label><input id="ntDep" type="date" value="${t?.depart_date || ''}"></div>
     <div class="fg"><label class="fl">Fecha de regreso</label><input id="ntRet" type="date" value="${t?.return_date || ''}"></div></div>
-    <div class="fg"><label class="fl">Notas (opcional)</label><textarea id="ntNotes" rows="3" placeholder="Info del viaje…">${esc(t?.notes || '')}</textarea></div>
+    <div class="fg">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <label class="fl" style="margin:0">Notas (las lee el pasajero)</label>
+        <div style="flex:1"></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="aiNotesBtn" onclick="aiTripNotes()"><span class="ms">auto_awesome</span>Escribir con IA</button>
+      </div>
+      <textarea id="ntNotes" rows="3" placeholder="Qué llevar, clima, recomendaciones…">${esc(t?.notes || '')}</textarea>
+    </div>
     <div class="fg"><label class="fl">Imagen del viaje (opcional)</label>
       <div style="display:flex;align-items:center;gap:12px">
         <div id="ntImgPrev" style="width:84px;height:56px;border-radius:10px;overflow:hidden;border:1px solid var(--line);flex-shrink:0;background:rgba(255,255,255,.04);display:flex;align-items:center;justify-content:center">
@@ -937,7 +1055,12 @@ function openNewTrip(edit) {
       <input type="hidden" id="ntImgDel" value="">
       <p class="sub-mut" style="font-size:12px;margin-top:6px">Si no cargás imagen, se usa la <b>bandera del país</b> automáticamente.</p>
     </div>
-    <div class="fg"><label class="fl">Checklist de documentación del viaje</label>
+    <div class="fg">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <label class="fl" style="margin:0">Checklist de documentación del viaje</label>
+        <div style="flex:1"></div>
+        <button type="button" class="btn btn-ghost btn-sm" id="aiReqBtn" onclick="aiReqDocs()"><span class="ms">auto_awesome</span>Sugerir con IA</button>
+      </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px">${REQ_CATS.map(c => `<button type="button" class="chip chip-mut reqchip ${t && A.reqs.some(r => r.trip_id === t.id && r.category === c) ? 'sel' : ''}" data-c="${esc(c)}" onclick="this.classList.toggle('sel')">${esc(c)}</button>`).join('')}</div>
       <p class="sub-mut" style="font-size:12px;margin-top:8px">Marcá lo que cada pasajero tiene que tener cargado. Si falta algo, te avisamos en Inicio para que lo subas.</p>
     </div>

@@ -202,7 +202,7 @@ body, body.light {
 .seg-ico .ms { font-size:21px; }
 .seg-ico-gold { background:rgba(242,179,82,.16); color:#b45309; }
 .seg-opt.active .seg-ico { background:#2563eb; color:#fff; }
-.seg-opt.active .seg-ico-gold { background:#d97706; color:#fff; }
+.seg-opt.active .seg-ico-gold { background:#b45309; color:#fff; }
 .seg-txt { display:flex; flex-direction:column; gap:3px; min-width:0; }
 .seg-t { font-size:14px; font-weight:700; color:#0f172a; }
 .seg-d { font-size:11.5px; color:#64748b; line-height:1.35; }
@@ -287,7 +287,7 @@ body.pkg-dragging .pkg-grid, body.pkg-dragging .pkg-list {
 #sbFilterGrupal .ms, #sbFilterGrupal .ri { color: #2563eb !important; }
 #sbFilterInspirador .ms, #sbFilterInspirador .ri { color: #7c3aed !important; }
 #sbFilterSecOferta .ms, #sbFilterSecOferta .ri { color: #e11d48 !important; }
-#sbFilterActive .ms, #sbFilterActive .ri { color: #16a34a !important; }
+#sbFilterActive .ms, #sbFilterActive .ri { color:#166534 !important; }
 #sbFilterInactive .ms, #sbFilterInactive .ri { color: #dc2626 !important; }
 
 /* Sub-item count badges */
@@ -332,9 +332,9 @@ body.pkg-dragging .pkg-grid, body.pkg-dragging .pkg-list {
   background: #f0fdf4 !important;
   border: 1.5px solid #bbf7d0 !important;
 }
-.dash-card-active .dash-num { color: #16a34a !important; font-size: 32px !important; font-weight: 800 !important; }
+.dash-card-active .dash-num { color:#166534 !important; font-size: 32px !important; font-weight: 800 !important; }
 .dash-card-active .dash-label { color: #15803d !important; font-weight: 800 !important; font-size: 11.5px !important; text-transform: uppercase !important; letter-spacing: .06em !important; }
-.dash-card-active .dash-icon { background: #dcfce7 !important; color: #16a34a !important; }
+.dash-card-active .dash-icon { background: #dcfce7 !important; color:#166534 !important; }
 
 .dash-card-featured {
   background: #fefce8 !important;
@@ -739,8 +739,8 @@ body.pkg-dragging .pkg-grid, body.pkg-dragging .pkg-list {
 .qbtn-star.on:hover { background:#fde68a !important; }
 .pkg-qbtn.qbtn-star.on:hover .ms { color:#b45309 !important; }
 
-.pkg-qbtn.qbtn-power .ms { color:#16a34a !important; transition:color .15s; }
-.qbtn-power:hover { border-color:#16a34a !important; }
+.pkg-qbtn.qbtn-power .ms { color:#166534 !important; transition:color .15s; }
+.qbtn-power:hover { border-color:#166534 !important; }
 .qbtn-power.off {
   background:#fee2e2 !important; border-color:#ef4444 !important;
   box-shadow: inset 0 2px 5px rgba(153,27,27,.22) !important;
@@ -1566,7 +1566,7 @@ select option {
 .btn-danger:hover{background:#fee2e2 !important}
 .btn-ghost{background:#ffffff !important;color:#334155 !important;border:1px solid #cbd5e1 !important}
 .btn-ghost:hover{background:#f1f5f9 !important;color:#0f172a !important;border-color:#94a3b8 !important}
-.btn-green{background:#f0fdf4 !important;color:#16a34a !important;border:1px solid #bbf7d0 !important}
+.btn-green{background:#f0fdf4 !important;color:#166534 !important;border:1px solid #bbf7d0 !important}
 .btn-green:hover{background:#dcfce7 !important}
 .btn-sm{padding:6px 13px;font-size:12px;border-radius:8px}
 .btn-icon{padding:7px;width:34px;height:34px;justify-content:center}
@@ -1801,6 +1801,11 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 .btn-ghost .ms,.btn-ghost .material-symbols-outlined,
 .media-btn .ms,.media-btn .material-symbols-outlined{color:inherit !important}
 .pkg-qbtn.qbtn-star .ms{color:#64748b !important}
+/* El icono de arrastrar quedaba en 4.25:1 sobre el azul palido de la fila */
+.sorter-item .ms,.drag-list-handle .ms,.pkg-drag-handle .ms,
+[style*="cursor:grab"],[style*="cursor: grab"]{color:#1e5c9e !important}
+/* Estados vacios: es texto real, no decoracion */
+.empty p,.hl-empty,.cp-no-results{color:#64748b !important}
 .pkg-qbtn.qbtn-star.on .ms{color:#92400e !important}
 #sbFilterAll .ms,#sbFilterAll .ri{color:#0369a1 !important}
 #sbFilterSecOferta .ms,#sbFilterSecOferta .ri{color:#be123c !important}
@@ -1858,8 +1863,10 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
   /* Barra de formato del texto enriquecido (N, K, listas…) */
   .tb-btn{min-width:38px;height:38px;font-size:13px;padding:0 9px}
   /* Celdas de la lista de paquetes */
-  .pli-cell{min-height:34px;display:flex;align-items:center}
-  .pli-cell-etq{min-height:38px}
+  .pli-cell{min-height:38px;display:flex;align-items:center}
+  .pli-cell-etq{min-height:40px}
+  /* Las pestañas del editor eran de 25px de alto */
+  .ed-tab{min-height:44px;display:flex;align-items:center}
   /* Cerrar el editor */
   #editorPanel .ed-header button{min-height:40px}
   /* Las pestañas del editor se cortan sin ninguna señal de que hay más:
@@ -1933,17 +1940,17 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <span class="sb-sub-count" id="sbCountGrupal" style="color:#0369a1;background:rgba(122,179,224,0.1)">—</span>
         </div>
         <div class="sb-sub-item" id="sbFilterInspirador" onclick="switchPkgFilter('sec_inspirador','all')">
-          <span class="ms material-symbols-outlined" style="color:#a855f7">auto_awesome</span>Viajes Sin Oferta
-          <span class="sb-sub-count" id="sbCountInspirador" style="color:#a855f7;background:rgba(168,85,247,0.1)">—</span>
+          <span class="ms material-symbols-outlined" style="color:#7e22ce">auto_awesome</span>Viajes Sin Oferta
+          <span class="sb-sub-count" id="sbCountInspirador" style="color:#7e22ce;background:rgba(168,85,247,0.1)">—</span>
         </div>
         <div class="sb-sub-item" id="sbFilterSecOferta" onclick="switchPkgFilter('sec_oferta','all')">
-          <span class="ms material-symbols-outlined" style="color:#f43f5e">local_fire_department</span>Viajes en Oferta
-          <span class="sb-sub-count" id="sbCountSecOferta" style="color:#f43f5e;background:rgba(244,63,94,0.1)">—</span>
+          <span class="ms material-symbols-outlined" style="color:#be123c">local_fire_department</span>Viajes en Oferta
+          <span class="sb-sub-count" id="sbCountSecOferta" style="color:#be123c;background:rgba(244,63,94,0.1)">—</span>
         </div>
         <div class="sb-divider" style="margin: 10px 16px; opacity: 0.3;"></div>
         <div class="sb-group-lbl">Por estado <span class="sb-group-hint">se suma al de arriba</span></div>
         <div class="sb-sub-item" id="sbFilterActive" onclick="switchPkgFilter('active','all')">
-          <span class="ms material-symbols-outlined" style="color:#16a34a;font-weight:800">check_circle</span>Activos
+          <span class="ms material-symbols-outlined" style="color:#166534;font-weight:800">check_circle</span>Activos
           <span class="sb-sub-count" id="sbCountActive" style="color:#15803d;background:rgba(74,222,128,0.08)">—</span>
         </div>
         <div class="sb-sub-item" id="sbFilterInactive" onclick="switchPkgFilter('inactive','all')">
@@ -1998,7 +2005,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <div class="dash-label">Paquetes totales</div>
         </div>
         <div class="dash-card dash-card-active" onclick="dashFilter('active')" style="cursor:pointer" title="Ver activos">
-          <div class="dash-icon"><span class="material-symbols-outlined" style="color:#16a34a">check_circle</span></div>
+          <div class="dash-icon"><span class="material-symbols-outlined" style="color:#166534">check_circle</span></div>
           <div class="dash-num" id="dActive">—</div>
           <div class="dash-label">Activos</div>
         </div>
@@ -2057,7 +2064,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
 
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num" id="sTotal">—</div><div class="stat-label">Total</div></div>
-        <div class="stat-card"><div class="stat-num" id="sActive" style="color:#16a34a;font-weight:800">—</div><div class="stat-label">Activos</div></div>
+        <div class="stat-card"><div class="stat-num" id="sActive" style="color:#166534;font-weight:800">—</div><div class="stat-label">Activos</div></div>
         <div class="stat-card"><div class="stat-num" id="sInactive" style="color:#dc2626;font-weight:800">—</div><div class="stat-label">Inactivos</div></div>
       </div>
 
@@ -2414,7 +2421,7 @@ body.light .pce-lbl{color:rgba(0,0,0,0.5)}
           <div class="tgl-row" style="margin-bottom: 0px">
             <div class="tgl-info">
               <div class="tgl-name" style="display:flex;align-items:center;gap:6px;font-weight:700">
-                <span class="ms material-symbols-outlined" style="color:#16a34a;font-weight:800">checklist</span>¿Incluir servicios (Incluye/No incluye)?
+                <span class="ms material-symbols-outlined" style="color:#166534;font-weight:800">checklist</span>¿Incluir servicios (Incluye/No incluye)?
               </div>
               <div class="tgl-desc">Activa el listado detallado de elementos incluidos y no incluidos</div>
             </div>
@@ -2922,14 +2929,14 @@ function renderPkgView() {
       </div>
       
       <div class="pkg-section-group" data-section-group="inspirador" style="margin-bottom: 30px;">
-        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #a855f7; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color:#7e22ce; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
           <span class="ms material-symbols-outlined">auto_awesome</span> ✨ Sección 2: Viajes Ind Sin Oferta (${inspiradores.length})
         </h3>
         ${inspiradores.length ? `<div class="${wrapClass}">${head}${inspiradores.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color:#94a3b8">No hay viajes en esta sección</p></div>'}
       </div>
       
       <div class="pkg-section-group" data-section-group="oferta" style="margin-bottom: 30px;">
-        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color: #f43f5e; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
+        <h3 style="font-size: 15px; font-weight: 700; margin-bottom: 12px; color:#be123c; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); padding-bottom: 6px;">
           <span class="ms material-symbols-outlined">local_fire_department</span> 🔥 Sección 3: Viajes Ind en Oferta (${ofertas.length})
         </h3>
         ${ofertas.length ? `<div class="${wrapClass}">${head}${ofertas.map((p,i)=>renderFn(p, i+1)).join('')}</div>` : '<div class="empty" style="padding: 20px 0;"><p style="font-size: 12px; color:#94a3b8">No hay viajes en esta sección</p></div>'}
@@ -3708,7 +3715,7 @@ function renderImgMgrSelected() {
   const sel = document.getElementById('imgMgrSelected');
   if (!sel) return;
   if (!imgMgrOrder.length) {
-    sel.innerHTML = `<div style="color:#94a3b8;font-size:13px;padding:20px 0;width:100%;text-align:center">Ninguna imagen seleccionada — elegí de la biblioteca</div>`;
+    sel.innerHTML = `<div style="color:#64748b;font-size:13px;padding:20px 0;width:100%;text-align:center">Ninguna imagen seleccionada — elegí de la biblioteca</div>`;
     return;
   }
   sel.innerHTML = imgMgrOrder.map((url,i) => `
@@ -5820,8 +5827,8 @@ function renderSorterLists() {
   
   const sections = [
     { title: '👥 Sección 1: Salidas Grupales', key: 'salida_grupal', color: '#7ab3e0' },
-    { title: '✨ Sección 2: Viajes Ind Sin Oferta', key: 'inspirador', color: '#a855f7' },
-    { title: '🔥 Sección 3: Viajes Ind en Oferta', key: 'oferta', color: '#f43f5e' }
+    { title: '✨ Sección 2: Viajes Ind Sin Oferta', key: 'inspirador', color:'#7e22ce' },
+    { title: '🔥 Sección 3: Viajes Ind en Oferta', key: 'oferta', color:'#be123c' }
   ];
   
   container.innerHTML = sections.map(sec => {
@@ -5846,7 +5853,7 @@ function renderSorterLists() {
                 <button class="pkg-qbtn" style="background:#ffffff;width:22px;height:22px;border:none;cursor:pointer" onclick="quickMoveSorter(${p.id}, 'down')" title="Bajar">▼</button>
               </div>
             </div>
-          `).join('') : `<div style="color:#94a3b8;font-size:12px;padding:12px;text-align:center">No hay viajes en esta sección</div>`}
+          `).join('') : `<div style="color:#64748b;font-size:12px;padding:12px;text-align:center">No hay viajes en esta sección</div>`}
         </div>
       </div>
     `;
