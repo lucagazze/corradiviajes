@@ -329,6 +329,15 @@ select option{background-color:#ffffff!important;color:#0f172a!important;font-si
 #pwaBanner .pwa-t span{font-size:12.5px;color:#475569;font-weight:500}
 #pwaBanner .pwa-x{padding:6px;min-width:auto}
 #pwaBanner .pwa-x .ms{font-size:18px}
+/* Con un modal abierto el banner quedaba flotando por encima de los botones
+   de "Asignar pasajeros" / "Subir doc" y no dejaba tocarlos. */
+body.modal-open #pwaBanner{display:none}
+/* Y el fondo no tiene que scrollear detrás del modal */
+body.modal-open{overflow:hidden}
+
+/* Flecha de volver: la inserta openModal() cuando hay a dónde volver */
+.modal-back{flex-shrink:0}
+.modal-back .ms{font-size:20px}
 @media(max-width:480px){
   #pwaBanner{flex-wrap:wrap}
   #pwaBanner .pwa-t{flex:1 1 100%;order:1}
@@ -415,7 +424,13 @@ img,video,canvas,iframe{max-width:100%}
   .modal-h{padding:20px 16px 15px;border-radius:22px 22px 0 0;position:relative}
   .modal-h:before{content:'';position:absolute;top:7px;left:50%;transform:translateX(-50%);
     width:38px;height:4px;border-radius:2px;background:#cbd5e1}
-  .modal-h h3{font-size:17px}
+  /* En la ficha de un viaje el encabezado llega a tener volver + miniatura +
+     título + editar + borrar + cerrar. A 360px hay que apretar y dejar que el
+     título se corte, no que empuje los botones fuera de la pantalla. */
+  .modal-h{gap:6px}
+  .modal-h h3{font-size:16px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .modal-h .btn-icon{width:38px;height:38px;min-height:38px;padding:7px}
+  .modal-h .avatar,.modal-h .thumb{width:34px;height:34px}
   .modal-b{padding:16px}
   /* Footer pegado abajo, botones grandes y por encima de la barra de gestos */
   .modal-f{padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));gap:8px}

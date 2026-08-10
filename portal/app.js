@@ -53,11 +53,121 @@ function toast(msg, type) {
   const el = $('toast'); el.textContent = msg; el.className = 'show ' + (type || '');
   clearTimeout(_toastT); _toastT = setTimeout(() => el.className = el.className.replace('show', ''), 3200);
 }
+// ══════════════════════════════════════════════════════════
+//  MODALES + HISTORIAL ("volver")
+// ══════════════════════════════════════════════════════════
+// Antes cada modal era un callejón sin salida: desde un viaje entrabas a un
+// pasajero y la única salida era cerrar todo y volver a empezar. Ahora se
+// guarda qué vista abrió cada modal para poder rehacerla.
+//
+// Se registra la LLAMADA (función + argumentos), no el HTML, así al volver la
+// vista se vuelve a dibujar con los datos frescos (si borraste un documento,
+// al volver ya no está).
+
+let _modalHist = [];      // [{ name:'openTripDetail', args:[12] }, …]
+let _modalStates = 0;     // entradas que metimos en el historial del navegador
+let _navBack = false;     // true mientras volvemos: no re-apilar ni re-pushear
+
 function openModal(html, wide) {
   $('modalRoot').innerHTML = `<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal ${wide ? 'wide' : ''}">${html}</div></div>`;
+  // El banner de "Instalá la app" quedaba flotando por encima de los botones
+  // del modal, y el fondo seguía scrolleando detrás.
+  document.body.classList.add('modal-open');
+  _injectBackBtn();
+  if (!_navBack) {
+    try { history.pushState({ pvModal: 1 }, ''); _modalStates++; } catch (e) {}
+  }
   hydrateThumbs();
 }
-function closeModal() { $('modalRoot').innerHTML = ''; }
+
+function closeModal() {
+  $('modalRoot').innerHTML = '';
+  document.body.classList.remove('modal-open');
+  _modalHist = [];
+  const n = _modalStates;
+  _modalStates = 0;
+  // Devolvemos al navegador las entradas que metimos, para no dejarle al
+  // usuario que apretar "atrás" cinco veces para salir del portal.
+  if (n > 0) {
+    _navBack = true;
+    try { history.go(-n); } catch (e) {}
+    setTimeout(() => { _navBack = false; }, 120);
+  }
+}
+
+// Vuelve una vista atrás. Si no hay a dónde volver, cierra.
+function modalBack() {
+  _modalHist.pop();                  // la vista actual
+  const prev = _modalHist.pop();     // la anterior (el wrapper la reinserta)
+  if (!prev) { closeModal(); return; }
+  const fn = window[prev.name];
+  if (typeof fn !== 'function') { closeModal(); return; }
+  fn.apply(null, prev.args);
+}
+
+// Flecha de volver en el encabezado, solo si hay a dónde volver.
+function _injectBackBtn() {
+  if (_modalHist.length < 2) return;
+  const h = document.querySelector('#modalRoot .modal-h');
+  if (!h || h.querySelector('.modal-back')) return;
+  const b = document.createElement('button');
+  b.className = 'btn btn-icon btn-ghost modal-back';
+  b.type = 'button';
+  b.title = 'Volver';
+  b.setAttribute('aria-label', 'Volver');
+  b.innerHTML = '<span class="ms">arrow_back</span>';
+  b.addEventListener('click', modalBack);
+  h.insertBefore(b, h.firstChild);
+}
+
+// Las vistas que forman parte de la navegación. Se envuelven para que cada
+// una se anote sola en el historial, sin tocar los cientos de onclick que ya
+// existen en el HTML.
+const _MODAL_VIEWS = [
+  'openPassengerDetail', 'openTripDetail', 'openEditPassenger', 'openNewPassenger',
+  'openNewTrip', 'openEditDest', 'openUploadForPax', 'openAttachLibrary',
+  'openUploadTripDoc', 'openUploadPaxDoc', 'openAssignPax', 'openQuickNewPassenger',
+  'openAttachTripLib', 'openPastTripModal', 'openPassengerUploadModal',
+];
+
+function _wrapModalViews() {
+  _MODAL_VIEWS.forEach(name => {
+    const orig = window[name];
+    if (typeof orig !== 'function' || orig._histWrapped) return;
+    const wrapped = function () {
+      const args = Array.prototype.slice.call(arguments);
+      if (!_navBack) {
+        const top = _modalHist[_modalHist.length - 1];
+        // Volver a dibujar la MISMA vista (después de guardar, de borrar un
+        // documento) no es navegar: si no, "volver" te dejaría en el mismo lugar.
+        const igual = top && top.name === name &&
+          JSON.stringify(top.args) === JSON.stringify(args);
+        if (!igual) _modalHist.push({ name: name, args: args });
+        if (_modalHist.length > 25) _modalHist.shift();   // tope de seguridad
+      }
+      return orig.apply(this, args);
+    };
+    wrapped._histWrapped = true;
+    window[name] = wrapped;
+  });
+}
+
+// El botón "atrás" del celular (y el gesto de deslizar) tienen que volver una
+// vista, no sacarte del portal en la mitad de una carga.
+window.addEventListener('popstate', function () {
+  if (_navBack) return;
+  if (!$('modalRoot').innerHTML) return;
+  _modalStates = Math.max(0, _modalStates - 1);   // el navegador ya consumió una
+  _navBack = true;
+  modalBack();
+  _navBack = false;
+});
+
+document.addEventListener('keydown', function (e) {
+  if (e.key !== 'Escape') return;
+  if (!$('modalRoot').innerHTML) return;
+  modalBack();
+});
 
 // ── Miniaturas y previsualización de documentos ──
 const IMG_EXT = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
@@ -921,7 +1031,7 @@ function openTripDetail(tid) {
         <button class="btn btn-primary btn-sm" id="genBtn" onclick="genDest(${tid})"><span class="ms">auto_awesome</span>Generar con IA</button>
         <button class="btn btn-ghost btn-sm" onclick="openEditDest(${tid})"><span class="ms">edit</span>A mano</button></div>`}
     <div class="section-t">Pasajeros (${px.length})</div>
-    ${px.length ? `<div class="rowlist">${px.map(p => { const m = missingForPax(p.id).length; return `<div class="rowitem"><div class="avatar">${esc(initials(p.full_name))}</div><div class="info click" onclick="openPassengerDetail('${p.id}')"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${m ? ' · ⚠ ' + m + ' doc. pendiente(s)' : ''}</div></div><button class="btn btn-icon btn-danger" title="Quitar del viaje" onclick="removePaxFromTrip(${tid},'${p.id}')"><span class="ms">person_remove</span></button></div>`; }).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Sin pasajeros asignados.</p>`}
+    ${px.length ? `<div class="rowlist">${px.map(p => { const m = missingForPax(p.id).length; return `<div class="rowitem click" onclick="openPassengerDetail('${p.id}')"><div class="avatar">${esc(initials(p.full_name))}</div><div class="info"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${m ? ' · ⚠ ' + m + ' doc. pendiente(s)' : ''}</div></div><span class="ms" style="color:var(--mut2)">chevron_right</span><button class="btn btn-icon btn-danger" title="Quitar del viaje" onclick="event.stopPropagation();removePaxFromTrip(${tid},'${p.id}')"><span class="ms">person_remove</span></button></div>`; }).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Sin pasajeros asignados.</p>`}
     <div class="section-t">Documentación del viaje (${Object.keys(grupos).length})</div>
     ${docsHtml ? `<div class="rowlist">${docsHtml}</div>` : `<p class="sub-mut" style="font-size:13px">Todavía no hay archivos. Subí acá el voucher, pasaporte, DNI, seguro, visa o lo que necesite el pasajero.</p>`}
   </div>
@@ -1306,4 +1416,6 @@ async function deleteLib(id, path) {
 }
 
 // ── Go ──
+// Se envuelven acá, con todas las vistas ya definidas.
+_wrapModalViews();
 init();
