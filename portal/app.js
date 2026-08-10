@@ -635,6 +635,54 @@ async function doNewPassenger() {
     closeModal(); toast('Pasajero creado ✓', 'ok'); await loadAll(); renderPaxList();
   } catch (e) { toast(e.message || 'Error al crear', 'err'); btn.disabled = false; btn.textContent = 'Crear pasajero'; }
 }
+// ── Acceso del pasajero ──────────────────────────────────────────────
+// El pasajero NO tiene contraseña propia: entra solo con el DNI (pv_login
+// resuelve credenciales internas). O sea que no hay contraseña que pueda
+// cambiar ni olvidarse. Lo único que necesita Corradi es poder mandarle el
+// link y el DNI sin tener que escribirlo a mano cada vez.
+const PORTAL_URL = 'https://www.corradiviajes.com.ar/portal';
+
+function accessMessage(p) {
+  return `¡Hola ${(p.full_name || '').split(' ')[0]}! Ya tenés tu viaje cargado en el portal de Corradi Viajes.\n\n` +
+    `Entrá acá: ${PORTAL_URL}\n` +
+    `Tu usuario es tu DNI: ${p.dni}\n\n` +
+    `Ahí vas a ver toda la documentación de tu viaje y la guía del destino. ¡Cualquier cosa escribinos!`;
+}
+
+function accessBox(p) {
+  const wa = (p.phone || '').replace(/\D/g, '');
+  return `<div style="background:#eff6ff;border:1.5px solid #bfdbfe;border-radius:14px;padding:14px 16px;margin-bottom:16px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:9px">
+      <span class="ms" style="color:#0052cc;font-size:19px">key</span>
+      <span style="font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:#0052cc">Acceso al portal</span>
+    </div>
+    <div style="font-size:13.5px;color:#334155;font-weight:500;margin-bottom:4px">Entra con su DNI. No usa contraseña.</div>
+    <div style="font-family:ui-monospace,monospace;font-size:21px;font-weight:800;color:#0f172a;letter-spacing:.04em;margin-bottom:12px">${esc(p.dni)}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-ghost btn-sm" onclick="copyAccess('${p.id}')"><span class="ms">content_copy</span>Copiar instrucciones</button>
+      ${wa ? `<a class="btn btn-primary btn-sm" target="_blank" rel="noopener"
+        href="https://wa.me/${wa}?text=${encodeURIComponent(accessMessage(p))}"><span class="ms">send</span>Enviar por WhatsApp</a>` : ''}
+    </div>
+  </div>`;
+}
+
+async function copyAccess(pid) {
+  const p = A.pax.find(x => x.id === pid); if (!p) return;
+  const txt = accessMessage(p);
+  try {
+    await navigator.clipboard.writeText(txt);
+    toast('Instrucciones copiadas ✓', 'ok');
+  } catch (e) {
+    // clipboard falla si la pestaña no está enfocada o el navegador es viejo
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); toast('Instrucciones copiadas ✓', 'ok'); }
+    catch (e2) { toast('No se pudo copiar', 'err'); }
+    ta.remove();
+  }
+}
+
 function openPassengerDetail(pid) {
   window._openPax = pid;
   const p = A.pax.find(x => x.id === pid); if (!p) return;
@@ -644,8 +692,9 @@ function openPassengerDetail(pid) {
     <button class="btn btn-icon btn-danger" title="Eliminar pasajero" onclick="deletePassenger('${pid}')"><span class="ms">delete</span></button>
     <button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
   <div class="modal-b">
-    <div class="sub-mut" style="margin-bottom:14px">DNI ${esc(p.dni)}${p.email ? ' · ' + esc(p.email) : ''}${p.phone ? ' · ' + esc(p.phone) : ''}</div>
+    <div class="sub-mut" style="margin-bottom:14px">${p.email ? esc(p.email) : ''}${p.email && p.phone ? ' · ' : ''}${p.phone ? esc(p.phone) : ''}</div>
     ${p.notes ? `<p class="sub-mut" style="margin:-6px 0 14px;white-space:pre-wrap">${esc(p.notes)}</p>` : ''}
+    ${accessBox(p)}
     ${miss.length ? `<div class="alert alert-red" style="margin-bottom:14px"><span class="ms">warning</span><div><div class="at">Falta documentación</div><div class="as">${miss.map(esc).join(' · ')}</div></div></div>` : ''}
     <div class="section-t" style="margin-top:0">Viajes asignados</div>
     ${trips.length ? `<div class="rowlist">${trips.map(t => `<div class="rowitem click" onclick="openTripDetail(${t.id})">${tripThumb(t, 38)}<div class="info"><div class="t">${esc(t.title)}</div><div class="s">${esc(t.destination || '')}${t.depart_date ? ' · ' + fmtDate(t.depart_date) : ''}</div></div><span class="ms" style="color:var(--mut2)">chevron_right</span></div>`).join('')}</div>` : `<p class="sub-mut" style="font-size:13px">Sin viajes. Asignalo desde la pestaña Viajes.</p>`}
