@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script>!function(){var t=localStorage.getItem('corradiTheme')||'light';document.documentElement.setAttribute('data-theme',t)}()</script>
+<link rel="stylesheet" href="/css/theme.css?v=8">
+<title>Página no encontrada | Corradi Viajes</title>
+<meta name="description" content="La página que buscás no existe o el paquete ya no está disponible. Mirá nuestras ofertas y salidas grupales.">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" type="image/png" href="/assets/logo.png">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<style>
+  @font-face { font-family:'Geomanist'; src:url('/geomanist-regular-webfont.woff2') format('woff2'),url('/geomanist-regular-webfont.woff') format('woff'); font-weight:400; font-style:normal; }
+  @font-face { font-family:'Geomanist'; src:url('/geomanist-medium.woff') format('woff'); font-weight:500; font-style:normal; }
+  @font-face { font-family:'Geomanist'; src:url('/geomanist-medium.woff') format('woff'); font-weight:700; font-style:normal; }
+  body { min-height:100dvh; font-family:'Geomanist','Plus Jakarta Sans',system-ui,sans-serif; }
+  .nf-wrap { max-width:620px; margin:0 auto; padding:140px 24px 80px; text-align:center; }
+  .nf-code { font-size:15px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:#1d5f96; }
+  .nf-title { font-size:32px; font-weight:700; line-height:1.2; margin:14px 0 12px; }
+  .nf-text { font-size:16px; line-height:1.7; opacity:.75; margin-bottom:34px; }
+  .nf-acciones { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; }
+  .nf-btn { display:inline-flex; align-items:center; gap:8px; padding:13px 24px; border-radius:999px;
+    font-weight:600; font-size:15px; text-decoration:none; transition:filter .2s; }
+  .nf-btn:hover { filter:brightness(1.08); }
+  .nf-btn--primario { background:linear-gradient(90deg,#2563eb,#3b82f6); color:#fff; }
+  .nf-btn--secundario { background:#25d366; color:#fff; }
+  .nf-btn--fantasma { border:1px solid currentColor; opacity:.7; }
+</style>
+</head>
+<body>
+<app-navbar></app-navbar>
+
+<main class="nf-wrap">
+  <p class="nf-code">Error 404</p>
+  <h1 class="nf-title">Esta página ya no está disponible</h1>
+  <p class="nf-text">
+    Puede que el paquete que buscabas haya salido, se haya completado o cambiado de fecha.
+    Escribinos y te armamos una alternativa parecida, o mirá lo que tenemos ahora.
+  </p>
+  <div class="nf-acciones">
+    <a class="nf-btn nf-btn--primario" href="/ofertas">Ver ofertas</a>
+    <a class="nf-btn nf-btn--secundario" id="waBtn" href="https://wa.me/5493416057588" target="_blank" rel="noopener">
+      <span class="material-symbols-outlined" style="font-size:19px">chat</span>Consultar por WhatsApp
+    </a>
+    <a class="nf-btn nf-btn--fantasma" href="/">Ir al inicio</a>
+  </div>
+</main>
+
+<app-footer></app-footer>
+<app-bottom-nav></app-bottom-nav>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="/js/config.js?v=8"></script>
+<script src="/js/slugs.js?v=1"></script>
+<script src="/js/components.js?v=8"></script>
+<script src="/js/theme.js?v=8"></script>
+<script>
+  // Si llegaron desde el link de un paquete dado de baja, que el mensaje de
+  // WhatsApp lo diga: es el caso mas probable de 404 en este sitio.
+  (function () {
+    var m = location.pathname.match(/^\/paquete\/(.+)$/);
+    if (!m) return;
+    var nombre = decodeURIComponent(m[1]).replace(/-\d+-dias$/, '').replace(/-/g, ' ');
+    var texto = 'Hola Corradi 👋 Estaba viendo el viaje *' + nombre +
+                '* y el link ya no anda. ¿Tienen algo parecido disponible?';
+    document.getElementById('waBtn').href =
+      'https://wa.me/5493416057588?text=' + encodeURIComponent(texto);
+  })();
+</script>
+</body>
+</html>

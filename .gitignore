@@ -22,3 +22,4 @@ revert_second_video.py
 update_html.py
 update_section.py
 rls_body.json
+__pycache__/

@@ -5,33 +5,413 @@
     {
       "source": "/video/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
       ]
     },
     {
       "source": "/img/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=2592000" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=2592000"
+        }
       ]
     },
     {
       "source": "/(.*)\\.(woff2?|css|js)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=604800" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800"
+        }
       ]
     },
     {
       "source": "/portal/sw.js",
       "headers": [
-        { "key": "Service-Worker-Allowed", "value": "/portal" },
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        {
+          "key": "Service-Worker-Allowed",
+          "value": "/portal"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
       ]
     },
     {
       "source": "/portal/manifest.webmanifest",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "79"
+        }
+      ],
+      "destination": "/paquete/egipto-crucero-por-el-nilo-y-el-cairo-8-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "80"
+        }
+      ],
+      "destination": "/paquete/costa-rica-aventura-natural-grupal-desde-rosario-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "81"
+        }
+      ],
+      "destination": "/paquete/japon-camino-de-kumano-peregrinacion-sagrada-14-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "82"
+        }
+      ],
+      "destination": "/paquete/iguazu-lodge-de-selva-con-cenas-incluidas-4-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "86"
+        }
+      ],
+      "destination": "/paquete/china-imperial-un-mundo-de-servicios-22-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "87"
+        }
+      ],
+      "destination": "/paquete/costa-rica-grupal-desde-rosario-diciembre-2026-10-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "88"
+        }
+      ],
+      "destination": "/paquete/mini-skiweek-en-chapelco-ski-2026-6-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "89"
+        }
+      ],
+      "destination": "/paquete/escapada-de-golf-llao-llao-bariloche-5-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "91"
+        }
+      ],
+      "destination": "/paquete/playa-del-carmen-viva-maya-by-wyndham-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "92"
+        }
+      ],
+      "destination": "/paquete/punta-cana-iberostar-waves-dominicana-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "93"
+        }
+      ],
+      "destination": "/paquete/aruba-riu-palace-antillas-solo-adultos-8-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "94"
+        }
+      ],
+      "destination": "/paquete/playa-del-carmen-catalonia-yucatan-beach-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "95"
+        }
+      ],
+      "destination": "/paquete/la-romana-bahia-principe-explore-la-romana-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "96"
+        }
+      ],
+      "destination": "/paquete/punta-cana-ocean-blue-sand-beach-resort-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "97"
+        }
+      ],
+      "destination": "/paquete/mendoza-clasica-valles-y-caminos-del-vino-4-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "98"
+        }
+      ],
+      "destination": "/paquete/iguazu-express-cataratas-de-agua-grande-4-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "99"
+        }
+      ],
+      "destination": "/paquete/bariloche-sonado-lagos-y-montanas-5-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "100"
+        }
+      ],
+      "destination": "/paquete/el-calafate-tierra-de-glaciares-4-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "102"
+        }
+      ],
+      "destination": "/paquete/salta-la-linda-tradicion-y-paisajes-4-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "103"
+        }
+      ],
+      "destination": "/paquete/patagonia-completa-ushuaia-y-calafate-7-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "104"
+        }
+      ],
+      "destination": "/paquete/porto-de-galinhas-pousada-capitaes-de-areia-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "106"
+        }
+      ],
+      "destination": "/paquete/salvador-vila-gale-salvador-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "108"
+        }
+      ],
+      "destination": "/paquete/joao-pessoa-cabo-branco-atlantico-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "109"
+        }
+      ],
+      "destination": "/paquete/maceio-ritz-suites-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "110"
+        }
+      ],
+      "destination": "/paquete/playa-del-carmen-riu-lupita-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "111"
+        }
+      ],
+      "destination": "/paquete/punta-cana-ocean-blue-sand-beach-resort-9-dias-desde-cordoba?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "114"
+        }
+      ],
+      "destination": "/paquete/cabo-frio-hotel-la-plage-9-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "116"
+        }
+      ],
+      "destination": "/paquete/maceio-slim-pajucara-by-tropicalis-8-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "123"
+        }
+      ],
+      "destination": "/paquete/disney-universal-orlando-salida-familiar-11-dias?id=",
+      "statusCode": 301
+    },
+    {
+      "source": "/paquete",
+      "has": [
+        {
+          "type": "query",
+          "key": "id",
+          "value": "126"
+        }
+      ],
+      "destination": "/paquete/dia-de-los-muertos-en-mexico-8-dias?id=",
+      "statusCode": 301
     }
   ]
 }
