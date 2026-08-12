@@ -269,6 +269,21 @@ select option{background-color:#ffffff!important;color:#0f172a!important;font-si
 .fg{margin-bottom:14px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
+/* ── Barra de filtros de las listas ── */
+.fbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-4px 0 14px}
+.fchip{cursor:pointer;border:1px solid transparent;font-size:11.5px;padding:7px 12px;
+  transition:background .12s,color .12s,border-color .12s;white-space:nowrap}
+.fchip:hover{filter:brightness(.97)}
+.fsel{width:auto;min-width:150px;max-width:230px;padding:7px 30px 7px 12px;font-size:12.5px;
+  font-weight:700;border-radius:20px;background-color:#f8fafc;border:1px solid #cbd5e1;color:#334155}
+.fcount{margin-left:auto;font-size:12.5px;font-weight:700;color:#475569;white-space:nowrap}
+/* Botón de limpiar dentro del buscador */
+.searchbox{position:relative}
+.sb-x{background:none;border:none;cursor:pointer;color:#94a3b8;padding:4px;display:flex;
+  align-items:center;border-radius:6px;flex-shrink:0}
+.sb-x:hover{background:#f1f5f9;color:#0f172a}
+.sb-x .ms{font-size:18px}
+
 /* Toast */
 #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(120%);z-index:400;background:#0f2036;border:1px solid var(--line);border-radius:12px;padding:13px 20px;font-weight:600;box-shadow:0 16px 44px rgba(0,0,0,.5);transition:transform .28s;max-width:90vw}
 #toast.show{transform:translateX(-50%) translateY(0)}
@@ -624,18 +639,20 @@ img,video,canvas,iframe{max-width:100%}
     <div id="viewPax" class="view">
       <div class="page-h">
         <h2>Pasajeros</h2><div class="spacer"></div>
-        <div class="searchbox"><span class="ms">search</span><input id="paxSearch" placeholder="Buscar por nombre o DNI…" oninput="renderPaxList()"></div>
+        <div class="searchbox"><span class="ms">search</span><input id="paxSearch" placeholder="Nombre, DNI, teléfono, viaje…" oninput="buscarPax()"><button class="sb-x" onclick="limpiarPax()" title="Limpiar"><span class="ms">close</span></button></div>
         <button class="btn btn-primary" onclick="openNewPassenger()"><span class="ms">person_add</span>Nuevo pasajero</button>
       </div>
+      <div id="paxFiltros"></div>
       <div id="paxListWrap" class="rowlist"></div>
     </div>
 
     <div id="viewTrips" class="view">
       <div class="page-h">
         <h2>Viajes</h2><div class="spacer"></div>
-        <div class="searchbox"><span class="ms">search</span><input id="tripSearch" placeholder="Buscar viaje…" oninput="renderTripList()"></div>
+        <div class="searchbox"><span class="ms">search</span><input id="tripSearch" placeholder="Viaje, destino, país, pasajero…" oninput="buscarTrips()"><button class="sb-x" onclick="limpiarTrips()" title="Limpiar"><span class="ms">close</span></button></div>
         <button class="btn btn-primary" onclick="openNewTrip()"><span class="ms">add</span>Nuevo viaje</button>
       </div>
+      <div id="tripFiltros"></div>
       <div id="tripListWrap" class="rowlist"></div>
     </div>
 

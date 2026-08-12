@@ -508,7 +508,11 @@ async function deleteDocById(id, file_path, source) {
 //  INFO DEL DESTINO (generada con IA, editable a mano)
 // ══════════════════════════════════════════════════════════
 const allDests = () => (me && me.role === 'admin' ? (A.dests || []) : (P.dests || []));
-const norm = s => (s || '').trim().toLowerCase();
+// Saca acentos además de minúsculas: buscar "maria" tiene que encontrar a
+// "María", y "japon" al viaje a "Japón". Se usa tanto para comparar destinos
+// como para el buscador.
+const norm = s => (s || '').trim().toLowerCase()
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 function destOfTrip(t) {
   const L = allDests();
   if (t.destination_id) { const d = L.find(x => x.id === t.destination_id); if (d) return d; }
@@ -740,21 +744,95 @@ async function startAdmin() {
   $('appAdmin').classList.remove('hidden'); $('appPassenger').classList.add('hidden');
   await loadAll(); adminView('dashboard');
 }
+// ── Carga de datos ───────────────────────────────────────────────────
+// PostgREST corta TODA consulta en 1000 filas (max_rows del project) y no
+// avisa: simplemente devuelve 1000 y listo. Con 200 pasajeros y ~8 documentos
+// cada uno son 1600 filas, o sea que a partir de la 1000 los documentos
+// desaparecían de la pantalla sin ningún error. Por eso se pagina siempre.
+const PAGE = 1000;
+async function fetchAll(tabla, cols, orden) {
+  const filas = [];
+  for (let desde = 0; ; desde += PAGE) {
+    let q = db.from(tabla).select(cols || '*').range(desde, desde + PAGE - 1);
+    if (orden) q = q.order(orden.col, { ascending: orden.asc !== false, nullsFirst: orden.nullsFirst });
+    const { data, error } = await q;
+    if (error) { console.error('[loadAll]', tabla, error.message); break; }
+    filas.push(...(data || []));
+    if (!data || data.length < PAGE) break;   // última página
+  }
+  return filas;
+}
+
 async function loadAll() {
   const [pax, trips, tp, docs, lib, reqs, dests, folders] = await Promise.all([
-    db.from('pv_profiles').select('*').eq('role', 'passenger').order('full_name'),
-    db.from('pv_trips').select('*').order('depart_date', { nullsFirst: false }),
-    db.from('pv_trip_passengers').select('*'),
-    db.from('pv_documents').select('*').order('created_at', { ascending: false }),
-    db.from('pv_library').select('*').order('created_at', { ascending: false }),
-    db.from('pv_required_docs').select('*'),
-    db.from('pv_destinations').select('*'),
-    db.from('pv_lib_folders').select('*').order('name'),
+    fetchAll('pv_profiles', '*', { col: 'full_name' }).then(f => f.filter(p => p.role === 'passenger')),
+    fetchAll('pv_trips', '*', { col: 'depart_date', asc: false, nullsFirst: false }),
+    fetchAll('pv_trip_passengers'),
+    fetchAll('pv_documents', '*', { col: 'created_at', asc: false }),
+    fetchAll('pv_library', '*', { col: 'created_at', asc: false }),
+    fetchAll('pv_required_docs'),
+    fetchAll('pv_destinations'),
+    fetchAll('pv_lib_folders', '*', { col: 'name' }),
   ]);
-  A = {
-    pax: pax.data || [], trips: trips.data || [], tp: tp.data || [], docs: docs.data || [],
-    lib: lib.data || [], reqs: reqs.data || [], dests: dests.data || [], folders: folders.data || [],
+  A = { pax, trips, tp, docs, lib, reqs, dests, folders };
+  buildIndex();
+}
+
+// ── Índices en memoria ───────────────────────────────────────────────
+// Antes cada fila de la lista recorría A.tp, A.docs y A.reqs enteros para
+// saber sus viajes y su documentación pendiente. Con 200 pasajeros y unos
+// miles de documentos eso es ~1 millón de operaciones por cada tecla que se
+// escribe en el buscador: la pantalla se congelaba. Ahora se arma una sola
+// vez por carga y cada consulta es O(1).
+let IX = {};
+function buildIndex() {
+  const g = (arr, key) => {
+    const m = new Map();
+    for (const x of arr) {
+      const k = x[key];
+      let a = m.get(k);
+      if (!a) m.set(k, a = []);
+      a.push(x);
+    }
+    return m;
   };
+  IX = {
+    pax: new Map(A.pax.map(p => [p.id, p])),
+    trip: new Map(A.trips.map(t => [t.id, t])),
+    tpByTrip: g(A.tp, 'trip_id'),
+    tpByPax: g(A.tp, 'passenger_id'),
+    docsByPax: g(A.docs, 'passenger_id'),
+    docsByTrip: g(A.docs, 'trip_id'),
+    reqsByTrip: g(A.reqs, 'trip_id'),
+  };
+  // Resumen por pasajero, precalculado: es lo que muestra cada fila del
+  // listado y lo que se usa para filtrar por "falta documentación".
+  IX.resumen = new Map();
+  for (const p of A.pax) {
+    const viajes = (IX.tpByPax.get(p.id) || []).map(x => IX.trip.get(x.trip_id)).filter(Boolean);
+    const tiene = new Set((IX.docsByPax.get(p.id) || []).map(d => d.category));
+    const pide = new Set();
+    for (const t of viajes) for (const r of (IX.reqsByTrip.get(t.id) || [])) pide.add(r.category);
+    const falta = [...pide].filter(c => !tiene.has(c));
+    IX.resumen.set(p.id, {
+      viajes, falta,
+      // Texto de búsqueda ya normalizado (sin acentos ni mayúsculas)
+      buscar: norm([p.full_name, p.dni, p.email, p.phone, p.notes,
+                    ...viajes.map(t => t.title), ...viajes.map(t => t.destination)]
+                    .filter(Boolean).join(' ')),
+    });
+  }
+  IX.resumenTrip = new Map();
+  for (const t of A.trips) {
+    const px = (IX.tpByTrip.get(t.id) || []).map(x => IX.pax.get(x.passenger_id)).filter(Boolean);
+    IX.resumenTrip.set(t.id, {
+      pax: px,
+      docs: (IX.docsByTrip.get(t.id) || []).length,
+      buscar: norm([t.title, t.destination, t.country, t.notes,
+                    ...px.map(p => p.full_name), ...px.map(p => p.dni)]
+                    .filter(Boolean).join(' ')),
+    });
+  }
 }
 function adminView(v) {
   closeModal();
@@ -766,16 +844,12 @@ function adminView(v) {
   if (v === 'lib') renderLib();
 }
 
-// helper: pasajeros de un viaje / viajes de un pasajero
-const paxOfTrip = tid => A.tp.filter(x => x.trip_id === tid).map(x => A.pax.find(p => p.id === x.passenger_id)).filter(Boolean);
-const tripsOfPax = pid => A.tp.filter(x => x.passenger_id === pid).map(x => A.trips.find(t => t.id === x.trip_id)).filter(Boolean);
-const docsOfPax = pid => A.docs.filter(d => d.passenger_id === pid);
-function missingForPax(pid) {
-  const cats = new Set(docsOfPax(pid).map(d => d.category));
-  const req = new Set();
-  tripsOfPax(pid).forEach(t => A.reqs.filter(r => r.trip_id === t.id).forEach(r => req.add(r.category)));
-  return [...req].filter(c => !cats.has(c));
-}
+// Pasajeros de un viaje / viajes de un pasajero. Antes cada llamada recorría
+// las tablas enteras; ahora salen del índice armado en buildIndex().
+const paxOfTrip = tid => (IX.resumenTrip?.get(tid)?.pax) || [];
+const tripsOfPax = pid => (IX.resumen?.get(pid)?.viajes) || [];
+const docsOfPax = pid => (IX.docsByPax?.get(pid)) || [];
+const missingForPax = pid => (IX.resumen?.get(pid)?.falta) || [];
 
 // ── Dashboard ──
 function renderDashboard() {
@@ -806,20 +880,115 @@ function renderDashboard() {
 }
 
 // ── Pasajeros ──
-function renderPaxList() {
-  const q = ($('paxSearch')?.value || '').toLowerCase().trim();
+// ══════════════════════════════════════════════════════════
+//  LISTADO DE PASAJEROS
+// ══════════════════════════════════════════════════════════
+// Estado de la vista: qué se busca, qué filtro está puesto, cómo se ordena y
+// cuántas filas se están mostrando (el resto se carga con "Mostrar más").
+const VP = { filtro: 'todos', orden: 'nombre', tope: 60, viaje: '' };
+const LOTE = 60;
+
+// Cada búsqueda mira varias palabras sueltas: "juan madrid" encuentra a Juan
+// que viaja a Madrid, sin importar el orden ni los acentos.
+function coincide(texto, q) {
+  if (!q) return true;
+  for (const p of q.split(/\s+/)) if (p && !texto.includes(p)) return false;
+  return true;
+}
+
+function paxFiltrados() {
+  const q = norm($('paxSearch')?.value || '');
   let list = A.pax;
-  if (q) list = list.filter(p => (p.full_name || '').toLowerCase().includes(q) || (p.dni || '').includes(q));
+
+  if (VP.filtro === 'pendientes') list = list.filter(p => missingForPax(p.id).length);
+  else if (VP.filtro === 'ok') list = list.filter(p => tripsOfPax(p.id).length && !missingForPax(p.id).length);
+  else if (VP.filtro === 'sinviaje') list = list.filter(p => !tripsOfPax(p.id).length);
+  if (VP.viaje) list = list.filter(p => tripsOfPax(p.id).some(t => String(t.id) === VP.viaje));
+  if (q) list = list.filter(p => coincide(IX.resumen.get(p.id).buscar, q));
+
+  const orden = {
+    nombre: (a, b) => (a.full_name || '').localeCompare(b.full_name || '', 'es'),
+    pendientes: (a, b) => missingForPax(b.id).length - missingForPax(a.id).length ||
+      (a.full_name || '').localeCompare(b.full_name || '', 'es'),
+    viajes: (a, b) => tripsOfPax(b.id).length - tripsOfPax(a.id).length ||
+      (a.full_name || '').localeCompare(b.full_name || '', 'es'),
+    nuevos: (a, b) => String(b.created_at || '').localeCompare(String(a.created_at || '')),
+  }[VP.orden];
+  return [...list].sort(orden);
+}
+
+function renderPaxList(reset) {
+  if (reset !== false) VP.tope = LOTE;
+  const list = paxFiltrados();
+  const q = ($('paxSearch')?.value || '').trim();
+  renderPaxBarra(list.length);
+
   const w = $('paxListWrap');
-  if (!list.length) { w.innerHTML = `<div class="empty"><span class="ms">group</span>${q ? 'Sin resultados.' : 'Todavía no hay pasajeros. Creá el primero.'}</div>`; return; }
-  w.innerHTML = list.map(p => {
-    const miss = missingForPax(p.id).length, nt = tripsOfPax(p.id).length;
+  if (!list.length) {
+    w.innerHTML = `<div class="empty"><span class="ms">group</span>${
+      q || VP.filtro !== 'todos' || VP.viaje
+        ? 'Ningún pasajero coincide. Probá con otro filtro.'
+        : 'Todavía no hay pasajeros. Creá el primero.'}</div>`;
+    return;
+  }
+  // Se dibujan de a lotes: con 200 filas de golpe el navegador se traba y
+  // además nadie mira más allá de las primeras.
+  const visibles = list.slice(0, VP.tope);
+  w.innerHTML = visibles.map(p => {
+    const r = IX.resumen.get(p.id);
+    const miss = r.falta.length, nt = r.viajes.length;
     return `<div class="rowitem click" onclick="openPassengerDetail('${p.id}')">
       <div class="avatar">${esc(initials(p.full_name))}</div>
-      <div class="info"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${p.phone ? ' · ' + esc(p.phone) : ''}</div></div>
+      <div class="info"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${p.phone ? ' · ' + esc(p.phone) : ''}${nt ? ' · ' + esc(r.viajes.map(t => t.title).join(', ')) : ''}</div></div>
       <div class="end"><span class="chip chip-mut">${nt} viaje${nt === 1 ? '' : 's'}</span>${miss ? `<span class="chip chip-red">${miss} pendiente${miss === 1 ? '' : 's'}</span>` : `<span class="chip chip-green">OK</span>`}<span class="ms" style="color:var(--mut2)">chevron_right</span></div></div>`;
-  }).join('');
+  }).join('') + (list.length > VP.tope
+    ? `<button class="btn btn-ghost" style="width:100%;margin-top:4px" onclick="masPax()">
+         <span class="ms">expand_more</span>Mostrar ${Math.min(LOTE, list.length - VP.tope)} más (quedan ${list.length - VP.tope})</button>`
+    : '');
 }
+function masPax() { VP.tope += LOTE; renderPaxList(false); }
+
+// Barra de filtros: se dibuja sola con los contadores reales, así de un
+// vistazo se ve cuántos tienen documentación pendiente sin tener que filtrar.
+function renderPaxBarra(n) {
+  const cont = $('paxFiltros'); if (!cont) return;
+  const pend = A.pax.filter(p => missingForPax(p.id).length).length;
+  const sinv = A.pax.filter(p => !tripsOfPax(p.id).length).length;
+  const okc = A.pax.length - pend - sinv;
+  const chip = (id, txt, cant, clase) =>
+    `<button class="chip ${VP.filtro === id ? 'chip-blue' : 'chip-mut'} fchip" onclick="setPaxFiltro('${id}')">${txt}${cant !== null ? ` (${cant})` : ''}</button>`;
+  const viajesOrdenados = [...A.trips].sort((a, b) => (a.title || '').localeCompare(b.title || '', 'es'));
+  cont.innerHTML = `
+    <div class="fbar">
+      ${chip('todos', 'Todos', A.pax.length)}
+      ${chip('pendientes', 'Falta documentación', pend)}
+      ${chip('ok', 'Al día', okc)}
+      ${chip('sinviaje', 'Sin viaje', sinv)}
+      <select class="fsel" onchange="VP.viaje=this.value;renderPaxList()" title="Filtrar por viaje">
+        <option value="">Todos los viajes</option>
+        ${viajesOrdenados.map(t => `<option value="${t.id}" ${VP.viaje === String(t.id) ? 'selected' : ''}>${esc(t.title)}</option>`).join('')}
+      </select>
+      <select class="fsel" onchange="VP.orden=this.value;renderPaxList()" title="Ordenar">
+        <option value="nombre" ${VP.orden === 'nombre' ? 'selected' : ''}>Por nombre</option>
+        <option value="pendientes" ${VP.orden === 'pendientes' ? 'selected' : ''}>Más pendientes primero</option>
+        <option value="viajes" ${VP.orden === 'viajes' ? 'selected' : ''}>Más viajes primero</option>
+        <option value="nuevos" ${VP.orden === 'nuevos' ? 'selected' : ''}>Últimos agregados</option>
+      </select>
+      <span class="fcount">${n === A.pax.length ? `${n} pasajero${n === 1 ? '' : 's'}` : `${n} de ${A.pax.length}`}</span>
+    </div>`;
+}
+function setPaxFiltro(f) { VP.filtro = f; renderPaxList(); }
+
+// Se espera a que deje de tipear: sin esto se redibuja la lista entera con
+// cada tecla y en un celular se siente pegajoso.
+function debounce(fn, ms) {
+  let t;
+  return function () { clearTimeout(t); t = setTimeout(fn, ms || 160); };
+}
+const buscarPax = debounce(() => renderPaxList());
+const buscarTrips = debounce(() => renderTripList());
+function limpiarPax() { $('paxSearch').value = ''; VP.filtro = 'todos'; VP.viaje = ''; renderPaxList(); $('paxSearch').focus(); }
+function limpiarTrips() { $('tripSearch').value = ''; VT.filtro = 'proximos'; renderTripList(); $('tripSearch').focus(); }
 function openNewPassenger() {
   openModal(`<div class="modal-h"><h3>Nuevo pasajero</h3><button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
   <div class="modal-b">
@@ -1014,21 +1183,93 @@ async function doAttachLibrary(pid, libId) {
 }
 
 // ── Viajes ──
-function renderTripList() {
-  const q = ($('tripSearch')?.value || '').toLowerCase().trim();
+// ══════════════════════════════════════════════════════════
+//  LISTADO DE VIAJES
+// ══════════════════════════════════════════════════════════
+const VT = { filtro: 'proximos', orden: 'fecha', tope: 60 };
+
+function tripsFiltrados() {
+  const q = norm($('tripSearch')?.value || '');
   let list = A.trips;
-  if (q) list = list.filter(t => (t.title || '').toLowerCase().includes(q) || (t.destination || '').toLowerCase().includes(q));
+
+  if (VT.filtro === 'proximos') list = list.filter(t => { const d = daysUntil(t.depart_date); return d === null || d >= 0; });
+  else if (VT.filtro === 'pasados') list = list.filter(t => { const d = daysUntil(t.depart_date); return d !== null && d < 0; });
+  else if (VT.filtro === 'pronto') list = list.filter(t => { const d = daysUntil(t.depart_date); return d !== null && d >= 0 && d <= 30; });
+  else if (VT.filtro === 'sinpax') list = list.filter(t => !paxOfTrip(t.id).length);
+  else if (VT.filtro === 'faltadoc') list = list.filter(t => paxOfTrip(t.id).some(p => missingForPax(p.id).length));
+  if (q) list = list.filter(t => coincide(IX.resumenTrip.get(t.id).buscar, q));
+
+  const lejos = 99999;
+  const dias = t => { const d = daysUntil(t.depart_date); return d === null ? lejos : d; };
+  const orden = {
+    // Sin fecha va al final, y entre los que tienen fecha primero el más cercano
+    fecha: (a, b) => dias(a) - dias(b),
+    titulo: (a, b) => (a.title || '').localeCompare(b.title || '', 'es'),
+    pax: (a, b) => paxOfTrip(b.id).length - paxOfTrip(a.id).length,
+    nuevos: (a, b) => b.id - a.id,
+  }[VT.orden];
+  return [...list].sort(orden);
+}
+
+function renderTripList(reset) {
+  if (reset !== false) VT.tope = LOTE;
+  const list = tripsFiltrados();
+  const q = ($('tripSearch')?.value || '').trim();
+  renderTripBarra(list.length);
+
   const w = $('tripListWrap');
-  if (!list.length) { w.innerHTML = `<div class="empty"><span class="ms">luggage</span>${q ? 'Sin resultados.' : 'Todavía no hay viajes. Creá el primero.'}</div>`; return; }
-  w.innerHTML = list.map(t => {
-    const px = paxOfTrip(t.id), du = daysUntil(t.depart_date);
-    const badge = (du !== null && du >= 0 && du <= 10) ? `<span class="chip chip-gold">En ${du} día${du === 1 ? '' : 's'}</span>` : (du !== null && du < 0 ? `<span class="chip chip-mut">Pasado</span>` : '');
+  if (!list.length) {
+    w.innerHTML = `<div class="empty"><span class="ms">luggage</span>${
+      q || VT.filtro !== 'todos'
+        ? 'Ningún viaje coincide. Probá con otro filtro.'
+        : 'Todavía no hay viajes. Creá el primero.'}</div>`;
+    return;
+  }
+  w.innerHTML = list.slice(0, VT.tope).map(t => {
+    const r = IX.resumenTrip.get(t.id), du = daysUntil(t.depart_date);
+    const pend = r.pax.filter(p => missingForPax(p.id).length).length;
+    const badge = (du !== null && du >= 0 && du <= 10)
+      ? `<span class="chip chip-gold">En ${du} día${du === 1 ? '' : 's'}</span>`
+      : (du !== null && du < 0 ? `<span class="chip chip-mut">Pasado</span>` : '');
     return `<div class="rowitem click" onclick="openTripDetail(${t.id})">
       ${tripThumb(t)}
       <div class="info"><div class="t">${esc(t.title)}</div><div class="s">${esc(t.destination || '')}${t.country ? ' · ' + esc(t.country) : ''}${t.depart_date ? ' · ' + fmtDate(t.depart_date) : ''}</div></div>
-      <div class="end">${badge}<span class="chip chip-mut">${px.length} pax</span><span class="ms" style="color:var(--mut2)">chevron_right</span></div></div>`;
-  }).join('');
+      <div class="end">${badge}${pend ? `<span class="chip chip-red">${pend} sin doc.</span>` : ''}<span class="chip chip-mut">${r.pax.length} pax</span><span class="ms" style="color:var(--mut2)">chevron_right</span></div></div>`;
+  }).join('') + (list.length > VT.tope
+    ? `<button class="btn btn-ghost" style="width:100%;margin-top:4px" onclick="masTrips()">
+         <span class="ms">expand_more</span>Mostrar ${Math.min(LOTE, list.length - VT.tope)} más (quedan ${list.length - VT.tope})</button>`
+    : '');
 }
+function masTrips() { VT.tope += LOTE; renderTripList(false); }
+
+function renderTripBarra(n) {
+  const cont = $('tripFiltros'); if (!cont) return;
+  const f = (fn) => A.trips.filter(fn).length;
+  const prox = f(t => { const d = daysUntil(t.depart_date); return d === null || d >= 0; });
+  const pronto = f(t => { const d = daysUntil(t.depart_date); return d !== null && d >= 0 && d <= 30; });
+  const pas = f(t => { const d = daysUntil(t.depart_date); return d !== null && d < 0; });
+  const sinp = f(t => !paxOfTrip(t.id).length);
+  const faltad = f(t => paxOfTrip(t.id).some(p => missingForPax(p.id).length));
+  const chip = (id, txt, cant) =>
+    `<button class="chip ${VT.filtro === id ? 'chip-blue' : 'chip-mut'} fchip" onclick="setTripFiltro('${id}')">${txt} (${cant})</button>`;
+  cont.innerHTML = `
+    <div class="fbar">
+      ${chip('proximos', 'Próximos', prox)}
+      ${chip('pronto', 'Salen en 30 días', pronto)}
+      ${chip('faltadoc', 'Falta documentación', faltad)}
+      ${chip('sinpax', 'Sin pasajeros', sinp)}
+      ${chip('pasados', 'Pasados', pas)}
+      ${chip('todos', 'Todos', A.trips.length)}
+      <select class="fsel" onchange="VT.orden=this.value;renderTripList()" title="Ordenar">
+        <option value="fecha" ${VT.orden === 'fecha' ? 'selected' : ''}>Por fecha de salida</option>
+        <option value="titulo" ${VT.orden === 'titulo' ? 'selected' : ''}>Por nombre</option>
+        <option value="pax" ${VT.orden === 'pax' ? 'selected' : ''}>Más pasajeros primero</option>
+        <option value="nuevos" ${VT.orden === 'nuevos' ? 'selected' : ''}>Últimos creados</option>
+      </select>
+      <span class="fcount">${n === A.trips.length ? `${n} viaje${n === 1 ? '' : 's'}` : `${n} de ${A.trips.length}`}</span>
+    </div>`;
+}
+function setTripFiltro(f) { VT.filtro = f; renderTripList(); }
 function openNewTrip(edit) {
   const t = edit ? A.trips.find(x => x.id === edit) : null;
   openModal(`<div class="modal-h"><h3>${t ? 'Editar viaje' : 'Nuevo viaje'}</h3><button class="btn btn-icon btn-ghost" onclick="closeModal()"><span class="ms">close</span></button></div>
