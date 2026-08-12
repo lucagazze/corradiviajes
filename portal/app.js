@@ -939,7 +939,7 @@ function renderPaxList(reset) {
     const miss = r.falta.length, nt = r.viajes.length;
     return `<div class="rowitem click" onclick="openPassengerDetail('${p.id}')">
       <div class="avatar">${esc(initials(p.full_name))}</div>
-      <div class="info"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${p.phone ? ' · ' + esc(p.phone) : ''}${nt ? ' · ' + esc(r.viajes.map(t => t.title).join(', ')) : ''}</div></div>
+      <div class="info"><div class="t">${esc(p.full_name)}</div><div class="s">DNI ${esc(p.dni)}${nt ? ' · ' + esc(r.viajes.map(t => t.title).join(', ')) : ' · sin viaje'}</div></div>
       <div class="end"><span class="chip chip-mut">${nt} viaje${nt === 1 ? '' : 's'}</span>${miss ? `<span class="chip chip-red">${miss} pendiente${miss === 1 ? '' : 's'}</span>` : `<span class="chip chip-green">OK</span>`}<span class="ms" style="color:var(--mut2)">chevron_right</span></div></div>`;
   }).join('') + (list.length > VP.tope
     ? `<button class="btn btn-ghost" style="width:100%;margin-top:4px" onclick="masPax()">
